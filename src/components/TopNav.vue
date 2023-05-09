@@ -33,7 +33,7 @@
                     <template #trigger>
                         <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
                     </template>
-                    已有账号？请<a @click="showLogin = true">登录</a>；未注册账号？请<a @click="showRegister=true">注册</a>。
+                    已有账号？请<a style="color:cornflowerblue" @click="showLogin = true">登录</a>；未注册账号？请<a style="color:cornflowerblue" @click="showRegister = true">注册</a>。
                   </n-tooltip>
             </n-gi>
         </n-grid>
@@ -41,8 +41,8 @@
             <n-divider />
         </div> -->
     </div>
-    <!-- <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false" @switch="showLogin = false; showRegister = true"></login-view>
-    <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view> -->
+    <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false" @switch="showLogin = false; showRegister = true"></login-view>
+    <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view>
   </template>
   
   <script>

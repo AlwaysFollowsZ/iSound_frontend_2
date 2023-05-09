@@ -11,7 +11,7 @@
                                 <h3>欢迎来到 iSound，请先完成注册！</h3>
                             </n-gi>
                             <n-gi :span="2">
-                                <div style="padding-top: 30%" @click="closeLWindow">
+                                <div style="padding-top: 30%" @click="closeRWindow">
                                     <close-outline/>
                                 </div>
                             </n-gi>
@@ -59,7 +59,7 @@ export default{
         CloseOutline,
     },
     props: {
-        showLogin: Boolean,
+        showRegister: Boolean,
     },
     methods: {
         closeRWindow() {
