@@ -12,7 +12,7 @@
         },
         methods: {
             back() {
-                this.$router.push({path:'/'})
+                this.$router.push({path:'/admin'})
             }
         }
     });
@@ -31,7 +31,7 @@
             </a-button>
         </div>
         <div class="admin-avatar">
-            <img src="../assets/default-admin.jpg" alt="管理员头像" class="default-admin">
+            <img src="../assets/default-admin.jpg" alt="管理员头像" class="default-admin-avatar">
         </div>
     </div>
 
@@ -67,7 +67,7 @@
 
 
 
-<style>
+<style scoped>
 .message-page-header {
     position: fixed;
     top: 0;
@@ -86,20 +86,22 @@
     top: 10px;
     right: 10px;
 }
-.default-admin {
+.default-admin-avatar {
     width: 35px;
 }
 .message-page-body {
     position: fixed;
     margin-left: 10vw;
     margin-top: 55px;
-    background:aquamarine ;
+    background:rgba(154, 211, 252, 0.516) ;
     width: 80vw;
     height: 100vw;
 }
 .ant-card {
     height: 100vw;
-    border: 2px solid rgb(191, 191, 191);
+    background: rgb(255, 255, 255);
+    border: 3px solid rgb(235, 237, 240);
+    margin: 0;
 }
 .left-menu {
     position: relative;
