@@ -1,8 +1,8 @@
 <script setup>
 import { defineProps, computed, ref ,inject} from 'vue'
 import { NButton, NEllipsis, NInput,NIcon,NIconWrapper } from 'naive-ui'
-import { MusicNote220Regular } from '@vicons/fluent' 
-import { LibraryMusicOutlined} from '@vicons/material'
+// import { MusicNote220Regular } from '@vicons/fluent' 
+// import { LibraryMusicOutlined} from '@vicons/material'
 // 从父级传入内容类型、图片路径、歌曲数（如有）、名字、图片大小、主题色等信息
 
 

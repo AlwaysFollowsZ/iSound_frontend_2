@@ -20,7 +20,22 @@ const router = createRouter({
     {
       path: '/message',
       name: 'message',
-      component: () => import('../views/MessageView.vue')
+      redirect:'/message/receive',
+      component: () => import('../views/MessageView.vue'),
+      children: [
+        {
+          path: 'receive',
+          component: () => import('../views/ReceiveMessage.vue'),
+        },
+        {
+          path: 'reply',
+          component: () => import('../views/ReplyMessage.vue'),
+        },
+        {
+          path: 'send',
+          component: () => import('../views/SendMessage.vue'),
+        },
+      ],
     },
     {
       path: '/admin',

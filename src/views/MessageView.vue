@@ -1,9 +1,9 @@
 <script>
     import { MenuOutlined, FileDoneOutlined, MailOutlined, EditOutlined, MessageOutlined } from '@ant-design/icons-vue';
     import { defineComponent } from 'vue';
-    import { MessageItem } from '../components/message/MessageItem.vue';
-    import { MessageSend } from '../components/message/MessageSend.vue';
-
+    import  MessageItem  from '../components/message/MessageItem.vue';
+    import  MessageSend  from '../components/message/MessageSend.vue';
+    
     export default defineComponent({
         name: 'MessageView',
         components: {
@@ -18,7 +18,16 @@
         methods: {
             back() {
                 this.$router.push({path:'/admin'})
-            }
+            },
+            myMessage(){
+                this.$router.push('receive')
+            },
+            replyMessage(){
+                this.$router.push('reply')
+            },
+            sendMessage(){
+                this.$router.push('send')
+            },
         },
         setup() {
 
@@ -49,16 +58,17 @@
                 <a-card title="消息中心" :bordered="false">
                     <a-menu class="left-menu"
                         mode="vertical"
-                        @click="handleClick">
-                        <a-menu-item key="1">
+                       >
+                        <a-menu-item key="1" @click="myMessage()">
                         <template #icon>
                             <MessageOutlined />
-                        </template>我的消息</a-menu-item>
-                        <a-menu-item key="2">
+                        </template>
+                        我的消息</a-menu-item>
+                        <a-menu-item key="2" @click="replyMessage()">
                         <template #icon>
                             <FileDoneOutlined />
                         </template>我的回复</a-menu-item>
-                        <a-menu-item key="3">
+                        <a-menu-item key="3" @click="sendMessage()">
                         <template #icon>
                             <EditOutlined />
                         </template>去写信</a-menu-item>
@@ -67,8 +77,10 @@
             </a-col>
 
             <a-col :span="20">
+                <router-view></router-view>
+                <!-- <MessageItem />
+                <MessageSend /> -->
                 
-                <MessageSend />
             </a-col>
         </a-row>
     </div>
