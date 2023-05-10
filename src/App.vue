@@ -1,14 +1,17 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import TopNav from './components/TopNav.vue';
-import ImageTable from './components/tables/ImageTable/ImageTable.vue';
+import TopNav from './components/TopNav.vue'
+import ImageTable from './components/tables/ImageTable/ImageTable.vue'
+import ListTable from './components/tables/ListTable/ListTable.vue'
 </script>
 
 <template>
   <TopNav></TopNav>
   <br>
   <image-table></image-table>
+  <br>
+  <list-table></list-table>
   <!-- <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
     
