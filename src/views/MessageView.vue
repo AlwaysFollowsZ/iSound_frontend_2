@@ -1,19 +1,27 @@
 <script>
     import { MenuOutlined, FileDoneOutlined, MailOutlined, EditOutlined, MessageOutlined } from '@ant-design/icons-vue';
     import { defineComponent } from 'vue';
+    import { MessageItem } from '../components/message/MessageItem.vue';
+    import { MessageSend } from '../components/message/MessageSend.vue';
+
     export default defineComponent({
-        name: 'MessagePageHeader',
+        name: 'MessageView',
         components: {
             MenuOutlined,
             FileDoneOutlined,
             MailOutlined,
             EditOutlined,
-            MessageOutlined
+            MessageOutlined,
+            MessageItem,
+            MessageSend,
         },
         methods: {
             back() {
                 this.$router.push({path:'/admin'})
             }
+        },
+        setup() {
+
         }
     });
 
@@ -60,6 +68,7 @@
 
             <a-col :span="20">
                 
+                <MessageSend />
             </a-col>
         </a-row>
     </div>
