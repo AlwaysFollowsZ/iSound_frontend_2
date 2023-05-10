@@ -10,8 +10,6 @@ import ListTable from './components/tables/ListTable/ListTable.vue'
   <TopNav></TopNav>
   <br>
   <image-table></image-table>
-  <br>
-  <list-table></list-table>
   <!-- <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
     
@@ -24,9 +22,9 @@ import ListTable from './components/tables/ListTable/ListTable.vue'
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
-  </header>
+  </header> -->
 
-  <RouterView /> -->
+  <RouterView />
 </template>
 
 <style scoped>
