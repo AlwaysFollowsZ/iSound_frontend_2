@@ -1,8 +1,9 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
 import TopNav from './components/TopNav.vue';
 import ImageTable from './components/tables/ImageTable/ImageTable.vue';
+import Player from './components/Player.vue';
 </script>
 
 <template>
@@ -24,6 +25,7 @@ import ImageTable from './components/tables/ImageTable/ImageTable.vue';
   </header>
 
   <RouterView /> -->
+  <Player />
 </template>
 
 <style scoped>

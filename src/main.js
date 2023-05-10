@@ -1,11 +1,14 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
 import 'naive-ui/dist/index';
+import axios from 'axios';
 
-const app = createApp(App)
-app.use(router)
+axios.defaults.baseURL = 'http://localhost:8000/api/';
 
-app.mount('#app')
+const app = createApp(App);
+app.config.globalProperties.$http = axios;
+app.use(router);
+app.mount('#app');
