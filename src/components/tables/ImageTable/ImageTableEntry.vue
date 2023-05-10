@@ -3,7 +3,7 @@ import { defineProps, ref,computed} from 'vue'
 import { NButton, NEllipsis, NInput,NIcon,NIconWrapper } from 'naive-ui'
 import { MusicNote220Regular } from '@vicons/fluent' 
 import { LibraryMusicOutlined } from '@vicons/material'
-import { getThemeColorString, getFontColorString} from '/src/components/tables/colorMode'
+import { getThemeColorString, getFontColorString} from '/src/colorMode'
 // 从父级传入内容类型、图片路径、歌曲数（如有）、名字、图片大小、主题色等信息
 
 const { Type, imagePath, songCount, Name, imageSize, themeColor} = defineProps({

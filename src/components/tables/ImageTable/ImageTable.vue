@@ -2,7 +2,7 @@
 import { defineProps,computed} from 'vue'
 import { NScrollbar, NButton, install } from 'naive-ui'
 import ImageTableEntry from './ImageTableEntry.vue'
-import { getThemeColorString, getFontColorString,changeColorMode} from '/src/components/tables/colorMode'
+import { getThemeColorString, getFontColorString,changeColorMode} from '/src/colorMode'
 const datas = defineProps({
     tableSize: {
         type: Array,

@@ -4,9 +4,10 @@ import store from '/src/store'
 export const colorMode=computed(()=>store.state.colorMode)
 export const getFontColorString = (themeColor) => {
     return computed(() => {
-        const colorRate = (255 - 125) / 255
+        const colorBase= 125
+        const colorRate = (255 - colorBase) / 255
         const fontColorString= colorMode.value === 'black' ?
-            `${125 + themeColor[0] * colorRate},${125 + themeColor[1] * colorRate},${125 + themeColor[2] * colorRate}`
+            `${colorBase + themeColor[0] * colorRate},${colorBase + themeColor[1] * colorRate},${colorBase + themeColor[2] * colorRate}`
             : `${themeColor[0] * colorRate},${themeColor[1] * colorRate},${themeColor[2] * colorRate}`
         console.log(fontColorString)
         return fontColorString
