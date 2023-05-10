@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import{backGroundColor} from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
 import TopNav from './components/TopNav.vue'
 import ImageTable from './components/tables/ImageTable/ImageTable.vue'
@@ -7,24 +8,11 @@ import ListTable from './components/tables/ListTable/ListTable.vue'
 </script>
 
 <template>
-  
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-    
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-      
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header> -->
-
-  <RouterView />
-  <image-table></image-table>
-  <list-table></list-table>
+  <div :style="{'background':backGroundColor}" class='page_background'>
+    <RouterView />
+    <image-table></image-table>
+    <list-table></list-table>
+  </div>
 </template>
 
 <style scoped>
@@ -61,6 +49,10 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+
+.page_background{
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;
 }
 
 @media (min-width: 1024px) {

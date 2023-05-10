@@ -1,7 +1,12 @@
 import { computed } from 'vue'
 import store from '/src/store'
 
-export const colorMode=computed(()=>store.state.colorMode)
+export const colorMode = computed(() => store.state.colorMode)
+export const backGroundColor = computed(() =>{
+    return colorMode.value === 'black' ?
+        'rgb(10,10,30)':'rgb(245,245,245)'
+})
+
 export const getFontColorString = (themeColor) => {
     return computed(() => {
         const colorBase= 125

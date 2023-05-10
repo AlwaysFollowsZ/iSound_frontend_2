@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref,computed} from 'vue'
+import { defineProps, ref} from 'vue'
 import { NButton, NEllipsis, NInput,NIcon,NIconWrapper } from 'naive-ui'
 import { MusicNote220Regular } from '@vicons/fluent' 
 import { LibraryMusicOutlined } from '@vicons/material'

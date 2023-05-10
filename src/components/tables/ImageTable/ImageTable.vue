@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps,computed} from 'vue'
+import { defineProps} from 'vue'
 import { NScrollbar, NButton, install } from 'naive-ui'
 import ImageTableEntry from './ImageTableEntry.vue'
 import { getThemeColorString, getFontColorString,changeColorMode} from '/src/colorMode'
