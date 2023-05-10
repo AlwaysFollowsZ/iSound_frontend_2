@@ -19,16 +19,22 @@ const pagination = ref({
 </script>
 
 <template>
-    <n-data-table
-        :bordered="false"
-        :columns="columns"
-        :data="data"
-        :pagination="pagination">
-    </n-data-table>
+    <div>
+        <n-data-table
+            :bordered="false"
+            :columns="columns"
+            :data="data"
+            :pagination="pagination"
+            class="data-table">
+        </n-data-table>
+    </div>
 </template>
 
 
 
-<style>
-
+<style scoped>
+.data-table{
+    display: inline-block;
+    margin:20px 100px
+}
 </style>

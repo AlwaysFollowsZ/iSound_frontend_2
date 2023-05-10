@@ -1,9 +1,8 @@
 <script setup>
-import { ref, defineProps,computed,provide } from 'vue'
-import {NScrollbar,NButton} from 'naive-ui'
+import { defineProps} from 'vue'
+import { NScrollbar, NButton, install } from 'naive-ui'
 import ImageTableEntry from './ImageTableEntry.vue'
-
-
+import { getThemeColorString, getFontColorString,changeColorMode} from '/src/colorMode'
 const datas = defineProps({
     tableSize: {
         type: Array,
@@ -75,25 +74,9 @@ const datas = defineProps({
         ]
     }
 })
-const colorMode = ref('black')
-provide('colorMode',colorMode)
-const changeColorMode=()=> {
-    colorMode.value === 'black' ?
-        colorMode.value = 'white' : colorMode.value = 'black'
-    console.log(colorMode.value);
-}
-const colorRate = (255 - 125) / 255
-const themeColor=datas.themeColor
-const fontColorString =computed(()=>{
-        return colorMode.value === 'black' ?
-        `${125 + themeColor[0] * colorRate},${125 + themeColor[1] * colorRate},${125 + themeColor[2] * colorRate}`
-        : `${themeColor[0] * colorRate},${themeColor[1] * colorRate},${themeColor[2] * colorRate}`
-})
-provide('fontColorString',fontColorString)
-const themeColorString = computed(() => {
-    return `${datas.themeColor[0]}, ${datas.themeColor[1]}, ${datas.themeColor[2]}`
-})
-
+const themeColor = datas.themeColor
+const themeColorString =  getThemeColorString(themeColor)
+const fontColorString = getFontColorString(themeColor)
 </script>
 
 <template>

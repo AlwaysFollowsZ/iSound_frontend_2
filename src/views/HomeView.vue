@@ -4,7 +4,7 @@
     <n-grid>
       <n-gi :span="14">
         <div class="carousel-container">
-          <n-carousel autoplay interval="3000">
+          <n-carousel autoplay :interval=3000 :style="{'border-radius': '20px'}">
             <img
               class="carousel-img"
               v-for="(src, idx) in imgs" :key="idx" :src="src.path"
@@ -143,6 +143,7 @@ export default {
     /*border: dashed; */
   }
   .carousel-container {
+    overflow: hidden;
     height: 65vh;
     align-items: center;
     /*padding-top: 3%;*/
@@ -151,7 +152,6 @@ export default {
     margin: auto;
   }
   .carousel-img {
-    border-radius: 20px;
     position: relative;
     width: 100%;
     height: 100%;
@@ -162,6 +162,7 @@ export default {
     /*padding-top: 1%;*/
     padding-right: 8%;
     margin: auto;
+    
   }
   .n-card {
     align-items: center;
@@ -227,9 +228,6 @@ export default {
   .song-entry-song-singer {
     font-size: small;
     color: gray;
-  }
-  .heart-icon {
-    
   }
 
 </style>
