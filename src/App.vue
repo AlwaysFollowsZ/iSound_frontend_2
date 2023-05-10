@@ -1,10 +1,11 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import TopNav from './components/TopNav.vue';
 import ImageTable from './components/tables/ImageTable/ImageTable.vue';
 import MessageItem from './components/message/MessageItem.vue';
 import MessageSend from './components/message/MessageSend.vue'
+import TopNav from './components/TopNav.vue'
+import ListTable from './components/tables/ListTable/ListTable.vue'
 </script>
 
 <template>
@@ -22,9 +23,7 @@ import MessageSend from './components/message/MessageSend.vue'
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
-  </header>
-
-  <RouterView /> -->
+  </header> -->
   <RouterView />
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->

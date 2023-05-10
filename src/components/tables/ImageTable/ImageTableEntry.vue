@@ -1,10 +1,12 @@
 <script setup>
-import { defineProps, computed, ref, onMounted } from 'vue'
+import { defineProps, computed, ref ,inject} from 'vue'
 import { NButton, NEllipsis, NInput,NIcon,NIconWrapper } from 'naive-ui'
 import { MusicNote220Regular } from '@vicons/fluent' 
+import { LibraryMusicOutlined} from '@vicons/material'
 // 从父级传入内容类型、图片路径、歌曲数（如有）、名字、图片大小、主题色等信息
-const colorMode = 'black';
-const { Type, imagePath, songCount, Name, imageSize ,themeColor} = defineProps({
+
+
+const { Type, imagePath, songCount, Name, imageSize, themeColor} = defineProps({
     Type: {
         type: String,
         default: 'songList',
@@ -34,9 +36,11 @@ const { Type, imagePath, songCount, Name, imageSize ,themeColor} = defineProps({
     themeColor:{
         type:Array,
         default:[128,128,128]
-    }
+    },
 })
-const fontSize=imageSize>300?imageSize/15:imageSize/10
+const colorMode=inject('colorMode')//以后会用的
+const fontSize = imageSize > 300 ? imageSize / 15 : imageSize / 10
+const fontColorString = inject('fontColorString')
 const themeColorString = `${themeColor[0]}, ${themeColor[1]}, ${themeColor[2]}`
 const titleFontStyle = {
     'font-size': `${fontSize}px`
@@ -49,7 +53,7 @@ const maskDynamicStyle = computed(() =>
 {
     let baseStyle = {
         'padding': `${imageSize / 8}px ${imageSize / 6}px ${imageSize / 10}px ${imageSize / 6}px`,
-        'border-radius':`${imageSize/12}px`,
+        'border-radius':`${imageSize/10}px`,
         'background-color': `rgb(${themeColorString},0.5)`,
         'border': `3px dashed rgb(${themeColorString}`
     }
@@ -71,7 +75,7 @@ const iconDynamicStyle = {
 }
 const countDynamicStyle = computed(() => {
     return {
-        'color': `rgb(${themeColorString},0.9)`,
+        'color': `rgb(${fontColorString.value},0.9)`,
         'font-size': `${fontSize}px`,
         'line-height':`${imageSize/10}px`
     }
@@ -79,22 +83,33 @@ const countDynamicStyle = computed(() => {
 const titleDynamicStyle = computed(() => {
     let baseStyle = {
         'width': `${imageSize}px`,
-        'color': `rgb(${ themeColorString })`
+        'color': `rgb(${ fontColorString.value})`
     }
     if (isHoverOnTitle.value) {
         baseStyle['text-shadow']= `0 0 ${fontSize/3}px rgb(${themeColorString},0.5)` 
     }
     return baseStyle
 })
-const tooltipDynamicStyle = {
-    'color': `rgb(${themeColorString})`,
-    'font-weight':'700'
-}
+const tooltipDynamicStyle =computed(()=>{return {
+        'color': `rgb(${fontColorString.value})`,
+        'font-weight': '700'
+    }
+}) 
 const isHoverOnBottom = ref(false)
 const isHoverOnTitle = ref(false)
 const isHoverOnMask = ref(false)
 const isClickOnMask = ref(false)
 
+
+const print = (ele) => {
+    let a = (ele.target.style);
+    console.log(a);
+    // for (let i = 0; i < a.length; i++) {
+    //     if (a[i] !== '') {
+    //         console.log(a[i]);
+    //     }
+    // }
+}
 </script>
 <template>
     <div class="outer_box"
@@ -113,17 +128,19 @@ const isClickOnMask = ref(false)
                     <!-- 底部显示歌曲数量  动态属性有背景色和宽高-->
                     <div class="image_bottom"
                     :style="imageBottomDynamicStyle"
-                    v-if="Type==='songList'" 
                     @mouseenter="isHoverOnBottom=true"
                     @mouseleave="isHoverOnBottom=false">
                         <n-icon-wrapper :style="iconDynamicStyle" 
                         :size="imageSize/8" 
                         :border-radius="imageSize/20"
                         :color="`rgb(${themeColor},0.9)`">
-                            <n-icon  :component="MusicNote220Regular" :size="imageSize/10"></n-icon>
+                            <n-icon  
+                            :component="Type === 'songList'?LibraryMusicOutlined:MusicNote220Regular" 
+                            :size="imageSize/10"></n-icon>
                         </n-icon-wrapper>
                         <transition name="count">
-                            <span class="count" v-if="isHoverOnBottom"
+                            <span class="count" 
+                            v-if="isHoverOnBottom && Type==='songList'"
                             :style="countDynamicStyle">{{ songCount }}</span>
                         </transition>
                         
@@ -137,7 +154,7 @@ const isClickOnMask = ref(false)
                 <n-ellipsis :style="titleFontStyle">
                     <!-- tooltip动态属性：背景色 -->
                     <template #tooltip>
-                        <div class="title_tooltip" :style="tooltipDynamicStyle">
+                        <div class="title_tooltip" :style="tooltipDynamicStyle" @click="print">
                             {{(Type==='Song')?'歌曲名称':'歌单名称'}} : {{ Name }}
                         </div>
                     </template>
@@ -202,6 +219,8 @@ const isClickOnMask = ref(false)
 .title-hover{
     transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.25s;
 }
+
+
 .count{
     height: 100%;
     position: absolute;
