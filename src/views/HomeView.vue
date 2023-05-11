@@ -224,39 +224,32 @@ export default {
     max-width: 30vw;
     max-height: 32vh;
   }
-  .single-img {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 180px;
-    width: 180px;
-  }
-  .card-img {
+  .single-card-img-container {
+    width: 160px; 
+    height: 160px; 
     border-radius: 10px;
-    zoom: 0.9;
-    width: 100%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    overflow: hidden
+  }
+  .single-card-img {
+    width: 100%; 
     height: 100%;
-    position: relative;
-    overflow: hidden;
   }
-  .song-name-link {
-    position: absolute;
-    padding-top: 10%;
-    max-width: 17vw;
+  .single-card-info-name {
     font-size: medium;
-    font-weight: bold;
+    font-weight: 700;
   }
-  .song-singer-link {
+  .single-card-info-singer {
     font-size: small;
-    font-weight: bold;
-    color: gray;
-  }*/
+    font-weight: 500;
+    color: grey;
+  }
+ 
   .song-entry-outter {
     height: 40vh;
-    /*background-color: aquamarine;
-    padding-left: 8%;
-    padding-right: 3%;*/
+  
   }
   .song-entry-card-container {
     padding-left: 19%;
@@ -302,37 +295,4 @@ export default {
     font-size: 8px;
     color: grey;
   }
-  /*.song-entry-heart {
-    padding-top: 50%;
-  }*/
-  /*.song-entry-card-container {
-    background-color: blue;
-    display: flex;
-  }
-  .entry-img-container {
-    display: block;
-    height: 60px;
-    width: 60px;
-  }
-  .entry-img {
-    border-radius: 10px;
-    height: 100%;
-    width: 100%;
-  }
-  .song-entry-song-container {
-    padding-left: 20%;
-  }
-  .song-entry-song-name {
-    padding-top: 10%;
-    font-size:larger;
-    font-weight: bold;
-  }
-  .song-entry-song-singer {
-    font-size: small;
-    color: gray;
-  }
-  .heart-icon {
-    
-  }*/
-
 </style>

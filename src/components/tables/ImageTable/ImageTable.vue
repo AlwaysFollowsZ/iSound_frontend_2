@@ -1,17 +1,16 @@
 <script setup>
-import { ref, defineProps,computed } from 'vue'
-import {NScrollbar,NButton} from 'naive-ui'
+import { defineProps} from 'vue'
+import { NScrollbar, NButton, install } from 'naive-ui'
 import ImageTableEntry from './ImageTableEntry.vue'
-
-
+import { getThemeColorString, getFontColorString,changeColorMode} from '/src/colorMode'
 const datas = defineProps({
     tableSize: {
         type: Array,
-        default:[1000,800]
+        default:[1000,1000]
     },
     position: {
         type: String,
-        default: 'PersonalView'
+        default: 'HomeView'
     },
     count: {
         type: Number,
@@ -75,16 +74,16 @@ const datas = defineProps({
         ]
     }
 })
-const themeColorString = computed(() => {
-    return `${datas.themeColor[0]}, ${datas.themeColor[1]}, ${datas.themeColor[2]}`
-})
-
+const themeColor = datas.themeColor
+const themeColorString =  getThemeColorString(themeColor)
+const fontColorString = getFontColorString(themeColor)
 </script>
 
 <template>
     <div class="image_table" 
-    :style="{'background-color':`rgba(${themeColorString},0.2)`,
+    :style="{'background-color':`rgba(${themeColorString},0.3)`,
         'border': `5px solid rgb(${themeColorString},0.5)`,
+        'border-radius':`${tableSize[0]/10}px ${tableSize[1]/10}px`,
         'width':`${tableSize[0]}px`,
         'height':`${tableSize[1]}px`}">
         <n-scrollbar v-if="position==='PersonalView'" class="image_table_list">
@@ -97,17 +96,30 @@ const themeColorString = computed(() => {
                 <div class="list_top_nav">
                     <n-button class="more_button" 
                         :style="{
-                            '--n-border': `50px solid rgba(${themeColorString},0.2)`,
-                            '--n-border-radius':`20px`
+                            '--n-color':`rgba(${themeColorString},0.15)`,
+                            '--n-color-hover': `rgba(${themeColorString},0.4)`,
+                            '--n-color-pressed': `rgba(${themeColorString},0.6)`,
+                            '--n-color-focus': `rgba(${themeColorString},0.1)`,
+                            '--n-border': `3px solid rgba(${themeColorString},0.5)`,
+                            '--n-border-radius':'10px',
+                            '--n-border-hover':`3px solid rgba(${themeColorString},0.5)`,
+                            '--n-border-pressed':`3px solid rgba(${themeColorString},0.3)`,
+                            '--n-border-focus':`3px solid rgba(${themeColorString},0.5)`,
+                            '--n-text-color':`rgba(${fontColorString},0.6)`,
+                            '--n-text-color-hover': `rgba(${fontColorString},0.8)`,
+                            '--n-text-color-pressed': `rgba(${fontColorString})`,
+                            '--n-text-color-focus': `rgba(${fontColorString},0.6)`,
+                            '--n-ripple-color':`rgba(${themeColorString})`
                             }" 
-                        :color="`rgba(${themeColorString},0.5)`"
-                        :text-color="`rgba(${themeColorString},0.8)`">
+                            @click="changeColorMode">
                         更多
                     </n-button>
                 </div>
-            <n-scrollbar>
+            <n-scrollbar class="image_table_list"
+            :style="{'height':`${tableSize[1]-150}px`}">
             <template v-for="data in datas.rows" :key="data.name">
-                <image-table-entry v-bind="data" style="vertical-align: middle;"></image-table-entry>  
+                <image-table-entry v-bind="data"
+                style="vertical-align: middle;"></image-table-entry>  
             </template>
             </n-scrollbar>
         </template>
@@ -123,6 +135,7 @@ const themeColorString = computed(() => {
 .image_table{
     margin: 30px 30px;
     padding: 20px 40px;
+    overflow: hidden;
 }
 .list_top_nav{
     position: relative;
@@ -130,8 +143,6 @@ const themeColorString = computed(() => {
     height: 60px;
 }
 .image_table_list{
-    max-height: 1000px;
-    overflow: scroll;
     padding: 10px 20px;
 }
 
@@ -145,5 +156,7 @@ const themeColorString = computed(() => {
     font-size: 25px;
     font-weight: 700;
 }
+
+
 
 </style>
