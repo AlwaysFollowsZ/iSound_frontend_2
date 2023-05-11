@@ -13,17 +13,16 @@ import ListTable from './components/tables/ListTable/ListTable.vue'
   <!-- <TopNav></TopNav> -->
 
 
-  <RouterView />
+  <!-- <RouterView /> -->
   <!-- <image-table></image-table> -->
 
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-</template>
 
   <div :style="{'background':backGroundColor}" class='page_background'>
     <RouterView />
-    <image-table></image-table>
-    <list-table></list-table>
+    <!-- <image-table></image-table>
+    <list-table></list-table> -->
   </div>
 </template>
 

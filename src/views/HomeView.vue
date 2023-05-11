@@ -223,7 +223,7 @@ export default {
     align-items: center;
     max-width: 30vw;
     max-height: 32vh;
-  }
+  }*/
   .single-card-img-container {
     width: 160px; 
     height: 160px; 
