@@ -4,51 +4,55 @@
         <n-grid x-gap="0">
             <n-gi :span="3"> <!--左右边栏留一部分空袭空隙，使主页主体居中--></n-gi>
             <n-gi :span="6">
-                <div class="avatar">
-                    <img :src="avatarImage" alt="avatar" />
-                </div>
-                <n-card class="user-info-card" embedded :bordered="false">
-                    <div class="user-info-title">iSound</div>
-                    <div class="user-info-body">
+                <div class="user-info-container">
+                    <div class="avatar">
+                        <img :src="avatarImage" alt="avatar" />
+                    </div>
+                    <div class="user-info-card">
+                        <div class="user-info-title">iSound</div>
+                        <div class="user-info-body">
+                            <div>
+                                <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ username }}<br />
+                                <newspaper-outline style="width: 20px; margin-top: 3px;" />邮箱：{{ email }}<br />
+                                <pricetag-outline style="width: 20px; margin-top: 3px;" />个性签名：{{ bio }}<br />
+                            </div>
+                        </div>
+                        <div><br /><br /><!--用来隔开基本信息和修改个人信息--></div>
                         <div>
-                            <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ username }}<br />
-                            <newspaper-outline style="width: 20px; margin-top: 3px;" />邮箱：{{ email }}<br />
-                            <pricetag-outline style="width: 20px; margin-top: 3px;" />个性签名：{{ bio }}<br />
+                            <n-button text class="modify-user-info-button" @click="showModifyUserInfo = true">
+                                <template #icon><n-icon><create-outline /></n-icon></template>修改个人信息
+                            </n-button>
                         </div>
                     </div>
-                    <div><br /><br /><!--用来隔开基本信息和修改个人信息--></div>
-                    <div>
-                        <n-button text class="modify-user-info-button" @click="showModifyUserInfo = true">
-                            <template #icon><n-icon><create-outline /></n-icon></template>修改个人信息
-                        </n-button>
-                    </div>
-                </n-card>
+                </div>
             </n-gi>
             <n-gi :span="12">
-                <div class="user-tabs">
-                    <div>
-                        <n-tabs size="large" type="line" animated>
-                            <n-tab-pane name="我的歌单" tab="我的歌单">
-                                <my-song-sheet-view />
-                            </n-tab-pane>
-                            <n-tab-pane name="我的收藏" tab="我的收藏">
-                                <collect-song-sheet-view />
-                            </n-tab-pane>
-                            <n-tab-pane name="上传歌单" tab="上传歌单">
-                                <upload-song-sheet-view />
-                            </n-tab-pane>
-                            <n-tab-pane name="我的关注" tab="我的关注">
-                                <follow-list-view />
-                            </n-tab-pane>
-                            <n-tab-pane name="我的粉丝" tab="我的粉丝">
-                                <fan-list-view />
-                            </n-tab-pane>
-                            <template #suffix>
-                                <!--maybe can add some icons-->
-                                粉丝：{{ fansCount }}
-                                关注：{{ likeCount }}
-                            </template>
-                        </n-tabs>
+                <div class="user-other-info-container">
+                    <div class="user-tabs">
+                        <div>
+                            <n-tabs size="large" type="line" animated>
+                                <n-tab-pane name="我的歌单" tab="我的歌单">
+                                    <my-song-sheet-view />
+                                </n-tab-pane>
+                                <n-tab-pane name="我的收藏" tab="我的收藏">
+                                    <collect-song-sheet-view />
+                                </n-tab-pane>
+                                <n-tab-pane name="上传歌单" tab="上传歌单">
+                                    <upload-song-sheet-view />
+                                </n-tab-pane>
+                                <n-tab-pane name="我的关注" tab="我的关注">
+                                    <follow-list-view />
+                                </n-tab-pane>
+                                <n-tab-pane name="我的粉丝" tab="我的粉丝">
+                                    <fan-list-view />
+                                </n-tab-pane>
+                                <template #suffix>
+                                    <!--maybe can add some icons-->
+                                    粉丝：{{ fansCount }}
+                                    关注：{{ likeCount }}
+                                </template>
+                            </n-tabs>
+                        </div>
                     </div>
                 </div>
             </n-gi>
@@ -98,7 +102,7 @@ export default {
         const username = ref("iSound");
         const bio = ref("我是一个很固执的人，从来不管别人怎么说，怎么做。如果你也和我一样，那么这件事情就真的，泰！裤！辣！");
         const email = ref("2137@buaa.edu.cn");
-        const avatarImage = ref("/src/assets/avatar.jpg");
+        const avatarImage = ref("/src/assets/default-admin.jpg");
         function uploadAvatar(event) {
             const file = event.target.files[0];
             // 上传文件的逻辑
@@ -149,7 +153,7 @@ export default {
 }
 
 .user-info-card {
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
 .user-info-title {

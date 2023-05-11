@@ -51,7 +51,7 @@ export default {
     data() {
         return {
             file: null,
-            avatarUrl: ref('/src/assets/avatar.jpg'),
+            avatarUrl: ref('/src/assets/default-admin.jpg'),
         }
     },
     components: {
@@ -98,11 +98,6 @@ export default {
     width: 256px;
     height: 256px;
     border-radius: 50%;
-}
-/* 这一行不要删，可以让个人主页的卡片背景为白色 */
-.n-card__content {
-    background-color: white;
-    border-radius: 20px;
 }
 
 .modify-notice-text {

@@ -78,9 +78,9 @@ export default{
     width: 80%;
 }
 .n-card__content {
-    background-color: white;
     border-radius: 20px;
 }
+
 .login-notice-text {
     display: flex;
     justify-content: center;

@@ -43,7 +43,7 @@ export default {
                 {
                     name: "iSound",
                     bio: "我是一个很固执的人，从来不管别人怎么说，怎么做。如果你也和我一样，那么这件事情就真的，泰！裤！辣！",
-                    avatarImg: "/src/assets/avatar.jpg"
+                    avatarImg: "/src/assets/default-admin.jpg"
                 },
             ]
         }
