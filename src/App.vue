@@ -1,7 +1,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import{backGroundColor} from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
-import TopNav from './components/TopNav.vue';
+import ImageTable from './components/tables/ImageTable/ImageTable.vue';
+import MessageItem from './components/message/MessageItem.vue';
+import MessageSend from './components/message/MessageSend.vue'
+import TopNav from './components/TopNav.vue'
+import ListTable from './components/tables/ListTable/ListTable.vue'
 </script>
 
 <template>
@@ -9,6 +14,17 @@ import TopNav from './components/TopNav.vue';
 
 
   <RouterView />
+  <!-- <image-table></image-table> -->
+
+  <!-- <message-item></message-item> -->
+  <!-- <message-send></message-send> -->
+</template>
+
+  <div :style="{'background':backGroundColor}" class='page_background'>
+    <RouterView />
+    <image-table></image-table>
+    <list-table></list-table>
+  </div>
 </template>
 
 <style scoped>
@@ -45,6 +61,10 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+
+.page_background{
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;
 }
 
 @media (min-width: 1024px) {

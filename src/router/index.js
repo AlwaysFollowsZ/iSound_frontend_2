@@ -35,6 +35,31 @@ const router = createRouter({
       name: 'UserView',
       component: UserView
     },
+    {
+      path: '/message',
+      name: 'message',
+      redirect:'/message/receive',
+      component: () => import('../views/MessageView.vue'),
+      children: [
+        {
+          path: 'receive',
+          component: () => import('../views/ReceiveMessage.vue'),
+        },
+        {
+          path: 'reply',
+          component: () => import('../views/ReplyMessage.vue'),
+        },
+        {
+          path: 'send',
+          component: () => import('../views/SendMessage.vue'),
+        },
+      ],
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/AdminView.vue')
+    }
   ]
 })
 
