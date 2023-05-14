@@ -2,13 +2,35 @@
 import { RouterLink, RouterView } from 'vue-router'
 import{backGroundColor} from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
+import ImageTable from './components/tables/ImageTable/ImageTable.vue';
+import MessageItem from './components/message/MessageItem.vue';
+import MessageSend from './components/message/MessageSend.vue'
 import TopNav from './components/TopNav.vue'
-import ImageTable from './components/tables/ImageTable/ImageTable.vue'
 import ListTable from './components/tables/ListTable/ListTable.vue'
 import Player from './components/Player.vue'
 </script>
 
 <template>
+  <!-- <TopNav></TopNav> -->
+  <!-- <image-table></image-table> -->
+  <!-- <header>
+    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
+      
+
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
+      </nav>
+    </div>
+  </header> -->
+  <RouterView />
+  <!-- <message-item></message-item> -->
+  <!-- <message-send></message-send> -->
+</template>
+
   <div :style="{'background':backGroundColor}" class='page_background'>
     <RouterView />
     <image-table></image-table>

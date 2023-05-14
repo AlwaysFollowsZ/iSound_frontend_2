@@ -16,6 +16,31 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/message',
+      name: 'message',
+      redirect:'/message/receive',
+      component: () => import('../views/MessageView.vue'),
+      children: [
+        {
+          path: 'receive',
+          component: () => import('../views/ReceiveMessage.vue'),
+        },
+        {
+          path: 'reply',
+          component: () => import('../views/ReplyMessage.vue'),
+        },
+        {
+          path: 'send',
+          component: () => import('../views/SendMessage.vue'),
+        },
+      ],
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/AdminView.vue')
     }
   ]
 })
