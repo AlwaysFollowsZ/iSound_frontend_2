@@ -1,5 +1,5 @@
 <template>
-    <div class="container" ref="containerRef"></div>
+    <div ref="containerRef"></div>
 </template>
   
 <script setup>
@@ -10,6 +10,18 @@ import {onBeforeUnmount, getCurrentInstance, onMounted, ref} from 'vue';
 
 const containerRef = ref();
 const { proxy } = getCurrentInstance();
+
+const props = defineProps({
+    pk: Number,
+    add: {
+        type: Boolean,
+        default: false,
+    },
+    playlist: {
+        type: Boolean,
+        default: false,
+    },
+});
 
 onMounted(() => {
     const ap = new APlayer({
@@ -28,16 +40,31 @@ onMounted(() => {
         listMaxHeight: '100px',
         storageName: 'aplayer-setting',
     });
-    proxy.$http.get('/api/index/').then(
+
+    let url = '/index/';
+    if (props.pk != undefined) {
+        if (props.playlist) {
+            url = `/playlist/detail/${props.pk}`;
+        }
+        else {
+            url = `/music/detail/${props.pk}`;
+        }
+    }
+
+    proxy.$http.get(url).then(
         (response) => {
             response.data.music_set.forEach((music) => {
                 music.url = proxy.$http.defaults.baseURL + music.url;
                 music.cover = proxy.$http.defaults.baseURL + music.cover;
+                if (music.lrc != null) {
+                    music.lrc = proxy.$http.defaults.baseURL + music.lrc;
+                }
             });
             ap.list.add(response.data.music_set);
             setTheme(ap.list.index);
         }
     );
+
     const colorThief = new ColorThief();
     const image = new Image();
     const xhr = new XMLHttpRequest();
@@ -59,14 +86,11 @@ onMounted(() => {
         setTheme(e.index);
     });
 });
-
-onBeforeUnmount(() => {
-    ap.destroy();
-});
 </script>
 
 <style scope>
-.container {
+/* .aplayer.aplayer-fixed {
+    max-width: 100%;
     width: 100%;
-}
+} */
 </style>

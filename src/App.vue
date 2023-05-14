@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import{backGroundColor} from '/src/colorMode'
+import { backGroundColor } from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
 import ImageTable from './components/tables/ImageTable/ImageTable.vue';
 import MessageItem from './components/message/MessageItem.vue';
@@ -29,14 +29,12 @@ import Player from './components/Player.vue'
   <RouterView />
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-</template>
-
   <div :style="{'background':backGroundColor}" class='page_background'>
     <RouterView />
     <image-table></image-table>
     <list-table></list-table>
   </div>
-  <Player />
+  <Player pk="3"/>
 </template>
 
 <style scoped>
