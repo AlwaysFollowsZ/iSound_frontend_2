@@ -12,27 +12,17 @@ import Player from './components/Player.vue'
 
 <template>
   <!-- <TopNav></TopNav> -->
-  <!-- <image-table></image-table> -->
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-    
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-      
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header> -->
-  <RouterView />
+
+  <!-- <RouterView /> -->
+  <!-- <image-table></image-table> -->
+
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
   <div :style="{'background':backGroundColor}" class='page_background'>
     <RouterView />
-    <image-table></image-table>
-    <list-table></list-table>
+    <!-- <image-table></image-table>
+    <list-table></list-table> -->
   </div>
   <Player pk="3"/>
 </template>

@@ -3,8 +3,13 @@
   <div class="img-show">
     <n-grid>
       <n-gi :span="14">
+        <div style="padding-bottom: 0%; padding-left: 8%">
+          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
+            来点不一样的歌单
+          </div>
+        </div>
         <div class="carousel-container">
-          <n-carousel autoplay :interval=3000 :style="{'border-radius': '20px'}">
+          <n-carousel autoplay interval="3000" :style="{'border-radius': `20px`}">
             <img
               class="carousel-img"
               v-for="(src, idx) in imgs" :key="idx" :src="src.path"
@@ -14,22 +19,28 @@
         </div>
       </n-gi>
       <n-gi :span="10">
+        <div style="padding-bottom: 0%; padding-left: 0%">
+          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
+            猜你喜欢
+          </div>
+        </div>
         <div class="card-container">
-          <n-grid :x-gap="12" :y-gap="6" :col="2">
-            <n-gi :span="12"  v-for="(song, idx) in songs" :key="idx">
+          <n-grid :x-gap="12" :y-gap="6" :col="3">
+            <n-gi :span="8"  v-for="(song, idx) in songs" :key="idx">
               <div>
-                <n-card :bordered="false">
-                  <div @click="jumpToSong(song.jumpLink)">
-                    <div class="single-img">
-                      <img class="card-img" :src="song.imgSrc">
-                    </div>
-                    <span class="song-name-link">
-                      {{song.title}}
-                      <span class="song-singer-link">&nbsp;{{song.singer}}</span>
-                    </span>
-                    
+                <div class="single-card-container">
+                  <div class="single-card-img-container">
+                    <img class="single-card-img" :src="song.imgSrc">
                   </div>
-                </n-card>
+                  <div class="single-card-info-container">
+                    <div class="single-card-info-name">
+                      {{ song.title }}
+                    </div>
+                    <div class="single-card-info-singer">
+                      {{ song.singer }}
+                    </div>
+                </div>
+              </div>
               </div>
             </n-gi>
           </n-grid>
@@ -37,30 +48,35 @@
       </n-gi>
     </n-grid>
   </div>
+  <div style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" >现在就听</div>
   <div class="song-entry-outter">
     <n-grid :x-gap="0" :y-gap="0" >
-      <n-gi :span="6">
+      <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
         <div class="song-entry-card-container">
-          <n-card content-style="padding: 2;">  
-            <n-grid :x-gap="4" :col="2">
-              <n-gi :span="10">
-                <div class="entry-img-container">
-                <img class="entry-img" src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"/>
-              </div>
-              </n-gi>
-              <n-gi :span="10">
-                <div class="song-entry-song-container">
-                  <div class="song-entry-song-name">歌名</div>
-                  <div class="song-entry-song-singer">歌手</div>
-                </div>
-              </n-gi>
+          <div class="song-entry-container">
+            <div style="padding-bottom: 3%; padding-top: 3%">
+              <hr style="box-shadow: none; border-color: rgb(255, 255, 255); margin: 0"/>
+            </div>
+            <n-grid>
               <n-gi :span="4">
-                <div class="heart-icon">
-                  <n-icon><HeartOutline/></n-icon>
+                <div class="song-entry-img-container" >
+                  <img class="song-entry-img" src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
                 </div>
               </n-gi>
+              <n-gi :span="2"></n-gi>
+              <n-gi :span="15">
+                <div class="song-entry-info-container">
+                  <div class="song-entry-info-name">这里还有更多的歌</div>
+                  <div class="song-entry-info-singer">singer</div>
+                </div>
+              </n-gi>
+              <!-- <n-gi :span="3">
+                <div class="song-entry-heart">
+                  <n-icon size="30px"><HeartOutline/></n-icon>
+                </div>
+              </n-gi> -->
             </n-grid>
-        </n-card>
+          </div>
         </div>
       </n-gi>
     </n-grid>
@@ -119,8 +135,21 @@ export default {
           title: "守时",
           jumpLink: "4",
           singer: "王菲"
+        },
+        {
+          imgSrc: "/src/assets/song5.jpg",
+          title: "当爱已成往事",
+          jumpLink: "5",
+          singer: "张国荣"
+        },
+        {
+          imgSrc: "/src/assets/song6.jpg",
+          title: "山水之间",
+          jumpLink: "6",
+          singer: "许嵩"
         }
-      ]
+      ],
+      arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     }
   },
   methods: {
@@ -143,10 +172,9 @@ export default {
     /*border: dashed; */
   }
   .carousel-container {
-    overflow: hidden;
-    height: 65vh;
+    height: 60vh;
     align-items: center;
-    /*padding-top: 3%;*/
+    padding-top: 1%;
     padding-left: 8%;
     padding-right: 8%;
     margin: auto;
@@ -159,75 +187,112 @@ export default {
   }
   .card-container {
     height: 65vh;
-    /*padding-top: 1%;*/
+    padding-top: 1%;
     padding-right: 8%;
     margin: auto;
-    
   }
-  .n-card {
+  .single-card-container {
+    max-width: 180px;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    word-wrap: break-word;
+  }
+  .single-card-img-container {
+    width: 160px; 
+    height: 160px; 
+    border-radius: 10px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    overflow: hidden
+  }
+  .single-card-img {
+    width: 100%; 
+    height: 100%;
+  }
+  .single-card-info-name {
+    font-size: medium;
+    font-weight: 700;
+  }
+  .single-card-info-singer {
+    font-size: small;
+    font-weight: 500;
+    color: grey;
+  }
+  /*.n-card {
     align-items: center;
     max-width: 30vw;
     max-height: 32vh;
-  }
-  .single-img {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 180px;
-    width: 180px;
-  }
-  .card-img {
+  }*/
+  .single-card-img-container {
+    width: 160px; 
+    height: 160px; 
     border-radius: 10px;
-    zoom: 0.9;
-    width: 100%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    overflow: hidden
+  }
+  .single-card-img {
+    width: 100%; 
     height: 100%;
-    position: relative;
-    overflow: hidden;
   }
-  .song-name-link {
-    position: absolute;
-    /*padding-top: 10%;*/
-    max-width: 17vw;
+  .single-card-info-name {
     font-size: medium;
-    font-weight: bold;
+    font-weight: 700;
   }
-  .song-singer-link {
+  .single-card-info-singer {
     font-size: small;
-    font-weight: bold;
-    color: gray;
+    font-weight: 500;
+    color: grey;
   }
+ 
   .song-entry-outter {
     height: 40vh;
-    background-color: aquamarine;
-    padding-left: 3%;
-    padding-right: 3%;
+  
   }
   .song-entry-card-container {
-    background-color: blue;
-    display: flex;
+    padding-left: 19%;
   }
-  .entry-img-container {
-    display: block;
-    height: 60px;
-    width: 60px;
+  .song-entry-container {
+    width: 18vw;
+    margin-top: 0%;
+    margin-bottom: 0%;
   }
-  .entry-img {
+  .song-entry-img-container {
+    width: 60px; 
+    height: 60px; 
     border-radius: 10px;
+    display: flex; 
+    justify-content: 
+    center; 
+    align-items: center; 
+    overflow: hidden
+  }
+  .song-entry-img {
+    /*margin-top: 70%;
+    margin-left: 70%;*/
+    /*margin-bottom: 20%;
+    margin-right: 20%;*/
+    width: 100%; 
     height: 100%;
-    width: 100%;
   }
-  .song-entry-song-container {
-    padding-left: 20%;
+  .song-entry-info-container {
+    padding-top: 1.5%;
+    
   }
-  .song-entry-song-name {
-    padding-top: 10%;
-    font-size:larger;
+  .song-entry-info-name {
+    max-width: 12vw;
+    padding-top: 3%;
+    word-wrap: break-word;
     font-weight: bold;
+    font-size: 14px;
   }
-  .song-entry-song-singer {
-    font-size: small;
-    color: gray;
+  .song-entry-info-singer {
+    max-width: 12vw;
+    word-wrap: break-word;
+    font-weight: bold;
+    font-size: 8px;
+    color: grey;
   }
-
 </style>
