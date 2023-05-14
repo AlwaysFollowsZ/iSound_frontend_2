@@ -25,10 +25,8 @@ import ListTable from './components/tables/ListTable/ListTable.vue'
       </nav>
     </div>
   </header> -->
-  <RouterView />
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-</template>
 
   <div :style="{'background':backGroundColor}" class='page_background'>
     <RouterView />
