@@ -1,8 +1,8 @@
 <template>
     <!-- <n-button @click="showLogin = true">登录</n-button> -->
     <n-modal :show="showLogin">
-        <div style="background-color:aliceblue">
-            <n-card :bordered="false"  role="dialog" aria-modal="true">
+        <div>
+            <n-card :style="{'width': `600px`, '--n-border-radius': `20px`}" :bordered="false"  role="dialog" aria-modal="true">
                 <template #header>
                     <div>
                         <n-grid :x-gap="12">
@@ -78,8 +78,9 @@ export default{
     width: 80%;
 }
 .n-card__content {
-    background-color: white;
+    border-radius: 20px;
 }
+
 .login-notice-text {
     display: flex;
     justify-content: center;

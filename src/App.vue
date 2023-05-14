@@ -2,18 +2,32 @@
 import { RouterLink, RouterView } from 'vue-router'
 import{backgroundColor} from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
+import ImageTable from './components/tables/ImageTable/ImageTable.vue';
+import MessageItem from './components/message/MessageItem.vue';
+import MessageSend from './components/message/MessageSend.vue'
 import TopNav from './components/TopNav.vue'
-import ImageTable from './components/tables/ImageTable/ImageTable.vue'
 import ListTable from './components/tables/ListTable/ListTable.vue'
+import Player from './components/Player.vue'
 </script>
 
 <template>
+  <!-- <TopNav></TopNav> -->
+
+
+  <!-- <RouterView /> -->
+  <!-- <image-table></image-table> -->
+
+  <!-- <message-item></message-item> -->
+  <!-- <message-send></message-send> -->
   <div :style="{'background':backgroundColor}" class='page_background'>
     <RouterView />
-    <!-- 请直接传入数字(px),宽度可略 -->
-    <div :style="{'text-align':'center'}"><image-table :table-size="[,1000]"></image-table></div>
-    <list-table></list-table>
-  </div>
+    
+    <!-- <div :style="{'text-align':'center'}">-->
+      <!-- 请直接传入数字(px),宽度可略 -->
+      <image-table :table-size="[,1000]"></image-table></div>
+    <list-table></list-table> 
+  <!-- </div> -->
+  <Player pk="3"/>
 </template>
 
 <style scoped>
