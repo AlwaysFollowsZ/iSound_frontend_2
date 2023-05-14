@@ -1,12 +1,12 @@
 <script setup>
 import { defineProps, ref} from 'vue'
-import { NButton, NEllipsis, NInput,NIcon,NIconWrapper } from 'naive-ui'
+import { NButton, NEllipsis, NInput,NIcon,NIconWrapper,NTooltip,NPopover } from 'naive-ui'
 import { MusicNote220Regular } from '@vicons/fluent' 
 import { LibraryMusicOutlined } from '@vicons/material'
-import { getThemeColorString, getFontColorString} from '/src/colorMode'
+import { getBackgroundColorString, getFontColorString, getThemeColorByImage } from '/src/colorMode'
 // 从父级传入内容类型、图片路径、歌曲数（如有）、名字、图片大小、主题色等信息
 
-const { Type, imagePath, songCount, Name, imageSize, themeColor} = defineProps({
+const { Type, imagePath, songCount, Name, imageSize} = defineProps({
     Type: {
         type: String,
         default: 'songList',
@@ -16,7 +16,7 @@ const { Type, imagePath, songCount, Name, imageSize, themeColor} = defineProps({
     },
     imagePath: {
         type: String,
-        default: '/src/assets/logo.svg'
+        default: '/src/assets/song1.jpg'
     },
     songCount: {
         type: Number,
@@ -33,15 +33,12 @@ const { Type, imagePath, songCount, Name, imageSize, themeColor} = defineProps({
         type: Number,
         default:250
     },
-    themeColor:{
-        type:Array,
-        default:[128,128,128]
-    },
 })
-
-const fontSize = imageSize > 300 ? imageSize / 15 : imageSize / 10
+const themeColor = ref([])
+getThemeColorByImage(imagePath,themeColor)
+const fontSize = imageSize/12
 const fontColorString = getFontColorString(themeColor)
-const themeColorString = getThemeColorString(themeColor)
+const themeColorString = getBackgroundColorString(themeColor)
 const isHoverOnBottom = ref(false)
 const isHoverOnTitle = ref(false)
 const isHoverOnMask = ref(false)
@@ -58,7 +55,7 @@ const isClickOnMask = ref(false)
             :style="{
                 'padding': `${imageSize / 8}px ${imageSize / 6}px ${imageSize / 10}px ${imageSize / 6}px`,
                 'border-radius': `${imageSize / 10}px`,
-                'background-color':isHoverOnMask? `rgb(${themeColorString},0.5)`:`rgb(${themeColorString},0.1)`,
+                'background-color':isHoverOnMask? `rgb(${themeColorString},0.6)`:`rgb(${themeColorString},0.3)`,
                 'box-shadow':isHoverOnMask? `0 0 8px 3px rgb(${themeColorString},0.8)`:'',
                 'border':isHoverOnMask? `3px solid rgb(${themeColorString})`:`3px dashed rgb(${themeColorString},0.7)`
             }"
@@ -72,29 +69,48 @@ const isClickOnMask = ref(false)
                 <div class="image" :style="{
                     'background-image': `url(${imagePath})`,
                     'width': `${imageSize}px`,
+                    'border-radius':`${imageSize/15}px`
                 }">
                     <!-- 底部显示歌曲数量  动态属性有背景色和宽高-->
                     <div class="image_bottom"
                     @mouseenter="isHoverOnBottom=true"
                     @mouseleave="isHoverOnBottom=false">
-                        <n-icon-wrapper :style="{
-                            'margin-right': `${imageSize > 300 ? imageSize / 10 : imageSize / 15}px`
-                        }" 
-                        :size="imageSize/8" 
-                        :border-radius="imageSize/20"
-                        :color="`rgb(${themeColor},0.9)`">
-                            <n-icon  
-                            :component="Type === 'songList'?LibraryMusicOutlined:MusicNote220Regular" 
-                            :size="imageSize/10"></n-icon>
-                        </n-icon-wrapper>
+                        <n-popover trigger="hover"
+                            :style="{
+                                'border-radius': `${imageSize / 20}px`,
+                                'font-weight':700,
+                                '--n-text-color': `rgb(${fontColorString})`,
+                                '--n-color': `rgb(${themeColorString},0.8)`,
+                                'font-size': `${fontSize/1.5}px`,
+                                'box-shadow':'n-icon-wrapper'
+                            }">
+                            <template #trigger>
+                                <n-icon-wrapper :style="{
+                                    'margin-right': `${imageSize > 300 ? imageSize / 10 : imageSize / 15}px`
+                                }" 
+                                :size="imageSize/8" 
+                                :border-radius="imageSize/20"
+                                :color="`rgb(${themeColor},0.9)`">
+                                    <n-icon  
+                                    :component="Type === 'songList'?LibraryMusicOutlined:MusicNote220Regular" 
+                                    :size="imageSize/10"></n-icon>
+                                </n-icon-wrapper>
+                            </template>
+                            {{ Type==='Song'?'这是一首歌曲':'这是一个歌单' }}
+                        </n-popover>
                         <transition name="count">
                             <span class="count" 
                             v-if="isHoverOnBottom && Type==='songList'"
                             :style="{
                                 'color': `rgb(${fontColorString},0.9)`,
                                 'font-size': `${fontSize}px`,
-                                'line-height': `${imageSize / 10}px`
-                            }">{{ songCount }}</span>
+                                'line-height': `${imageSize / 10}px`,
+                                'background-color': `rgb(${themeColorString},0.8)`,
+                                'border-radius':`${imageSize/20}px`,
+                                'padding': `${imageSize / 50}px ${imageSize /30 }px`
+                            }">
+                            歌曲数量 : {{ songCount }}
+                            </span>
                         </transition>
                         
                     </div>
@@ -109,15 +125,20 @@ const isClickOnMask = ref(false)
                 :class="isHoverOnTitle?'title-hover':''"
                 @mouseenter="isHoverOnTitle=true"
                 @mouseleave="isHoverOnTitle=false">
-                <n-ellipsis :style="{'font-size': `${fontSize}px`}">
-                    <!-- tooltip动态属性:背景色 -->
+                <n-ellipsis :style="{'font-size': `${fontSize}px`}" 
+                :tooltip="{
+                    style:{
+                        '--n-text-color':`rgb(${fontColorString})`,
+                        '--n-color':`rgb(${themeColorString},0.8)`,
+                        'border': `3px solid rgb(${themeColorString})`,
+                        'font-weight': '700',
+                        'border-radius':'10px',
+                        'padding':'5px 10px',
+                        '--n-box-shadow':`0 0 5px 5px rgb(${themeColorString},0.3)`
+                    },
+                }">
                     <template #tooltip>
-                        <div class="title_tooltip" :style="{
-                            'color': `rgb(${fontColorString})`,
-                            'font-weight': '700'
-                        }">
-                            {{(Type==='Song')?'歌曲名称':'歌单名称'}} : {{ Name }}
-                        </div>
+                        {{ Type==='Song'?'歌曲名称 : ':'歌单名称 : ' }}{{ Name }}
                     </template>
                 {{ Name }}
             </n-ellipsis></div>
@@ -182,9 +203,9 @@ const isClickOnMask = ref(false)
     transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.25s;
 }
 
-
 .count{
-    height: 100%;
+    width: max-content;
+    padding: 5px 10px;
     position: absolute;
     top:0;
 }

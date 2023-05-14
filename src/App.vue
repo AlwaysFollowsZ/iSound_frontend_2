@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import{backGroundColor} from '/src/colorMode'
+import{backgroundColor} from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
 import TopNav from './components/TopNav.vue'
 import ImageTable from './components/tables/ImageTable/ImageTable.vue'
@@ -8,9 +8,10 @@ import ListTable from './components/tables/ListTable/ListTable.vue'
 </script>
 
 <template>
-  <div :style="{'background':backGroundColor}" class='page_background'>
+  <div :style="{'background':backgroundColor}" class='page_background'>
     <RouterView />
-    <image-table></image-table>
+    <!-- 请直接传入数字(px),宽度可略 -->
+    <div :style="{'text-align':'center'}"><image-table :table-size="[,1000]"></image-table></div>
     <list-table></list-table>
   </div>
 </template>
@@ -52,7 +53,9 @@ nav a:first-of-type {
 }
 
 .page_background{
-  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;
+  height: fit-content;
+  width: fit-content;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 @media (min-width: 1024px) {

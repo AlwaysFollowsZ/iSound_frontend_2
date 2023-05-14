@@ -83,24 +83,43 @@ export default {
           jumpLink: "a"
         },
         {
+          path: "/src/assets/picture5.png",
+          jumpLink: 'e'
+        },
+        {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg",
           jumpLink: "b"
+        },
+        {
+          path: "/src/assets/picture5.png",
+          jumpLink: 'e'
         },
         {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg",
           jumpLink: "c"
         },
         {
+          path: "/src/assets/picture5.png",
+          jumpLink: 'e'
+        },
+        {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg",
           jumpLink: "d"
-        }
+        },
+        {
+          path: "/src/assets/picture5.png",
+          jumpLink:'e'
+        },
+        
+        
+        
       ],
       songs: [
         {
-          imgSrc: "/src/assets/song1.jpg",
-          title: "陪你度过漫长岁月",
+          imgSrc: "/src/assets/song5.png",
+          title: "只因你太美",
           jumpLink: "1",
-          singer: "陈奕迅"
+          singer: "蔡只因"
         },
         {
           imgSrc: "/src/assets/song2.jpg",

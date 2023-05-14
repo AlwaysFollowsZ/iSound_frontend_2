@@ -1,29 +1,113 @@
 import { computed } from 'vue'
 import store from '/src/store'
 
-export const colorMode = computed(() => store.state.colorMode)
-export const backGroundColor = computed(() =>{
-    return colorMode.value === 'black' ?
-        'rgb(10,10,30)':'rgb(245,245,245)'
-})
+import ColorThief from 'colorThief'
 
-export const getFontColorString = (themeColor) => {
+const colorThief = new ColorThief()
+
+export const colorMode = computed(() => store.state.colorMode)//从这里获取白天和黑夜模式
+export const globalThemeColor = computed(() => Object.assign([], store.state.currentThemeColor))//全局的主题色
+export const backgroundColor = computed(() => {
+
+    return colorMode.value === 'black' ?
+        'rgb(15,15,20)' : 'rgb(245,245,245)'
+})//从这里获取背景色
+//以下两个方法的输入为一个数组'[]',包含表示RGB的三个数字
+//colorBase表示颜色基底[0,255]，值越高和背景色差别越小
+//获取主题字体色的方法
+export const getFontColorString = (themeColorInput, colorBase = 125) => {
     return computed(() => {
-        const colorBase= 125
-        const colorRate = (255 - colorBase) / 255
-        const fontColorString= colorMode.value === 'black' ?
-            `${colorBase + themeColor[0] * colorRate},${colorBase + themeColor[1] * colorRate},${colorBase + themeColor[2] * colorRate}`
-            : `${themeColor[0] * colorRate},${themeColor[1] * colorRate},${themeColor[2] * colorRate}`
-        console.log(fontColorString)
+        const a = globalThemeColor.value
+        let themeColor
+        if (themeColorInput instanceof Array == false) {
+            themeColor = themeColorInput.value
+        }
+        else {
+            themeColor = themeColorInput
+        }
+        const whiteColorRate = (255 - colorBase) / 255
+        const blackColorRate = colorBase / 255
+        const fontColorString = colorMode.value === 'black' ?
+            `${colorBase + themeColor[0] * whiteColorRate},${colorBase + themeColor[1] * whiteColorRate},${colorBase + themeColor[2] * whiteColorRate}`
+            : `${themeColor[0] * blackColorRate},${themeColor[1] * blackColorRate},${themeColor[2] * blackColorRate}`
         return fontColorString
+
     })
 }
-export const getThemeColorString = (themeColor) => {
+//获取主题背景色的方法
+export const getBackgroundColorString = (themeColorInput, colorBase = 255) => {
     return computed(() => {
-        return `${themeColor[0]}, ${themeColor[1]}, ${themeColor[2]}`
-    })//以防万一，对这里也加一下计算属性
-}
+        const a = globalThemeColor.value
+        let themeColor//不能直接对传入的对象进行更改，因此设置一个中间变量
+        if (themeColorInput instanceof Array == false) {
+            themeColor = fixColor(themeColorInput.value)
+        }
+        else {
+            themeColor = fixColor(themeColorInput)
+        }
+        const themeColorString = `${themeColor[0]},${themeColor[1]},${themeColor[2]}`
+        return themeColorString
+    })
+}//根据主题色获取主题颜色
 
 export const changeColorMode = () => {
     store.commit('changeColorMode')
 }
+
+//更改主题色。请传入RGB数组
+export const changeThemeColor = (colorInput = [200, 200, 200]) => {
+    let color = fixColor(colorInput)
+    store.commit('changeThemeColor', color)
+}
+//根据传入的图片路径直接更改传入的ref变量"color"
+//注意！请不要放入svg图片
+export const getThemeColorByImage = async (imageUrl,color) => {
+    colorThief.getColorFromUrl(imageUrl,(res)=>{color.value=res})
+}
+//根据传入的图片路径更换主题色
+//注意！请不要放入svg图片
+export const changeThemeColorByImage = (imageUrl) => {
+    colorThief.getColorFromUrl(imageUrl, (res) => {
+        changeThemeColor(res)
+    })
+}
+
+
+//根据色彩模式调节主题色
+const fixColor = (colorInput) => {
+    let color = JSON.parse(JSON.stringify(colorInput))//深拷贝
+    const blackBrightness = Math.round((Math.max(color[0], color[1], color[2]) + Math.min(color[0], color[1], color[2])) / 2);
+    const whiteBrightness = Math.round((color[0] * 299 + color[1] * 587 + color[2] * 114) / 1000)//计算主题色明度
+    if (colorMode.value === 'white') {//白色模式下应保证主题色较亮，但不能太亮
+        if (whiteBrightness < 150) {//明度较低，应调高明度
+            let colorBase = 150
+            let rate = (255 - colorBase) / 255
+            for (let i = 0; i < 3; i++) {
+                color[i] = color[i] * rate + colorBase
+            }
+        }
+        if (blackBrightness > 200) {//明度过高，降低明度
+            let rate = 0.8
+            for (let i = 0; i < 3; i++) {
+                color[i] = color[i] * rate
+            }
+        }
+    }
+    else {//黑色模式下应保证主题色较暗,但不能太暗
+        if (blackBrightness > 150) {//明度较高，应调低明度
+            let colorBase = 50
+            let rate = (255 - colorBase) / 255
+            for (let i = 0; i < 3; i++) {
+                color[i] = color[i] * rate
+            }
+        }
+        if (whiteBrightness < 50) {//明度过暗,调高明度
+            let rate = 1.2
+            for (let i = 0; i < 3; i++) {
+                color[i] = color[i] * rate
+            }
+        }
+    }
+    return color
+}
+
