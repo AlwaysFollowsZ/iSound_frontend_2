@@ -1,19 +1,24 @@
 import { computed } from 'vue'
 import store from '/src/store'
 
-import ColorThief from 'colorThief'
+import ColorThief from 'colorthief'
 
+
+//我们的设计包括白天/黑夜模式和每一首歌曲或歌单的背景图片的主题背景色
 const colorThief = new ColorThief()
 
 export const colorMode = computed(() => store.state.colorMode)//从这里获取白天和黑夜模式
 export const globalThemeColor = computed(() => Object.assign([], store.state.currentThemeColor))//全局的主题色
 export const backgroundColor = computed(() => {
-
     return colorMode.value === 'black' ?
         'rgb(15,15,20)' : 'rgb(245,245,245)'
-})//从这里获取背景色
+})//从这里获取白天/黑夜模式的背景色
+
+
 //以下两个方法的输入为一个数组'[]',包含表示RGB的三个数字
 //colorBase表示颜色基底[0,255]，值越高和背景色差别越小
+
+
 //获取主题字体色的方法
 export const getFontColorString = (themeColorInput, colorBase = 125) => {
     return computed(() => {
@@ -48,8 +53,9 @@ export const getBackgroundColorString = (themeColorInput, colorBase = 255) => {
         const themeColorString = `${themeColor[0]},${themeColor[1]},${themeColor[2]}`
         return themeColorString
     })
-}//根据主题色获取主题颜色
+}
 
+//更改白天/黑夜模式
 export const changeColorMode = () => {
     store.commit('changeColorMode')
 }

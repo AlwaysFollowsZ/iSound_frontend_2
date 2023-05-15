@@ -70,7 +70,8 @@ const columns = ref([
                 style: {
                     'text-decoration': 'none',
                     'display': 'block',
-                    'cursor':'pointer'
+                    'cursor': 'pointer',
+                    'color':`rgb(${fontColorString.value},0.8)`
                 },
                 onClick: () => {
                     changeThemeColorByImage(row.imgSrc)
@@ -215,7 +216,7 @@ const columns = ref([
                                 'font-size': '20px'
                             }
                         },
-                        [row.isLiked ? '从"收藏夹"移除' : '添加到"收藏夹"'])
+                        [row.isCollected ? '从"收藏夹"移除' : '添加到"收藏夹"'])
                 })
         }
     }
@@ -260,7 +261,8 @@ const handleCheck = (rowKeys) => {
                 '--n-th-font-weight':'700',
                 '--n-border-color':`rgb(${fontColorString},0.6)`,
                 '--n-color-checked': `rgb(${fontColorString},0.8)`,
-                '--n-check-mark-color':`rgb(${HeadBackgroundColorString},0.6)`
+                '--n-check-mark-color':`rgb(${HeadBackgroundColorString},0.6)`,
+                '--n-font-size':'20px'
             }" >
         </n-data-table>
     </div>
@@ -270,9 +272,6 @@ const handleCheck = (rowKeys) => {
 
 <style scoped>
 
-*{
-    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;
-}
 .data-table{
     display: inline-block;
     margin:20px 100px;
@@ -283,7 +282,4 @@ const handleCheck = (rowKeys) => {
     overflow: scroll;
 }
 
-:deep(.n-checkbox-box){
-    
-}
 </style>
