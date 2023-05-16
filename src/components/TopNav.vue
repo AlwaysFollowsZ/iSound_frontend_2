@@ -37,9 +37,6 @@
                   </n-tooltip>
             </n-gi>
         </n-grid>
-        <!-- <div style="padding-left: 1%; padding-right: 1%">
-            <n-divider />
-        </div> -->
     </div>
     <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false" @switch="showLogin = false; showRegister = true"></login-view>
     <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view>
@@ -114,15 +111,16 @@
     padding-bottom: 1%;
     /*border: dashed;*/
 }
-
+.router-link-active {
+    text-decoration: none; /* 去除 router-link 中文字的下划线 */
+}
 .isound-style {
     display: inline;
-    font-family: 'Monaco', 'Courier New', Courier, monospace;
-    color:dimgray;
+    vertical-align: text-bottom;
+    color: black;
     font-weight: bold;
-    font-style: italic;
-    font-size: 30px;
-    vertical-align: top;
+    /* font-style: italic; */
+    font-size: 35px;
     padding-left: 5%;
   }
 </style>

@@ -1,30 +1,23 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import{backGroundColor} from '/src/colorMode'
+import{backgroundColor} from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
 import ImageTable from './components/tables/ImageTable/ImageTable.vue';
 import MessageItem from './components/message/MessageItem.vue';
 import MessageSend from './components/message/MessageSend.vue'
 import TopNav from './components/TopNav.vue'
 import ListTable from './components/tables/ListTable/ListTable.vue'
+import Player from './components/Player.vue'
 </script>
 
 <template>
   <!-- <TopNav></TopNav> -->
-  <!-- <image-table></image-table> -->
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-    
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-      
-
+  <div :style="{'background':backgroundColor}" class='page_background'>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
-    </div>
-  </header> -->
+  </div>
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
 
@@ -32,6 +25,16 @@ import ListTable from './components/tables/ListTable/ListTable.vue'
     <RouterView />
     <!-- <image-table></image-table> -->
     <!-- <list-table></list-table> -->
+  <RouterView />
+  <!-- <message-item></message-item> -->
+  <!-- <message-send></message-send> -->
+
+    <div :style="{'text-align':'center'}">
+      <!-- 请直接传入数字(px),宽度可略 -->
+      <image-table :table-size="[,1000]"></image-table></div>
+    <list-table></list-table> 
+  
+  <Player pk="3"/>
   </div>
 </template>
 
@@ -72,7 +75,9 @@ nav a:first-of-type {
 }
 
 .page_background{
-  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;
+  height: fit-content;
+  width: fit-content;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 @media (min-width: 1024px) {
