@@ -59,7 +59,12 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminView.vue')
-    }
+    },
+    {
+      path: '/searchresult',
+      name: 'searchresult',
+      component: () => import('../views/SearchResultView.vue')
+    },
   ]
 })
 
