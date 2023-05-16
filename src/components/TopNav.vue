@@ -38,7 +38,12 @@
             </n-gi>
         </n-grid>
     </div>
-    <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false" @switch="showLogin = false; showRegister = true"></login-view>
+    <login-view 
+        :showLogin="showLogin" 
+        @closeLoginWindow="showLogin = false" 
+        @switch="showLogin = false; showRegister = true"
+        @login="loggedIn = true"    
+    ></login-view>
     <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view>
   </template>
   
