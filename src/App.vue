@@ -12,12 +12,6 @@ import Player from './components/Player.vue'
 
 <template>
   <!-- <TopNav></TopNav> -->
-  <div :style="{'background':backgroundColor}" class='page_background'>
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-  </div>
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
 
@@ -25,14 +19,11 @@ import Player from './components/Player.vue'
     <RouterView />
     <!-- <image-table></image-table> -->
     <!-- <list-table></list-table> -->
-  <RouterView />
-  <!-- <message-item></message-item> -->
-  <!-- <message-send></message-send> -->
 
-    <div :style="{'text-align':'center'}">
+    <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px),宽度可略 -->
-      <image-table :table-size="[,1000]"></image-table></div>
-    <list-table></list-table> 
+      <!-- <image-table :table-size="[,1000]"></image-table></div> -->
+    <!-- <list-table></list-table>  -->
   
   <Player pk="3"/>
   </div>
