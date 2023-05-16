@@ -24,7 +24,7 @@ import Player from './components/Player.vue'
     <!-- <image-table></image-table>
     <list-table></list-table> -->
   </div>
-  <Player pk="3"/>
+  <Player/>
 </template>
 
 <style scoped>
