@@ -9,7 +9,7 @@
                         <img :src="avatarUrl" alt="avatar" />
                     </div>
                     <div class="user-info-card">
-                        <div class="user-info-title">{{this.username}}</div>
+                        <div class="user-info-title">{{ this.username }}</div>
                         <div class="user-info-body">
                             <div>
                                 <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ this.username }}<br />
@@ -65,6 +65,7 @@
     </div>
     <modify-user-info-view :showModifyUserInfo="showModifyUserInfo"
         @closeModifyWindow="showModifyUserInfo = false"></modify-user-info-view>
+    <ModifyUserInfo @update-user-info="updateUserInfo" />
 </template>
   
 <script>
@@ -108,7 +109,7 @@ export default {
         }
     },
     created() {
-        this.$http.get('/api/accounts/detail/8/').then(response => {
+        this.$http.get('/api/accounts/detail/0/').then(response => {
             this.username = response.data.username;
             this.email = response.data.email;
             this.recordNum = response.data.record_num;
@@ -119,25 +120,14 @@ export default {
             console.error(error);
         });
     },
-    // setup() {
-    //     const username = ref("iSound");
-    //     const bio = ref("我是一个很固执的人，从来不管别人怎么说，怎么做。如果你也和我一样，那么这件事情就真的，泰！裤！辣！");
-    //     const email = ref("2137@buaa.edu.cn");
-    //     const avatarImage = ref("/src/assets/default-admin.jpg");
-    //     function uploadAvatar(event) {
-    //         const file = event.target.files[0];
-    //         // 上传文件的逻辑
-    //     }
-    //     return {
-    //         username,
-    //         bio,
-    //         email,
-    //         avatarImage,
-    //         uploadAvatar,
-    //         fansCount: 1000,
-    //         likeCount: 10,
-    //     };
-    // },
+    methods: {
+        updateUserInfo(userInfo) {
+            this.avatarUrl = userInfo.avatarUrl;
+            this.username = userInfo.username;
+            this.email = userInfo.email;
+            this.bio = userInfo.bio;
+        },
+    }
 };
 </script>
   

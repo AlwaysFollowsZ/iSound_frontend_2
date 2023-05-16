@@ -27,7 +27,7 @@
                     <n-gi>
                         <span>用户名</span>
                         <n-input :style="{ '--n-border-radius': `10px` }" type="text" size="small" :placeholder="username"
-                           :value="username" @input="username = $event" />
+                            :value="username" @input="username = $event" />
                         <span>邮箱</span>
                         <n-input :style="{ '--n-border-radius': `10px` }" type="text" size="small" :placeholder="email"
                             :value="email" @input="email = $event" />
@@ -114,6 +114,12 @@ export default {
             this.$http.post('/api/accounts/update/', data).then(response => {
                 console.log(response);
                 if (response.data.code === '0') {
+                    this.$emit('update-user-info', {
+                        username: this.username,
+                        email: this.email,
+                        bio: this.bio,
+                        avatarUrl: this.avatarUrl,
+                    });
                     this.closeMWindow();
                     alert('修改成功!')
                 } else if (response.data.code === '-1') {
