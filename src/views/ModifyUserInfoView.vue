@@ -26,15 +26,15 @@
                     </n-gi>
                     <n-gi>
                         <span>用户名</span>
-                        <n-input type="text" size="small" placeholder="this.username" :value="username"
+                        <n-input type="text" size="small" placeholder="username" :value="username"
                             @input="username = $event" />
                         <span>邮箱</span>
-                        <n-input type="text" size="small" placeholder="this.email" :value="email" @input="email = $event" />
+                        <n-input type="text" size="small" placeholder="email" :value="email" @input="email = $event" />
                         <span>历史记录条数</span>
-                        <n-input type="text" size="small" placeholder="this.recordNum" :value="recordNum"
+                        <n-input type="text" size="small" placeholder="recordNum" :value="recordNum"
                             @input="recordNum = $event" />
                         <span>个性签名</span>
-                        <n-input type="textarea" size="small" placeholder="this.bio" :value="bio" @input="bio = $event" />
+                        <n-input type="textarea" size="small" placeholder="bio" :value="bio" @input="bio = $event" />
                         <n-button strong secondary round type="primary" class="modify-button-position"
                             @click="submitModify">
                             确认修改
@@ -60,7 +60,7 @@ export default {
             recordNum: '',
             bio: '',
             avatarFile: null,
-            avatarUrl: ref('/src/assets/default-admin.jpg'),
+            avatarUrl: ''
         }
     },
     components: {
@@ -73,46 +73,61 @@ export default {
         closeMWindow() {
             this.$emit('closeModifyWindow')
         },
+        create() {
+            this.$http.get('/api/account/detail/', data).then(response => {
+                this.username = response.data.username;
+                this.email = response.data.email;
+                this.recordNum = response.data.record_num;
+                this.bio = response.data.profile;
+                this.avatarFile = response.data.avatar;
+                this.avatarUrl = URL.createObjectURL(this.avatarFile)
+            }).catch(error => {
+                console.error(error);
+            });
+        },
         uploadFile() {
             this.$refs.fileInput.click()
         },
         handleFileChange(e) {
             const file = e.target.files[0];
-            // const formData = new FormData();
-            // formData.append('file', file);
-
             // 更新 avatarUrl 属性，即时更换图片
             this.avatarUrl = URL.createObjectURL(file);
+            let formData = new FormData();
+            formData.append('avatar', file);
 
             // 发送文件到后端
-            // this.uploadFormData(formData);
-            // this.uploadImage()
+            this.uploadFormData(formData);
+        },
+        uploadAvatar(formData) {
+            this.$http.post('/api/uploadAvatar', formData).then(response => {
+                this.avatarUrl = response.data.avatarUrl;
+                // 可以在上传成功后进行一些其他逻辑操作
+            }).catch(error => {
+                console.error(error);
+            });
         },
         submitModify() {
             console.log(this.username),
-            console.log(this.email),
-            console.log(this.recordNum),
-            console.log(this.bio)
+                console.log(this.email),
+                console.log(this.recordNum),
+                console.log(this.bio)
             let data = new FormData();
             data.append('username', this.username);
             data.append('email', this.email);
             data.append('record_num', this.recordNum);
             data.append('profile', this.bio);
+            data.append('avatar', this.$refs.fileInput.files[0]);
             this.$http.post('/api/accounts/update/', data).then(response => {
-                if(response.data.code == '0') {
-                    // this.closeLWindow();
+                if (response.data.code === '0') {
+                    this.closeMWindow();
                     alert('修改成功!')
-                } else if (response.data.code == '-1') {
+                } else if (response.data.code === '-1') {
                     alert('修改失败，请重新修改！');
-                    // this.closeLWindow();
+                    // this.closeMWindow();
                 }
             });
         },
     },
-    setup() {
-        return {
-        };
-    }
 };
 </script>
 <style>
