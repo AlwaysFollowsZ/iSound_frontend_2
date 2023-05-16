@@ -46,7 +46,7 @@
             <div>
                 <n-grid>
                     <n-gi :span="1">
-                        <a-button class="back-button" type="primary" shape="circle" @click="gotoMessage()">
+                        <a-button class="back-button" type="primary" shape="circle" @click="back()">
                             <template #icon><menu-outlined style="color:white"/></template>
                         </a-button>
                     </n-gi>
