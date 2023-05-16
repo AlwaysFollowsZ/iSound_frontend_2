@@ -5,7 +5,14 @@
             <n-divider />
         </div>
         <div>
-            <img width="100" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" @click="goToUploadSong = true"/>
+            <n-popover trigger="hover">
+                <template #trigger>
+                    <div class="single-card-container">
+                        <img style="width: 100%; height: 100%;" :src="uploadSongEntryLogoUrl" @click="goToUploadSong = true" />
+                    </div>
+                </template>
+                <span>点击此处可以上传歌曲</span>
+            </n-popover>
         </div>
     </div>
     <div class="already-upload-song-sheet">
@@ -33,8 +40,7 @@
             </n-grid>
         </div>
     </div>
-    <upload-song-view :goToUploadSong="goToUploadSong"
-        @closeUploadWindow="goToUploadSong = false"></upload-song-view>
+    <upload-song-view :goToUploadSong="goToUploadSong" @closeUploadWindow="goToUploadSong = false"></upload-song-view>
 </template>
 <script>
 import UploadSongView from '../views/UploadSongView.vue';
@@ -44,7 +50,8 @@ export default {
     },
     data() {
         return {
-            // goToUploadSong: false,
+            goToUploadSong: false,
+            uploadSongEntryLogoUrl: "/src/assets/upload-logo.png",
             songSheets: [
                 {
                     imgSrc: "/src/assets/song1.jpg",

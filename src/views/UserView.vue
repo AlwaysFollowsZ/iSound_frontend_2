@@ -42,7 +42,7 @@
                                     <collect-song-sheet-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我的歌曲" tab="我的歌曲">
-                                    <upload-song-view />
+                                    <my-upload-song-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我的关注" tab="我的关注">
                                     <follow-list-view />

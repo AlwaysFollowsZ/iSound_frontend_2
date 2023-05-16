@@ -26,19 +26,17 @@
                     </n-gi>
                     <n-gi>
                         <span>用户名</span>
-                        <n-input type="text" size="small" placeholder="这里是用户名" :value="username"
+                        <n-input type="text" size="small" placeholder="this.username" :value="username"
                             @input="username = $event" />
                         <span>邮箱</span>
-                        <n-input type="text" size="small" placeholder="这里是用户的邮箱" :value="email"
-                            @input="email = $event" />
+                        <n-input type="text" size="small" placeholder="this.email" :value="email" @input="email = $event" />
                         <span>历史记录条数</span>
-                        <n-input type="text" size="small" placeholder="这里是历史记录条数" :value="recordNum"
+                        <n-input type="text" size="small" placeholder="this.recordNum" :value="recordNum"
                             @input="recordNum = $event" />
                         <span>个性签名</span>
-                        <n-input type="textarea" size="small" placeholder="这里是用户的个性签名" :value="bio"
-                            @input="bio = $event" />
-                        <!-- <n-switch v-model:value="active" class="modify-button-position"/> -->
-                        <n-button strong secondary round type="primary" class="modify-button-position" @click="submitModify">
+                        <n-input type="textarea" size="small" placeholder="this.bio" :value="bio" @input="bio = $event" />
+                        <n-button strong secondary round type="primary" class="modify-button-position"
+                            @click="submitModify">
                             确认修改
                         </n-button>
                     </n-gi>
@@ -61,7 +59,7 @@ export default {
             email: '',
             recordNum: '',
             bio: '',
-            file: null,
+            avatarFile: null,
             avatarUrl: ref('/src/assets/default-admin.jpg'),
         }
     },
@@ -79,8 +77,15 @@ export default {
             this.$refs.fileInput.click()
         },
         handleFileChange(e) {
-            const file = e.target.files[0]
-            this.file = file
+            const file = e.target.files[0];
+            // const formData = new FormData();
+            // formData.append('file', file);
+
+            // 更新 avatarUrl 属性，即时更换图片
+            this.avatarUrl = URL.createObjectURL(file);
+
+            // 发送文件到后端
+            // this.uploadFormData(formData);
             // this.uploadImage()
         },
         submitModify() {
@@ -92,21 +97,21 @@ export default {
             data.append('username', this.username);
             data.append('email', this.email);
             data.append('record_num', this.recordNum);
-            data.append('profile', this.bio)
+            data.append('profile', this.bio);
+            data.append('avatarFile', this.avatarFile);
             this.$http.post('/accounts/update/', data).then(response => {
-                if(response.data.code == '0') {
+                if (response.data.code == '0') {
                     // this.closeLWindow();
                     alert('修改成功!')
                 } else if (response.data.code == '-1') {
                     alert('修改失败，请重新修改！');
                     // this.closeLWindow();
                 }
-            }); 
+            });
         },
     },
     setup() {
         return {
-            active: ref(false),
         };
     }
 };
