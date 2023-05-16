@@ -30,8 +30,8 @@ import ListTable from './components/tables/ListTable/ListTable.vue'
 
   <div :style="{'background':backGroundColor}" class='page_background'>
     <RouterView />
-    <image-table></image-table>
-    <list-table></list-table>
+    <!-- <image-table></image-table> -->
+    <!-- <list-table></list-table> -->
   </div>
 </template>
 
