@@ -8,7 +8,7 @@
                         <n-grid :x-gap="12">
                             <n-gi :span="2"></n-gi>
                             <n-gi :span="20">
-                                <h3>欢迎回到 iSound，请先完成登录！</h3>
+                                <h3 class="login-card-title">欢迎回到 iSound，请先完成登录！</h3>
                             </n-gi>
                             <n-gi :span="2">
                                 <div style="padding-top: 30%" @click="closeLWindow">
@@ -25,12 +25,12 @@
                     </n-gi>
                     <n-gi>
                         <span>用户名</span>
-                        <n-input type="text" placeholder="请输入用户名" clearable />
+                        <n-input type="text" placeholder="请输入用户名" :value="username" @input="username = $event" clearable />
                         <span>密码</span>
-                        <n-input type="password" show-password-on="mousedown" placeholder="请输入密码" :minlength="8" />
+                        <n-input type="password" show-password-on="mousedown" placeholder="请输入密码" :minlength="8" :value="password" @input="password = $event"/>
                         <n-grid class="login-button-top" x-gap="6" :cols="2">
                             <n-gi>
-                                <n-button strong secondary type="success">
+                                <n-button strong secondary type="success" @click="login">
                                     登录
                                 </n-button>
                             </n-gi>
@@ -55,6 +55,12 @@
 import { CloseOutline } from '@vicons/ionicons5'
 export default{
     name: "LoginView",
+    data() {
+        return {
+            username: '',
+            password: ''
+        };
+    },
     components: {
         CloseOutline,
     },
@@ -67,6 +73,19 @@ export default{
         },
         switchToRegister() {
             this.$emit('switch')
+        },
+        login() {
+            let data = new FormData();
+            data.append('username', this.username);
+            data.append('password', this.password);
+            this.$http.post('/accounts/login/', data).then(response => {
+                if(response.data.code == '0') {
+                    this.closeLWindow();
+                } else if (response.data.code == '-1') {
+                    alert('登录失败，请重新登录！');
+                    this.closeLWindow();
+                }
+            }); 
         }
     }
     
@@ -74,6 +93,12 @@ export default{
 </script>
 
 <style>
+.login-card-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
 .login-image {
     width: 80%;
 }

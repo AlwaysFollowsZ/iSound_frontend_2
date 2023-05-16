@@ -1,13 +1,14 @@
 <template>
     <div class="upload-song-sheet-container">
         <div class="upload-song-sheet-title">
-            上传歌单
+            上传歌曲
             <n-divider />
         </div>
+        <div>this is the upload song view!</div>
     </div>
     <div class="already-upload-song-sheet">
         <div class="upload-song-sheet-title">
-            已上传的歌单
+            已上传的歌曲
             <n-divider />
         </div>
         <div class="song-sheet-container">
