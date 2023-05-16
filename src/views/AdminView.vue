@@ -1,16 +1,24 @@
 <script>
     import { BellOutlined } from '@ant-design/icons-vue';
     import { defineComponent } from 'vue';
+    import { SearchOutline } from '@vicons/ionicons5'
     export default defineComponent({
         name: 'AdminPageHeader',
         components: {
             BellOutlined,
+            SearchOutline,
         },
         methods: {
             gotoMessage() {
                 this.$router.push({path:'/message'})
-            }
-        },
+            },
+            search() {
+            if (this.searchValue.trim().length !== 0) {
+                console.log(`searchValue: ${this.searchValue}`)
+                // do search
+                this.searchValue = ''}
+            },
+        }
     });
 </script>
 
@@ -28,16 +36,32 @@
         <div class="admin-avatar">
             <img src="../assets/default-admin.jpg" alt="管理员头像" class="default-admin-avatar">
         </div>
-            <a-space class="search-input" direction="vertical">
+            <!-- <a-space class="search-input" direction="vertical">
                 <a-input-search
                 v-model:value="value"
                 placeholder="input search text"
                 style="width: 200px"
                 @search="onSearch"
-                />
-        </a-space>
+                /> 
+            </a-space> -->
     </div>
-    
+    <div class="message-page-search">
+        <n-grid>
+            <n-gi :span="3"></n-gi>
+            <n-gi :span="14">
+                <div style="padding-top: 7%">
+                <n-input round type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search()" />
+                </div>
+            </n-gi>
+            <n-gi :span="2"></n-gi>
+            <n-gi :span="1">
+            <div style="color:lightgray; padding-top: 100%">
+                <SearchOutline size="30px" @click="search()" />
+            </div> 
+            </n-gi> 
+            <n-gi :span="4"></n-gi>
+        </n-grid>      
+    </div>
     <div class="music-list-header">
         <a-tabs v-model:activeKey="activeKey" >
         <a-tab-pane key="1">
@@ -91,9 +115,15 @@
     top: 12px;
 }
 
-.music-list-header {
+.message-page-search {
     position: fixed;
     top: 58px;
+    width: 60vw;
+    margin: 0 20vw;
+}
+.music-list-header {
+    position: fixed;
+    top: 170px;
     left: 10vw;
     width: 80vw;
     height: 100vw;
@@ -101,5 +131,8 @@
     margin: 0;
     padding: 0 15px;
 }
-
+.n-input {
+    transform: scale(1.2, 1.2);
+    position: relative;
+} 
 </style>

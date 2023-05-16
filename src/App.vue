@@ -12,16 +12,18 @@ import Player from './components/Player.vue'
 
 <template>
   <!-- <TopNav></TopNav> -->
-  <div :style="{'background':backgroundColor}" class='page_background'>
-
-  <RouterView />
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
 
-    <div :style="{'text-align':'center'}">
+  <div :style="{'background':backGroundColor}" class='page_background'>
+    <RouterView />
+    <!-- <image-table></image-table> -->
+    <!-- <list-table></list-table> -->
+
+    <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px),宽度可略 -->
-      <image-table :table-size="[,1000]"></image-table></div>
-    <list-table></list-table> 
+      <!-- <image-table :table-size="[,1000]"></image-table></div> -->
+    <!-- <list-table></list-table>  -->
   
   <Player pk="3"/>
   </div>
