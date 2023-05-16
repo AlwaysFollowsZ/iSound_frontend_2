@@ -98,9 +98,8 @@ export default {
             data.append('email', this.email);
             data.append('record_num', this.recordNum);
             data.append('profile', this.bio);
-            data.append('avatarFile', this.avatarFile);
-            this.$http.post('/accounts/update/', data).then(response => {
-                if (response.data.code == '0') {
+            this.$http.post('/api/accounts/update/', data).then(response => {
+                if(response.data.code == '0') {
                     // this.closeLWindow();
                     alert('修改成功!')
                 } else if (response.data.code == '-1') {

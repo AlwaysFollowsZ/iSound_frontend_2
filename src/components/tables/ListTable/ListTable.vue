@@ -4,12 +4,33 @@ import { NDataTable, NButton,NPopover,NEllipsis } from 'naive-ui'
 import { Heart12Filled,Star12Filled } from '@vicons/fluent';
 import { getFontColorString, getBackgroundColorString,globalThemeColor,changeThemeColorByImage} from '/src/colorMode'
 
+const props = defineProps({
+    viewMode: {
+        type: String,
+        default:'none'
+    }
+})//是否在管理员界面
 const themeColor = globalThemeColor
-const HeadBackgroundColorString = getBackgroundColorString(themeColor, 225) 
+const HeadBackgroundColorString = getBackgroundColorString(themeColor, 225)
 const DataBackgroundColorString = getBackgroundColorString(themeColor, 180)
 const fontColorString = getFontColorString(themeColor) 
+const getRGBString = ( color, opacity = 1,type = 'normal') => {//获取rgb字段
+    console.log(props.viewMode);
+    if (props.viewMode === 'user') {
+        return `rgba(${color},${opacity})`
+    }
+    else {
+        if (type === 'font') {
+            return 'rgba(100,100,100,0.7)'
+        }
+        else if (type === 'background') {
+            return 'transparent'
+        }
+    }
+}
 let isSelected = false//当前是否有歌曲被选择
 let selectedEntries=[]//被选择的项（和rowKey同步更新）
+
 
 const data = ref([
     {
@@ -51,7 +72,6 @@ const data = ref([
 const columns = ref([
     {
         type: 'selection',
-        className:'check-box'
     },
     {
         title: '名称',
@@ -62,8 +82,8 @@ const columns = ref([
                 'line-clamp': 1,
                 'tooltip': {
                     style: {
-                        'color': `rgb(${fontColorString.value})`,
-                        '--n-color': `rgb(${HeadBackgroundColorString.value},0.8)`
+                        'color':getRGBString(fontColorString.value,1,'font'),
+                        '--n-color':getRGBString(HeadBackgroundColorString.value,0.8,'background')
                     }
                 }
             },()=>[h('a', {
@@ -71,10 +91,12 @@ const columns = ref([
                     'text-decoration': 'none',
                     'display': 'block',
                     'cursor': 'pointer',
-                    'color':`rgb(${fontColorString.value},0.8)`
+                    'color':getRGBString(fontColorString.value,0.8,'font')
                 },
                 onClick: () => {
-                    changeThemeColorByImage(row.imgSrc)
+                    if (props.viewMode === 'user') {
+                        changeThemeColorByImage(row.imgSrc)
+                    }
                 }
             }, row.name)])
         }
@@ -97,12 +119,12 @@ const columns = ref([
                 },
                 style: {
                     'opacity': isSelected ? '1' : '0',
-                    '--n-color': `rgb(${HeadBackgroundColorString.value})`,
-                    '--n-border-hover': `1px solid rgb(${fontColorString.value},0.8)`,
+                    '--n-color': getRGBString(HeadBackgroundColorString.value, 1,'background'),
+                    '--n-border-hover': `1px solid ${getRGBString(fontColorString.value,0.8,'font')}`,
                     '--n-border-focus': `none`,
-                    '--n-border-pressed': `1px solid rgb(${fontColorString.value},0.5)`,
+                    '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5,'font')}`,
                     '--n-border-disabled': `none`,
-                    '--n-ripple-color': `rgb(${fontColorString.value},0.8)`
+                    '--n-ripple-color': getRGBString(fontColorString.value, 0.8,'font')
                 }
             }, {
                 icon: () => h(Heart12Filled, {
@@ -120,8 +142,8 @@ const columns = ref([
             return h(NPopover, {
                 trigger: 'hover',
                 style: {
-                    'color': `rgb(${fontColorString.value})`,
-                    '--n-color': `rgb(${HeadBackgroundColorString.value},0.8)`
+                    'color': getRGBString(fontColorString.value, 1,'font'),
+                    '--n-color': getRGBString(HeadBackgroundColorString.value, 0.8,'background')
                 }
             },
                 {
@@ -130,12 +152,12 @@ const columns = ref([
                             row.isLiked = !row.isLiked
                         },
                         style: {
-                            '--n-color': `rgb(${DataBackgroundColorString.value})`,
-                            '--n-border-hover': `1px solid rgb(${fontColorString.value},0.8)`,
+                            '--n-color': getRGBString(DataBackgroundColorString.value, 1,'background'),
+                            '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8,'font')}`,
                             '--n-border-focus': `none`,
-                            '--n-border-pressed': `1px solid rgb(${fontColorString.value},0.5)`,
+                            '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5,'font')}`,
                             '--n-border-disabled': `none`,
-                            '--n-ripple-color': `rgb(${fontColorString.value},0.8)`
+                            '--n-ripple-color': getRGBString(fontColorString.value, 0.8,'font')
                         }   
                     },
                         {
@@ -166,12 +188,12 @@ const columns = ref([
                 },
                 style: {
                     'opacity': isSelected ? '1' : '0',
-                    '--n-color':`rgb(${HeadBackgroundColorString.value})`,
-                    '--n-border-hover': `1px solid rgb(${fontColorString.value},0.8)`,
+                    '--n-color': getRGBString(HeadBackgroundColorString.value, 1,'background'),
+                    '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8,'font')}`,
                     '--n-border-focus': `none`,
-                    '--n-border-pressed': `1px solid rgb(${fontColorString.value},0.5)`,
+                    '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5,'font')}`,
                     '--n-border-disabled': `none`,
-                    '--n-ripple-color': `rgb(${fontColorString.value},0.8)`
+                    '--n-ripple-color': getRGBString(fontColorString.value, 0.8,'font')
                 }
             }, {
                 icon: () => h(Star12Filled, {
@@ -185,8 +207,8 @@ const columns = ref([
             return h(NPopover, {
                 trigger: 'hover',
                 style: {
-                    'color': `rgb(${fontColorString.value})`,
-                    '--n-color': `rgb(${HeadBackgroundColorString.value},0.8)`
+                    'color': getRGBString(fontColorString.value, 1, 'font'),
+                    '--n-color':getRGBString(HeadBackgroundColorString.value,0.8,'background')
                 }
             },
                 {
@@ -195,18 +217,18 @@ const columns = ref([
                             row.isCollected = !row.isCollected
                         },
                         style: {
-                            '--n-color': `rgb(${DataBackgroundColorString.value})`,
-                            '--n-border-hover': `1px solid rgb(${fontColorString.value},0.8)`,
+                            '--n-color': getRGBString(DataBackgroundColorString.value, 1,'background'),
+                            '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8,'font')}`,
                             '--n-border-focus': `none`,
-                            '--n-border-pressed': `1px solid rgb(${fontColorString.value},0.5)`,
+                            '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5,'font')}`,
                             '--n-border-disabled': `none`,
-                            '--n-ripple-color': `rgb(${fontColorString.value},0.8)`
+                            '--n-ripple-color': getRGBString(fontColorString.value, 0.8,'font')
                         }
                     },
                         {
                             icon: () => h(Star12Filled, {
                                 style: {
-                                    'color': row.isCollected ? 'rgb(210,195,135)' : 'white'
+                                    'color': row.isCollected ? 'rgb(255, 230, 120)' : 'white'
                                 }
                             })
                         }),//收藏按钮
@@ -252,16 +274,15 @@ const handleCheck = (rowKeys) => {
             class="data-table"
             :style="{
                 // 调节字体、背景、边框颜色
-                '--n-th-text-color':`rgb(${fontColorString})`,
-                '--n-td-text-color': `rgb(${fontColorString},0.8)`,
-                '--n-td-color':`rgb(${HeadBackgroundColorString},0.6)`,
-                '--n-th-color':`rgb(${DataBackgroundColorString},0.6)`,
-                '--n-td-color-hover': `rgba(${HeadBackgroundColorString},0.1)`,
-                '--n-th-color-hover': `rgba(${DataBackgroundColorString},0.1)`,
+                '--n-th-text-color':getRGBString(fontColorString,1,'font'),
+                '--n-td-text-color':getRGBString(fontColorString,0.8,'font'),
+                '--n-td-color':getRGBString(HeadBackgroundColorString,0.6,'background'),
+                '--n-th-color':getRGBString(DataBackgroundColorString,0.6,'background'),
+                '--n-td-color-hover': getRGBString(HeadBackgroundColorString,0.1,'background'),
                 '--n-th-font-weight':'700',
-                '--n-border-color':`rgb(${fontColorString},0.6)`,
-                '--n-color-checked': `rgb(${fontColorString},0.8)`,
-                '--n-check-mark-color':`rgb(${HeadBackgroundColorString},0.6)`,
+                '--n-border-color':getRGBString(fontColorString,0.6,'font'),
+                '--n-color-checked': getRGBString(fontColorString,0.8,'font'),
+                '--n-check-mark-color':getRGBString(HeadBackgroundColorString,0.6,'background'),
                 '--n-font-size':'20px'
             }" >
         </n-data-table>
@@ -274,12 +295,10 @@ const handleCheck = (rowKeys) => {
 
 .data-table{
     display: inline-block;
-    margin:20px 100px;
-    max-width:1500px
 }
 .table-box{
     text-align: center;
-    overflow: scroll;
+    padding: 20px;
 }
 
 </style>
