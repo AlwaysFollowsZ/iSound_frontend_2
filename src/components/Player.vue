@@ -9,6 +9,7 @@ import ColorThief from 'colorthief';
 import {onBeforeUnmount, getCurrentInstance, onMounted, ref} from 'vue';
 
 const containerRef = ref();
+const theme = ref('#b7daff');
 const { proxy } = getCurrentInstance();
 
 const props = defineProps({
@@ -29,7 +30,7 @@ onMounted(() => {
         fixed: true,
         mini: true,
         autoplay: false,
-        theme: '#b7daff',
+        theme: theme.value,
         loop: 'all', // 'all' | 'one' | 'none',
         order: 'list', // 'list' | 'random'
         preload: 'auto', // 'auto' | 'metadata' | 'none'
@@ -41,25 +42,18 @@ onMounted(() => {
         storageName: 'aplayer-setting',
     });
 
-    let url = '/index/';
+    let url = '/api/index/';
     if (props.pk != undefined) {
         if (props.playlist) {
-            url = `/playlist/detail/${props.pk}`;
+            url = `/api/playlist/detail/${props.pk}`;
         }
         else {
-            url = `/music/detail/${props.pk}`;
+            url = `/api/music/detail/${props.pk}`;
         }
     }
 
     proxy.$http.get(url).then(
         (response) => {
-            response.data.music_set.forEach((music) => {
-                music.url = proxy.$http.defaults.baseURL + music.url;
-                music.cover = proxy.$http.defaults.baseURL + music.cover;
-                if (music.lrc != null) {
-                    music.lrc = proxy.$http.defaults.baseURL + music.lrc;
-                }
-            });
             ap.list.add(response.data.music_set);
             setTheme(ap.list.index);
         }
@@ -73,7 +67,8 @@ onMounted(() => {
             const coverUrl = URL.createObjectURL(this.response);
             image.onload = function() {
                 const color = colorThief.getColor(image);
-                ap.theme(`rgb(${color[0]}, ${color[1]}, ${color[2]})`, index);
+                theme.value = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                ap.theme(theme.value, index);
                 URL.revokeObjectURL(coverUrl);
             };
             image.src = coverUrl;
@@ -89,8 +84,88 @@ onMounted(() => {
 </script>
 
 <style scope>
-/* .aplayer.aplayer-fixed {
-    max-width: 100%;
-    width: 100%;
-} */
+.aplayer-fixed {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+.aplayer-body {
+    max-width: calc(100% - 18px) !important;
+    width: calc(100% - 18px) !important;
+}
+
+.aplayer-pic {
+    width: 52.8px !important;
+    height: 52.8px !important;
+    position: fixed !important;
+    bottom: 6.6px !important;
+    left: 6.6px !important;
+    border-radius: 6.6px !important;
+}
+
+.aplayer-bar-wrap {
+    position: fixed !important;
+    margin: 0 !important;
+    width: calc(25% + 21px) !important;
+    left: calc(37.5% - 34.5px) !important;
+}
+
+.aplayer-time-inner {
+    visibility: hidden !important;
+}
+
+.aplayer-ptime {
+    position: fixed !important;
+    left: calc(37.5% - 71.54px) !important;
+    visibility: visible !important;
+}
+
+.aplayer-dtime {
+    position: fixed !important;
+    left: calc(62.5% - 6.5px) !important;
+    visibility: visible !important;
+}
+
+.aplayer-icon-order {
+    position: fixed !important;
+    left: calc(50% - 109px) !important;
+    display: inline !important;
+}
+
+.aplayer-icon-loop {
+    position: fixed !important;
+    left: calc(50% - 109px) !important;
+    bottom: 29px !important;
+    display: inline !important;
+}
+
+.aplayer-icon-back {
+    position: fixed !important;
+    left: calc(50% - 74px) !important;
+}
+
+.aplayer-icon-play {
+    position: fixed !important;
+    left: calc(50% - 34px) !important;
+}
+
+.aplayer-icon-forward {
+    position: fixed !important;
+    left: calc(50% + 6px) !important;
+}
+
+.aplayer-icon-menu {
+    position: fixed !important;
+    left: calc(50% + 46px) !important;
+}
+
+.aplayer-lrc {
+    position: fixed !important;
+    bottom: 82px !important;
+    height: 32px !important;
+}
+
+.aplayer-lrc-contents > p {
+    font-size: 16px !important;
+}
 </style>

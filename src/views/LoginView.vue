@@ -81,7 +81,7 @@ export default{
             let data = new FormData();
             data.append('username', this.username);
             data.append('password', this.password);
-            this.$http.post('/accounts/login/', data).then(response => {
+            this.$http.post('/api/accounts/login/', data).then(response => {
                 if(response.data.code == '0') {
                     this.changeToLoggedIn();
                     this.closeLWindow();

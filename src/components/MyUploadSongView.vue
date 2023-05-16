@@ -4,7 +4,16 @@
             上传歌曲
             <n-divider />
         </div>
-        <div>this is the upload song view!</div>
+        <div>
+            <n-popover trigger="hover">
+                <template #trigger>
+                    <div class="single-card-container">
+                        <img style="width: 100%; height: 100%;" :src="uploadSongEntryLogoUrl" @click="goToUploadSong = true" />
+                    </div>
+                </template>
+                <span>点击此处可以上传歌曲</span>
+            </n-popover>
+        </div>
     </div>
     <div class="already-upload-song-sheet">
         <div class="upload-song-sheet-title">
@@ -31,11 +40,18 @@
             </n-grid>
         </div>
     </div>
+    <upload-song-view :goToUploadSong="goToUploadSong" @closeUploadWindow="goToUploadSong = false"></upload-song-view>
 </template>
 <script>
+import UploadSongView from '../views/UploadSongView.vue';
 export default {
+    components: {
+        UploadSongView,
+    },
     data() {
         return {
+            goToUploadSong: false,
+            uploadSongEntryLogoUrl: "/src/assets/upload-logo.png",
             songSheets: [
                 {
                     imgSrc: "/src/assets/song1.jpg",

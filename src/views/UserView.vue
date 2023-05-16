@@ -42,7 +42,7 @@
                                     <collect-song-sheet-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我的歌曲" tab="我的歌曲">
-                                    <upload-song-sheet-view />
+                                    <my-upload-song-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我的关注" tab="我的关注">
                                     <follow-list-view />
@@ -72,7 +72,7 @@ import TopNav from '../components/TopNav.vue';
 import ModifyUserInfoView from './ModifyUserInfoView.vue';
 import MySongSheetView from '../components/MySongSheetView.vue';
 import CollectSongSheetView from '../components/CollectSongSheetView.vue';
-import UploadSongSheetView from '../components/UploadSongSheetView.vue';
+import MyUploadSongView from '../components/MyUploadSongView.vue';
 import FollowListView from "../components/FollowListView.vue";
 import FanListView from '../components/FanListView.vue';
 import { ref } from "vue";
@@ -85,7 +85,7 @@ export default {
         ModifyUserInfoView,
         MySongSheetView,
         CollectSongSheetView,
-        UploadSongSheetView,
+        MyUploadSongView,
         FollowListView,
         FanListView,
         NTabs,
