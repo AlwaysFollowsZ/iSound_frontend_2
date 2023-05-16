@@ -15,12 +15,12 @@
             <n-gi :span="10"></n-gi>
             <n-gi :span="3">
                 <div style="padding-top: 3%">
-                    <n-input round type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" />
+                    <n-input round type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search()" />
                 </div>
             </n-gi>
             <n-gi :span="1">
                 <div style="color:lightgray; padding-top: 13%">
-                    <n-icon :component="SearchOutline" size="30px" @click="search" />
+                    <n-icon :component="SearchOutline" size="30px" @click="search()" />
                 </div>
                 
             </n-gi>
