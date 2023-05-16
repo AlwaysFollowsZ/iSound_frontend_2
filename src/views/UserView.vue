@@ -3,7 +3,7 @@
     <div class="user-page-body">
         <n-grid x-gap="0">
             <n-gi :span="3"> <!--左右边栏留一部分空袭空隙，使主页主体居中--></n-gi>
-            <n-gi :span="6">
+            <n-gi :span="5">
                 <div class="user-info-container">
                     <div class="avatar">
                         <img :src="avatarImage" alt="avatar" />
@@ -26,6 +26,10 @@
                     </div>
                 </div>
             </n-gi>
+            <n-gi :span="1">
+                <!--这里本意是想用一个竖线隔开，但是这个方法不太行的通似乎。-->
+                <n-divider vertical />
+            </n-gi>
             <n-gi :span="12">
                 <div class="user-other-info-container">
                     <div class="user-tabs">
@@ -37,8 +41,8 @@
                                 <n-tab-pane name="我的收藏" tab="我的收藏">
                                     <collect-song-sheet-view />
                                 </n-tab-pane>
-                                <n-tab-pane name="上传歌单" tab="上传歌单">
-                                    <upload-song-sheet-view />
+                                <n-tab-pane name="我的歌曲" tab="我的歌曲">
+                                    <upload-song-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我的关注" tab="我的关注">
                                     <follow-list-view />
@@ -68,7 +72,7 @@ import TopNav from '../components/TopNav.vue';
 import ModifyUserInfoView from './ModifyUserInfoView.vue';
 import MySongSheetView from '../components/MySongSheetView.vue';
 import CollectSongSheetView from '../components/CollectSongSheetView.vue';
-import UploadSongSheetView from '../components/UploadSongSheetView.vue';
+import MyUploadSongView from '../components/MyUploadSongView.vue';
 import FollowListView from "../components/FollowListView.vue";
 import FanListView from '../components/FanListView.vue';
 import { ref } from "vue";
@@ -81,7 +85,7 @@ export default {
         ModifyUserInfoView,
         MySongSheetView,
         CollectSongSheetView,
-        UploadSongSheetView,
+        MyUploadSongView,
         FollowListView,
         FanListView,
         NTabs,

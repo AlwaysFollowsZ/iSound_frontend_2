@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { backGroundColor } from '/src/colorMode'
+import{backgroundColor} from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
 import ImageTable from './components/tables/ImageTable/ImageTable.vue';
 import MessageItem from './components/message/MessageItem.vue';
@@ -12,19 +12,21 @@ import Player from './components/Player.vue'
 
 <template>
   <!-- <TopNav></TopNav> -->
-
-
-  <!-- <RouterView /> -->
-  <!-- <image-table></image-table> -->
-
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
+
   <div :style="{'background':backGroundColor}" class='page_background'>
     <RouterView />
-    <!-- <image-table></image-table>
-    <list-table></list-table> -->
+    <!-- <image-table></image-table> -->
+    <!-- <list-table></list-table> -->
+
+    <!-- <div :style="{'text-align':'center'}"> -->
+      <!-- 请直接传入数字(px),宽度可略 -->
+      <!-- <image-table :table-size="[,1000]"></image-table></div> -->
+    <!-- <list-table></list-table>  -->
+  
+  <Player />
   </div>
-  <Player/>
 </template>
 
 <style scoped>
@@ -64,7 +66,9 @@ nav a:first-of-type {
 }
 
 .page_background{
-  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;
+  height: fit-content;
+  width: fit-content;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 @media (min-width: 1024px) {

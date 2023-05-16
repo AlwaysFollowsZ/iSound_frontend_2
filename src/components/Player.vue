@@ -42,25 +42,18 @@ onMounted(() => {
         storageName: 'aplayer-setting',
     });
 
-    let url = '/index/';
+    let url = '/api/index/';
     if (props.pk != undefined) {
         if (props.playlist) {
-            url = `/playlist/detail/${props.pk}`;
+            url = `/api/playlist/detail/${props.pk}`;
         }
         else {
-            url = `/music/detail/${props.pk}`;
+            url = `/api/music/detail/${props.pk}`;
         }
     }
 
     proxy.$http.get(url).then(
         (response) => {
-            response.data.music_set.forEach((music) => {
-                music.url = proxy.$http.defaults.baseURL + music.url;
-                music.cover = proxy.$http.defaults.baseURL + music.cover;
-                if (music.lrc != null) {
-                    music.lrc = proxy.$http.defaults.baseURL + music.lrc;
-                }
-            });
             ap.list.add(response.data.music_set);
             setTheme(ap.list.index);
         }
@@ -133,9 +126,17 @@ onMounted(() => {
     visibility: visible !important;
 }
 
+.aplayer-icon-order {
+    position: fixed !important;
+    left: calc(50% - 109px) !important;
+    display: inline !important;
+}
+
 .aplayer-icon-loop {
     position: fixed !important;
     left: calc(50% - 109px) !important;
+    bottom: 29px !important;
+    display: inline !important;
 }
 
 .aplayer-icon-back {

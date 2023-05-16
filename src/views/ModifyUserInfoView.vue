@@ -18,7 +18,7 @@
                     </div>
                 </template>
                 <n-grid x-gap="12" :cols="2">
-                    <n-gi >
+                    <n-gi>
                         <div class="avatar">
                             <img :src="avatarUrl" @click="uploadFile" />
                             <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
@@ -26,14 +26,21 @@
                     </n-gi>
                     <n-gi>
                         <span>用户名</span>
-                        <n-input type="text" size="small" placeholder="这里是用户名" :disabled="!active"  />
-                        <span>昵称</span>
-                        <n-input type="text" size="small" placeholder="这里是昵称" :disabled="!active"  />
+                        <n-input type="text" size="small" placeholder="这里是用户名" :value="username"
+                            @input="username = $event" />
                         <span>邮箱</span>
-                        <n-input type="text" size="small" placeholder="这里是用户的邮箱" :disabled="!active" />
+                        <n-input type="text" size="small" placeholder="这里是用户的邮箱" :value="email"
+                            @input="email = $event" />
+                        <span>历史记录条数</span>
+                        <n-input type="text" size="small" placeholder="这里是历史记录条数" :value="recordNum"
+                            @input="recordNum = $event" />
                         <span>个性签名</span>
-                        <n-input type="textarea" size="small" placeholder="这里是用户的个性签名" :disabled="!active" />
-                        <n-switch v-model:value="active" class="modify-button-position"/>
+                        <n-input type="textarea" size="small" placeholder="这里是用户的个性签名" :value="bio"
+                            @input="bio = $event" />
+                        <!-- <n-switch v-model:value="active" class="modify-button-position"/> -->
+                        <n-button strong secondary round type="primary" class="modify-button-position" @click="submitModify">
+                            确认修改
+                        </n-button>
                     </n-gi>
                 </n-grid>
                 <div class="modify-notice-text">
@@ -50,6 +57,10 @@ export default {
     name: 'ModifyUserInfo',
     data() {
         return {
+            username: '',
+            email: '',
+            recordNum: '',
+            bio: '',
             file: null,
             avatarUrl: ref('/src/assets/default-admin.jpg'),
         }
@@ -72,6 +83,26 @@ export default {
             this.file = file
             // this.uploadImage()
         },
+        submitModify() {
+            console.log(this.username),
+            console.log(this.email),
+            console.log(this.recordNum),
+            console.log(this.bio)
+            let data = new FormData();
+            data.append('username', this.username);
+            data.append('email', this.email);
+            data.append('record_num', this.recordNum);
+            data.append('profile', this.bio);
+            this.$http.post('/api/accounts/update/', data).then(response => {
+                if(response.data.code == '0') {
+                    // this.closeLWindow();
+                    alert('修改成功!')
+                } else if (response.data.code == '-1') {
+                    alert('修改失败，请重新修改！');
+                    // this.closeLWindow();
+                }
+            });
+        },
     },
     setup() {
         return {
@@ -88,6 +119,7 @@ export default {
     align-items: center;
     margin-top: 20px;
 }
+
 .avatar {
     display: flex;
     align-items: center;
@@ -110,6 +142,7 @@ export default {
 .modify-button-position {
     margin-top: 20px;
 }
+
 .modify-button-top {
     margin-top: 20px;
 }

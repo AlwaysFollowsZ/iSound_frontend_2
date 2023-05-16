@@ -1,13 +1,16 @@
 <template>
     <div class="upload-song-sheet-container">
         <div class="upload-song-sheet-title">
-            上传歌单
+            上传歌曲
             <n-divider />
+        </div>
+        <div>
+            <img width="100" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" @click="goToUploadSong = true"/>
         </div>
     </div>
     <div class="already-upload-song-sheet">
         <div class="upload-song-sheet-title">
-            已上传的歌单
+            已上传的歌曲
             <n-divider />
         </div>
         <div class="song-sheet-container">
@@ -30,11 +33,18 @@
             </n-grid>
         </div>
     </div>
+    <upload-song-view :goToUploadSong="goToUploadSong"
+        @closeUploadWindow="goToUploadSong = false"></upload-song-view>
 </template>
 <script>
+import UploadSongView from '../views/UploadSongView.vue';
 export default {
+    components: {
+        UploadSongView,
+    },
     data() {
         return {
+            // goToUploadSong: false,
             songSheets: [
                 {
                     imgSrc: "/src/assets/song1.jpg",
