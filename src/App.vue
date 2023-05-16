@@ -19,9 +19,9 @@ import Player from './components/Player.vue'
   <!-- <message-send></message-send> -->
 
     <div :style="{'text-align':'center'}">
-      <!-- 请直接传入数字(px),宽度可略 -->
-      <image-table :table-size="[,1000]"></image-table></div>
-    <list-table></list-table> 
+      <!-- 请直接传入数字(px)(高度可略)-->
+      <image-table :table-size="[1000,]"></image-table></div>
+    <list-table :view-mode="user"></list-table> 
   
   <Player pk="3"/>
   </div>
