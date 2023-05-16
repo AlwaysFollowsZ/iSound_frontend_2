@@ -39,7 +39,40 @@
 <template>
     
     <div class="message-page-header">
-        <a-page-header
+        <div class="message-page-header">
+            <!-- <a-page-header
+            :backIcon="false"
+            ></a-page-header> -->
+            <div>
+                <n-grid>
+                    <n-gi :span="1">
+                        <a-button class="back-button" type="primary" shape="circle" @click="gotoMessage()">
+                            <template #icon><menu-outlined style="color:white"/></template>
+                        </a-button>
+                    </n-gi>
+                    <n-gi :span="4">
+                        <div class="isound-admin-style">
+                            iSound管理平台
+                        </div>
+                    </n-gi>
+                </n-grid>
+                
+                
+            </div>
+            <div class="admin-avatar">
+                <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
+                
+            </div>
+                <!-- <a-space class="search-input" direction="vertical">
+                    <a-input-search
+                    v-model:value="value"
+                    placeholder="input search text"
+                    style="width: 200px"
+                    @search="onSearch"
+                    /> 
+                </a-space> -->
+        </div>
+        <!-- <a-page-header
         :backIcon="false"
         ></a-page-header>
         <div>
@@ -49,7 +82,7 @@
         </div>
         <div class="admin-avatar">
             <img src="../assets/default-admin.jpg" alt="管理员头像" class="default-admin-avatar">
-        </div>
+        </div> -->
     </div>
 
     <div class="message-page-body">
@@ -89,6 +122,10 @@
 
 
 <style scoped>
+.isound-admin-style {
+    padding-top: 1%;
+    font-size: 28px;
+}
 .message-page-header {
     position: fixed;
     top: 0;
@@ -101,6 +138,8 @@
     position: fixed;
     top: 10px;
     left: 10px;
+    background-color: lightgray;
+    border-color: lightgray;
 }
 .admin-avatar {
     position: fixed;

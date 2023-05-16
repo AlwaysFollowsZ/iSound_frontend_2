@@ -74,12 +74,16 @@ export default{
         switchToRegister() {
             this.$emit('switch')
         },
+        changeToLoggedIn() {
+            this.$emit('login')
+        },
         login() {
             let data = new FormData();
             data.append('username', this.username);
             data.append('password', this.password);
             this.$http.post('/api/accounts/login/', data).then(response => {
                 if(response.data.code == '0') {
+                    this.changeToLoggedIn();
                     this.closeLWindow();
                 } else if (response.data.code == '-1') {
                     alert('登录失败，请重新登录！');
