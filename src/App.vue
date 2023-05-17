@@ -14,9 +14,9 @@ import Player from './components/Player.vue'
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-
-  <div :style="{'background':backGroundColor}" class='page_background'>
-    <RouterView />
+  <RouterView />
+  <!-- <div :style="{'background':backGroundColor}" class='page_background'> -->
+    
     <!-- <image-table></image-table> -->
     <!-- <list-table></list-table> -->
 
@@ -26,7 +26,6 @@ import Player from './components/Player.vue'
     <!-- <list-table></list-table>  -->
   
   <Player pk="3"/>
-  </div>
 </template>
 
 <style scoped>
