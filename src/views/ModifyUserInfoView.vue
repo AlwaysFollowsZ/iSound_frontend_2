@@ -86,40 +86,31 @@ export default {
     methods: {
         closeMWindow() {
             this.$emit('closeModifyWindow')
+            location.reload();
         },
         uploadFile() {
             this.$refs.fileInput.click()
         },
         handleFileChange(e) {
-            const file = e.target.files[0];
+            this.avatarFile = e.target.files[0];
             // 更新 avatarUrl 属性，即时更换图片
-            this.avatarUrl = URL.createObjectURL(file);
-            let formData = new FormData();
-            formData.append('avatar', file);
+            this.avatarUrl = URL.createObjectURL(this.avatarFile);
+            // let formData = new FormData();
+            // formData.append('avatar', file);
 
             // 发送文件到后端
-            this.uploadFormData(formData);
+            // this.uploadFormData(formData);
         },
         submitModify() {
-            console.log(this.username),
-                console.log(this.email),
-                console.log(this.recordNum),
-                console.log(this.bio)
             let data = new FormData();
             data.append('username', this.username);
             data.append('email', this.email);
             data.append('record_num', this.recordNum);
             data.append('profile', this.bio);
-            data.append('avatar', this.$refs.fileInput.files[0]);
+            data.append('avatar', this.avatarFile);
             this.$http.post('/api/accounts/update/', data).then(response => {
                 console.log(response);
                 if (response.data.code === '0') {
-                    this.$emit('update-user-info', {
-                        username: this.username,
-                        email: this.email,
-                        bio: this.bio,
-                        avatarUrl: this.avatarUrl,
-                    });
                     this.closeMWindow();
                     alert('修改成功!')
                 } else if (response.data.code === '-1') {

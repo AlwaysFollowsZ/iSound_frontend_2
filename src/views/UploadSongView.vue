@@ -22,8 +22,9 @@
                         <n-popover trigger="hover">
                             <template #trigger>
                                 <div class="upload-song-page">
-                                    <img :src="uploadSongPageUrl" @click="uploadFile" />
-                                    <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
+                                    <img :src="SongPageUrl" @click="uploadFile" />
+                                    <input type="file" ref="fileInput" style="display: none"
+                                        @change="handleSongPageChange" />
                                 </div>
                             </template>
                             <span>点击此处上传歌曲封面</span>
@@ -52,9 +53,9 @@
                                 @input="songName = $event" />
                         </div>
                         <div>
-                            <span>歌曲描述</span>
-                            <n-input type="textarea" size="small" placeholder="这里是歌曲的简介" :value="songDiscription"
-                                @input="songDiscription = $event" />
+                            <span>歌手</span>
+                            <n-input type="text" size="small" placeholder="请输入歌手" :value="songAuthor"
+                                @input="songAuthor = $event" />
                         </div>
                         <div>
                             <span>标签选择</span>
@@ -84,10 +85,11 @@ export default defineComponent({
     data() {
         return {
             songName: '',
-            songDiscription: '',
-            songSrcFile: '',
-            songLyricFile: '',
-            uploadSongPageUrl: "/src/assets/upload-logo.png",
+            songAuthor: '',
+            songSrcFile: null,
+            songLyricFile: null,
+            songPageFile: null,
+            songPageUrl: "/src/assets/upload-logo.png",
             options: [
                 {
                     label: "Everybody's Got Something to Hide Except Me and My Monkey",
@@ -101,48 +103,6 @@ export default defineComponent({
                     label: "Norwegian Wood",
                     value: "song2"
                 },
-                {
-                    label: "You Won't See",
-                    value: "song3",
-                    disabled: true
-                },
-                {
-                    label: "Nowhere Man",
-                    value: "song4"
-                },
-                {
-                    label: "Think For Yourself",
-                    value: "song5"
-                },
-                {
-                    label: "The Word",
-                    value: "song6"
-                },
-                {
-                    label: "Michelle",
-                    value: "song7",
-                    disabled: true
-                },
-                {
-                    label: "What goes on",
-                    value: "song8"
-                },
-                {
-                    label: "Girl",
-                    value: "song9"
-                },
-                {
-                    label: "I'm looking through you",
-                    value: "song10"
-                },
-                {
-                    label: "In My Life",
-                    value: "song11"
-                },
-                {
-                    label: "Wait",
-                    value: "song12"
-                }
             ]
         }
     },
@@ -156,22 +116,38 @@ export default defineComponent({
     methods: {
         closeUWindow() {
             this.$emit('closeUploadWindow');
+            location.reload();
         },
-        submitUpload() {
-            console.log(this.songName);
-        },
-        uploadFile() {
-            this.$refs.fileInput.click()
-        },
-        //     uploadFile() {
-        //         this.$refs.fileInput.click()
-        //     },
-        //     handleFileChange(e) {
-        //         const file = e.target.files[0]
-        //         this.file = file
-        //         // this.uploadImage()
-        //     },
-    },
+        // uploadFile() {
+        //     this.$refs.fileInput.click()
+        // },
+        // handleSongPageChange(e) {
+        //     this.songPageFile = e.target.files[0];
+        // },
+        // handleSongSrcFileChange(e) {
+        //     this.songSrcFile = e.target.files[0];
+        // },
+        // handleSongLyricFileChange(e) {
+        //     this.songLyricFile = e.target.files[0];
+        // },
+        // submitUpload() {
+        //     let data = new FormData();
+        //     data.append('title', this.songName);
+        //     data.append('artist', this.songAuthor);
+        //     data.append('cover', this.songPageFile);
+        //     data.append('source', this.songSrcFile);
+        //     data.append('lyrics', this.songLyricFile);
+        //     this.$http.post('/api/music/upload/', data).then(response => {
+        //         console.log(response);
+        //         if (response.data.code === '0') {
+        //             this.closeUWindow();
+        //             alert('上传歌曲成功!')
+        //         } else if (response.data.code === '-1') {
+        //             alert('上传歌曲失败，请重新上传!');
+        //         }
+        //     });
+        // }
+    }
 });
 </script>
 <style>
