@@ -11,7 +11,7 @@ export default new Vuex.Store({
         changeColorMode(state) {
             state.colorMode = state.colorMode === 'white' ? 'black' : 'white'
         },
-        changeThemeColor(state,rgb) {
+        changeThemeColor(state, rgb) {
             state.currentThemeColor = rgb
         },
         setLogState(state, b) {
