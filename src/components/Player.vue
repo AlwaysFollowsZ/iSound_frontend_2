@@ -1,5 +1,6 @@
 <template>
     <div ref="containerRef"></div>
+    <div class="footer"></div>
 </template>
   
 <script setup>
@@ -10,6 +11,7 @@ import {onBeforeUnmount, getCurrentInstance, onMounted, ref} from 'vue';
 
 const containerRef = ref();
 const theme = ref('#b7daff');
+const footerHeight = ref('130px');
 const { proxy } = getCurrentInstance();
 
 const props = defineProps({
@@ -83,6 +85,12 @@ onMounted(() => {
     ap.on('loadstart', () => {
         let author = document.getElementsByClassName('aplayer-author')[0];
         author.innerText = author.innerText.substr(2);
+    });
+    ap.on('lrcshow', (e) => {
+        footerHeight.value = '130px';
+    });
+    ap.on('lrchide', (e) => {
+        footerHeight.value = '66px';
     });
 });
 </script>
@@ -221,5 +229,11 @@ onMounted(() => {
     position: fixed !important;
     bottom: 23px !important;
     right: 20px !important;
+}
+
+.footer {
+    position: relative !important;
+    width: 100% !important;
+    height: v-bind('footerHeight');
 }
 </style>
