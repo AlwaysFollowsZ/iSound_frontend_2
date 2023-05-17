@@ -149,7 +149,7 @@
 
 <template>
   <div class="message-card-outer">
-    <n-scrollbar style="max-height: 780px">
+    <n-scrollbar style="max-height: 90vh">
     <div class="message-card" 
       v-for="(message, idx) in 
         messages.slice(7 * (page - 1), 7 * (page - 1) + ((7 * page > messages.length) ? (messages.length % 7) : 7))" 
