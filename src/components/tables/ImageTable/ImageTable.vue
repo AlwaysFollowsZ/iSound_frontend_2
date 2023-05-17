@@ -1,20 +1,42 @@
 <script>
-import { computed, defineProps, ref } from 'vue'
+import { watch } from 'vue'
 import { NScrollbar, NButton, NPagination } from 'naive-ui'
 import ImageTableEntry from './ImageTableEntry.vue'
-import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor } from '/src/colorMode'
+import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor } from '/src/colorMode'
 import { Rows } from './ImageRowData'
+import { backgroundColor } from '../../../colorMode'
 //传入props
 export default {
     data() {
-        const themeColor = globalThemeColor
+        const fontColorString = getFontColorString(globalThemeColor)
+        const BackgroundColorString = getBackgroundColorString(globalThemeColor)
+        //在这里设置需要使用:deep更改的穿透样式，并在:root中定义相应变量
+        watch(globalThemeColor, () => {
+            const tempFontColorString = getFontColorString(globalThemeColor)
+            const tempBackgroundColorString = getBackgroundColorString(globalThemeColor)
+            document.documentElement.style.setProperty('--my-arrow-color', getRGBString(tempFontColorString.value, 0.5))
+            document.documentElement.style.setProperty('--my-text-color', getRGBString(tempFontColorString.value, 0.8))
+            document.documentElement.style.setProperty('--my-color', getRGBString(tempBackgroundColorString.value, 0.5))
+            document.documentElement.style.setProperty('--my-color-focus', `1px solid ${getRGBString(tempBackgroundColorString.value, 0.7)}`)
+            document.documentElement.style.setProperty('--my-color-active', `1px solid ${getRGBString(tempBackgroundColorString.value, 0.8)}`)
+            document.documentElement.style.setProperty('--my-border-hover', `1px solid ${getRGBString(tempFontColorString.value, 0.6)}`)
+            document.documentElement.style.setProperty('--my-border', `1px solid ${getRGBString(tempFontColorString.value, 0.1)}`)
+            document.documentElement.style.setProperty('--my-border-active', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
+            document.documentElement.style.setProperty('--my-border-focus', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
+            document.documentElement.style.setProperty('--my-shadow-active', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.6)}`)
+            document.documentElement.style.setProperty('--my-shadow-focus', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.7)}`)
+        }, { immediate: true })
+
         return {
+            getRGBString,
+            antiBackgroundColor,
             pageArgs: {
                 currentPage: 1,
                 pageSize: 3
             },
-            BackgroundColorString: getBackgroundColorString(themeColor, 225),
-            fontColorString: getFontColorString(themeColor)
+            BackgroundColorString,
+            fontColorString,
+            changeColorMode
         }
     },
     computed: {
@@ -23,15 +45,13 @@ export default {
         },
         currentPageData() {
             const startIndex = (this.pageArgs.currentPage - 1) * this.pageArgs.pageSize
-            console.log(this.pageArgs.currentPage);
-            console.log(this.rows.slice());
             return this.rows.slice(startIndex, startIndex + this.pageArgs.pageSize)
-        }
+        },
     },
     props: {
         tableSize: {
             type: Array,
-            default: ['1000', ]
+            default: ['1000',]
         },
         position: {
             type: String,
@@ -45,8 +65,7 @@ export default {
             type: JSON.type,
             default: Rows
         }
-    }
-    //分页组件部分
+    },
 }
 </script>
 
@@ -60,13 +79,44 @@ export default {
         'width': `${tableSize[0]}px`,
         'height': `${tableSize[1]}px`
     }">
-        <n-scrollbar v-if="position === 'PersonalView'" class="image_table_list">
+        <n-scrollbar v-if="position === 'PersonalView'"
+         class="image_table_list">
             <template v-for="data in currentPageData" :key="data.name">
                 <image-table-entry v-bind="data" style="vertical-align: middle;"></image-table-entry>
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
-                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker :page-sizes="[5, 10, 20, 50]">
+                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker :page-sizes="[5, 10, 20, 50]"
+                    :style="{
+                        //页面按钮
+                        '--n-item-text-color': getRGBString(antiBackgroundColor, 0.6, 'font'),
+                        '--n-item-text-color-hover': getRGBString(antiBackgroundColor, 0.4, 'font'),
+                        '--n-item-text-color-active': getRGBString(fontColorString, 0.8),
+                        '--n-item-text-color-pressed': getRGBString(fontColorString, 0.2),
+                        '--n-item-border-hover': `1px solid ${getRGBString(fontColorString, 0.6)}`,
+                        '--n-item-border-pressed': `1px solid ${getRGBString(fontColorString, 0.3)}`,
+                        '--n-item-border-active': `1px solid ${getRGBString(fontColorString, 0.8)}`,
+                        '--n-item-border-active-hover': `1px solid ${getRGBString(fontColorString, 1)}`,
+                        //不可用的跳转按钮
+                        '--n-item-border-disabled': `1px solid ${getRGBString(BackgroundColorString, 0.6)}`,
+                        '--n-item-color-disabled': `1px solid ${getRGBString(BackgroundColorString, 0.3)}`,
+                        //可用的跳转按钮
+                        '--n-button-color-hover': getRGBString(BackgroundColorString, 0.6),
+                        '--n-button-border': `1px solid ${getRGBString(fontColorString, 0.8)}`,
+                        '--n-button-border-hover': `1px solid ${getRGBString(fontColorString)}`,
+                        '--n-button-icon-color': `${getRGBString(fontColorString, 0.8)}`,
+                        '--n-button-icon-color-hover': `${getRGBString(fontColorString, 0.5)}`,
+                        '--n-jumper-text-color': `${getRGBString(fontColorString, 0.6)}`,
+                        // 单页加载量选择按钮(需要v-deep)
+                        '--n-border-hover': `${getRGBString(fontColorString, 0.6)} `,
+                        '--n-arrow-color': `${getRGBString(fontColorString, 0.5)}`,
+                        '--n-text-color': `${getRGBString(fontColorString, 0.8)}`,
+                        '--n-color': `${getRGBString(BackgroundColorString, 1)}`,
+                        '--n-caret-color': `${getRGBString(fontColorString.value, 0.6)}`
+                    }"
+                    :select-props="{style:{
+                        '--n-color':'red',
+                    }}">
 
                     <template #goto>
                         跳转到
@@ -74,8 +124,7 @@ export default {
                 </n-pagination>
             </div>
         </n-scrollbar>
-        <template v-else>
-
+        <!-- <template v-else> -->
             <div class="list_top_nav">
                 <n-button class="more_button" :style="{
                     '--n-color': `rgba(${BackgroundColorString},0.15)`,
@@ -103,12 +152,12 @@ export default {
                 'border-radius': '50px',
                 'height': `${tableSize[1] - 100}px`
             }">
-                <template v-for=" data  in  Datas.rows " :key="data.name">
+                <template v-for=" data  in  rows " :key="data.name">
                     <image-table-entry v-bind="data" style="vertical-align: middle;">
                     </image-table-entry>
                 </template>
             </div>
-        </template>
+        <!-- </template> -->
     </div>
 </template>
 
@@ -116,6 +165,20 @@ export default {
 * {
     padding: 0;
     margin: 0;
+}
+
+:root {
+    --my-arrow-color: none;
+    --my-text-color: none;
+    --my-color: none;
+    --my-border: none;
+    --my-border-hover: none;
+    --my-color-focus: none;
+    --my-color-active:none;
+    --my-border-active: none;
+    --my-border-focus: none;
+    --my-shadow-active: none;
+    --my-shadow-focus: none;
 }
 
 .image_table {
@@ -136,11 +199,13 @@ export default {
     padding: 0 20px;
 }
 
-.pagination_box{
+.pagination_box {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    font-weight: 700;
 }
+
 .more_button {
     position: absolute;
     right: 20px;
@@ -150,5 +215,41 @@ export default {
     padding: 30px 30px;
     font-size: 25px;
     font-weight: 700;
+}
+
+:deep(.n-pagination .n-pagination-item) {
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
+
+:deep(.n-base-selection-label) {
+    --n-arrow-color: var(--my-arrow-color);
+    --n-color: var(--my-color);
+    --n-color-active:var(--my-color-focus);
+    --n-text-color: var(--my-text-color);
+}
+
+:deep(.n-base-selection) {
+    --n-border: var(--my-border) !important;
+    --n-border-hover: var(--my-border-hover) !important;
+    --n-border-focus: var(--my-border-focus) !important;
+    --n-border-active: var(--my-border-active) !important;
+    --n-box-shadow-focus: var(--my-shadow-focus) !important;
+    --n-box-shadow-active: var(--my-shadow-active) !important
+}
+
+:deep(.n-input) {
+    --n-color: var(--my-color) !important;
+    --n-color-focus: var(--my-color-focus) !important;
+    --n-text-color: var(--my-text-color) !important;
+    --n-border: var(--my-border) !important;
+    --n-border-hover: var(--my-border-hover) !important;
+    --n-border-focus: var(--my-border-focus) !important;
+    --n-box-shadow-focus: var(--my-shadow-focus) !important;
+    --n-box-shadow-active: var(--my-shadow-active) !important;
+    --n-font-weight: 700;
+}
+
+:deep(.n-pagination .n-pagination-item.n-pagination-item--disabled) {
+    cursor: default;
 }
 </style>
