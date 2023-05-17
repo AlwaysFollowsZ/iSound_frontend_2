@@ -26,7 +26,7 @@
             </n-gi>
             <n-gi :span="5"></n-gi>
             <n-gi>
-                <n-dropdown v-if="loggedIn" trigger="hover" :options="options">
+                <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options">
                     <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
                 </n-dropdown>
                 <n-tooltip v-else placement="bottom-start" trigger="hover">
@@ -38,7 +38,12 @@
             </n-gi>
         </n-grid>
     </div>
-    <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false" @switch="showLogin = false; showRegister = true"></login-view>
+    <login-view 
+        :showLogin="showLogin" 
+        @closeLoginWindow="showLogin = false" 
+        @switch="showLogin = false; showRegister = true"
+        @login="toLogIn()"
+    ></login-view>
     <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view>
   </template>
   
@@ -46,6 +51,7 @@
   import { SearchOutline } from '@vicons/ionicons5'
   import LoginView from '../views/LoginView.vue';
   import RegisterView from '../views/RegisterView.vue';
+  import { mapState, mapMutations } from 'vuex';
   
   export default {
     name: 'TopNav',
@@ -54,10 +60,12 @@
         LoginView,
         RegisterView
     },
+    computed: {
+        ...mapState(['isLoggedIn']),
+    },
     data() {
         return {
             searchValue: '',
-            loggedIn: false,
             showLogin: false,
             showRegister: false,
             SearchOutline,
@@ -84,7 +92,7 @@
             label: "登出",
             props: {
                 onClick: () => {
-                    this.loggedIn = false
+                    this.setLogState(false)
                     console.log('logout')
                 }
             }
@@ -93,6 +101,7 @@
         }
     },
     methods: {
+        ...mapMutations(['setLogState']),
         search() {
             if (this.searchValue.trim().length !== 0) {
                 console.log(`searchValue: ${this.searchValue}`)
@@ -100,6 +109,10 @@
                 this.searchValue = ''
             }
         },
+        toLogIn() {
+            this.setLogState(true)
+            console.log('hello')
+        }
         
     }
 };

@@ -26,19 +26,19 @@
                     </n-gi>
                     <n-gi>
                         <span>用户名</span>
-                        <n-input type="text" size="small" placeholder="这里是用户名" :value="username"
-                            @input="username = $event" />
+                        <n-input :style="{ '--n-border-radius': `10px` }" type="text" size="small" :placeholder="username"
+                            :value="username" @input="username = $event" />
                         <span>邮箱</span>
-                        <n-input type="text" size="small" placeholder="这里是用户的邮箱" :value="email"
-                            @input="email = $event" />
+                        <n-input :style="{ '--n-border-radius': `10px` }" type="text" size="small" :placeholder="email"
+                            :value="email" @input="email = $event" />
                         <span>历史记录条数</span>
-                        <n-input type="text" size="small" placeholder="这里是历史记录条数" :value="recordNum"
-                            @input="recordNum = $event" />
+                        <n-input :style="{ '--n-border-radius': `10px` }" type="text" size="small" :placeholder="recordNum"
+                            :value="recordNum" @input="recordNum = $event" />
                         <span>个性签名</span>
-                        <n-input type="textarea" size="small" placeholder="这里是用户的个性签名" :value="bio"
-                            @input="bio = $event" />
-                        <!-- <n-switch v-model:value="active" class="modify-button-position"/> -->
-                        <n-button strong secondary round type="primary" class="modify-button-position" @click="submitModify">
+                        <n-input :style="{ '--n-border-radius': `10px` }" type="textarea" size="small" :placeholder="bio"
+                            :value="bio" @input="bio = $event" />
+                        <n-button strong secondary round type="primary" class="modify-button-position"
+                            @click="submitModify">
                             确认修改
                         </n-button>
                     </n-gi>
@@ -61,9 +61,21 @@ export default {
             email: '',
             recordNum: '',
             bio: '',
-            file: null,
-            avatarUrl: ref('/src/assets/default-admin.jpg'),
+            avatarFile: null,
+            avatarUrl: ''
         }
+    },
+    created() {
+        this.$http.get('/api/accounts/detail/8/').then(response => {
+            this.username = response.data.username;
+            this.email = response.data.email;
+            this.recordNum = response.data.record_num;
+            this.bio = response.data.profile;
+            this.avatarFile = response.data.avatar;
+            this.avatarUrl = '/api' + response.data.avatar;
+        }).catch(error => {
+            console.error(error);
+        });
     },
     components: {
         CloseOutline,
@@ -79,36 +91,44 @@ export default {
             this.$refs.fileInput.click()
         },
         handleFileChange(e) {
-            const file = e.target.files[0]
-            this.file = file
-            // this.uploadImage()
+            const file = e.target.files[0];
+            // 更新 avatarUrl 属性，即时更换图片
+            this.avatarUrl = URL.createObjectURL(file);
+            let formData = new FormData();
+            formData.append('avatar', file);
+
+            // 发送文件到后端
+            this.uploadFormData(formData);
         },
         submitModify() {
             console.log(this.username),
-            console.log(this.email),
-            console.log(this.recordNum),
-            console.log(this.bio)
+                console.log(this.email),
+                console.log(this.recordNum),
+                console.log(this.bio)
             let data = new FormData();
             data.append('username', this.username);
             data.append('email', this.email);
             data.append('record_num', this.recordNum);
             data.append('profile', this.bio);
+            data.append('avatar', this.$refs.fileInput.files[0]);
             this.$http.post('/api/accounts/update/', data).then(response => {
-                if(response.data.code == '0') {
-                    // this.closeLWindow();
+                console.log(response);
+                if (response.data.code === '0') {
+                    this.$emit('update-user-info', {
+                        username: this.username,
+                        email: this.email,
+                        bio: this.bio,
+                        avatarUrl: this.avatarUrl,
+                    });
+                    this.closeMWindow();
                     alert('修改成功!')
-                } else if (response.data.code == '-1') {
+                } else if (response.data.code === '-1') {
                     alert('修改失败，请重新修改！');
-                    // this.closeLWindow();
+                    // this.closeMWindow();
                 }
             });
         },
     },
-    setup() {
-        return {
-            active: ref(false),
-        };
-    }
 };
 </script>
 <style>

@@ -29,9 +29,10 @@
         <tbody>
           <tr>
             <td style="width: 50px" :style="{'display':'inline-block','margin-right':'20px'}">
-              <div style="width: 50px" :style="{'text-align':'right'}">收件人:</div></td>
+              <div style="width: 50px; padding-top: 10%" :style="{'text-align':'right'}">收件人</div></td>
             <td style="width: 800px">
               <n-input 
+              :style="{'--n-border-radius': `10px`}"
               v-model:value="value1" 
               type="text" 
               placeholder="请输入收件人" 
@@ -46,9 +47,10 @@
         <tbody>
           <tr>
             <td style="width: 50px" :style="{'display':'inline-block','margin-right':'20px'}">
-              <div style="width: 50px" :style="{'text-align':'right'}">正文:</div></td>
+              <div style="width: 50px; padding-top: 10%" :style="{'text-align':'right'}">正文</div></td>
             <td style="width: 800px">
               <n-input
+              :style="{'--n-border-radius': `20px`}"
               v-model:value="value2"
               type="textarea"
               :autosize="{
