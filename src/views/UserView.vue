@@ -6,15 +6,15 @@
             <n-gi :span="5">
                 <div class="user-info-container">
                     <div class="avatar">
-                        <img :src="avatarImage" alt="avatar" />
+                        <img :src="avatarUrl" alt="avatar" />
                     </div>
                     <div class="user-info-card">
-                        <div class="user-info-title">iSound</div>
+                        <div class="user-info-title">{{ this.username }}</div>
                         <div class="user-info-body">
                             <div>
-                                <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ username }}<br />
-                                <newspaper-outline style="width: 20px; margin-top: 3px;" />邮箱：{{ email }}<br />
-                                <pricetag-outline style="width: 20px; margin-top: 3px;" />个性签名：{{ bio }}<br />
+                                <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ this.username }}<br />
+                                <newspaper-outline style="width: 20px; margin-top: 3px;" />邮箱：{{ this.email }}<br />
+                                <pricetag-outline style="width: 20px; margin-top: 3px;" />个性签名：{{ this.bio }}<br />
                             </div>
                         </div>
                         <div><br /><br /><!--用来隔开基本信息和修改个人信息--></div>
@@ -42,7 +42,7 @@
                                     <collect-song-sheet-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我的歌曲" tab="我的歌曲">
-                                    <upload-song-sheet-view />
+                                    <my-upload-song-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我的关注" tab="我的关注">
                                     <follow-list-view />
@@ -65,6 +65,7 @@
     </div>
     <modify-user-info-view :showModifyUserInfo="showModifyUserInfo"
         @closeModifyWindow="showModifyUserInfo = false"></modify-user-info-view>
+    <ModifyUserInfo @update-user-info="updateUserInfo" />
 </template>
   
 <script>
@@ -72,7 +73,7 @@ import TopNav from '../components/TopNav.vue';
 import ModifyUserInfoView from './ModifyUserInfoView.vue';
 import MySongSheetView from '../components/MySongSheetView.vue';
 import CollectSongSheetView from '../components/CollectSongSheetView.vue';
-import UploadSongSheetView from '../components/UploadSongSheetView.vue';
+import MyUploadSongView from '../components/MyUploadSongView.vue';
 import FollowListView from "../components/FollowListView.vue";
 import FanListView from '../components/FanListView.vue';
 import { ref } from "vue";
@@ -85,7 +86,7 @@ export default {
         ModifyUserInfoView,
         MySongSheetView,
         CollectSongSheetView,
-        UploadSongSheetView,
+        MyUploadSongView,
         FollowListView,
         FanListView,
         NTabs,
@@ -100,27 +101,33 @@ export default {
         return {
             showModifyUserInfo: false,
             currentView: "songSheet",
+            username: '',
+            bio: '',
+            email: '',
+            avatarUrl: '',
+            avatarFile: ''
         }
     },
-    setup() {
-        const username = ref("iSound");
-        const bio = ref("我是一个很固执的人，从来不管别人怎么说，怎么做。如果你也和我一样，那么这件事情就真的，泰！裤！辣！");
-        const email = ref("2137@buaa.edu.cn");
-        const avatarImage = ref("/src/assets/default-admin.jpg");
-        function uploadAvatar(event) {
-            const file = event.target.files[0];
-            // 上传文件的逻辑
-        }
-        return {
-            username,
-            bio,
-            email,
-            avatarImage,
-            uploadAvatar,
-            fansCount: 1000,
-            likeCount: 10,
-        };
+    created() {
+        this.$http.get('/api/accounts/detail/0/').then(response => {
+            this.username = response.data.username;
+            this.email = response.data.email;
+            this.recordNum = response.data.record_num;
+            this.bio = response.data.profile;
+            this.avatarFile = response.data.avatar;
+            this.avatarUrl = '/api' + response.data.avatar;
+        }).catch(error => {
+            console.error(error);
+        });
     },
+    methods: {
+        updateUserInfo(userInfo) {
+            this.avatarUrl = userInfo.avatarUrl;
+            this.username = userInfo.username;
+            this.email = userInfo.email;
+            this.bio = userInfo.bio;
+        },
+    }
 };
 </script>
   

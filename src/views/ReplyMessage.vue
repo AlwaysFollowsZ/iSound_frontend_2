@@ -1,17 +1,17 @@
 <script>
     import { defineComponent } from 'vue';
-    import  MessageItem  from '../components/message/MessageItem.vue';
+    import  MessageItemReply  from '../components/message/MessageItemReply.vue';
     export default defineComponent({
-        name : 'ReceiveMessage',
+        name : 'ReplyMessage',
         components: {
-            MessageItem,
+            MessageItemReply,
         }
     });
 </script>
 
 <template>
     <div class="reply-message">
-    <message-item></message-item>
+    <message-item-reply></message-item-reply>
     </div>
 </template>
 

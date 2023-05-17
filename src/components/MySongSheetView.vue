@@ -4,25 +4,28 @@
             全部歌单
             <n-divider />
         </div>
-        <div class="song-sheet-container">
-            <n-grid :x-gap="12" :y-gap="6" :col="3">
-                <n-gi :span="8" v-for="(song, idx) in songSheets" :key="idx">
-                    <div class="single-card-container">
-                        <div class="single-card-img-container">
-                            <img class="single-card-img" :src="song.imgSrc">
-                        </div>
-                        <div class="single-card-info-container">
-                            <div class="single-card-info-name">
-                                {{ song.title }}
+        <!-- <div style="display: flex; justify-content: center;"> -->
+            <div class="song-sheet-container">
+                <n-grid :x-gap="12" :y-gap="6" :col="3">
+                    <n-gi :span="8" v-for="(song, idx) in songSheets" :key="idx">
+                        <div class="single-card-container">
+                            <div class="single-card-img-container">
+                                <img class="single-card-img" :src="song.imgSrc">
                             </div>
-                            <div class="single-card-info-singer">
-                                {{ song.singer }}
+                            <div class="single-card-info-container">
+                                <div class="single-card-info-name">
+                                    {{ song.title }}
+                                </div>
+                                <div class="single-card-info-singer">
+                                    {{ song.singer }}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </n-gi>
-            </n-grid>
-        </div>
+                    </n-gi>
+                </n-grid>
+            </div>
+            <!-- <n-pagination v-model:page="page" :page-count="3" />
+        </div> -->
     </div>
 </template>
 <script>
