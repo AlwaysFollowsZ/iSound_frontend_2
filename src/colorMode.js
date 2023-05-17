@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import store from '/src/store'
 
 import ColorThief from 'colorthief'
@@ -8,18 +8,21 @@ import ColorThief from 'colorthief'
 const colorThief = new ColorThief()
 
 export const colorMode = computed(() => store.state.colorMode)//从这里获取白天和黑夜模式
-export const globalThemeColor = computed(() => Object.assign([], store.state.currentThemeColor))//全局的主题色
+export const globalThemeColor = computed(() =>  Object.assign([], store.state.currentThemeColor))//全局的主题色
 export const backgroundColor = computed(() => {
     return colorMode.value === 'black' ?
         'rgb(15,15,20)' : 'rgb(245,245,245)'
 })//从这里获取白天/黑夜模式的背景色
-
+export const antiBackgroundColor = computed(() => {
+    return colorMode.value === 'white' ?
+        '15,15,20' : '245,245,245'
+})//从这里获取两种模式的相反色。用于pagination
 
 //以下两个方法的输入为一个数组'[]',包含表示RGB的三个数字
 //colorBase表示颜色基底[0,255]，值越高和背景色差别越小
 
 
-//获取主题字体色的方法
+//获取主题字体色的方法,返回'a,b,c'形式的字符串
 export const getFontColorString = (themeColorInput, colorBase = 125) => {
     return computed(() => {
         const a = globalThemeColor.value
@@ -39,8 +42,8 @@ export const getFontColorString = (themeColorInput, colorBase = 125) => {
 
     })
 }
-//获取主题背景色的方法
-export const getBackgroundColorString = (themeColorInput, colorBase = 255) => {
+//获取主题背景色的方法,返回'a,b,c'形式的字符串
+export const getBackgroundColorString = (themeColorInput) => {
     return computed(() => {
         const a = globalThemeColor.value
         let themeColor//不能直接对传入的对象进行更改，因此设置一个中间变量
@@ -55,6 +58,22 @@ export const getBackgroundColorString = (themeColorInput, colorBase = 255) => {
     })
 }
 
+//输入形如'a,b,c'的颜色字符串、不透明度和类型(仅在管理员模式下有效),viewMode(仅在管理员模式下有效)
+//获取形如'rgba(a,b,c,opacity)'的rgba字段
+export const getRGBString = (color, opacity = 1, type = 'normal', viewMode = 'user') => {
+    if (viewMode === 'user') {
+        return `rgba(${color},${opacity})`
+    }
+    else {
+        if (type === 'font') {
+            return 'rgba(100,100,100,0.7)'
+        }
+        else if (type === 'background') {
+            return 'transparent'
+        }
+    }
+}
+
 //更改白天/黑夜模式
 export const changeColorMode = () => {
     store.commit('changeColorMode')
@@ -67,8 +86,8 @@ export const changeThemeColor = (colorInput = [200, 200, 200]) => {
 }
 //根据传入的图片路径直接更改传入的ref变量"color"
 //注意！请不要放入svg图片
-export const getThemeColorByImage = async (imageUrl,color) => {
-    colorThief.getColorFromUrl(imageUrl,(res)=>{color.value=res})
+export const getThemeColorByImage = async (imageUrl, color) => {
+    colorThief.getColorFromUrl(imageUrl, (res) => { color.value = res })
 }
 //根据传入的图片路径更换主题色
 //注意！请不要放入svg图片
@@ -79,7 +98,7 @@ export const changeThemeColorByImage = (imageUrl) => {
 }
 
 
-//根据色彩模式调节主题色
+//根据色彩模式调节主题色,返回调节后的数组
 const fixColor = (colorInput) => {
     let color = JSON.parse(JSON.stringify(colorInput))//深拷贝
     const blackBrightness = Math.round((Math.max(color[0], color[1], color[2]) + Math.min(color[0], color[1], color[2])) / 2);

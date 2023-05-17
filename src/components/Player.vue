@@ -1,5 +1,6 @@
 <template>
     <div ref="containerRef"></div>
+    <div class="footer"></div>
 </template>
   
 <script setup>
@@ -10,6 +11,7 @@ import {onBeforeUnmount, getCurrentInstance, onMounted, ref} from 'vue';
 
 const containerRef = ref();
 const theme = ref('#b7daff');
+const footerHeight = ref('130px');
 const { proxy } = getCurrentInstance();
 
 const props = defineProps({
@@ -38,7 +40,7 @@ onMounted(() => {
         mutex: true,
         lrcType: 3,
         listFolded: true,
-        listMaxHeight: '100px',
+        listMaxHeight: '600px',
         storageName: 'aplayer-setting',
     });
 
@@ -80,13 +82,25 @@ onMounted(() => {
     ap.on('listswitch', (e) => {
         setTheme(e.index);
     });
+    ap.on('loadstart', () => {
+        let author = document.getElementsByClassName('aplayer-author')[0];
+        author.innerText = author.innerText.substr(2);
+    });
+    ap.on('lrcshow', (e) => {
+        footerHeight.value = '130px';
+    });
+    ap.on('lrchide', (e) => {
+        footerHeight.value = '66px';
+    });
 });
 </script>
 
 <style scope>
 .aplayer-fixed {
-    max-width: 100% !important;
-    width: 100% !important;
+    position: fixed !important;
+    width: 400px !important;
+    bottom: 0 !important;
+    left: calc(100% - 400px) !important;
 }
 
 .aplayer-body {
@@ -95,53 +109,80 @@ onMounted(() => {
 }
 
 .aplayer-pic {
-    width: 52.8px !important;
-    height: 52.8px !important;
+    width: 46px !important;
+    height: 46px !important;
     position: fixed !important;
-    bottom: 6.6px !important;
-    left: 6.6px !important;
-    border-radius: 6.6px !important;
+    bottom: 10px !important;
+    left: 10px !important;
+    border-radius: 6px !important;
+}
+
+.aplayer-fixed:not(.aplayer-narrow) > .aplayer-body > .aplayer-pic > .aplayer-button {
+    display: none !important;
+}
+
+.aplayer-title {
+    position: fixed !important;
+    top: 15px !important;
+    left: 10px !important;
+}
+
+.aplayer-author {
+    position: fixed !important;
+    bottom: 15px !important;
+    left: 10px !important;
+}
+
+.aplayer-controller {
+    width: 360px !important;
+    left: calc(50% - 204px) !important;
+    z-index: 100 !important;
 }
 
 .aplayer-bar-wrap {
-    position: fixed !important;
     margin: 0 !important;
-    width: calc(25% + 21px) !important;
-    left: calc(37.5% - 34.5px) !important;
 }
 
 .aplayer-time-inner {
+    position: fixed !important;
+    width: 426px !important;
+    bottom: 6px !important;
+    left: calc(50% - 237px) !important;
+    display: inline-block !important;
     visibility: hidden !important;
 }
 
 .aplayer-ptime {
-    position: fixed !important;
-    left: calc(37.5% - 71.54px) !important;
+    position: absolute !important;
+    left: 0 !important;
     visibility: visible !important;
 }
 
 .aplayer-dtime {
-    position: fixed !important;
-    left: calc(62.5% - 6.5px) !important;
+    position: absolute !important;
+    right: -3px !important;
     visibility: visible !important;
 }
 
-.aplayer-icon-order {
-    position: fixed !important;
-    left: calc(50% - 109px) !important;
-    display: inline !important;
+.aplayer-time {
+    position: absolute !important;
+    width: 100% !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: -100 !important;
 }
 
-.aplayer-icon-loop {
-    position: fixed !important;
-    left: calc(50% - 109px) !important;
-    bottom: 29px !important;
-    display: inline !important;
+.aplayer-volume-wrap {
+    margin: 0 !important;
+    bottom: 21px !important;
+    left: calc(50% - 112.5px) !important;
 }
 
 .aplayer-icon-back {
     position: fixed !important;
-    left: calc(50% - 74px) !important;
+    left: calc(50% - 84px) !important;
 }
 
 .aplayer-icon-play {
@@ -151,12 +192,13 @@ onMounted(() => {
 
 .aplayer-icon-forward {
     position: fixed !important;
-    left: calc(50% + 6px) !important;
+    left: calc(50% + 16px) !important;
 }
 
-.aplayer-icon-menu {
+.aplayer-icon-lrc {
     position: fixed !important;
-    left: calc(50% + 46px) !important;
+    bottom: 29.5px !important;
+    left: calc(50% + 68.5px) !important;
 }
 
 .aplayer-lrc {
@@ -167,5 +209,31 @@ onMounted(() => {
 
 .aplayer-lrc-contents > p {
     font-size: 16px !important;
+}
+
+.aplayer-icon-order {
+    position: fixed !important;
+    display: inline !important;
+    bottom: 25.5px !important;
+    right: 102.5px !important;
+}
+
+.aplayer-icon-loop {
+    position: fixed !important;
+    display: inline !important;
+    bottom: 25.5px !important;
+    right: 60px !important;
+}
+
+.aplayer-icon-menu {
+    position: fixed !important;
+    bottom: 23px !important;
+    right: 20px !important;
+}
+
+.footer {
+    position: relative !important;
+    width: 100% !important;
+    height: v-bind('footerHeight');
 }
 </style>

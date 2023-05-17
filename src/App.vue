@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import{backgroundColor} from '/src/colorMode'
+import{backgroundColor,getRGBString} from '/src/colorMode'
 import HelloWorld from './components/HelloWorld.vue'
 import ImageTable from './components/tables/ImageTable/ImageTable.vue';
 import MessageItem from './components/message/MessageItem.vue';
@@ -14,19 +14,17 @@ import Player from './components/Player.vue'
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-  <RouterView />
   <!-- <div :style="{'background':backGroundColor}" class='page_background'> -->
-    
-    <!-- <image-table></image-table> -->
-    <!-- <list-table></list-table> -->
-
+  <!-- <image-table></image-table> -->
+  <!-- <list-table></list-table> -->
+  <div :style="{'background':backgroundColor }" class='page_background'>
+    <RouterView />
     <!-- <div :style="{'text-align':'center'}"> -->
-      <!-- 请直接传入数字(px)(高度可略)-->
-      <!-- <image-table :table-size="[1000,]"></image-table></div> -->
-    <!-- <list-table :view-mode="user"></list-table>  -->
-  
+    <!-- 请直接传入数字(px)(高度可略)-->
+    <image-table :table-size="[1000,]"></image-table>
+    <list-table :view-mode="user"></list-table> 
+  </div> 
   <Player />
-
 </template>
 
 <style scoped>
