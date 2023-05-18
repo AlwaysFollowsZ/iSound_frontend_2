@@ -115,7 +115,7 @@ export default {
             this.recordNum = response.data.record_num;
             this.bio = response.data.profile;
             this.avatarFile = response.data.avatar;
-            this.avatarUrl = '/api' + response.data.avatar;
+            this.avatarUrl = response.data.avatar;
         }).catch(error => {
             console.error(error);
         });
