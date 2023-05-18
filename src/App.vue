@@ -14,17 +14,14 @@ import Player from './components/Player.vue'
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-  <!-- <div :style="{'background':backGroundColor}" class='page_background'> -->
-  <!-- <image-table></image-table> -->
-  <!-- <list-table></list-table> -->
   <div :style="{'background':backgroundColor }" class='page_background'>
     <RouterView />
     <!-- <div :style="{'text-align':'center'}"> -->
     <!-- 请直接传入数字(px)(高度可略)-->
-    <image-table :table-size="[1000,]"></image-table>
-    <list-table :view-mode="user"></list-table> 
+    <!-- <image-table :table-size="[1000,]"></image-table> -->
+    <!-- <list-table :view-mode="user"></list-table>  -->
+    <Player />
   </div> 
-  <Player />
 </template>
 
 <style scoped>

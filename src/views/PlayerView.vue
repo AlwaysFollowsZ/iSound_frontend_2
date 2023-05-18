@@ -1,9 +1,9 @@
 <script>
+    import 'animate.css' 
     import dayjs from 'dayjs';
     import relativeTime from 'dayjs/plugin/relativeTime';
-    import { defineComponent } from 'vue';
-    import { useMessage } from "naive-ui";
-    import { ChevronBack, StarOutline, FitnessOutline, WarningOutline, ChatbubbleEllipsesOutline, TrashOutline, CreateOutline } from '@vicons/ionicons5';
+    import { defineComponent, ref } from 'vue';
+    import { ChevronBack, StarOutline, FitnessOutline, WarningOutline, ChatbubbleEllipsesOutline, TrashOutline, CreateOutline, Fitness, Star, Warning } from '@vicons/ionicons5';
     dayjs.extend(relativeTime);
     export default defineComponent({
         name: 'PlayerView',
@@ -15,18 +15,31 @@
             ChatbubbleEllipsesOutline,
             TrashOutline,
             CreateOutline,
+            Fitness,
+            Star,
+            Warning,
         },
         setup() {
-            const message = useMessage();
             return {
-                handlePositiveClick() {
-                    message.info("该评论已删除");
+                handlePositiveClick(comment) {
+                    // alert("该评论已删除");
+                    console.log(comment.content.length);
+                    const index = this.comments.findIndex(cmt => cmt.id === comment.id);
+                    if (index !== -1) {
+                        this.comments.splice(index, 1);
+                    }
+                    if ((this.page - 1) * 5 >= this.comments.length) {
+                        this.page -= 1;
+                    }
                 },
                 handleNegativeClick() {
-                    message.info("取消");
+                    // alert("取消");
                 },
                 dayjs,
                 value: ref(null),
+                islike: ref(false),
+                iscollect: ref(false),
+                iscomplain: ref(false),
             };
         },
         data() {
@@ -52,6 +65,54 @@
                         avatar: "/src/assets/song1.jpg",
                         content: "这是很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论"
                     },
+                    {
+                        id: 4,
+                        author: "zjq",
+                        avatar: "/src/assets/song6.jpg",
+                        content: "这是我的评论评论评论评论评论评论"
+                    },
+                    {
+                        id: 5,
+                        author: "zjq",
+                        avatar: "/src/assets/song6.jpg",
+                        content: "这是我的评论评论评论评论评论评论"
+                    },
+                    {
+                        id: 6,
+                        author: "zjq",
+                        avatar: "/src/assets/song6.jpg",
+                        content: "这是我的评论评论评论评论评论评论"
+                    },
+                    {
+                        id: 7,
+                        author: "Iris",
+                        avatar: '/src/assets/song4.jpg',
+                        content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+                    },
+                    {
+                        id: 8,
+                        author: "zjq",
+                        avatar: "/src/assets/song6.jpg",
+                        content: "这是我的评论评论评论评论评论评论"
+                    },
+                    {
+                        id: 9,
+                        author: "Iris",
+                        avatar: '/src/assets/song4.jpg',
+                        content: '9999We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+                    },
+                    {
+                        id: 10,
+                        author: "Iris",
+                        avatar: '/src/assets/song4.jpg',
+                        content: '101010We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+                    },
+                    {
+                        id: 11,
+                        author: "Iris",
+                        avatar: '/src/assets/song4.jpg',
+                        content: '11111111We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
+                    },
                 ]
             }
         },
@@ -61,18 +122,21 @@
             },
             like() {
                 //todo
+                this.islike = !this.islike;
             },
             collect() {
                 //todo
+                this.iscollect = !this.iscollect;
             },
             complain() {
                 //todo
+                this.iscomplain = !this.iscomplain;
             },
-            getImageUrl(url) {
-                return new URL(url, import.meta.url).href;
-            },
+            // getImageUrl(url) {
+            //     return new URL(url, import.meta.url).href;
+            // },
             cleanComment() {
-                this.value=""
+                this.value="";
             },
             sendComment() {
                 //todo
@@ -80,19 +144,26 @@
             deleteMyComment() {
                 //todo
             },
-            editMyComment() {
-                //todo
+            editMyComment(comment) {
+                // alert("yes!");
+                this.value=comment.content;
+                document.querySelector('#comment-top').scrollIntoView({
+                    behavior: 'smooth'
+                });
+                if (document.querySelector('.n-input-wrapper') == null) {
+                    document.querySelector('#comment-fold').click();
+                }
             },
         }
     });
 </script>
 
 <template>
-    <div class="player-page">
+    <div class="player-page" id="top">
         <n-grid>
             <n-gi :span="4">
                 <div>
-                <n-button tertiary circle class="back-button" @click="back()">
+                <n-button tertiary circle class="back-button" @click="back">
                 <ChevronBack style="width: 36px; position: absolute; left: 0px"/>
                 </n-button>
             </div>
@@ -108,17 +179,20 @@
                         <n-gi :span="6"></n-gi>
                         <n-gi :span="4" style="margin: auto">
                             <span style="margin-right: 3px; margin-top: 2px;" >
-                                <n-icon size="30" color="#ff69b4" @click="like()"><FitnessOutline/></n-icon>
+                                <n-icon v-if="islike" size="30" color="#ff69b4" @click="like" class="animate__animated animate__heartBeat"><Fitness/></n-icon>
+                                <n-icon v-else size="30" @click="like"><FitnessOutline/></n-icon>
                             </span>
                         </n-gi>
                         <n-gi :span="4" style="margin: auto">
                             <span style="margin-right: 3px; margin-top: 2px;">
-                                <n-icon size="30" @click="collect()"><StarOutline/></n-icon>
+                                <n-icon v-if="iscollect" size="30" color="#FFD700" @click="collect" class="animate__animated animate__flash"><Star/></n-icon>
+                                <n-icon v-else size="30" @click="collect"><StarOutline/></n-icon>
                             </span>
                         </n-gi>
                         <n-gi :span="4" style="margin: auto">
                             <span style="margin-right: 3px; margin-top: 2px;">
-                                <n-icon size="30" @click="complain()"><WarningOutline/></n-icon>
+                                <n-icon v-if="iscomplain" size="30" color="#DC143C" @click="complain" class="animate__animated animate__headShake"><Warning/></n-icon>
+                                <n-icon v-else size="30" @click="complain"><WarningOutline/></n-icon>
                             </span>
                         </n-gi>
                         <n-gi :span="6"></n-gi>
@@ -151,18 +225,18 @@
             <n-gi :span="16">
                 <div>
                     <n-collapse>
-                    <n-collapse-item  name="1">
+                    <n-collapse-item >
                     <template #arrow><div style="color: white"></div></template>
                     <template #header>
                         <span style="margin-right: 3px; margin-top: 2px;">
                             <n-grid>
-                                <n-gi :span="23">
+                                <n-gi :span="23" id="comment-top">
                                     <span style="font-size: 22px;">
                                         全部评论
                                     </span>
                                 </n-gi>
-                                <n-gi :span="1">
-                                    <n-icon size="27"><ChatbubbleEllipsesOutline/></n-icon>
+                                <n-gi :span="1" style="padding-top: 5px;">
+                                    <n-icon id="comment-fold" size="27"><ChatbubbleEllipsesOutline /></n-icon>
                                 </n-gi>
                             </n-grid>
                         </span>
@@ -181,34 +255,36 @@
                                 maxRows: 6
                             }"/>
                             <div class="my-comment-button">
-                                <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment()">
+                                <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
                                 清空
                                 </n-button>
-                                <n-button calss="send-button" strong secondary type="tertiary" @click="sendComment()">
+                                <n-button calss="send-button" strong secondary type="tertiary" @click="sendComment">
                                 发送
                                 </n-button>
                             </div>
                         </div>
                     </n-collapse-item>
                     </n-collapse>
-                    
                 </div>
             </n-gi>
             <n-gi :span="4"></n-gi>
         </n-grid>
     </div>
+    <a-divider style="height: 1.8px; background-color: #dddddd"/>
     <div class="comments">
         <n-grid>
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">
-                <div v-for="comment in comments">
+                <div v-for="(comment, idx) in 
+                comments.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > comments.length) ? (comments.length % 5) : 5))"
+                :key="idx">
                     <a-comment>
                         <template #actions>
                             <span key="edit-comment">
-                                <span style="padding-left: 855px; cursor: auto">
+                                <span style="padding-left: 860px; cursor: auto">
                                     <n-popover trigger="hover">
                                         <template #trigger>
-                                        <n-icon size="18" @click="editMyComment()">
+                                        <n-icon size="18" @click="editMyComment(comment)">
                                         <CreateOutline/>
                                         </n-icon>
                                         </template>
@@ -219,11 +295,11 @@
                             <span key="delete-comment">
                                 <span style="padding-left: 3px; cursor: auto">
                                     <n-popconfirm
-                                        @positive-click="handlePositiveClick"
+                                        @positive-click="handlePositiveClick(comment)"
                                         @negative-click="handleNegativeClick"
                                     >
                                     <template #trigger>
-                                    <n-icon size="18" @click="deleteMyComment()">
+                                    <n-icon size="18" @click="deleteMyComment">
                                     <TrashOutline/>
                                     </n-icon>
                                     </template>
@@ -247,13 +323,28 @@
                             
                         </a-tooltip>
                         </template>
-                        
                     </a-comment>
                 </div> 
+                <div class="card-pagination">
+                    <n-grid>
+                        <n-gi :span="8"></n-gi>
+                        <n-gi :span="8">
+                        <div style="display: flex; justify-content: center;" v-if="comments.length > 0">
+                            <n-pagination v-model:page="page" :page-count="Math.ceil(comments.length / 5)" />
+                        </div>
+                        <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+                            期待你的评论！
+                        </div>
+                        </n-gi>
+                        <n-gi :span="8"></n-gi>
+                    </n-grid>
+                </div>
             </n-gi>
             <n-gi :span="4"></n-gi>
         </n-grid>
     </div>
+        
+    
 </template>
 
 <style scoped>
@@ -315,14 +406,30 @@
 :deep(.ant-comment-actions) {
     margin-top: 0;
 }
+
+.ant-divider-horizontal {
+    display: flex;
+    clear: both;
+    width: 984px;
+    min-width: 984px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    margin-left: 244px;
+    margin-right: 244px;
+}
+
 .edit-comment {
     margin-top: 24px;
 }
 .clean-button {
     margin-right: 15px;
-    margin-left: 849px;
+    margin-left: 853px;
 }
 .my-comment-button {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
+}
+
+.html {
+    scroll-behavior: smooth;
 }
 </style>

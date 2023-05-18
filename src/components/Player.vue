@@ -90,7 +90,7 @@ onMounted(() => {
         footerHeight.value = '130px';
     });
     ap.on('lrchide', (e) => {
-        footerHeight.value = '66px';
+        footerHeight.value = '82px';
     });
 });
 </script>
