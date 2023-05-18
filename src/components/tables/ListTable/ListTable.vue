@@ -331,7 +331,7 @@ export default {
                 // 调节字体、背景、边框颜色
                 '--n-th-text-color': getRGBString(fontColorString, 1, 'font', viewMode),
                 '--n-td-text-color': getRGBString(fontColorString, 0.8, 'font', viewMode),
-                '--n-td-color': getRGBString(HeadBackgroundColorString, 0.6, 'background', viewMode),
+                '--n-td-color': getRGBString(HeadBackgroundColorString, 0.4, 'background', viewMode),
                 '--n-th-color': getRGBString(DataBackgroundColorString, 0.6, 'background', viewMode),
                 '--n-td-color-hover': getRGBString(HeadBackgroundColorString, 0.1, 'background', viewMode),
                 '--n-th-font-weight': '700',
