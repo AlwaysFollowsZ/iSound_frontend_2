@@ -3,7 +3,10 @@
         全部关注
         <n-divider />
     </div>
-    <div class="follower-container" v-for="follower in followerList">
+    <div class="follow-list-border">
+    <div class="follower-container" v-for="(follower, idx) in 
+        followerList.slice(5*(page-1), 5*(page-1)+((5*page>followerList.length) ? (followerList.length%5) : 5))"
+        :key="idx">
         <div class="follower-card">
             <n-grid x-gap="12">
                 <n-gi :span="3"><img class="follower-card-image" :src="follower.avatarImg" /></n-gi>
@@ -22,13 +25,33 @@
                 </n-gi>
             </n-grid>
             <n-divider dashed />
-        </div>
+        </div> 
+    </div>
+    <n-grid>
+        <n-gi :span="8"></n-gi>
+        <n-gi :span="8">
+            <div style="display: flex; justify-content: center;" v-if="followerList.length > 0">
+            <n-pagination v-model:page="page" :page-count="Math.ceil(followerList.length / 5)" />
+            </div>
+            <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+            您还没有关注他人哦~
+          </div>
+        </n-gi>
+        <n-gi :span="8"></n-gi>
+    </n-grid>
     </div>
 </template>
 <script>
+import { defineComponent } from 'vue'
+import { message } from 'ant-design-vue';
+import { NGrid } from 'naive-ui'
 export default {
+    components: {
+        NGrid,
+    },
     data() {
         return {
+            page: 1,
             followerList: [
                 {
                     name: "iSound",
@@ -44,7 +67,27 @@ export default {
                     name: "王菲",
                     bio: "匆匆那年",
                     avatarImg: "/src/assets/song2.jpg"
-                }
+                },
+                {
+                    name: "王菲",
+                    bio: "匆匆那年",
+                    avatarImg: "/src/assets/song2.jpg"
+                },
+                {
+                    name: "王菲",
+                    bio: "匆匆那年",
+                    avatarImg: "/src/assets/song2.jpg"
+                },
+                {
+                    name: "王菲",
+                    bio: "匆匆那年",
+                    avatarImg: "/src/assets/song2.jpg"
+                },
+                {
+                    name: "王菲",
+                    bio: "匆匆那年",
+                    avatarImg: "/src/assets/song2.jpg"
+                },
             ]
         }
     }
@@ -87,4 +130,5 @@ export default {
     font-weight: 500;
     color: grey;
 }
+
 </style>

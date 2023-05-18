@@ -1,33 +1,58 @@
 <template>
     <div ref="containerRef"></div>
+    <a @click="aplayerLaunch"><ChevronUp class="aplayer-launch" /></a>
     <div class="footer"></div>
 </template>
   
 <script setup>
+import {getCurrentInstance, onMounted, ref} from 'vue';
 import 'APlayer/dist/APlayer.min.css';
 import APlayer from 'APlayer';
 import ColorThief from 'colorthief';
-import {onBeforeUnmount, getCurrentInstance, onMounted, ref} from 'vue';
+import { ChevronUp } from '@vicons/ionicons5';
 
 const containerRef = ref();
 const theme = ref('#b7daff');
 const footerHeight = ref('130px');
 const { proxy } = getCurrentInstance();
+const colorThief = new ColorThief();
+const image = new Image();
+const xhr = new XMLHttpRequest();
 
-const props = defineProps({
-    pk: Number,
-    add: {
-        type: Boolean,
-        default: false,
-    },
-    playlist: {
-        type: Boolean,
-        default: false,
-    },
-});
+let ap;
+let currentMusicId;
+
+function aplayerLaunch() {
+    if (currentMusicId != undefined) {
+        proxy.$router.push(`/player/${currentMusicId}`);
+    }
+}
+
+function aplayerPlay(musicId) {
+    proxy.$http.get(`/api/music/detail/${musicId}`).then((response) => {
+        ap.list.clear();
+        ap.list.add(response.data.music_set);
+    });
+}
+
+function aplayerTheme(index) {
+    xhr.onload = function() {
+        const coverUrl = URL.createObjectURL(this.response);
+        image.onload = function() {
+            const color = colorThief.getColor(image);
+            theme.value = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            ap.theme(theme.value, index);
+            URL.revokeObjectURL(coverUrl);
+        };
+        image.src = coverUrl;
+    };
+    xhr.open('GET', ap.list.audios[index].cover, true);
+    xhr.responseType = 'blob';
+    xhr.send();
+}
 
 onMounted(() => {
-    const ap = new APlayer({
+    ap = new APlayer({
         container: containerRef.value,
         fixed: true,
         mini: true,
@@ -44,53 +69,34 @@ onMounted(() => {
         storageName: 'aplayer-setting',
     });
 
-    let url = '/api/index/';
-    if (props.pk != undefined) {
-        if (props.playlist) {
-            url = `/api/playlist/detail/${props.pk}`;
-        }
-        else {
-            url = `/api/music/detail/${props.pk}`;
-        }
-    }
-
-    proxy.$http.get(url).then(
+    proxy.$http.get('/api/index/').then(
         (response) => {
             ap.list.add(response.data.music_set);
-            setTheme(ap.list.index);
         }
     );
 
-    const colorThief = new ColorThief();
-    const image = new Image();
-    const xhr = new XMLHttpRequest();
-    const setTheme = (index) => {
-        xhr.onload = function() {
-            const coverUrl = URL.createObjectURL(this.response);
-            image.onload = function() {
-                const color = colorThief.getColor(image);
-                theme.value = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-                ap.theme(theme.value, index);
-                URL.revokeObjectURL(coverUrl);
-            };
-            image.src = coverUrl;
-        };
-        xhr.open('GET', ap.list.audios[index].cover, true);
-        xhr.responseType = 'blob';
-        xhr.send();
-    };
     ap.on('listswitch', (e) => {
-        setTheme(e.index);
+        currentMusicId = ap.list.audios[e.index].id;
+        aplayerTheme(e.index);
     });
+
     ap.on('loadstart', () => {
         let author = document.getElementsByClassName('aplayer-author')[0];
         author.innerText = author.innerText.substr(2);
     });
-    ap.on('lrcshow', (e) => {
+
+    ap.on('lrcshow', () => {
         footerHeight.value = '130px';
     });
-    ap.on('lrchide', (e) => {
+
+    ap.on('lrchide', () => {
         footerHeight.value = '82px';
+    });
+
+    document.getElementsByClassName('aplayer-miniswitcher')[0].click();
+
+    onBeforeUnmount(() => {
+        ap.destroy();
     });
 });
 </script>
@@ -109,12 +115,35 @@ onMounted(() => {
 }
 
 .aplayer-pic {
+    position: fixed !important;
     width: 46px !important;
     height: 46px !important;
-    position: fixed !important;
     bottom: 10px !important;
     left: 10px !important;
     border-radius: 6px !important;
+    z-index: -100 !important;
+}
+
+.aplayer-narrow + .aplayer-launch {
+    display: none !important;
+}
+
+.aplayer-launch {
+    position: fixed !important;
+    width: 46px !important;
+    height: 46px !important;
+    bottom: 10px !important;
+    left: 10px !important;
+    border-radius: 6px !important;
+    opacity: 0 !important;
+    color: white !important;
+    z-index: 100 !important;
+}
+
+.aplayer-launch:hover {
+    background-color: #696969 !important;
+    opacity: 0.6 !important;
+    z-index: 100 !important;
 }
 
 .aplayer-fixed:not(.aplayer-narrow) > .aplayer-body > .aplayer-pic > .aplayer-button {
@@ -234,6 +263,6 @@ onMounted(() => {
 .footer {
     position: relative !important;
     width: 100% !important;
-    height: v-bind('footerHeight');
+    height: v-bind('footerHeight') !important;
 }
 </style>

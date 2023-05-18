@@ -3,7 +3,10 @@
         全部粉丝
         <n-divider />
     </div>
-    <div class="fan-container" v-for="fan in fansList">
+    <div class="fan-list-border">
+    <div class="fan-container" v-for="(fan, idx) in 
+        fansList.slice(5*(page-1), 5*(page-1)+((5*page>fansList.length) ? (fansList.length%5) : 5))"
+        :key="idx">
         <div class="fan-card">
             <n-grid x-gap="12">
                 <n-gi :span="3"><img class="fan-card-image" :src="fan.avatarImg" /></n-gi>
@@ -24,11 +27,26 @@
             <n-divider dashed />
         </div>
     </div>
+    <n-grid>
+        <n-gi :span="8"></n-gi>
+        <n-gi :span="8">
+            <div style="display: flex; justify-content: center;" v-if="fansList.length > 0">
+            <n-pagination v-model:page="page" :page-count="Math.ceil(fansList.length / 5)" />
+            </div>
+            <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+            您还没有粉丝哦~
+          </div>
+        </n-gi>
+        <n-gi :span="8"></n-gi>
+    </n-grid>
+    </div>
 </template>
 <script>
+
 export default {
     data() {
         return {
+            page: 1,
             fansList: [
                 {
                     name: "周一行",

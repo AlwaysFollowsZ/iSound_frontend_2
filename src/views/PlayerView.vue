@@ -19,6 +19,21 @@
             Star,
             Warning,
         },
+        created() {
+            this.$watch(
+                () => this.$route.params,
+                () => {
+                    const musicId = this.$route.params.musicId;
+                    this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
+                        this.music = response.data.music_set[0];
+                    });
+                    this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
+                        this.comments = response.data.comment_set;
+                    });
+                },
+                { immediate: true },
+            );
+        },
         setup() {
             return {
                 handlePositiveClick(comment) {
@@ -46,79 +61,21 @@
             return {
                 id: 0,
                 page: 1,
-                comments:[
-                    {
-                        id: 1,
-                        author: "Iris",
-                        avatar: '/src/assets/song4.jpg',
-                        content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-                    },
-                    {
-                        id: 2,
-                        author: "zjq",
-                        avatar: "/src/assets/song6.jpg",
-                        content: "这是我的评论评论评论评论评论评论"
-                    },
-                    {
-                        id: 3,
-                        author: "中文试一下",
-                        avatar: "/src/assets/song1.jpg",
-                        content: "这是很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论很多行评论"
-                    },
-                    {
-                        id: 4,
-                        author: "zjq",
-                        avatar: "/src/assets/song6.jpg",
-                        content: "这是我的评论评论评论评论评论评论"
-                    },
-                    {
-                        id: 5,
-                        author: "zjq",
-                        avatar: "/src/assets/song6.jpg",
-                        content: "这是我的评论评论评论评论评论评论"
-                    },
-                    {
-                        id: 6,
-                        author: "zjq",
-                        avatar: "/src/assets/song6.jpg",
-                        content: "这是我的评论评论评论评论评论评论"
-                    },
-                    {
-                        id: 7,
-                        author: "Iris",
-                        avatar: '/src/assets/song4.jpg',
-                        content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-                    },
-                    {
-                        id: 8,
-                        author: "zjq",
-                        avatar: "/src/assets/song6.jpg",
-                        content: "这是我的评论评论评论评论评论评论"
-                    },
-                    {
-                        id: 9,
-                        author: "Iris",
-                        avatar: '/src/assets/song4.jpg',
-                        content: '9999We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-                    },
-                    {
-                        id: 10,
-                        author: "Iris",
-                        avatar: '/src/assets/song4.jpg',
-                        content: '101010We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-                    },
-                    {
-                        id: 11,
-                        author: "Iris",
-                        avatar: '/src/assets/song4.jpg',
-                        content: '11111111We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.'
-                    },
-                ]
+                comments: [],
+                music: {},
             }
+        },
+        computed: {
+            num1() {
+                return 5*(this.page-1);
+            },
+            num2() {
+                return 5*(this.page-1) + ((5*this.page>this.comments.length) ? (this.comments.length%5) : 5);
+            },
         },
         methods: {
             back() {
-                //todo
+                this.$router.go(-1);
             },
             like() {
                 //todo
@@ -139,7 +96,12 @@
                 this.value="";
             },
             sendComment() {
-                //todo
+                const musicId = this.$route.params.musicId;
+                let formData = new FormData();
+                formData.append('content', this.value);
+                this.$http.post(`/api/comment/on/${musicId}/`, formData).then((response) => {
+                    console.log(response.data);
+                });
             },
             deleteMyComment() {
                 //todo
@@ -171,7 +133,7 @@
             <n-gi :span="7">
                 <div class="music-cover">
                 <n-image class="music-cover-img"
-                    src="/src/assets/default-admin.jpg" 
+                    :src="music.cover" 
                 />
                 </div>
                 <div class="three-buttons">
@@ -203,10 +165,10 @@
                 <div class="lyrics-part">
                     <n-grid :y-gap="20" :cols="1">
                         <n-gi>
-                            <div style="font-size:xx-large">歌曲名称</div>
+                            <div style="font-size:xx-large">{{ music.name }}</div>
                         </n-gi>
                         <n-gi>
-                            <div>歌手：某某</div>
+                            <div>歌手：{{ music.artist }}</div>
                         </n-gi>
                         <n-gi>
                             <div style="font-size: larger;">
@@ -258,7 +220,7 @@
                                 <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
                                 清空
                                 </n-button>
-                                <n-button calss="send-button" strong secondary type="tertiary" @click="sendComment">
+                                <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
                                 发送
                                 </n-button>
                             </div>
@@ -275,13 +237,13 @@
         <n-grid>
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">
-                <div v-for="(comment, idx) in 
-                comments.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > comments.length) ? (comments.length % 5) : 5))"
+                <div v-for="(comment, idx) in comments.slice( num1, num2 )"
+                    
                 :key="idx">
                     <a-comment>
                         <template #actions>
                             <span key="edit-comment">
-                                <span style="padding-left: 860px; cursor: auto">
+                                <span style="padding-left: 855px; cursor: auto">
                                     <n-popover trigger="hover">
                                         <template #trigger>
                                         <n-icon size="18" @click="editMyComment(comment)">
@@ -310,7 +272,7 @@
                         </template>
                         <template #author><a style="font-size: 18px;">{{ comment.author }}</a></template>
                         <template #avatar>
-                            <a-avatar src="/src/assets/song4.jpg" :size="50"/>
+                            <a-avatar :src="comment.avatar" :size="50"/>
                         </template>
                         <template #content>
                         <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px;">
@@ -318,9 +280,10 @@
                         </p>
                         </template>
                         <template #datetime>
-                        <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">
-                            <span style="margin-bottom: 0; font-size: 10px;">{{ dayjs().fromNow() }}</span>
-                            
+                        <a-tooltip :title="comment.date.replace('T', ' ').split('.')[0]">
+                            <span style="margin-bottom: 0; font-size: 10px;">
+                                {{ dayjs(comment.date.replace('T', ' ').split('.')[0]).fromNow() }}
+                            </span>
                         </a-tooltip>
                         </template>
                     </a-comment>
@@ -410,8 +373,8 @@
 .ant-divider-horizontal {
     display: flex;
     clear: both;
-    width: 984px;
-    min-width: 984px;
+    width: 976.54px;
+    min-width: 0px;
     margin-top: 0;
     margin-bottom: 30px;
     margin-left: 244px;
@@ -422,11 +385,15 @@
     margin-top: 24px;
 }
 .clean-button {
-    margin-right: 15px;
-    margin-left: 853px;
+    position: absolute;
+    margin-left: 920px;
+}
+.send-button {
+    position: absolute;
+    margin-right: 100px;
 }
 .my-comment-button {
-    margin-bottom: 15px;
+    margin-bottom: 50px;
 }
 
 .html {
