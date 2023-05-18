@@ -67,7 +67,8 @@ nav a:first-of-type {
   z-index: -1;
   height: 100vh;
   width: 100vw;
-  transition: height cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+  transition: height cubic-bezier(0.165, 0.84, 0.44, 1) 1s,
+              background-color cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 @media (min-width: 1024px) {
