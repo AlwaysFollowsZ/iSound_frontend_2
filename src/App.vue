@@ -1,13 +1,13 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import{backgroundColor,getRGBString} from '/src/colorMode'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView } from 'vue-router';
+import{backgroundColor,getRGBString} from '/src/colorMode';
+import HelloWorld from './components/HelloWorld.vue';
 import ImageTable from './components/tables/ImageTable/ImageTable.vue';
 import MessageItem from './components/message/MessageItem.vue';
-import MessageSend from './components/message/MessageSend.vue'
-import TopNav from './components/TopNav.vue'
-import ListTable from './components/tables/ListTable/ListTable.vue'
-import Player from './components/Player.vue'
+import MessageSend from './components/message/MessageSend.vue';
+import TopNav from './components/TopNav.vue';
+import ListTable from './components/tables/ListTable/ListTable.vue';
+import Player from './components/Player.vue';
 </script>
 
 <template>
