@@ -266,7 +266,7 @@
                                 <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
                                 清空
                                 </n-button>
-                                <n-button calss="send-button" strong secondary type="tertiary" @click="sendComment">
+                                <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
                                 发送
                                 </n-button>
                             </div>
@@ -289,7 +289,7 @@
                     <a-comment>
                         <template #actions>
                             <span key="edit-comment">
-                                <span style="padding-left: 860px; cursor: auto">
+                                <span style="padding-left: 855px; cursor: auto">
                                     <n-popover trigger="hover">
                                         <template #trigger>
                                         <n-icon size="18" @click="editMyComment(comment)">
@@ -418,8 +418,8 @@
 .ant-divider-horizontal {
     display: flex;
     clear: both;
-    width: 984px;
-    min-width: 984px;
+    width: 976.54px;
+    min-width: 0px;
     margin-top: 0;
     margin-bottom: 30px;
     margin-left: 244px;
@@ -430,11 +430,15 @@
     margin-top: 24px;
 }
 .clean-button {
-    margin-right: 15px;
-    margin-left: 853px;
+    position: absolute;
+    margin-left: 920px;
+}
+.send-button {
+    position: absolute;
+    margin-right: 100px;
 }
 .my-comment-button {
-    margin-bottom: 15px;
+    margin-bottom: 50px;
 }
 
 .html {
