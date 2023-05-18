@@ -22,7 +22,7 @@
                         <n-popover trigger="hover">
                             <template #trigger>
                                 <div class="upload-song-page">
-                                    <img :src="SongPageUrl" @click="uploadFile" />
+                                    <img :src="songPageUrl" @click="uploadFile" />
                                     <input type="file" ref="fileInput" style="display: none"
                                         @change="handleSongPageChange" />
                                 </div>
@@ -34,7 +34,7 @@
                         <div>
                             <span>歌曲文件</span>
                             <n-space>
-                                <n-button dashed @click="uploadFile">
+                                <n-button dashed @click="uploadFile" @change="handleSongSrcFileChange">
                                     <template #icon><n-icon><arrow-up-outline /></n-icon></template>请上传音频格式文件
                                 </n-button>
                             </n-space>
@@ -42,7 +42,7 @@
                         <div>
                             <span>歌词文件</span>
                             <n-space>
-                                <n-button dashed @click="uploadFile">
+                                <n-button dashed @click="uploadFile" @change="handleSongLyricFileChange">
                                     <template #icon><n-icon><arrow-up-outline /></n-icon></template>请上传歌词格式文件
                                 </n-button>
                             </n-space>
@@ -50,7 +50,7 @@
                         <div>
                             <span>歌名</span>
                             <n-input type="text" size="small" placeholder="请输入歌名" :value="songName"
-                                @input="songName = $event" />
+                                @input="songName = $event"/>
                         </div>
                         <div>
                             <span>歌手</span>
@@ -116,37 +116,38 @@ export default defineComponent({
     methods: {
         closeUWindow() {
             this.$emit('closeUploadWindow');
-            location.reload();
+            // location.reload();
         },
-        // uploadFile() {
-        //     this.$refs.fileInput.click()
-        // },
-        // handleSongPageChange(e) {
-        //     this.songPageFile = e.target.files[0];
-        // },
-        // handleSongSrcFileChange(e) {
-        //     this.songSrcFile = e.target.files[0];
-        // },
-        // handleSongLyricFileChange(e) {
-        //     this.songLyricFile = e.target.files[0];
-        // },
-        // submitUpload() {
-        //     let data = new FormData();
-        //     data.append('title', this.songName);
-        //     data.append('artist', this.songAuthor);
-        //     data.append('cover', this.songPageFile);
-        //     data.append('source', this.songSrcFile);
-        //     data.append('lyrics', this.songLyricFile);
-        //     this.$http.post('/api/music/upload/', data).then(response => {
-        //         console.log(response);
-        //         if (response.data.code === '0') {
-        //             this.closeUWindow();
-        //             alert('上传歌曲成功!')
-        //         } else if (response.data.code === '-1') {
-        //             alert('上传歌曲失败，请重新上传!');
-        //         }
-        //     });
-        // }
+        uploadFile() {
+            this.$refs.fileInput.click()
+        },
+        handleSongPageChange(e) {
+            this.songPageFile = e.target.files[0];
+            // this.SongPageUrl = URL.createObjectURL(this.songPageFile);
+        },
+        handleSongSrcFileChange(e) {
+            this.songSrcFile = e.target.files[0];
+        },
+        handleSongLyricFileChange(e) {
+            this.songLyricFile = e.target.files[0];
+        },
+        submitUpload() {
+            let data = new FormData();
+            // data.append('title', this.songName);
+            // data.append('artist', this.songAuthor);
+            // data.append('cover', this.songPageFile);
+            data.append('source', this.songSrcFile);
+            // data.append('lyrics', this.songLyricFile);
+            this.$http.post('/api/music/upload/', data).then(response => {
+                console.log(response);
+                if (response.data.code === '0') {
+                    this.closeUWindow();
+                    alert('上传歌曲成功!')
+                } else if (response.data.code === '-1') {
+                    alert('上传歌曲失败，请重新上传!');
+                }
+            });
+        }
     }
 });
 </script>

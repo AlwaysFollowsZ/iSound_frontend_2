@@ -72,7 +72,7 @@ export default {
             this.recordNum = response.data.record_num;
             this.bio = response.data.profile;
             this.avatarFile = response.data.avatar;
-            this.avatarUrl = '/api' + response.data.avatar;
+            this.avatarUrl = response.data.avatar;
         }).catch(error => {
             console.error(error);
         });
@@ -86,7 +86,7 @@ export default {
     methods: {
         closeMWindow() {
             this.$emit('closeModifyWindow')
-            location.reload();
+            // location.reload(); // 可以自动刷新一下，但是会抖动一下，观看效果不太好。
         },
         uploadFile() {
             this.$refs.fileInput.click()

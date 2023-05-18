@@ -7,6 +7,7 @@ import 'naive-ui/dist/index';
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import axios from 'axios';
+import 'animate.css';
 
 axios.defaults.timeout = 50000;
 axios.defaults.withCredentials = true;
