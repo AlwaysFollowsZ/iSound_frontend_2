@@ -65,6 +65,11 @@ const router = createRouter({
       name: 'searchresult',
       component: () => import('../views/SearchResultView.vue')
     },
+    {
+      path: '/player/:musicId',
+      name: 'player',
+      component: () => import('../views/PlayerView.vue')
+    },
   ]
 })
 

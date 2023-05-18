@@ -24,7 +24,7 @@ let currentMusicId;
 
 function aplayerLaunch() {
     if (currentMusicId != undefined) {
-        proxy.$router.push(`/play/${currentMusicId}`);
+        proxy.$router.push(`/player/${currentMusicId}`);
     }
 }
 
