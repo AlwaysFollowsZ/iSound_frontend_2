@@ -15,14 +15,14 @@ import Player from './components/Player.vue'
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
 
-  <div :style="{'background':backgroundColor }" class='page_background'>
+  <div :style="{'background':backgroundColor }" class='page_background'></div> 
     <RouterView />
 
     <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px)(高度可略)-->
       <image-table :table-size="[1000,]"></image-table>
      <list-table :view-mode="user"></list-table> 
-  </div> 
+  
   <Player />
   <!-- </div> -->
 </template>
@@ -64,9 +64,11 @@ nav a:first-of-type {
 }
 
 .page_background{
-  height: fit-content;
-  width: fit-content;
-  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+  position: fixed;
+  z-index: -1;
+  height: 100vh;
+  width: 100vw;
+  transition: height cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 @media (min-width: 1024px) {
