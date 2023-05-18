@@ -76,6 +76,7 @@ import CollectSongSheetView from '../components/CollectSongSheetView.vue';
 import MyUploadSongView from '../components/MyUploadSongView.vue';
 import FollowListView from "../components/FollowListView.vue";
 import FanListView from '../components/FanListView.vue';
+import 'animate.css';
 import { ref } from "vue";
 import { NTabs, NTabPane } from "naive-ui";
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
@@ -115,7 +116,7 @@ export default {
             this.recordNum = response.data.record_num;
             this.bio = response.data.profile;
             this.avatarFile = response.data.avatar;
-            this.avatarUrl = '/api' + response.data.avatar;
+            this.avatarUrl = this.avatarFile;
         }).catch(error => {
             console.error(error);
         });

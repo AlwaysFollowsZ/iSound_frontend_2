@@ -86,7 +86,8 @@ export default {
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
-                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker :page-sizes="[5, 10, 20, 50]"
+                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker
+                    :page-sizes="[5, 10, 20, 50]"
                     :style="{
                         //页面按钮
                         '--n-item-text-color': getRGBString(antiBackgroundColor, 0.6, 'font'),
@@ -107,7 +108,7 @@ export default {
                         '--n-button-icon-color': `${getRGBString(fontColorString, 0.8)}`,
                         '--n-button-icon-color-hover': `${getRGBString(fontColorString, 0.5)}`,
                         '--n-jumper-text-color': `${getRGBString(fontColorString, 0.6)}`,
-                        // 单页加载量选择按钮(需要v-deep)
+                        // 单页加载量选择按钮(需要v-deep,此处仅作为标记)
                         '--n-border-hover': `${getRGBString(fontColorString, 0.6)} `,
                         '--n-arrow-color': `${getRGBString(fontColorString, 0.5)}`,
                         '--n-text-color': `${getRGBString(fontColorString, 0.8)}`,
@@ -251,5 +252,9 @@ export default {
 
 :deep(.n-pagination .n-pagination-item.n-pagination-item--disabled) {
     cursor: default;
+}
+
+:deep(.n-scrollbar){
+    --n-color:red !important;
 }
 </style>
