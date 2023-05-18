@@ -65,6 +65,14 @@
                 music: {},
             }
         },
+        computed: {
+            num1() {
+                return 5*(this.page-1);
+            },
+            num2() {
+                return 5*(this.page-1) + ((5*this.page>this.comments.length) ? (this.comments.length%5) : 5);
+            },
+        },
         methods: {
             back() {
                 this.$router.go(-1);
@@ -229,8 +237,8 @@
         <n-grid>
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">
-                <div v-for="(comment, idx) in 
-                comments.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > comments.length) ? (comments.length % 5) : 5))"
+                <div v-for="(comment, idx) in comments.slice( num1, num2 )"
+                    
                 :key="idx">
                     <a-comment>
                         <template #actions>

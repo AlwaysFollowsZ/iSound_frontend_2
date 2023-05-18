@@ -263,7 +263,6 @@ export default {
 <template>
     <div class="table-box">
         <div class="before_table">
-            {{ viewMode }}
         </div>
         <n-data-table ref="dataTable" :bordered="false" :columns="columns" :data="songData" :pagination="pagination"
             @update:checked-row-keys="handleCheck" class="data-table" :style="{
