@@ -1,6 +1,6 @@
 <template>
     <div ref="containerRef"></div>
-    <a @click="aplayerLaunch"><ChevronUp class="aplayer-launch" /></a>
+    <a ref="aplayerLaunchRef" @click="aplayerLaunch"><ChevronUp class="aplayer-launch" /></a>
     <div class="footer"></div>
 </template>
   

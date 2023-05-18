@@ -52,6 +52,7 @@
                 },
                 dayjs,
                 value: ref(null),
+                editCommentId: ref(0),
                 islike: ref(false),
                 iscollect: ref(false),
                 iscomplain: ref(false),
@@ -64,14 +65,6 @@
                 comments: [],
                 music: {},
             }
-        },
-        computed: {
-            num1() {
-                return 5*(this.page-1);
-            },
-            num2() {
-                return 5*(this.page-1) + ((5*this.page>this.comments.length) ? (this.comments.length%5) : 5);
-            },
         },
         methods: {
             back() {
@@ -99,16 +92,25 @@
                 const musicId = this.$route.params.musicId;
                 let formData = new FormData();
                 formData.append('content', this.value);
-                this.$http.post(`/api/comment/on/${musicId}/`, formData).then((response) => {
-                    console.log(response.data);
-                });
+                if (this.editCommentId == 0) {
+                    this.$http.post(`/api/comment/on/${musicId}/`, formData).then((response) => {
+                        console.log(response.data);
+                    });
+                }
+                else {
+                    this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then((response) => {
+                        console.log(response.data);
+                    });
+                    this.editCommentId = 0;
+                }
             },
             deleteMyComment() {
                 //todo
             },
             editMyComment(comment) {
                 // alert("yes!");
-                this.value=comment.content;
+                this.value = comment.content;
+                this.editCommentId = comment.id;
                 document.querySelector('#comment-top').scrollIntoView({
                     behavior: 'smooth'
                 });
@@ -237,8 +239,8 @@
         <n-grid>
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">
-                <div v-for="(comment, idx) in comments.slice( num1, num2 )"
-                    
+                <div v-for="(comment, idx) in 
+                comments.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > comments.length) ? (comments.length % 5) : 5))"
                 :key="idx">
                     <a-comment>
                         <template #actions>
