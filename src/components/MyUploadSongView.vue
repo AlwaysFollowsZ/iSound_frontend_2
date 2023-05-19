@@ -7,9 +7,9 @@
         <div>
             <n-popover trigger="hover">
                 <template #trigger>
-                    <div class="single-card-container">
-                        <img style="width: 100%; height: 100%;" :src="uploadSongEntryLogoUrl" @click="goToUploadSong = true" />
-                    </div>
+                    <n-button @click="goToUploadSong = true">
+                        <cloud-upload-outline style="width: 40px; height: 60px;"/>
+                    </n-button>
                 </template>
                 <span>点击此处可以上传歌曲</span>
             </n-popover>
@@ -44,9 +44,11 @@
 </template>
 <script>
 import UploadSongView from '../views/UploadSongView.vue';
+import { CloudUploadOutline } from '@vicons/ionicons5'
 export default {
     components: {
         UploadSongView,
+        CloudUploadOutline,
     },
     data() {
         return {

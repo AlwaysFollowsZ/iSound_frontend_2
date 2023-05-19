@@ -70,6 +70,16 @@ const router = createRouter({
       name: 'player',
       component: () => import('../views/PlayerView.vue')
     },
+    {
+      path: '/home/user/:userId',
+      name: 'OtherUserView',
+      component: () => import('../views/OtherUserView.vue')
+    },
+    {
+      path: '/listdetail',
+      name: 'listdetail',
+      component: () => import('../views/ListDetailed.vue')
+    },
   ]
 })
 
