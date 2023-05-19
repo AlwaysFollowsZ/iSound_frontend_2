@@ -74,7 +74,12 @@ const router = createRouter({
       path: '/home/user/:userId',
       name: 'OtherUserView',
       component: () => import('../views/OtherUserView.vue')
-    }
+    },
+    {
+      path: '/listdetail',
+      name: 'listdetail',
+      component: () => import('../views/ListDetailed.vue')
+    },
   ]
 })
 
