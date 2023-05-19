@@ -47,7 +47,7 @@
                             <other-user-song-sheet-view/>
                         </n-tab-pane>
                         <n-tab-pane name="ta的歌曲" tab="ta的歌曲">
-                            <my-upload-song-view />
+                            <other-user-upload-song-view/>
                         </n-tab-pane>
                     </n-tabs>
                 </div>
@@ -61,6 +61,7 @@ import TopNav from '../components/TopNav.vue';
 import MySongSheetView from '../components/MySongSheetView.vue';
 import MyUploadSongView from '../components/MyUploadSongView.vue';
 import OtherUserSongSheetView from '../components/OtherUserSongSheetView.vue';
+import OtherUserUploadSongView from '../components/OtherUserUploadedSongView.vue'
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline, ChevronBack } from '@vicons/ionicons5';
 import { NewspaperOutline } from '@vicons/ionicons5';
 export default {
@@ -71,6 +72,7 @@ export default {
         ChevronBack,
         MySongSheetView,
         MyUploadSongView,
+        OtherUserUploadSongView,
     },
     data() {
         return {
