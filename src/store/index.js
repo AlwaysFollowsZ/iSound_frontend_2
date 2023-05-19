@@ -6,6 +6,7 @@ export default new Vuex.Store({
         colorMode: 'white',
         currentThemeColor: [200,200,200],
         isLoggedIn: false,
+        //isAdmin: false,      // 测试阶段设为 true，正式情况下将设为 false
     },
     mutations: {
         changeColorMode(state) {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
         },
         setLogState(state, b) {
             state.isLoggedIn = b
-        }
+        },
+        // setIsAdmin(state, b) {
+        //     state.isAdmin = b
+        // },
     }
 })

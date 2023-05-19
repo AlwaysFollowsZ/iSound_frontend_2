@@ -3,7 +3,7 @@
         全部粉丝
         <n-divider />
     </div>
-    <div class="fan-container" v-for="fan in fansList">
+    <div class="fan-container" v-for="(fan, idx) in fansList" :key="idx">
         <div class="fan-card">
             <n-grid x-gap="12">
                 <n-gi :span="3"><img class="fan-card-image" :src="fan.avatarImg" /></n-gi>
