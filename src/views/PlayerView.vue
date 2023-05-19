@@ -217,11 +217,11 @@
                                 maxRows: 6
                             }"/>
                             <div class="my-comment-button">
-                                <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
-                                清空
-                                </n-button>
                                 <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
                                 发送
+                                </n-button>
+                                <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                                清空
                                 </n-button>
                             </div>
                         </div>
@@ -392,6 +392,7 @@
     position: absolute;
     margin-right: 100px;
 }
+
 .my-comment-button {
     margin-bottom: 50px;
 }

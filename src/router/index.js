@@ -70,6 +70,11 @@ const router = createRouter({
       name: 'player',
       component: () => import('../views/PlayerView.vue')
     },
+    {
+      path: '/listdetail',
+      name: 'listdetail',
+      component: () => import('../views/ListDetailed.vue')
+    },
   ]
 })
 
