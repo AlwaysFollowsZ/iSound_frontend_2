@@ -26,6 +26,8 @@
                     const musicId = this.$route.params.musicId;
                     this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
                         this.music = response.data.music_set[0];
+                        this.islike = this.music.is_like;
+                        this.iscollect = this.music.is_favorite;
                     });
                     this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
                         this.comments = response.data.comment_set;
@@ -38,7 +40,7 @@
             return {
                 handlePositiveClick(comment) {
                     // alert("该评论已删除");
-                    console.log(comment.content.length);
+                    // console.log(comment.content.length);
                     const index = this.comments.findIndex(cmt => cmt.id === comment.id);
                     if (index !== -1) {
                         this.comments.splice(index, 1);
@@ -71,8 +73,10 @@
                 this.$router.go(-1);
             },
             like() {
-                //todo
                 this.islike = !this.islike;
+                this.$http.post(`/api/like/${this.music.id}/`).then((response) => {
+                    console.log(response.data);
+                });
             },
             collect() {
                 //todo
@@ -89,11 +93,10 @@
                 this.value="";
             },
             sendComment() {
-                const musicId = this.$route.params.musicId;
                 let formData = new FormData();
                 formData.append('content', this.value);
                 if (this.editCommentId == 0) {
-                    this.$http.post(`/api/comment/on/${musicId}/`, formData).then((response) => {
+                    this.$http.post(`/api/comment/on/${this.music.id}/`, formData).then((response) => {
                         console.log(response.data);
                     });
                 }
@@ -104,8 +107,10 @@
                     this.editCommentId = 0;
                 }
             },
-            deleteMyComment() {
-                //todo
+            deleteMyComment(comment) {
+                this.$http.delete(`/api/comment/delete/${comment.id}/`).then((response) => {
+                    console.log(response.data);
+                });
             },
             editMyComment(comment) {
                 // alert("yes!");
@@ -263,7 +268,7 @@
                                         @negative-click="handleNegativeClick"
                                     >
                                     <template #trigger>
-                                    <n-icon size="18" @click="deleteMyComment">
+                                    <n-icon size="18" @click="deleteMyComment(comment)">
                                     <TrashOutline/>
                                     </n-icon>
                                     </template>

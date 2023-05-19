@@ -1,6 +1,6 @@
 <template>
     <div ref="containerRef"></div>
-    <a ref="aplayerLaunchRef" @click="aplayerLaunch"><ChevronUp class="aplayer-launch" /></a>
+    <a @click="aplayerLaunch"><ChevronUp class="aplayer-launch" /></a>
     <div class="footer"></div>
 </template>
   
@@ -20,11 +20,18 @@ const image = new Image();
 const xhr = new XMLHttpRequest();
 
 let ap;
+let launched = false;
 let currentMusicId;
 
 function aplayerLaunch() {
     if (currentMusicId != undefined) {
-        proxy.$router.push(`/player/${currentMusicId}`);
+        if (launched) {
+            proxy.$router.replace(`/player/${currentMusicId}`);
+        }
+        else {
+            proxy.$router.push(`/player/${currentMusicId}`);
+        }
+        launched = true;
     }
 }
 
@@ -77,6 +84,13 @@ onMounted(() => {
 
     ap.on('listswitch', (e) => {
         currentMusicId = ap.list.audios[e.index].id;
+        if (proxy.$router.currentRoute.value.name == 'player') {
+            launched = true;
+            aplayerLaunch();
+        }
+        else {
+            launched = false;
+        }
         aplayerTheme(e.index);
     });
 
