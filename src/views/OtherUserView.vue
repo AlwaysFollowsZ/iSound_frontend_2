@@ -44,7 +44,7 @@
                 <div class="user-song-songsheet">
                     <n-tabs type="line" animated>
                         <n-tab-pane name="ta的歌单" tab="ta的歌单">
-                            <my-song-sheet-view />
+                            <other-user-song-sheet-view/>
                         </n-tab-pane>
                         <n-tab-pane name="ta的歌曲" tab="ta的歌曲">
                             <my-upload-song-view />
@@ -60,6 +60,7 @@
 import TopNav from '../components/TopNav.vue';
 import MySongSheetView from '../components/MySongSheetView.vue';
 import MyUploadSongView from '../components/MyUploadSongView.vue';
+import OtherUserSongSheetView from '../components/OtherUserSongSheetView.vue';
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline, ChevronBack } from '@vicons/ionicons5';
 import { NewspaperOutline } from '@vicons/ionicons5';
 export default {
@@ -104,7 +105,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 .back-button {
     width: 40px;
     height: 40px;

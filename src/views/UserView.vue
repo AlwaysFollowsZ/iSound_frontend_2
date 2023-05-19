@@ -136,7 +136,7 @@ export default {
 };
 </script>
   
-<style>
+<style scoped>
 .n-tabs-tab {
     --n-tab-text-color-active: rgb(104, 9, 9);
     --n-tab-text-color: grey;

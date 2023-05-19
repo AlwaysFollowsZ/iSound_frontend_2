@@ -78,7 +78,7 @@ export default {
     },
 }
 </script>
-<style>
+<style scoped>
 .fan-list-title {
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
