@@ -52,8 +52,8 @@
                                 </n-tab-pane>
                                 <template #suffix>
                                     <!--maybe can add some icons-->
-                                    粉丝：{{ fansCount }}
-                                    关注：{{ likeCount }}
+                                    <!-- 粉丝：{{ fansList.length }}
+                                    关注：{{ followerList.length }} -->
                                 </template>
                             </n-tabs>
                         </div>
@@ -106,8 +106,12 @@ export default {
             bio: '',
             email: '',
             avatarUrl: '',
-            avatarFile: ''
+            avatarFile: '',
         }
+    },
+    props: {
+        fansList: [],
+        followerList: [],
     },
     created() {
         this.$http.get('/api/accounts/detail/0/').then(response => {
@@ -128,7 +132,7 @@ export default {
             this.email = userInfo.email;
             this.bio = userInfo.bio;
         },
-    }
+    },
 };
 </script>
   

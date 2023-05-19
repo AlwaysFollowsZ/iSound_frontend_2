@@ -5,6 +5,7 @@
     import { defineComponent, ref } from 'vue';
     import { ChevronBack, StarOutline, FitnessOutline, WarningOutline, ChatbubbleEllipsesOutline, TrashOutline, CreateOutline, Fitness, Star, Warning } from '@vicons/ionicons5';
     dayjs.extend(relativeTime);
+    import {globalThemeColor,getBackgroundColorString,getRGBString, changeThemeColorByImage} from '/src/colorMode.js'
     export default defineComponent({
         name: 'PlayerView',
         components: {
@@ -26,6 +27,8 @@
                     const musicId = this.$route.params.musicId;
                     this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
                         this.music = response.data.music_set[0];
+                        console.log(this.music.cover);
+                        changeThemeColorByImage(this.music.cover)
                     });
                     this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
                         this.comments = response.data.comment_set;
@@ -63,6 +66,8 @@
                 page: 1,
                 comments: [],
                 music: {},
+                getRGBString,
+                backgroundColorString: getBackgroundColorString(globalThemeColor,225),
             }
         },
         computed: {
@@ -121,7 +126,9 @@
 </script>
 
 <template>
-    <div class="player-page" id="top">
+    <div class="player-page" id="top" :style="{
+        'background-color':getRGBString(backgroundColorString,0.7)
+        }">
         <n-grid>
             <n-gi :span="4">
                 <div>
@@ -311,6 +318,9 @@
 </template>
 
 <style scoped>
+.player-page{
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
 .back-button {
     width: 40px;
     height: 40px;
