@@ -22,7 +22,7 @@ import Player from './components/Player.vue';
       <!-- <image-table :table-size="[1000,]"></image-table>
      <list-table :view-mode="user"></list-table>  -->
   
-  <!-- <Player /> -->
+  <Player />
   <!-- </div> -->
 </template>
 

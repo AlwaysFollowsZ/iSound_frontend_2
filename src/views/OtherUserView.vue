@@ -2,7 +2,13 @@
     <div class="user-page-TopNav"><top-nav></top-nav></div>
     <div>
         <n-grid :x-gap="0">
-            <n-gi :span="4"></n-gi>
+            <n-gi :span="4">
+                <div>
+                    <n-button tertiary circle class="back-button" @click="back">
+                        <ChevronBack style="width: 36px; position: absolute; left: 0px" />
+                    </n-button>
+                </div>
+            </n-gi>
             <n-gi :span="18">
                 <div class="user-info-title">
                     <n-grid :x-gap="0">
@@ -54,13 +60,14 @@
 import TopNav from '../components/TopNav.vue';
 import MySongSheetView from '../components/MySongSheetView.vue';
 import MyUploadSongView from '../components/MyUploadSongView.vue';
-import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
+import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline, ChevronBack } from '@vicons/ionicons5';
 import { NewspaperOutline } from '@vicons/ionicons5';
 export default {
     components: {
         PersonCircleSharp,
         NewspaperOutline,
         PricetagOutline,
+        ChevronBack,
         MySongSheetView,
         MyUploadSongView,
     },
@@ -90,9 +97,21 @@ export default {
             { immediate: true },
         );
     },
+    methods: {
+        back() {
+            this.$router.go(-1);
+        },
+    }
 }
 </script>
 <style>
+.back-button {
+    width: 40px;
+    height: 40px;
+    /* position: fixed; */
+    left: 20px;
+}
+
 .user-info-title {
     height: 55vh;
     overflow: hidden;
