@@ -108,15 +108,14 @@
     width: 35px;
 }*/
 .message-page-body {
-    position: fixed;
     margin-left: 10vw;
-    margin-top: 55px;
-    background:rgba(154, 211, 252, 0.516) ;
+    margin-top: 2%;
+    background:lightsteelblue;
     width: 80vw;
-    height: 100vw;
+    height: 90vh;
 }
 .ant-card {
-    height: 100vw;
+    height: 100%;
     background: rgb(255, 255, 255);
     border: 3px solid rgb(235, 237, 240);
     margin: 0;

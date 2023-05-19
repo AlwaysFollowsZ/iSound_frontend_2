@@ -50,7 +50,7 @@
             <n-gi :span="4"></n-gi>
         </n-grid>      
     </div>
-    <div class="music-list-header">
+    <!-- <div class="music-list-header">
         <a-tabs v-model:activeKey="activeKey" >
         <a-tab-pane key="1">
         <template #tab>
@@ -71,7 +71,7 @@
         待插入歌单列表
         </a-tab-pane>
     </a-tabs>
-    </div>
+    </div> -->
     
 </template>
 
@@ -79,47 +79,16 @@
 .ant-space-item {
     background-color:aqua;
 }
-/*.message-page-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 55px;
-    border: 3px solid rgb(235, 237, 240)
-}*/
-/*.isound-admin-style {
-    padding-top: 1%;
-    font-size: 28px;
-}
-.go-message-button {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background-color: lightgray;
-    border-color: lightgray;
-}
-.admin-avatar {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-}
-.default-admin-avatar {
-    width: 35px;
-}*/
 .search-input {
-    position: fixed;
-    right: 60px;
-    top: 12px;
+   
+    
 }
 
 .message-page-search {
-    position: fixed;
-    top: 58px;
-    width: 60vw;
-    margin: 0 20vw;
+    padding-top: 2%;
 }
 .music-list-header {
-    position: fixed;
+   /* position: fixed;*/
     top: 170px;
     left: 10vw;
     width: 80vw;
@@ -130,6 +99,6 @@
 }
 .n-input {
     transform: scale(1.2, 1.2);
-    position: relative;
+  /*  position: relative;*/
 } 
 </style>

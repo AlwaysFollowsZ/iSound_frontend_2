@@ -9,9 +9,6 @@
                                   <n-icon><BellOutlined style="color:lightsteelblue"/></n-icon>
                                 </template>
                               </n-button>
-                            <!-- <a-button  color="lightst·eelblue" class="go-message-button" type="primary" shape="circle" @click="gotoMessage()" ghost>
-                                <template #icon><BellOutlined :size="40" style="color:lightsteelblue"/></template>
-                            </a-button> -->
                         </div>
                         <div v-else>
                             <n-button class="go-message-button" strong secondary circle type="info" @click="back()">
@@ -19,9 +16,6 @@
                                   <n-icon><menu-outlined style="color:lightsteelblue"/></n-icon>
                                 </template>
                               </n-button>
-                            <!-- <a-button class="back-button" type="primary" shape="circle" @click="back()">
-                                <template #icon><menu-outlined style="color:white"/></template>
-                            </a-button> -->
                         </div> 
                     </n-gi>
                     <n-gi :span="4">
@@ -29,12 +23,16 @@
                             iSound管理平台
                         </div>
                     </n-gi>
+                    <n-gi :span="18"></n-gi>
+                    <n-gi :span="1">
+                        <n-dropdown trigger="hover" :options="options">
+                            <div class="admin-avatar" >
+                                <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
+                            </div>
+                         </n-dropdown>
+                    </n-gi>
                 </n-grid>
-                <n-dropdown trigger="hover" :options="options">
-                    <div class="admin-avatar" >
-                        <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
-                    </div>
-                </n-dropdown>
+                
             </div>
             
             <!-- <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>   -->
@@ -98,36 +96,31 @@ export default {
 
 <style>
 .message-page-header {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100vw;
-    height: 55px;
     border: 3px solid rgb(235, 237, 240)
 }
 .isound-admin-style {
-    padding-top: 1%;
+    padding-top: 3%;
     font-size: 26px;
     font-weight: 450;
 }
 
 .back-button {
-    position: fixed;
-    top: 10px;
-    left: 10px;
+    /*position: fixed;*/
+    top: 20px;
+    left: 20px;
     background-color: lightgray;
     border-color: lightgray;
 }
 .admin-avatar {
-    position: fixed;
-    top: 10px;
-    right: 10px;
+    /*position: fixed;*/
+    padding-top: 13%;
 }
 .default-admin-avatar {
     width: 35px;
 }
 .go-message-button {
-    position: fixed;
+    /*position: fixed;*/
     top: 10px;
     left: 10px;
     /*background-color: lightgray;
@@ -156,7 +149,7 @@ export default {
     border-color: lightsteelblue !important;
 }*/
 .message-page-search {
-    position: fixed;
+   /* position: fixed;*/
     top: 58px;
     width: 60vw;
     margin: 0 20vw;

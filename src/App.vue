@@ -17,12 +17,14 @@ import Player from './components/Player.vue';
 
   <div :style="{'background':backgroundColor }" class='page_background'>
     <RouterView />
+    <Player /> 
+  </div>
     <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px)(高度可略)-->
-      <image-table :table-size="[1000,]"></image-table>
-     <list-table :view-mode="user"></list-table> 
-  </div> 
-  <Player />
+      <!-- <image-table :table-size="[1000,]"></image-table>
+     <list-table :view-mode="user"></list-table>  -->
+    
+    
   <!-- </div> -->
 </template>
 
@@ -63,7 +65,7 @@ nav a:first-of-type {
 }
 
 .page_background{
-  position: fixed;
+  /*position: fixed;*/
   z-index: -1;
   height: 100vh;
   width: 100vw;
