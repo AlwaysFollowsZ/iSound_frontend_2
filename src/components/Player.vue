@@ -1,6 +1,6 @@
 <template>
     <div ref="containerRef"></div>
-    <a @click="aplayerLaunch"><ChevronUp class="aplayer-launch" /></a>
+    <a @click="launch"><ChevronUp class="aplayer-launch" /></a>
     <div class="footer"></div>
 </template>
   
@@ -20,22 +20,22 @@ const image = new Image();
 const xhr = new XMLHttpRequest();
 
 let ap;
+let launched = false;
 let currentMusicId;
 
-function aplayerLaunch() {
+function launch() {
     if (currentMusicId != undefined) {
-        proxy.$router.push(`/player/${currentMusicId}`);
+        if (launched) {
+            proxy.$router.replace(`/player/${currentMusicId}`);
+        }
+        else {
+            proxy.$router.push(`/player/${currentMusicId}`);
+        }
+        launched = true;
     }
 }
 
-function aplayerPlay(musicId) {
-    proxy.$http.get(`/api/music/detail/${musicId}`).then((response) => {
-        ap.list.clear();
-        ap.list.add(response.data.music_set);
-    });
-}
-
-function aplayerTheme(index) {
+function setTheme(index) {
     xhr.onload = function() {
         const coverUrl = URL.createObjectURL(this.response);
         image.onload = function() {
@@ -50,6 +50,27 @@ function aplayerTheme(index) {
     xhr.responseType = 'blob';
     xhr.send();
 }
+
+function play(musicId) {
+    proxy.$http.get(`/api/music/detail/${musicId}`).then((response) => {
+        ap.list.clear();
+        ap.list.add(response.data.music_set);
+        ap.play();
+    });
+}
+
+function playAll(playlistId) {
+    proxy.$http.get(`/api/playlist/detail/${playlistId}`).then((response) => {
+        ap.list.clear();
+        ap.list.add(response.data.music_set);
+        ap.play();
+    });
+}
+
+defineExpose({
+    play,
+    playAll,
+});
 
 onMounted(() => {
     ap = new APlayer({
@@ -77,7 +98,14 @@ onMounted(() => {
 
     ap.on('listswitch', (e) => {
         currentMusicId = ap.list.audios[e.index].id;
-        aplayerTheme(e.index);
+        if (proxy.$router.currentRoute.value.name == 'player') {
+            launched = true;
+            launch();
+        }
+        else {
+            launched = false;
+        }
+        setTheme(e.index);
     });
 
     ap.on('loadstart', () => {
