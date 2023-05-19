@@ -1,16 +1,32 @@
 <script>
 import { h, ref, defineProps, computed } from 'vue'
-import { NDataTable, NButton, NPopover, NEllipsis } from 'naive-ui'
+import { NDataTable, NButton, NPopover, NEllipsis, NPagination } from 'naive-ui'
 import { Heart12Filled, Star12Filled } from '@vicons/fluent';
-import { getFontColorString, getBackgroundColorString, globalThemeColor, changeThemeColorByImage, getRGBString } from '/src/colorMode'
-
+import { getFontColorString, getBackgroundColorString, globalThemeColor, changeThemeColorByImage, getRGBString, antiBackgroundColor } from '/src/colorMode'
+import 'animate.css';
 export default {
     data() {
-        let viewMode=this.viewMode//转换一下
+        let viewMode = this.viewMode//转换一下
         const themeColor = globalThemeColor
         const HeadBackgroundColorString = getBackgroundColorString(themeColor, 225)
         const DataBackgroundColorString = getBackgroundColorString(themeColor, 180)
+        const BackgroundColorString = DataBackgroundColorString
         const fontColorString = getFontColorString(themeColor)
+        watch(globalThemeColor, () => {
+            const tempFontColorString = getFontColorString(globalThemeColor)
+            const tempBackgroundColorString = getBackgroundColorString(globalThemeColor)
+            document.documentElement.style.setProperty('--my-arrow-color', getRGBString(tempFontColorString.value, 0.5))
+            document.documentElement.style.setProperty('--my-text-color', getRGBString(tempFontColorString.value, 0.8))
+            document.documentElement.style.setProperty('--my-color', getRGBString(tempBackgroundColorString.value, 0.5))
+            document.documentElement.style.setProperty('--my-color-focus', `1px solid ${getRGBString(tempBackgroundColorString.value, 0.7)}`)
+            document.documentElement.style.setProperty('--my-color-active', `1px solid ${getRGBString(tempBackgroundColorString.value, 0.8)}`)
+            document.documentElement.style.setProperty('--my-border-hover', `1px solid ${getRGBString(tempFontColorString.value, 0.6)}`)
+            document.documentElement.style.setProperty('--my-border', `1px solid ${getRGBString(tempFontColorString.value, 0.1)}`)
+            document.documentElement.style.setProperty('--my-border-active', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
+            document.documentElement.style.setProperty('--my-border-focus', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
+            document.documentElement.style.setProperty('--my-shadow-active', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.6)}`)
+            document.documentElement.style.setProperty('--my-shadow-focus', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.7)}`)
+        }, { immediate: true })
         let isSelected = false//当前是否有歌曲被选择
         let selectedEntries = []//被选择的项（和rowKey同步更新）
         let songData = [
@@ -90,31 +106,32 @@ export default {
                 key: 'length'
             },
             {
-                title: (column) => {
-                    return h(NButton, {
-                        onClick: () => {
-                            for (let i = 0; i < selectedEntries.length; i++) {
-                                songData.value[selectedEntries[i]].isLiked = true
-                            }
-                        },
-                        style: {
-                            'opacity': isSelected ? '1' : '0',
-                            '--n-color': getRGBString(HeadBackgroundColorString.value, 1, 'background', viewMode),
-                            '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
-                            '--n-border-focus': `none`,
-                            '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
-                            '--n-border-disabled': `none`,
-                            '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode)
-                        }
-                    }, {
-                        icon: () => h(Heart12Filled, {
-                            style: {
-                                'color': 'rgb(204,12,32)'
-                            }
-                        })
-                    })
-                },
                 key: 'actions',
+                title: (column) => h(NButton, {
+                    onClick: () => {
+                        for (let i = 0; i < this.selectedEntries.length; i++) {
+                            this.songData[this.selectedEntries[i]].isLiked = true
+                        }
+                    },
+                    style: {
+                        'opacity': this.isSelected ? '1' : '0',
+                        '--n-color': getRGBString(HeadBackgroundColorString.value, 1, 'background', viewMode),
+                        '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
+                        '--n-border-focus': `none`,
+                        '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
+                        '--n-border-disabled': `none`,
+                        '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode),
+                        'animation': this.isSelected ? 'bounceIn' : 'heartBeat',
+                        'animation-duration': '0.5s'
+                    },
+                }, {
+                    icon: () => h(Heart12Filled, {
+                        style: {
+                            'color': 'rgb(204,12,32)'
+                        }
+                    })
+                }),
+
                 style: {
                     "text-align": "center"
                 },
@@ -141,7 +158,9 @@ export default {
                                         viewMode)}`,
                                     '--n-border-disabled': `none`,
                                     '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font',
-                                        viewMode)
+                                        viewMode),
+                                    'animation': row.isLiked ? 'bounceIn' : 'heartBeat',
+                                    'animation-duration': '0.5s'
                                 }
                             },
                                 {
@@ -163,31 +182,30 @@ export default {
             },
             {
                 key: "collect",
-                title: (column) => {
-                    return h(NButton, {
-                        onClick: () => {
-                            for (let i = 0; i < selectedEntries.length; i++) {
-                                songData.value[selectedEntries[i]].isCollected = true
-                            }
-
-                        },
-                        style: {
-                            'opacity': isSelected ? '1' : '0',
-                            '--n-color': getRGBString(HeadBackgroundColorString.value, 1, 'background', viewMode),
-                            '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
-                            '--n-border-focus': `none`,
-                            '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
-                            '--n-border-disabled': `none`,
-                            '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode)
+                title: (column) => h(NButton, {
+                    onClick: () => {
+                        for (let i = 0; i < this.selectedEntries.length; i++) {
+                            this.songData[this.selectedEntries[i]].isCollected = true
                         }
-                    }, {
-                        icon: () => h(Star12Filled, {
-                            style: {
-                                'color': 'rgb(210,195,135)'
-                            }
-                        })
+                    },
+                    style: {
+                        'opacity': this.isSelected ? '1' : '0',
+                        '--n-color': getRGBString(HeadBackgroundColorString.value, 1, 'background', viewMode),
+                        '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
+                        '--n-border-focus': `none`,
+                        '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
+                        '--n-border-disabled': `none`,
+                        '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode),
+                        'animation': isSelected ? 'bounceIn' : 'heartBeat',
+                        'animation-duration': '0.5s'
+                    }
+                }, {
+                    icon: () => h(Star12Filled, {
+                        style: {
+                            'color': 'rgb(210,195,135)'
+                        }
                     })
-                },
+                }),
                 render(row) {
                     return h(NPopover, {
                         trigger: 'hover',
@@ -211,7 +229,9 @@ export default {
                                         viewMode)}`,
                                     '--n-border-disabled': `none`,
                                     '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font',
-                                        viewMode)
+                                        viewMode),
+                                    'animation': row.isCollected ? 'bounceIn' : 'heartBeat',
+                                    'animation-duration': '0.5s'
                                 }
                             },
                                 {
@@ -233,11 +253,53 @@ export default {
             }
         ]//表头和表项
         let pagination = {
-            pageSize: 10
-        }//分页工具
+            style: {
+                //页面按钮
+                '--n-item-text-color': getRGBString(antiBackgroundColor.value, 0.6, 'font'),
+                '--n-item-text-color-hover': getRGBString(antiBackgroundColor.value, 0.4, 'font'),
+                '--n-item-text-color-active': getRGBString(fontColorString.value, 0.8),
+                '--n-item-text-color-pressed': getRGBString(fontColorString.value, 0.2),
+                '--n-item-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.6)}`,
+                '--n-item-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.3)}`,
+                '--n-item-border-active': `1px solid ${getRGBString(fontColorString.value, 0.8)}`,
+                '--n-item-border-active-hover': `1px solid ${getRGBString(fontColorString.value, 1)}`,
+                //不可用的跳转按钮
+                '--n-item-border-disabled': `1px solid ${getRGBString(BackgroundColorString.value, 0.6)}`,
+                '--n-item-color-disabled': `1px solid ${getRGBString(BackgroundColorString.value, 0.3)}`,
+                //可用的跳转按钮
+                '--n-button-color-hover': getRGBString(BackgroundColorString.value, 0.6),
+                '--n-button-border': `1px solid ${getRGBString(fontColorString.value, 0.8)}`,
+                '--n-button-border-hover': `1px solid ${getRGBString(fontColorString.value)}`,
+                '--n-button-icon-color': `${getRGBString(fontColorString.value, 0.8)}`,
+                '--n-button-icon-color-hover': `${getRGBString(fontColorString.value, 0.5)}`,
+                '--n-jumper-text-color': `${getRGBString(fontColorString.value, 0.6)}`,
+                // 单页加载量选择按钮(需要v-deep,此处仅作为标记)
+                // '--n-border-hover': `${getRGBString(fontColorString, 0.6)} `,
+                // '--n-arrow-color': `${getRGBString(fontColorString, 0.5)}`,
+                // '--n-text-color': `${getRGBString(fontColorString, 0.8)}`,
+                // '--n-color': `${getRGBString(BackgroundColorString, 1)}`,
+                // '--n-caret-color': `${getRGBString(fontColorString.value, 0.6)}`
+
+            },
+            showSizePicker: true,
+            showQuickJumper: true,
+            suffix: () => h('span', {
+                style: {
+                    'color': getRGBString(fontColorString.value,0.6),
+                    'font-weight': 700
+                }
+            }, '页'),
+            goto: () => h('span', {
+                style: {
+                    'color': getRGBString(fontColorString.value,0.6),
+                    'font-weight': 700
+                }
+            }, '跳转到第'),
+            pageSizes: [5, 10, 20, 50]
+        }
         return {
             themeColor, HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
-            isSelected, selectedEntries, songData, columns, pagination,getRGBString
+            isSelected, selectedEntries, songData, columns, getRGBString, pagination
         }
     },
     props: {
@@ -269,7 +331,7 @@ export default {
                 // 调节字体、背景、边框颜色
                 '--n-th-text-color': getRGBString(fontColorString, 1, 'font', viewMode),
                 '--n-td-text-color': getRGBString(fontColorString, 0.8, 'font', viewMode),
-                '--n-td-color': getRGBString(HeadBackgroundColorString, 0.6, 'background', viewMode),
+                '--n-td-color': getRGBString(HeadBackgroundColorString, 0.4, 'background', viewMode),
                 '--n-th-color': getRGBString(DataBackgroundColorString, 0.6, 'background', viewMode),
                 '--n-td-color-hover': getRGBString(HeadBackgroundColorString, 0.1, 'background', viewMode),
                 '--n-th-font-weight': '700',
@@ -285,6 +347,21 @@ export default {
 
 
 <style scoped>
+:root {
+    --my-arrow-color: none;
+    --my-text-color: none;
+    --my-color: none;
+    --my-border: none;
+    --my-border-hover: none;
+    --my-color-focus: none;
+    --my-color-active: none;
+    --my-border-active: none;
+    --my-border-focus: none;
+    --my-shadow-active: none;
+    --my-shadow-focus: none;
+    --my-option-text-color: none;
+}
+
 .data-table {
     display: inline-block;
 }
@@ -293,7 +370,44 @@ export default {
     text-align: center;
     padding: 20px;
 }
-:deep(.n-data-table__pagination){
+
+:deep(.n-data-table__pagination) {
     justify-content: center;
+}
+
+:deep(.n-pagination .n-pagination-item) {
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
+
+:deep(.n-base-selection-label) {
+    --n-arrow-color: var(--my-arrow-color);
+    --n-color: var(--my-color);
+    --n-color-active: var(--my-color-focus);
+    --n-text-color: var(--my-text-color);
+}
+
+:deep(.n-base-selection) {
+    --n-border: var(--my-border) !important;
+    --n-border-hover: var(--my-border-hover) !important;
+    --n-border-focus: var(--my-border-focus) !important;
+    --n-border-active: var(--my-border-active) !important;
+    --n-box-shadow-focus: var(--my-shadow-focus) !important;
+    --n-box-shadow-active: var(--my-shadow-active) !important
+}
+
+:deep(.n-input) {
+    --n-color: var(--my-color) !important;
+    --n-color-focus: var(--my-color-focus) !important;
+    --n-text-color: var(--my-text-color) !important;
+    --n-border: var(--my-border) !important;
+    --n-border-hover: var(--my-border-hover) !important;
+    --n-border-focus: var(--my-border-focus) !important;
+    --n-box-shadow-focus: var(--my-shadow-focus) !important;
+    --n-box-shadow-active: var(--my-shadow-active) !important;
+    --n-font-weight: 700;
+}
+
+:deep(.n-pagination .n-pagination-item.n-pagination-item--disabled) {
+    cursor: default;
 }
 </style>

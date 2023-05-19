@@ -5,6 +5,7 @@
     import { defineComponent, ref } from 'vue';
     import { ChevronBack, StarOutline, FitnessOutline, WarningOutline, ChatbubbleEllipsesOutline, TrashOutline, CreateOutline, Fitness, Star, Warning } from '@vicons/ionicons5';
     dayjs.extend(relativeTime);
+    import {globalThemeColor,getBackgroundColorString,getRGBString, changeThemeColorByImage} from '/src/colorMode.js'
     export default defineComponent({
         name: 'PlayerView',
         components: {
@@ -28,6 +29,8 @@
                         this.music = response.data.music_set[0];
                         this.islike = this.music.is_like;
                         this.iscollect = this.music.is_favorite;
+                        console.log(this.music.cover);
+                        changeThemeColorByImage(this.music.cover)
                     });
                     this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
                         this.comments = response.data.comment_set;
@@ -66,6 +69,8 @@
                 page: 1,
                 comments: [],
                 music: {},
+                getRGBString,
+                backgroundColorString: getBackgroundColorString(globalThemeColor,225),
             }
         },
         methods: {
@@ -128,7 +133,9 @@
 </script>
 
 <template>
-    <div class="player-page" id="top">
+    <div class="player-page" id="top" :style="{
+        'background-color':getRGBString(backgroundColorString,0.7)
+        }">
         <n-grid>
             <n-gi :span="4">
                 <div>
@@ -224,11 +231,11 @@
                                 maxRows: 6
                             }"/>
                             <div class="my-comment-button">
-                                <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
-                                清空
-                                </n-button>
                                 <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
                                 发送
+                                </n-button>
+                                <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                                清空
                                 </n-button>
                             </div>
                         </div>
@@ -318,6 +325,9 @@
 </template>
 
 <style scoped>
+.player-page{
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
 .back-button {
     width: 40px;
     height: 40px;
@@ -399,6 +409,7 @@
     position: absolute;
     margin-right: 100px;
 }
+
 .my-comment-button {
     margin-bottom: 50px;
 }

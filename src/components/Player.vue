@@ -69,6 +69,7 @@ function setTheme(index) {
 
 defineExpose({
     play,
+    playAll,
 });
 
 onMounted(() => {

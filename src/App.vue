@@ -15,6 +15,10 @@ const playerRef = ref();
 function play(musicId) {
   playerRef.value.play(musicId);
 }
+
+function playAll(playlistId) {
+  playerRef.value.playAll(playlistId);
+}
 </script>
 
 <template>
@@ -23,7 +27,7 @@ function play(musicId) {
   <!-- <message-send></message-send> -->
 
   <div :style="{'background':backgroundColor }" class='page_background'></div> 
-    <RouterView @play="play" />
+    <RouterView @play="play" @playAll="playAll" />
     <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px)(高度可略)-->
       <!-- <image-table :table-size="[1000,]"></image-table>
