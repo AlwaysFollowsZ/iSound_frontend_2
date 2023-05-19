@@ -1,6 +1,6 @@
 <template>
     <div ref="containerRef"></div>
-    <a @click="aplayerLaunch"><ChevronUp class="aplayer-launch" /></a>
+    <a @click="launch"><ChevronUp class="aplayer-launch" /></a>
     <div class="footer"></div>
 </template>
   
@@ -23,7 +23,7 @@ let ap;
 let launched = false;
 let currentMusicId;
 
-function aplayerLaunch() {
+function launch() {
     if (currentMusicId != undefined) {
         if (launched) {
             proxy.$router.replace(`/player/${currentMusicId}`);
@@ -35,14 +35,23 @@ function aplayerLaunch() {
     }
 }
 
-function aplayerPlay(musicId) {
+function play(musicId) {
     proxy.$http.get(`/api/music/detail/${musicId}`).then((response) => {
         ap.list.clear();
         ap.list.add(response.data.music_set);
+        ap.play();
     });
 }
 
-function aplayerTheme(index) {
+function playAll(playlistId) {
+    proxy.$http.get(`/api/playlist/detail/${playlistId}`).then((response) => {
+        ap.list.clear();
+        ap.list.add(response.data.music_set);
+        ap.play();
+    });
+}
+
+function setTheme(index) {
     xhr.onload = function() {
         const coverUrl = URL.createObjectURL(this.response);
         image.onload = function() {
@@ -57,6 +66,10 @@ function aplayerTheme(index) {
     xhr.responseType = 'blob';
     xhr.send();
 }
+
+defineExpose({
+    play,
+});
 
 onMounted(() => {
     ap = new APlayer({
@@ -86,12 +99,12 @@ onMounted(() => {
         currentMusicId = ap.list.audios[e.index].id;
         if (proxy.$router.currentRoute.value.name == 'player') {
             launched = true;
-            aplayerLaunch();
+            launch();
         }
         else {
             launched = false;
         }
-        aplayerTheme(e.index);
+        setTheme(e.index);
     });
 
     ap.on('loadstart', () => {
