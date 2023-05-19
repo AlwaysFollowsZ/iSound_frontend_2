@@ -35,22 +35,6 @@ function launch() {
     }
 }
 
-function play(musicId) {
-    proxy.$http.get(`/api/music/detail/${musicId}`).then((response) => {
-        ap.list.clear();
-        ap.list.add(response.data.music_set);
-        ap.play();
-    });
-}
-
-function playAll(playlistId) {
-    proxy.$http.get(`/api/playlist/detail/${playlistId}`).then((response) => {
-        ap.list.clear();
-        ap.list.add(response.data.music_set);
-        ap.play();
-    });
-}
-
 function setTheme(index) {
     xhr.onload = function() {
         const coverUrl = URL.createObjectURL(this.response);
@@ -65,6 +49,22 @@ function setTheme(index) {
     xhr.open('GET', ap.list.audios[index].cover, true);
     xhr.responseType = 'blob';
     xhr.send();
+}
+
+function play(musicId) {
+    proxy.$http.get(`/api/music/detail/${musicId}`).then((response) => {
+        ap.list.clear();
+        ap.list.add(response.data.music_set);
+        ap.play();
+    });
+}
+
+function playAll(playlistId) {
+    proxy.$http.get(`/api/playlist/detail/${playlistId}`).then((response) => {
+        ap.list.clear();
+        ap.list.add(response.data.music_set);
+        ap.play();
+    });
 }
 
 defineExpose({
