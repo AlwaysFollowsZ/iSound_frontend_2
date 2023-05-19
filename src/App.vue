@@ -19,8 +19,8 @@ import Player from './components/Player.vue';
     <RouterView />
     <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px)(高度可略)-->
-      <!-- <image-table :table-size="[1000,]"></image-table>
-     <list-table :view-mode="user"></list-table>  -->
+      <image-table :table-size="[1000,]"></image-table>
+     <list-table :view-mode="user"></list-table> 
   
   <Player />
   <!-- </div> -->
@@ -67,7 +67,8 @@ nav a:first-of-type {
   z-index: -1;
   height: 100vh;
   width: 100vw;
-  transition: height cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+  transition: height cubic-bezier(0.165, 0.84, 0.44, 1) 1s,
+              background-color cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 @media (min-width: 1024px) {
