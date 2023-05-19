@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps, ref} from 'vue'
-import { NButton, NEllipsis, NInput,NIcon,NIconWrapper,NTooltip,NPopover } from 'naive-ui'
+import { NButton, NEllipsis, NInput, NIcon, NIconWrapper, NTooltip, NPopover,NConfigProvider } from 'naive-ui'
 import { MusicNote220Regular } from '@vicons/fluent' 
 import { LibraryMusicOutlined } from '@vicons/material'
 import { getBackgroundColorString, getFontColorString, getThemeColorByImage } from '/src/colorMode'

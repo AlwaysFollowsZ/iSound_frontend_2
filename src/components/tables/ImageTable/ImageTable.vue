@@ -26,7 +26,7 @@ export default {
             document.documentElement.style.setProperty('--my-shadow-active', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.6)}`)
             document.documentElement.style.setProperty('--my-shadow-focus', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.7)}`)
         }, { immediate: true })
-
+        
         return {
             getRGBString,
             antiBackgroundColor,
@@ -67,6 +67,8 @@ export default {
 }
 </script>
 <template>
+
+    
     <div class="image_table" :style="{
         'background-color': `rgba(${BackgroundColorString},0.3)`,
         'border-radius': '50px',
@@ -119,7 +121,7 @@ export default {
                 </n-pagination>
             </div>
         </n-scrollbar>
-        <!-- <template v-else> -->
+        <template v-else>
         <div class="list_top_nav">
             <n-button class="more_button" :style="{
                 '--n-color': `rgba(${BackgroundColorString},0.15)`,
@@ -152,8 +154,10 @@ export default {
                 </image-table-entry>
             </template>
         </div>
-        <!-- </template> -->
+        </template>
     </div>
+
+
 </template>
 
 <style scoped>
