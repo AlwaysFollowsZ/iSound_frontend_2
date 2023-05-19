@@ -55,7 +55,7 @@ const isClickOnMask = ref(false)
             :style="{
                 'padding': `${imageSize / 8}px ${imageSize / 6}px ${imageSize / 10}px ${imageSize / 6}px`,
                 'border-radius': `${imageSize / 10}px`,
-                'background-color':isHoverOnMask? `rgb(${themeColorString},0.6)`:`rgb(${themeColorString},0.3)`,
+                'background-color':isHoverOnMask? `rgb(${themeColorString},0.8)`:`rgb(${themeColorString},0.5)`,
                 'box-shadow':isHoverOnMask? `0 0 8px 3px rgb(${themeColorString},0.8)`:'',
                 'border':isHoverOnMask? `3px solid rgb(${themeColorString})`:`3px dashed rgb(${themeColorString},0.7)`
             }"
