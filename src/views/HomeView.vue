@@ -2,48 +2,50 @@
   <div><top-nav></top-nav></div>
   <div class="img-show">
     <n-grid>
-      <n-gi :span="14">
-        <div style="padding-bottom: 0%; padding-left: 8%">
+      <n-gi :span="24">
+        <div style="padding-bottom: 0%; padding-left: 4.5%">
           <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
             来点不一样的歌单
           </div>
         </div>
         <div class="carousel-container">
-          <n-carousel autoplay interval="3000" :style="{'border-radius': `20px`}">
-            <img
-              class="carousel-img"
-              v-for="(src, idx) in imgs" :key="idx" :src="src.path"
-              @click="jumpToSongList(src.jumpLink)"
-            >
+          <n-carousel autoplay :interval="3000"
+            effect="card"
+            prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
+            next-slide-style="transform: translateX(20%) translateZ(-500px);"
+            style="height: 85%"
+            :show-dots="true"
+          >
+            <n-carousel-item :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx" >
+              <img
+                class="carousel-img"
+                :src="src.path"
+                @click="jumpToSongList(src.jumpLink)"
+              >
+            </n-carousel-item>
           </n-carousel>
         </div>
       </n-gi>
-      <n-gi :span="10">
-        <div style="padding-bottom: 0%; padding-left: 0%">
-          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
-            猜你喜欢
+    </n-grid>
+  </div>
+  <div style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" >猜你喜欢</div>
+  <div class="card-container">
+    <n-grid  :col="6">
+      <n-gi :span="4"  v-for="(song, idx) in songs" :key="idx">
+        <div>
+          <div class="single-card-container">
+            <div class="single-card-img-container">
+              <img class="single-card-img" :src="song.imgSrc">
+            </div>
+            <div class="single-card-info-container">
+              <div class="single-card-info-name">
+                {{ song.title }}
+              </div>
+              <div class="single-card-info-singer">
+                {{ song.singer }}
+              </div>
           </div>
         </div>
-        <div class="card-container">
-          <n-grid :x-gap="12" :y-gap="6" :col="3">
-            <n-gi :span="8"  v-for="(song, idx) in songs" :key="idx">
-              <div>
-                <div class="single-card-container">
-                  <div class="single-card-img-container">
-                    <img class="single-card-img" :src="song.imgSrc">
-                  </div>
-                  <div class="single-card-info-container">
-                    <div class="single-card-info-name">
-                      {{ song.title }}
-                    </div>
-                    <div class="single-card-info-singer">
-                      {{ song.singer }}
-                    </div>
-                </div>
-              </div>
-              </div>
-            </n-gi>
-          </n-grid>
         </div>
       </n-gi>
     </n-grid>
@@ -99,10 +101,6 @@ export default {
           jumpLink: "a"
         },
         {
-          path: "/src/assets/picture5.png",
-          jumpLink: 'e'
-        },
-        {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg",
           jumpLink: "b"
         },
@@ -115,20 +113,9 @@ export default {
           jumpLink: "c"
         },
         {
-          path: "/src/assets/picture5.png",
-          jumpLink: 'e'
-        },
-        {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg",
           jumpLink: "d"
         },
-        {
-          path: "/src/assets/picture5.png",
-          jumpLink:'e'
-        },
-        
-        
-        
       ],
       songs: [
         {
@@ -187,27 +174,28 @@ export default {
 
 <style>
   .img-show {
-    height: 70vh;
+    height: 60vh;
     /*border: dashed; */
   }
   .carousel-container {
     height: 60vh;
     align-items: center;
     padding-top: 1%;
-    padding-left: 8%;
-    padding-right: 8%;
+    padding-left: 10%;
+    padding-right: 10%;
     margin: auto;
   }
   .carousel-img {
     position: relative;
     width: 100%;
     height: 100%;
+    border-radius: 15px;
     overflow: hidden;
   }
   .card-container {
-    height: 65vh;
+    height: 30vh;
     padding-top: 1%;
-    padding-right: 8%;
+    padding-left: 5%;
     margin: auto;
   }
   .single-card-container {
@@ -219,7 +207,7 @@ export default {
   .single-card-img-container {
     width: 160px; 
     height: 160px; 
-    border-radius: 10px;
+    border-radius: 15px;
     display: flex; 
     justify-content: center; 
     align-items: center; 
