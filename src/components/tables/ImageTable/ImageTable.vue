@@ -42,6 +42,7 @@ export default {
             return Math.ceil(this.rows.length / this.pageArgs.pageSize)
         },
         currentPageData() {
+            console.log(this.position)
             const rows = this.rows
             const startIndex = (this.pageArgs.currentPage - 1) * this.pageArgs.pageSize
             if (this.position === 'CollectionView') {

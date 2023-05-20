@@ -1,7 +1,7 @@
 <template>
   <div><top-nav></top-nav></div>
   <div class="img-show" 
-    :class="{'animate__animated animate__slideInUp': !isLoggedIn}">
+    :class="{'animate__animated animate__zoomIn': !isLoggedIn}">
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
@@ -30,7 +30,7 @@
     </n-grid>
   </div>
   <div v-if="scrollPromptShouldDisplay && !isLoggedIn" 
-    :class="[`${cardsShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
+    :class="(cardsShouldAnimate && !isLoggedIn )? ['animate__animated animate__zoomOut'] : ['animate__animated animate__zoomIn animate__slow']">
     <n-grid>
       <n-gi :span="9"></n-gi>
       <n-gi :span="8">
@@ -40,11 +40,11 @@
   </div>
   <div v-if="cardsShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
-      :class="{'animate__slideInLeft animate__slow': cardsShouldAnimate && !isLoggedIn}"
+      :class="{'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn}"
       style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" 
     >猜你喜欢</div>
     <div class="card-container animate__animated "
-      :class="{'animate__fadeInLeft animate__slow': cardsShouldAnimate && !isLoggedIn}"
+      :class="{'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn}"
     >
       <n-grid  :col="6">
         <n-gi :span="4"  v-for="(song, idx) in songs" :key="idx">
@@ -69,10 +69,10 @@
   </div><div ref="songCardRef" class="placeholder" v-else></div>
   <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
-      :class="{'animate__slideInLeft animate__slow': songEntryShouldAnimate && !isLoggedIn}"
+      :class="{'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn}"
       style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" >现在就听</div>
-    <div class="song-entry-outter animate__animated animate__slow"
-      :class="{'animate__fadeInLeft': songEntryShouldAnimate && !isLoggedIn}">
+    <div class="song-entry-outter animate__animated"
+      :class="{'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn}">
       <n-grid :x-gap="0" :y-gap="0" >
         <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
           <div class="song-entry-card-container">
@@ -202,25 +202,28 @@ export default {
       console.log(jumpLink)
     },
     handleCardsScroll() {
-      const componentElement = this.$refs.songCardRef
-      const componentOffsetTop = componentElement.offsetTop
-      const windowHeight = window.innerHeight;
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-      if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
-        this.cardsShouldAnimate = true
-        setTimeout(() => {
-          this.scrollPromptShouldDisplay = false
-        }, 150)
+      if (!this.cardsShouldAnimate) {
+        const componentElement = this.$refs.songCardRef
+        const componentOffsetTop = componentElement.offsetTop
+        const windowHeight = window.innerHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+        if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
+          this.cardsShouldAnimate = true
+          setTimeout(() => {
+            this.scrollPromptShouldDisplay = false
+          }, 300)
+        }
       }
-        
     },
     handleSongEntryScroll() {
-      const componentElement = this.$refs.songEntryRef
-      const componentOffsetTop = componentElement.offsetTop
-      const windowHeight = window.innerHeight;
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
-        this.songEntryShouldAnimate = true
+      if (!this.songEntryShouldAnimate) {
+        const componentElement = this.$refs.songEntryRef
+        const componentOffsetTop = componentElement.offsetTop
+        const windowHeight = window.innerHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
+          this.songEntryShouldAnimate = true
+        }
       }
     }, 
   }
@@ -253,6 +256,8 @@ export default {
     padding-top: 1%;
     padding-left: 5%;
     margin: auto;
+    animation-delay: 300ms;
+    animation-duration: 1500ms;
   }
   .single-card-container {
     max-width: 180px;
@@ -282,11 +287,6 @@ export default {
     font-weight: 500;
     color: grey;
   }
-  /*.n-card {
-    align-items: center;
-    max-width: 30vw;
-    max-height: 32vh;
-  }*/
   .single-card-img-container {
     width: 160px; 
     height: 160px; 
@@ -312,7 +312,8 @@ export default {
  
   .song-entry-outter {
     height: 40vh;
-  
+    animation-delay: 300ms;
+    animation-duration: 1500ms;
   }
   .song-entry-card-container {
     padding-left: 19%;
@@ -361,17 +362,6 @@ export default {
     margin-top: 1.5%;
     font-size: 40px;
     font-weight: bold;
-
-  }
-  @keyframes rainbow {
-    0% { color: red; }
-    14% { color: orange; }
-    28% { color: yellow; }
-    42% { color: green; }
-    57% { color: blue; }
-    71% { color: indigo; }
-    85% { color: violet; }
-    100% { color: red; }
   }
   .rainbow-text {
     background: linear-gradient(to right,  green, rgba(0, 0, 255, 0.66), indigo, violet);
