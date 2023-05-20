@@ -1,8 +1,10 @@
 <script>
 import { h, ref, defineProps, computed } from 'vue'
-import { NDataTable, NButton, NPopover, NEllipsis, NPagination, NConfigProvider } from 'naive-ui'
+import { Rows } from '/src/components/tables/ImageTable/ImageRowData'
+import { NDataTable, NButton, NPopover, NEllipsis, NPagination, NConfigProvider, NModal } from 'naive-ui'
 import { Heart12Filled, Star12Filled } from '@vicons/fluent';
 import { getFontColorString, getBackgroundColorString, globalThemeColor, changeThemeColorByImage, getRGBString, antiBackgroundColor } from '/src/colorMode'
+import imageTable from '../ImageTable/ImageTable.vue';
 import 'animate.css';
 export default {
     data() {
@@ -18,10 +20,10 @@ export default {
             document.documentElement.style.setProperty('--my-arrow-color', getRGBString(tempFontColorString.value, 0.5))
             document.documentElement.style.setProperty('--my-text-color', getRGBString(tempFontColorString.value, 0.8))
             document.documentElement.style.setProperty('--my-color', getRGBString(tempBackgroundColorString.value, 0.5))
-            document.documentElement.style.setProperty('--my-color-focus', `1px solid ${getRGBString(tempBackgroundColorString.value, 0.7)}`)
-            document.documentElement.style.setProperty('--my-color-active', `1px solid ${getRGBString(tempBackgroundColorString.value, 0.8)}`)
-            document.documentElement.style.setProperty('--my-border-hover', `1px solid ${getRGBString(tempFontColorString.value, 0.6)}`)
+            document.documentElement.style.setProperty('--my-color-focus', getRGBString(tempBackgroundColorString.value, 0.7))
+            document.documentElement.style.setProperty('--my-color-active', getRGBString(tempBackgroundColorString.value, 0.8))
             document.documentElement.style.setProperty('--my-border', `1px solid ${getRGBString(tempFontColorString.value, 0.1)}`)
+            document.documentElement.style.setProperty('--my-border-hover', `1px solid ${getRGBString(tempFontColorString.value, 0.6)}`)
             document.documentElement.style.setProperty('--my-border-active', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
             document.documentElement.style.setProperty('--my-border-focus', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
             document.documentElement.style.setProperty('--my-shadow-active', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.6)}`)
@@ -34,7 +36,6 @@ export default {
         const emit = this.$emit
         let isSelected = false//当前是否有歌曲被选择
         let selectedEntries = []//被选择的项（和rowKey同步更新）
-
         let columns = [
             {
                 key: 'image',
@@ -192,9 +193,9 @@ export default {
                         {
                             trigger: () => h(NButton, {
                                 onClick: () => {
-                                    row['isLikeChanged'] = false
+                                    row['isLikeChanged'] = true
                                     emit('like', row.key)
-                                    setInterval(() => { row['isLikeChanged'] = true }, 100)
+                                    setTimeout(() => { row['isLikeChanged'] = false }, 200)
                                 },
                                 style: {
                                     '--n-color': getRGBString(DataBackgroundColorString.value, 1, 'background',
@@ -246,7 +247,8 @@ export default {
                         '--n-color': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
                         '--n-color-hover': getRGBString(fontColorString.value, 0.5, 'background', viewMode),
                         '--n-color-focus': getRGBString(fontColorString.value, 0.4, 'background', viewMode),
-                        '--n-color-pressed': getRGBString(fontColorString.value, 0.3, 'background', viewMode), '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
+                        '--n-color-pressed': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
+                        '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
                         '--n-border-focus': `none`,
                         '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
                         '--n-border-disabled': `none`,
@@ -262,7 +264,7 @@ export default {
                     })
                 }),
                 render(row) {
-                    return h(NPopover, {
+                    return h('div', [h(NPopover, {
                         trigger: 'hover',
                         style: {
                             'color': getRGBString(fontColorString.value, 1, 'font', viewMode),
@@ -272,10 +274,7 @@ export default {
                         {
                             trigger: () => h(NButton, {
                                 onClick: () => {
-                                    row['isCollectChanged'] = false
-                                    emit('collect', row.key)
-                                    setInterval(() => { row['isCollectChanged'] = true }, 100)
-
+                                    row['showCollection'] = true
                                 },
                                 style: {
                                     '--n-color': getRGBString(DataBackgroundColorString.value, 1, 'background',
@@ -284,7 +283,7 @@ export default {
                                     '--n-color-focus': getRGBString(DataBackgroundColorString.value, 1, 'background', viewMode),
                                     '--n-color-pressed': getRGBString(DataBackgroundColorString.value, 0.3, 'background', viewMode),
                                     '--n-color-disabled': getRGBString(DataBackgroundColorString.value, 1, 'background', viewMode),
-                                    '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font',
+                                    '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font',
                                         viewMode)}`,
                                     '--n-border-focus': `none`,
                                     '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font',
@@ -301,70 +300,62 @@ export default {
                                         style: {
                                             'color': row.isCollected ? 'rgb(255, 230, 120)' : 'white'
                                         }
-                                    })
+                                    }),
                                 }),//收藏按钮
                             default: () => h('span',
                                 {
                                     style: {
-                                        'font-size': '12px'
+                                        'font-size': '12px',
                                     }
                                 },
-                                [row.isCollected ? '从"收藏夹"移除' : '添加到"收藏夹"'])
-                        })
+                                [row.isCollected ? '从"收藏夹"移除' : '添加到"收藏夹"']),
+                            // 
+                        }), h(NModal, {
+                            'show': row['showCollection'],
+                            'on-mask-click': () => {
+                                row['showCollection'] = false
+                            },
+                        }
+                            , h('div', {
+                                style: {
+                                    'text-align': 'center',
+                                    'border-radius': '50px'
+                                }
+                            }, [h('div', {
+                                style: {
+                                    'margin': '20px',
+                                    'font-size': '25px',
+                                    'font-weight': '700',
+                                    'background-color': getRGBString(BackgroundColorString.value, 0.8),
+                                    'color': getRGBString(fontColorString.value, 0.8),
+                                    'margin-top': '20px',
+                                    'border-radius': '50px',
+                                },
+                            }, '请选择收藏夹'), h(imageTable, {
+                                //一些收藏夹的参数
+                                tableSize: [1000, 500],
+                                position: 'CollectionView',
+                                handleClick: (key) => {
+                                    console.log('添加成功:' + key)
+                                    row['isCollectChanged'] = true
+                                    row['showCollection'] = false
+                                    if (row['CollectedLists'].indexOf(key) >= 0) {
+                                        row.push(key)
+                                    }
+                                    console.log(row['CollectedLists'])
+                                    emit('collect', row.key)
+                                    setTimeout(() => { row['isCollectChanged'] = false }, 500)
+                                }
+                            }, '')]))])
                 }
             },
             {
                 type: 'selection',
             },
         ]//表头和表项
-        let pagination = {
-            style: {
-                //页面按钮
-                '--n-item-text-color': getRGBString(antiBackgroundColor.value, 0.6, 'font'),
-                '--n-item-text-color-hover': getRGBString(antiBackgroundColor.value, 0.4, 'font'),
-                '--n-item-text-color-active': getRGBString(fontColorString.value, 0.8),
-                '--n-item-text-color-pressed': getRGBString(fontColorString.value, 0.2),
-                '--n-item-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.6)}`,
-                '--n-item-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.3)}`,
-                '--n-item-border-active': `1px solid ${getRGBString(fontColorString.value, 0.8)}`,
-                '--n-item-border-active-hover': `1px solid ${getRGBString(fontColorString.value, 1)}`,
-                //不可用的跳转按钮
-                '--n-item-border-disabled': `1px solid ${getRGBString(BackgroundColorString.value, 0.6)}`,
-                '--n-item-color-disabled': `1px solid ${getRGBString(BackgroundColorString.value, 0.3)}`,
-                //可用的跳转按钮
-                '--n-button-color-hover': getRGBString(BackgroundColorString.value, 0.6),
-                '--n-button-border': `1px solid ${getRGBString(fontColorString.value, 0.8)}`,
-                '--n-button-border-hover': `1px solid ${getRGBString(fontColorString.value)}`,
-                '--n-button-icon-color': `${getRGBString(fontColorString.value, 0.8)}`,
-                '--n-button-icon-color-hover': `${getRGBString(fontColorString.value, 0.5)}`,
-                '--n-jumper-text-color': `${getRGBString(fontColorString.value, 0.6)}`,
-                // 单页加载量选择按钮(需要v-deep,此处仅作为标记)
-                // '--n-border-hover': `${getRGBString(fontColorString, 0.6)} `,
-                // '--n-arrow-color': `${getRGBString(fontColorString, 0.5)}`,
-                // '--n-text-color': `${getRGBString(fontColorString, 0.8)}`,
-                // '--n-color': `${getRGBString(BackgroundColorString, 1)}`,
-                // '--n-caret-color': `${getRGBString(fontColorString.value, 0.6)}`
-
-            },
-            showSizePicker: true,
-            showQuickJumper: true,
-            suffix: () => h('span', {
-                style: {
-                    'color': getRGBString(fontColorString.value, 0.6),
-                    'font-weight': 700
-                }
-            }, '页'),
-            goto: () => h('span', {
-                style: {
-                    'color': getRGBString(fontColorString.value, 0.6),
-                    'font-weight': 700
-                }
-            }, '跳转到第'),
-            pageSizes: [5, 10, 20, 50]
-        }
         return {
             themeColor, HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
-            isSelected, selectedEntries, columns, getRGBString, pagination
+            isSelected, selectedEntries, columns, getRGBString,h
         }
     },
     props: {
@@ -377,14 +368,20 @@ export default {
                     singer: '/',
                     length: '/',
                     isLiked: false,
-                    isCollected: false,
+                    isCollected: false,//公开页面：是否被自己任意一个收藏夹收藏过；个人页面：被打开的收藏夹收藏过
+                    CollectedLists: [],//公开页面：收藏本歌曲的收藏夹id；个人页面：无作用
                     imgSrc: ""
                 }]
         },//歌曲数据
         viewMode: {
             type: String,
             default: 'user'
-        }//是否在管理员界面
+        },//是否在管理员界面
+        //使用该组件的位置，包括公开页面和自己的收藏夹页面/播放记录页面
+        position: {
+            type: String,
+            default: 'PublicView'
+        }
     },
     methods: {
         handleCheck(rowKeys) {
@@ -405,25 +402,81 @@ export default {
     <div class="table-box">
         <div class="before_table">
         </div>
-        <n-data-table ref="dataTable" :bordered="false" :columns="columns" :data="songData" :pagination="pagination"
-            @update:checked-row-keys="handleCheck" class="data-table" :style="{
-                // 调节字体、背景、边框颜色
-                '--n-loading-color': getRGBString(fontColorString, 0.5, 'font', viewMode),
-                '--n-th-text-color': getRGBString(fontColorString, 1, 'font', viewMode),
-                '--n-td-text-color': getRGBString(fontColorString, 0.8, 'font', viewMode),
-                '--n-th-icon-color': getRGBString(fontColorString, 0.5, 'font', viewMode),
-                '--n-th-icon-color-active': getRGBString(fontColorString, 1, 'font', viewMode),
-                '--n-td-color': getRGBString(HeadBackgroundColorString, 0.4, 'background', viewMode),
-                '--n-th-color': getRGBString(DataBackgroundColorString, 0.6, 'background', viewMode),
-                '--n-td-color-hover': getRGBString(HeadBackgroundColorString, 0.1, 'background', viewMode),
-                '--n-th-color-hover': getRGBString(HeadBackgroundColorString, 'background', viewMode),
-                '--n-td-color-striped': getRGBString(fontColorString, 1, 'background', viewMode),
-                '--n-th-color-striped': getRGBString(fontColorString, 1, 'background', viewMode),
-                '--n-th-font-weight': '700',
-                // '--n-border-color': getRGBString(fontColorString, 0.6, 'font', viewMode),
-                '--n-color-checked': getRGBString(fontColorString, 0.8, 'font', viewMode),
-                '--n-check-mark-color': getRGBString(HeadBackgroundColorString, 0.6, 'background', viewMode),
-            }">
+        <n-data-table ref="dataTable" :bordered="false" :columns="columns" :data="songData" :pagination="{
+            style: {
+                'font-weight': '700',
+                //页面按钮
+                '--n-item-text-color': getRGBString(fontColorString,0.8 ,'font'),
+                '--n-item-text-color-hover': getRGBString(fontColorString, 0.8, 'font'),
+                '--n-item-text-color-active': getRGBString(fontColorString, 0.5),
+                '--n-item-text-color-pressed': getRGBString(fontColorString, 0.2),
+                '--n-item-border-hover': `1px solid ${getRGBString(fontColorString, 0.6)}`,
+                '--n-item-border-pressed': `1px solid ${getRGBString(fontColorString, 0.3)}`,
+                '--n-item-border-active': `1px solid ${getRGBString(fontColorString, 0.6)}`,
+                '--n-item-border-active-hover': `1px solid ${getRGBString(fontColorString, 1)}`,
+                //不可用的跳转按钮
+                '--n-item-border-disabled': `1px solid ${getRGBString(BackgroundColorString, 0.6)}`,
+                '--n-item-color-disabled': getRGBString(BackgroundColorString, 0.3),
+                //可用的跳转按钮
+                '--n-button-color-hover': getRGBString(BackgroundColorString, 0.6),
+                '--n-button-border': `1px solid ${getRGBString(fontColorString, 0.8)}`,
+                '--n-button-border-hover': `1px solid ${getRGBString(fontColorString)}`,
+                '--n-button-icon-color': `${getRGBString(fontColorString, 0.8)}`,
+                '--n-button-icon-color-hover': `${getRGBString(fontColorString, 0.5)}`,
+                '--n-jumper-text-color': `${getRGBString(fontColorString, 0.6)}`,
+                // 单页加载量选择按钮(需要v-deep,此处仅作为标记)
+                // '--n-border-hover': `${getRGBString(fontColorString, 0.6)} `,
+                // '--n-arrow-color': `${getRGBString(fontColorString, 0.5)}`,
+                // '--n-text-color': `${getRGBString(fontColorString, 0.8)}`,
+                // '--n-color': `${getRGBString(BackgroundColorString, 1)}`,
+                // '--n-caret-color': `${getRGBString(fontColorString.value, 0.6)}`
+
+            },
+            showSizePicker: true,
+            showQuickJumper: true,
+            suffix: () => h('span', {
+                style: {
+                    'color': getRGBString(fontColorString, 0.6),
+                    'font-weight': 700
+                }
+            }, '页'),
+            goto: () => h('span', {
+                style: {
+                    'color': getRGBString(fontColorString, 0.6),
+                    'font-weight': 700
+                }
+            }, '跳转到第'),
+            pageSizes: [{
+                label: '5条/页',
+                value: 5
+            }, {
+                label: '10条/页',
+                value: 10
+            }, {
+                label: '20条/页',
+                value: 20
+            }, {
+                label: '50条/页',
+                value: 50
+            }]
+        }" @update:checked-row-keys="handleCheck" class="data-table" :style="{
+    // 调节字体、背景、边框颜色
+    '--n-loading-color': getRGBString(fontColorString, 0.5, 'font', viewMode),
+    '--n-th-text-color': getRGBString(fontColorString, 1, 'font', viewMode),
+    '--n-td-text-color': getRGBString(fontColorString, 0.8, 'font', viewMode),
+    '--n-th-icon-color': getRGBString(fontColorString, 0.5, 'font', viewMode),
+    '--n-th-icon-color-active': getRGBString(fontColorString, 1, 'font', viewMode),
+    '--n-td-color': getRGBString(HeadBackgroundColorString, 0.4, 'background', viewMode),
+    '--n-th-color': getRGBString(DataBackgroundColorString, 0.6, 'background', viewMode),
+    '--n-td-color-hover': getRGBString(HeadBackgroundColorString, 0.1, 'background', viewMode),
+    '--n-th-color-hover': getRGBString(HeadBackgroundColorString, 'background', viewMode),
+    '--n-td-color-striped': getRGBString(fontColorString, 1, 'background', viewMode),
+    '--n-th-color-striped': getRGBString(fontColorString, 1, 'background', viewMode),
+    '--n-th-font-weight': '700',
+    // '--n-border-color': getRGBString(fontColorString, 0.6, 'font', viewMode),
+    '--n-color-checked': getRGBString(fontColorString, 0.8, 'font', viewMode),
+    '--n-check-mark-color': getRGBString(HeadBackgroundColorString, 0.6, 'background', viewMode),
+}">
         </n-data-table>
     </div>
 </template>

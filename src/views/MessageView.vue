@@ -42,11 +42,24 @@
     <div><admin-top-nav :isSearchPage="false"></admin-top-nav></div>
     <div class="message-page-body">
         <a-row>
+            
             <a-col :span="4">
-                <a-card title="消息中心" :bordered="false">
+                <div class="message-center-left-container">
+                    <div class="message-center-title">消息中心</div>
+                    <div class="message-center-sub-route" @click="myMessage()">
+                        <n-icon style="margin-right:8%"><MessageOutlined /></n-icon>我的消息
+                    </div>
+                    <div class="message-center-sub-route" @click="replyMessage()">
+                        <n-icon style="margin-right:8%"><FileDoneOutlined /></n-icon>我的回复
+                    </div>
+                    <div class="message-center-sub-route" @click="sendMessage()">
+                        <n-icon style="margin-right:8%"><EditOutlined /></n-icon>去写信
+                    </div>
+                </div>
+                <!-- <a-card title="消息中心" :bordered="false">
                     <a-menu class="left-menu"
                         mode="vertical"
-                       >
+                    >
                         <a-menu-item key="1" @click="myMessage()">
                         <template #icon>
                             <MessageOutlined />
@@ -61,16 +74,12 @@
                             <EditOutlined />
                         </template>去写信</a-menu-item>
                     </a-menu>
-                </a-card>
+                </a-card> -->
             </a-col>
-
-            <a-col :span="20" :style="{'background-color': `lightsteelblue`}">
-                <div style="background-color:lightsteelblue">
+            <a-col :span="20">
+                <div>
                     <router-view></router-view>
                 </div>
-                <!-- <MessageItem />
-                <MessageSend /> -->
-                
             </a-col>
         </a-row>
     </div>
@@ -79,50 +88,29 @@
 
 
 <style scoped>
-/*.isound-admin-style {
-    padding-top: 1%;
-    font-size: 28px;
-}*/
-/*.message-page-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 55px;
-    border: 3px solid rgb(235, 237, 240)
-}*/
-/*
-.back-button {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background-color: lightgray;
-    border-color: lightgray;
-}
-.admin-avatar {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-}
-.default-admin-avatar {
-    width: 35px;
-}*/
 .message-page-body {
     margin-left: 10vw;
     margin-top: 2%;
-    background:lightsteelblue;
     width: 80vw;
     height: 90vh;
 }
-.ant-card {
-    height: 100%;
-    background: rgb(255, 255, 255);
-    border: 3px solid rgb(235, 237, 240);
-    margin: 0;
+
+.message-center-left-container {
+    margin-left: 30%;
+
 }
-.left-menu {
-    position: relative;
-    margin-left: 0;
+.message-center-title {
+    font-size: 30px;
+    font-weight: bold;
 }
+.message-center-sub-route {
+    padding-top: 6%;
+    padding-bottom: 5%;
+    font-size: 18px;
+    font-weight: 500;
+}
+.message-center-sub-route:hover {
+    cursor: pointer;
+  }
 </style>
 
