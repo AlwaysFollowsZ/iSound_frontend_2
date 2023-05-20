@@ -26,7 +26,7 @@ function playAll(playlistId) {
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-    <div :style="{ 'background': backgroundColor }" class='page_background'>
+    <div :style="{ 'background': backgroundColor }" class='page_background'> </div>
     <RouterView @play="play" @playAll="playAll" />
     <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px)(高度可略)-->
@@ -34,7 +34,7 @@ function playAll(playlistId) {
     
   
   <Player />
-  </div>
+ 
 </template>
 
 <style scoped>
