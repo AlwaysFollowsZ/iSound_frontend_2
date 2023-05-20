@@ -2,12 +2,14 @@
   import { defineComponent } from 'vue'
   import { NCard, NButton } from 'naive-ui'
   import { CloseOutline } from '@vicons/ionicons5'
+  import 'animate.css' 
   export default defineComponent({
     name : 'MessageItemReply',
     data() {
       return {
         id: 0,
         page: 1,
+        refreshPage: true,
         messages: [
           { 
             id: 1, 
@@ -128,20 +130,30 @@
     },
     methods: {
       removeMessage(message) {
-        console.log(message.content.length)
-        const index = this.messages.findIndex(msg => msg.id === message.id)
-        if (index !== -1) {
-          this.messages.splice(index, 1)
-        }
-        if ((this.page - 1) * 5 >= this.messages.length) {
-          this.page -= 1
-        }
-        // this.page = Math.ceil(this.messages.length / 5)
-        // console.log(this.messages.length)
-        // this.messages = this.messages.filter((t) => t !== message)
+        message['isDeleted'] = true
+        this.refreshPage = false
+        setTimeout(() => {
+          const index = this.messages.findIndex(msg => msg.id === message.id)
+          if (index !== -1) {
+            this.messages.splice(index, 1)
+            for (var i = index; i < this.messages.length; i++) {
+              this.messages[i].id = Math.random()
+            }
+            this.refreshPage = true
+          }
+          if ((this.page - 1) * 5 >= this.messages.length) {
+            this.page -= 1
+          }
+        }, 700)
       },
       reply() {
         this.$router.push({path:'/message/send'})
+      },
+      toRefreshPage() {
+        this.refreshPage = false
+        setTimeout(() => {
+          this.refreshPage = true
+        }, 600)
       }
     }
   });
@@ -150,10 +162,10 @@
 <template>
   <div class="message-card-outer">
     <n-scrollbar style="max-height: 90vh" trigger="none">
-    <div class="message-card" 
-      v-for="(message, idx) in 
+    <div :class="['message-card', 'animate__animated', `${message.isDeleted ? 'animate__fadeOutRight' : 'animate__slideInUp'}`]" 
+      v-for="(message) in 
         messages.slice(7 * (page - 1), 7 * (page - 1) + ((7 * page > messages.length) ? (messages.length % 7) : 7))" 
-      :key="idx">
+      :key="message.id">
       <div class="message-card-header">
         <n-grid>
           <n-gi :span="12">
@@ -198,50 +210,17 @@
               </span>
             </n-gi>
           </n-grid>
-          
-          
-            <!-- <n-ellipsis style="max-width: 500px">
-              {{ message.content }}
-              <template #tooltip >
-                <div style="text-align: left; max-width: 500px;">
-                  {{ message.content }}
-                </div>
-              </template>
-            </n-ellipsis> -->
         </div>
       </div>
-      <!-- <div class="messgae-card-footer">
-        <n-grid>
-          <n-gi :span="20">
-
-          </n-gi>
-          <n-gi :span="2">
-            <div class="message-card-footer-read">
-              <n-button  
-                strong secondary type="info" 
-                 :disabled="message.disabled" 
-                 @click="message.disabled = !message.disabled"
-              >
-              已读
-              </n-button>
-            </div>
-          </n-gi>
-          <n-gi :span="2">
-            <div class="message-card-footer-reply">
-              <n-button strong secondary type="info" @click="reply">
-              回复
-              </n-button>
-            </div>
-            </n-gi>
-        </n-grid>
-      </div> -->
     </div>
     <div class="card-pagination">
       <n-grid>
         <n-gi :span="8"></n-gi>
         <n-gi :span="8">
-          <div style="display: flex; justify-content: center;" v-if="messages.length > 0">
-            <n-pagination v-model:page="page" :page-count="Math.ceil(messages.length / 7)" />
+          <div :class="['animate__animated', `${refreshPage ? 'animate__zoomIn' : 'animate__zoomOut'}`]" 
+            style="display: flex; justify-content: center;" v-if="messages.length > 0"
+          >
+            <n-pagination v-model:page="page" :page-count="Math.ceil(messages.length / 7)" @click="toRefreshPage" />
           </div>
           <div style="display: flex; justify-content: center; font-size: 20px" v-else>
             您暂未收到任何消息
@@ -252,29 +231,6 @@
     </div>
     </n-scrollbar>
   </div>
-  <!-- <ul class="ul">
-    <n-card v-for="(message, idx) in messages" :key="idx" title="卡片" hoverable> -->
-      
-      <!-- <n-button class="close-button" type="info" quaternary @click="removeMessage(message)"> -->
-        <!-- <CloseCircleOutline style="width: 20px" @click="removeMessage(message)"/> -->
-      <!-- </n-button> -->
-    <!-- <n-button class="close-button" tertiary circle style="width: 25px; height: 25px;">
-      <CloseCircleOutline style="width: 25px" @click="removeMessage(message)"/>
-    </n-button>
-    {{ message.from }}
-    {{ message.content }}
-    {{ message.music }}
-    {{ message.time }}
-    <span>
-      <n-button class="already-read" strong secondary type="info" :disabled="message.disabled" @click="message.disabled=!message.disabled">
-      已读
-      </n-button>
-      <n-button class="reply-read" strong secondary type="info" @click="reply">
-      回复
-      </n-button>
-    </span>
-    </n-card>
-  </ul> -->
   
 </template>
 
@@ -289,6 +245,7 @@
   margin-right: 8%;
   margin-top: 2%;
   margin-bottom: 2%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .message-card-header {
 
@@ -317,6 +274,10 @@
 .message-card-footer {
 
 }
+.message-card-header-close-button:hover {
+  color: grey;
+  cursor: pointer;
+}
 .message-card-footer-read {
   padding-bottom: 10%;
 }
@@ -326,26 +287,5 @@
 .card-pagination {
   padding-top: 3%;
 }
-/*
-.ul {
-  padding: 0;
-}
-.n-card {
-  max-width: 90%;
-  margin: 10px auto;
-}
-.already-read {
-  position: absolute;
-  right: 75px;
-}
-.reply-read {
-  position: absolute;
-  right: 10px;
-}
-.close-button {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  
-}*/
+
 </style>

@@ -34,8 +34,6 @@
                 </n-grid>
                 
             </div>
-            
-            <!-- <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>   -->
         </div>
 </template>
 
@@ -120,34 +118,12 @@ export default {
     width: 35px;
 }
 .go-message-button {
-    /*position: fixed;*/
+    
     top: 10px;
     left: 10px;
-    /*background-color: lightgray;
-    border-color: lightgray;*/
 }
-.go-message-button :hover {
-    /*position: fixed;
-    top: 10px;
-    left: 10px;*/
-    /*background-color: lightsteelblue !important;
-    border-color: lightsteelblue !important;*/
-}
-/*.ant-btn :hover {
-    color: lightsteelblue !important;
-    background-color: lightsteelblue !important;
-    border-color: lightsteelblue !important;
-}*/
-/*.ant-btn-primary :hover {
-    
-    background-color: lightsteelblue !important;
-    border-color: lightsteelblue !important;
-}
-.ant-btn-circle :hover {
-    
-    background-color: lightsteelblue !important;
-    border-color: lightsteelblue !important;
-}*/
+
+
 .message-page-search {
    /* position: fixed;*/
     top: 58px;
