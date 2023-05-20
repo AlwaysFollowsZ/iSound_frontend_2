@@ -10,6 +10,7 @@ export default {
                 length: '3:40',
                 isLiked: false,
                 isCollected: false,
+                CollectedLists: [],
                 imgSrc: "/src/assets/song5.png"
             },
             {
@@ -19,6 +20,7 @@ export default {
                 length: '4:05',
                 isLiked: false,
                 isCollected: false,
+                CollectedLists: [],
                 imgSrc: "/src/assets/song2.jpg"
             }, {
                 key: 2,
@@ -27,6 +29,7 @@ export default {
                 length: '4:24',
                 isLiked: false,
                 isCollected: false,
+                CollectedLists: [],
                 imgSrc: "/src/assets/song3.jpg"
             }, {
                 key: 3,
@@ -35,6 +38,7 @@ export default {
                 length: '3:56',
                 isLiked: false,
                 isCollected: false,
+                CollectedLists: [],
                 imgSrc: "/src/assets/song4.jpg"
             },]
         }
@@ -43,6 +47,7 @@ export default {
         handleLikeAll(keys) {
             for (let i = 0; i < keys.length; i++) {
                 this.songData[keys[i]].isLiked = !this.songData[keys[i]].isLiked
+                this.songData[keys[i]].isLikeChanged = true
             }
             this.cleanChangeReaction()
         },
@@ -53,6 +58,7 @@ export default {
         handleCollectAll(keys) {
             for (let i = 0; i < keys.length; i++) {
                 this.songData[keys[i]].isCollected = !this.songData[keys[i]].isCollected
+                this.songData[keys[i]].isCollectChanged = true
             }
             this.cleanChangeReaction()
         },
@@ -61,12 +67,12 @@ export default {
             this.cleanChangeReaction()
         },
         cleanChangeReaction() {
-            setInterval(() => {
-                for (let i = 0; i < keys.length; i++) {
-                    this.songData[keys[i]].isLikeChanged = false
-                    this.songData[keys[i]].isCollectChanged=false
+            setTimeout(() => {
+                for (let i = 0; i < this.songData.length; i++) {
+                    this.songData[i].isLikeChanged = false
+                    this.songData[i].isCollectChanged = false
                 }
-            }, 100)
+            }, 500)
         }
     }
 
