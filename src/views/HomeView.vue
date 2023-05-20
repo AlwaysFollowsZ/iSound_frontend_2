@@ -1,6 +1,7 @@
 <template>
   <div><top-nav></top-nav></div>
-  <div class="img-show animate__animated animate__slideInUp">
+  <div class="img-show" 
+    :class="{'animate__animated animate__slideInUp': !isLoggedIn}">
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
@@ -28,8 +29,8 @@
       </n-gi>
     </n-grid>
   </div>
-  <div v-if="scrollPromptShouldDisplay" 
-    :class="[`${cardsShouldAnimate ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__delay-2s'}`]">
+  <div v-if="scrollPromptShouldDisplay && !isLoggedIn" 
+    :class="[`${cardsShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
     <n-grid>
       <n-gi :span="9"></n-gi>
       <n-gi :span="8">
@@ -37,13 +38,13 @@
       </n-gi><n-gi :span="7"></n-gi>
     </n-grid>
   </div>
-  <div v-if="cardsShouldAnimate">
+  <div v-if="cardsShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
-      :class="{'animate__slideInLeft': cardsShouldAnimate}"
+      :class="{'animate__slideInLeft animate__slow': cardsShouldAnimate && !isLoggedIn}"
       style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" 
     >猜你喜欢</div>
     <div class="card-container animate__animated "
-      :class="{'animate__fadeInLeft animate__delay-2s': cardsShouldAnimate}"
+      :class="{'animate__fadeInLeft animate__slow': cardsShouldAnimate && !isLoggedIn}"
     >
       <n-grid  :col="6">
         <n-gi :span="4"  v-for="(song, idx) in songs" :key="idx">
@@ -66,12 +67,12 @@
       </n-grid>
     </div>
   </div><div ref="songCardRef" class="placeholder" v-else></div>
-  <div v-if="songEntryShouldAnimate">
+  <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
-      :class="{'animate__slideInLeft': songEntryShouldAnimate}"
+      :class="{'animate__slideInLeft animate__slow': songEntryShouldAnimate && !isLoggedIn}"
       style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" >现在就听</div>
-    <div class="song-entry-outter animate__animated animate__delay-2s"
-      :class="{'animate__fadeInLeft': songEntryShouldAnimate}">
+    <div class="song-entry-outter animate__animated animate__slow"
+      :class="{'animate__fadeInLeft': songEntryShouldAnimate && !isLoggedIn}">
       <n-grid :x-gap="0" :y-gap="0" >
         <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
           <div class="song-entry-card-container">
@@ -106,10 +107,14 @@
 import TopNav from '../components/TopNav.vue'
 import { HeartOutline } from '@vicons/ionicons5'
 import 'animate.css'
+import { mapState, mapMutations } from 'vuex'
 export default {
   components: {
     TopNav,
     HeartOutline
+  },
+  computed: {
+    ...mapState(['isLoggedIn']),
   },
   data() {
     return {
@@ -205,7 +210,7 @@ export default {
         this.cardsShouldAnimate = true
         setTimeout(() => {
           this.scrollPromptShouldDisplay = false
-        }, 500)
+        }, 150)
       }
         
     },
@@ -369,7 +374,7 @@ export default {
     100% { color: red; }
   }
   .rainbow-text {
-    background: linear-gradient(to right, red, orange, #FFD700, green, blue, indigo, violet);
+    background: linear-gradient(to right,  green, rgba(0, 0, 255, 0.66), indigo, violet);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
