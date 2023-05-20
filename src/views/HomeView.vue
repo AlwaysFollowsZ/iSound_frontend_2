@@ -1,7 +1,7 @@
 <template>
   <div><top-nav></top-nav></div>
   <div class="img-show" 
-    :class="{'animate__animated animate__slideInUp': !isLoggedIn}">
+    :class="{'animate__animated animate__zoomIn': !isLoggedIn}">
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
@@ -30,7 +30,7 @@
     </n-grid>
   </div>
   <div v-if="scrollPromptShouldDisplay && !isLoggedIn" 
-    :class="[`${cardsShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
+    :class="(cardsShouldAnimate && !isLoggedIn )? ['animate__animated animate__zoomOut'] : ['animate__animated animate__zoomIn animate__slow']">
     <n-grid>
       <n-gi :span="9"></n-gi>
       <n-gi :span="8">
@@ -362,7 +362,6 @@ export default {
     margin-top: 1.5%;
     font-size: 40px;
     font-weight: bold;
-
   }
   .rainbow-text {
     background: linear-gradient(to right,  green, rgba(0, 0, 255, 0.66), indigo, violet);
