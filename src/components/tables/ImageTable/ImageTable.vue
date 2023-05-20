@@ -42,7 +42,14 @@ export default {
             return Math.ceil(this.rows.length / this.pageArgs.pageSize)
         },
         currentPageData() {
+            console.log(this.position)
+            const rows = this.rows
             const startIndex = (this.pageArgs.currentPage - 1) * this.pageArgs.pageSize
+            if (this.position === 'CollectionView') {
+                for (let i = 0; i < rows.length; i++) {
+                    rows[i]['imageSize'] = 150
+                }
+            }
             return this.rows.slice(startIndex, startIndex + this.pageArgs.pageSize)
         },
     },
@@ -51,6 +58,7 @@ export default {
             type: Array,
             default: ['1000',]
         },
+        //使用该组件的位置包括个人主页/收藏夹选择悬浮框和音乐馆主页
         position: {
             type: String,
             default: 'PersonalView'
@@ -62,6 +70,13 @@ export default {
         rows: {
             type: JSON.type,
             default: Rows
+        },
+        //处理点击事件的方法
+        handleClick: {
+            type: Function,
+            default: (Key) => {
+                alert(Key)
+            }
         }
     },
 }
@@ -73,19 +88,31 @@ export default {
         'width': `${tableSize[0]}px`,
         'height': `${tableSize[1]}px`
     }">
-        <n-scrollbar v-if="position === 'PersonalView'" class="image_table_list">
-            <template v-for="data in currentPageData" :key="data.name">
-                <image-table-entry v-bind="data" style="vertical-align: middle;"></image-table-entry>
+        <n-scrollbar v-if="['PersonalView', 'CollectionView'].includes(position)" class="image_table_list">
+            <template v-for="data in currentPageData" :key="data.Key">
+                <image-table-entry v-bind="data" style="vertical-align: middle;" @clickEntry="handleClick"></image-table-entry>
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
                     v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker :default-page-size="1"
-                    :page-sizes="[5, 10, 20, 50]" :suffix="() => h('span', {
-                        style: {
-                            'color': getRGBString(fontColorString, 0.6),
-                            'font-weight': 700
-                        }
-                    }, '页')" :style="{
+                    :page-sizes="[{
+                        label: '5条/页',
+                        value: 5
+                    }, {
+                        label: '10条/页',
+                        value: 10
+                    }, {
+                        label: '20条/页',
+                        value: 20
+                    }, {
+                        label: '50条/页',
+                        value: 50
+                    }]" :suffix="() => h('span', {
+    style: {
+        'color': getRGBString(fontColorString, 0.6),
+        'font-weight': 700
+    }
+}, '页')" :style="{
     //页面按钮
     '--n-item-text-color': getRGBString(antiBackgroundColor, 0.6, 'font'),
     '--n-item-text-color-hover': getRGBString(antiBackgroundColor, 0.4, 'font'),
@@ -119,40 +146,40 @@ export default {
                 </n-pagination>
             </div>
         </n-scrollbar>
-        <!-- <template v-else> -->
-        <div class="list_top_nav">
-            <n-button class="more_button" :style="{
-                '--n-color': `rgba(${BackgroundColorString},0.15)`,
-                '--n-color-hover': `rgba(${BackgroundColorString},0.4)`,
-                '--n-color-pressed': `rgba(${BackgroundColorString},0.6)`,
-                '--n-color-focus': `rgba(${BackgroundColorString},0.1)`,
-                '--n-border': `3px solid rgba(${BackgroundColorString},0.5)`,
-                '--n-border-radius': '10px',
-                '--n-border-hover': `3px solid rgba(${BackgroundColorString},0.5)`,
-                '--n-border-pressed': `3px solid rgba(${BackgroundColorString},0.3)`,
-                '--n-border-focus': `3px solid rgba(${BackgroundColorString},0.5)`,
-                '--n-text-color': `rgba(${fontColorString},0.6)`,
-                '--n-text-color-hover': `rgba(${fontColorString},0.8)`,
-                '--n-text-color-pressed': `rgba(${fontColorString})`,
-                '--n-text-color-focus': `rgba(${fontColorString},0.6)`,
-                '--n-ripple-color': `rgba(${fontColorString},0.5)`,
-                '--n-wave-opacity': '1'
-            }" @click="changeColorMode">
-                更多
-            </n-button>
-        </div>
-        <div class="image_table_list" :style="{
-            'background-color': `rgba(${BackgroundColorString},0.4)`,
-            'border': `5px solid rgb(${BackgroundColorString},0.7)`,
-            'border-radius': '50px',
-            'height': `${tableSize[1] - 100}px`
-        }">
-            <template v-for=" data  in  rows " :key="data.name">
-                <image-table-entry v-bind="data" style="vertical-align: middle;">
-                </image-table-entry>
-            </template>
-        </div>
-        <!-- </template> -->
+        <template v-else>
+            <div class="list_top_nav">
+                <n-button class="more_button" :style="{
+                    '--n-color': `rgba(${BackgroundColorString},0.15)`,
+                    '--n-color-hover': `rgba(${BackgroundColorString},0.4)`,
+                    '--n-color-pressed': `rgba(${BackgroundColorString},0.6)`,
+                    '--n-color-focus': `rgba(${BackgroundColorString},0.1)`,
+                    '--n-border': `3px solid rgba(${BackgroundColorString},0.5)`,
+                    '--n-border-radius': '10px',
+                    '--n-border-hover': `3px solid rgba(${BackgroundColorString},0.5)`,
+                    '--n-border-pressed': `3px solid rgba(${BackgroundColorString},0.3)`,
+                    '--n-border-focus': `3px solid rgba(${BackgroundColorString},0.5)`,
+                    '--n-text-color': `rgba(${fontColorString},0.6)`,
+                    '--n-text-color-hover': `rgba(${fontColorString},0.8)`,
+                    '--n-text-color-pressed': `rgba(${fontColorString})`,
+                    '--n-text-color-focus': `rgba(${fontColorString},0.6)`,
+                    '--n-ripple-color': `rgba(${fontColorString},0.5)`,
+                    '--n-wave-opacity': '1'
+                }" @click="changeColorMode">
+                    更多
+                </n-button>
+            </div>
+            <div class="image_table_list" :style="{
+                'background-color': `rgba(${BackgroundColorString},0.4)`,
+                'border': `5px solid rgb(${BackgroundColorString},0.7)`,
+                'border-radius': '50px',
+                'height': `${tableSize[1] - 100}px`
+            }">
+                <template v-for=" data  in  rows " :key="data.name">
+                    <image-table-entry v-bind="data" style="vertical-align: middle;">
+                    </image-table-entry>
+                </template>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -200,6 +227,7 @@ export default {
     justify-content: center;
     margin-bottom: 20px;
     font-weight: 700;
+    text-align: center;
 }
 
 .more_button {

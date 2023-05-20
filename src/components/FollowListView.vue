@@ -4,46 +4,55 @@
         <n-divider />
     </div>
     <div class="follow-list-border">
-    <div class="follower-container" v-for="(follower, idx) in 
-        followerList.slice(5*(page-1), 5*(page-1)+((5*page>followerList.length) ? (followerList.length%5) : 5))"
-        :key="idx">
-        <div class="follower-card">
-            <n-grid x-gap="12">
-                <n-gi :span="3"><img class="follower-card-image" :src="follower.avatarImg" /></n-gi>
-                <n-gi :span="18">
-                    <div class="follower-card-name">
-                        {{ follower.name }}
-                    </div>
-                    <div class="follower-card-bio">
-                        {{ follower.bio }}
-                    </div>
-                </n-gi>
-                <n-gi span="3">
-                    <n-button strong secondary round type="info" style="margin-top: 15px;">
-                        已关注
-                    </n-button>
-                </n-gi>
-            </n-grid>
-            <n-divider dashed />
-        </div> 
-    </div>
-    <n-grid>
-        <n-gi :span="8"></n-gi>
-        <n-gi :span="8">
-            <div style="display: flex; justify-content: center;" v-if="followerList.length > 0">
-            <n-pagination v-model:page="page" :page-count="Math.ceil(followerList.length / 5)" />
+        <div class="follower-container"
+            v-for="(follower, idx) in 
+        followerList.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > followerList.length) ? (followerList.length % 5) : 5))" :key="idx">
+            <div class="follower-card">
+                <n-grid x-gap="12">
+                    <n-gi :span="3">
+                        <router-link :to="`/home/user/${follower.id}`"><img class="follower-card-image"
+                                :src="follower.avatarImg" /></router-link></n-gi>
+                    <n-gi :span="18">
+                        <router-link :to="`/home/user/${follower.id}`">
+                            <div class="follower-card-name">
+                                {{ follower.name }}
+                            </div>
+                        </router-link>
+                        <div class="follower-card-bio">
+                            <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
+                                <div style="  word-wrap: break-word;">
+                                    <span>
+                                        {{ follower.bio }}
+                                    </span>
+                                </div>
+                            </n-ellipsis>
+                        </div>
+                    </n-gi>
+                    <n-gi span="3">
+                        <n-button v-if="follower.isFollowing" strong secondary round type="info" style="margin-top: 15px;"
+                            @click="follow(follower)">已关注</n-button>
+                        <n-button v-else strong secondary round style="margin-top: 15px;"
+                            @click="follow(follower)">加关注</n-button>
+                    </n-gi>
+                </n-grid>
+                <n-divider dashed />
             </div>
-            <div style="display: flex; justify-content: center; font-size: 20px" v-else>
-            您还没有关注他人哦~
-          </div>
-        </n-gi>
-        <n-gi :span="8"></n-gi>
-    </n-grid>
+        </div>
+        <n-grid>
+            <n-gi :span="8"></n-gi>
+            <n-gi :span="8">
+                <div style="display: flex; justify-content: center;" v-if="followerList.length > 0">
+                    <n-pagination v-model:page="page" :page-count="Math.ceil(followerList.length / 5)" />
+                </div>
+                <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+                    您还没有关注他人哦~
+                </div>
+            </n-gi>
+            <n-gi :span="8"></n-gi>
+        </n-grid>
     </div>
 </template>
 <script>
-import { defineComponent } from 'vue'
-import { message } from 'ant-design-vue';
 import { NGrid } from 'naive-ui'
 export default {
     components: {
@@ -52,43 +61,44 @@ export default {
     data() {
         return {
             page: 1,
-            followerList: [
-                {
-                    name: "iSound",
-                    bio: "我是一个很固执的人，从来不管别人怎么说，怎么做。如果你也和我一样，那么这件事情就真的，泰！裤！辣！",
-                    avatarImg: "/src/assets/default-admin.jpg"
-                },
-                {
-                    name: "周一行",
-                    bio: "Hello World.",
-                    avatarImg: "/src/assets/song4.jpg"
-                },
-                {
-                    name: "王菲",
-                    bio: "匆匆那年",
-                    avatarImg: "/src/assets/song2.jpg"
-                },
-                {
-                    name: "王菲",
-                    bio: "匆匆那年",
-                    avatarImg: "/src/assets/song2.jpg"
-                },
-                {
-                    name: "王菲",
-                    bio: "匆匆那年",
-                    avatarImg: "/src/assets/song2.jpg"
-                },
-                {
-                    name: "王菲",
-                    bio: "匆匆那年",
-                    avatarImg: "/src/assets/song2.jpg"
-                },
-                {
-                    name: "王菲",
-                    bio: "匆匆那年",
-                    avatarImg: "/src/assets/song2.jpg"
-                },
-            ]
+            followerList: [],
+        }
+    },
+    created() {
+        this.$http.get('/api/accounts/following/0/').then((response) => {
+            console.log(response);
+            this.followerList = response.data.following.map(follower => ({
+                id: follower.id,
+                name: follower.username,
+                bio: follower.profile,
+                avatarImg: follower.avatar,
+                isFollowing: true,
+            }));
+        });
+    },
+    methods: {
+        follow(follower) {
+            follower.isFollowing = !follower.isFollowing;
+            if (follower.isFollowing) {
+                this.followUser(follower);
+            } else {
+                this.unFollowUser(follower);
+            }
+        },
+        followUser(user) {
+            this.$http.post('/api/follow/${user.id}/').then((response) => {
+                console.log(response);
+                this.followerList.push(user);
+            })
+        },
+        unFollowUser(user) {
+            this.$http.delete('/api/follow/${user.id}/').then((response) => {
+                console.log(response);
+                const index = this.followerList.findIndex(follower => follower.id === user.id);
+                if (index != -1) {
+                    this.followerList.splice(index, 1);
+                }
+            })
         }
     }
 }
@@ -130,5 +140,4 @@ export default {
     font-weight: 500;
     color: grey;
 }
-
 </style>

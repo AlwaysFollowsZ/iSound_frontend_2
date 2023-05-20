@@ -2,12 +2,14 @@
   import { defineComponent } from 'vue'
   import { NCard, NButton } from 'naive-ui'
   import { CloseOutline } from '@vicons/ionicons5'
+  import 'animate.css'                                // 引入 css 文件
   export default defineComponent({
     name : 'MessageItem',
     data() {
       return {
         id: 0,
         page: 1,
+        refreshPage: true,      // 设置了一个布尔量用于底部页码的刷新
         messages: [
           { 
             id: 1, 
@@ -16,7 +18,7 @@
             content: 'Welcome to iSound!',
             music: null,
             time: '2023-05-09 20:10:45',
-            disabled:false
+            disabled:false,
           },
           { 
             id: 2, 
@@ -128,32 +130,57 @@
     },
     methods: {
       removeMessage(message) {
-        console.log(message.content.length)
-        const index = this.messages.findIndex(msg => msg.id === message.id)
-        if (index !== -1) {
-          this.messages.splice(index, 1)
-        }
-        if ((this.page - 1) * 5 >= this.messages.length) {
-          this.page -= 1
-        }
-        // this.page = Math.ceil(this.messages.length / 5)
-        // console.log(this.messages.length)
-        // this.messages = this.messages.filter((t) => t !== message)
+        message['isDeleted']=true // 此设置用于消息删除离场动画
+        this.refreshPage = false  // 此设置用于消息删除后短暂让页码消失
+        setTimeout(() => {        // 设置定时器
+          const index = this.messages.findIndex(msg => msg.id === message.id)
+          if (index !== -1) {
+            this.messages.splice(index, 1)
+            /*
+                下面的循环将 index 及其后的消息的 id 字段设为随机值
+                由于我们指定了 v-for 的 key 是 id 字段
+                所以只有 id 更新了，v-for 才会重刷该元素
+                为了让后面的浮上来，所以从 index 往后循环
+            */
+            for (var i = index; i < this.messages.length; i++) {
+              this.messages[i].id = Math.random()
+            }
+            this.refreshPage = true // 让页码重新出现
+          }
+          if ((this.page - 1) * 5 >= this.messages.length) {
+            this.page -= 1
+          }
+        }, 700)    
       },
       reply() {
         this.$router.push({path:'/message/send'})
+      },
+      /*
+          此函数用于页码刷新，原理同上，它是页码组件 @click 的响应函数
+      */
+      toRefreshPage() {
+        this.refreshPage = false
+        setTimeout(() => {
+          this.refreshPage = true
+        }, 600)
       }
     }
   });
 </script>
 
 <template>
-  <div class="message-card-outer">
-    <n-scrollbar style="max-height: 770px">
-    <div class="message-card" 
-      v-for="(message, idx) in 
+  <div style="overflow: hidden">
+    <n-scrollbar style="max-height: 90vh" trigger="none">
+      <!-- 
+        下面的 :class 写法使得 card div 默认有 message-card 和 animate__animated 两个特性 
+        如果某 message 被删除，其 isDeleted 字段为真，添加“向右离场”动画
+        否则添加“向上浮现”动画
+        由于被删消息之前的消息不会被 v-for 重新渲染，故它们没有动画
+      -->
+    <div :class="['message-card', 'animate__animated', `${message.isDeleted ? 'animate__fadeOutRight' : 'animate__slideInUp'}`]" 
+      v-for="(message) in 
         messages.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > messages.length) ? (messages.length % 5) : 5))" 
-      :key="idx">
+      :key="message.id">
       <div class="message-card-header">
         <n-grid>
           <n-gi :span="12">
@@ -197,16 +224,6 @@
               </span>
             </n-gi>
           </n-grid>
-          
-          
-            <!-- <n-ellipsis style="max-width: 500px">
-              {{ message.content }}
-              <template #tooltip >
-                <div style="text-align: left; max-width: 500px;">
-                  {{ message.content }}
-                </div>
-              </template>
-            </n-ellipsis> -->
         </div>
       </div>
       <div class="messgae-card-footer">
@@ -220,6 +237,14 @@
                 strong secondary type="info" 
                  :disabled="message.disabled" 
                  @click="message.disabled = !message.disabled"
+                 :style="{
+                  '--n-color': `rgba(40, 180, 40, 0.657)`, 
+                  '--n-color-hover': `rgba(40, 180, 40, 0.9)`,
+                  '--n-color-disabled': `rgba(46, 51, 56, .05)`, 
+                  '--n-text-color': `white`,
+                  '--n-text-color-hover': `white`,
+                  '--n-text-color-disabled': `rgb(90, 90, 90)`,
+                }"
               >
               已读
               </n-button>
@@ -227,7 +252,15 @@
           </n-gi>
           <n-gi :span="2">
             <div class="message-card-footer-reply">
-              <n-button strong secondary type="info" @click="reply">
+              <n-button 
+                strong secondary type="info" @click="reply"
+                :style="{
+                  '--n-color': `rgba(40, 120, 200, 0.711)`, 
+                  '--n-color-hover': `rgba(40, 120, 200, 0.95)`,
+                  '--n-text-color': `white`,
+                  '--n-text-color-hover': `white`,
+                }"
+              >
               回复
               </n-button>
             </div>
@@ -239,8 +272,10 @@
       <n-grid>
         <n-gi :span="8"></n-gi>
         <n-gi :span="8">
-          <div style="display: flex; justify-content: center;" v-if="messages.length > 0">
-            <n-pagination v-model:page="page" :page-count="Math.ceil(messages.length / 5)" />
+          <!-- 添加了动画 这种用一个布尔量实现刷新的做法证实了可靠 不复述逻辑了 -->
+          <div :class="['animate__animated', `${refreshPage ? 'animate__zoomIn' : 'animate__zoomOut'}`]" 
+          style="display: flex; justify-content: center;" v-if="messages.length > 0">
+            <n-pagination v-model:page="page" :page-count="Math.ceil(messages.length / 5)" @click="toRefreshPage"/>
           </div>
           <div style="display: flex; justify-content: center; font-size: 20px" v-else>
             您暂未收到任何消息
@@ -251,46 +286,24 @@
     </div>
     </n-scrollbar>
   </div>
-  <!-- <ul class="ul">
-    <n-card v-for="(message, idx) in messages" :key="idx" title="卡片" hoverable> -->
-      
-      <!-- <n-button class="close-button" type="info" quaternary @click="removeMessage(message)"> -->
-        <!-- <CloseCircleOutline style="width: 20px" @click="removeMessage(message)"/> -->
-      <!-- </n-button> -->
-    <!-- <n-button class="close-button" tertiary circle style="width: 25px; height: 25px;">
-      <CloseCircleOutline style="width: 25px" @click="removeMessage(message)"/>
-    </n-button>
-    {{ message.from }}
-    {{ message.content }}
-    {{ message.music }}
-    {{ message.time }}
-    <span>
-      <n-button class="already-read" strong secondary type="info" :disabled="message.disabled" @click="message.disabled=!message.disabled">
-      已读
-      </n-button>
-      <n-button class="reply-read" strong secondary type="info" @click="reply">
-      回复
-      </n-button>
-    </span>
-    </n-card>
-  </ul> -->
-  
 </template>
 
 <style scoped>
 .message-card-outer {
-
+  
 }
 .message-card {
   background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   border-radius: 20px;
   margin-left: 8%;
   margin-right: 8%;
   margin-top: 2%;
   margin-bottom: 2%;
+  
 }
 .message-card-header {
-
+ 
 }
 .message-card-header-contents {
   padding-top: 2%;
@@ -309,6 +322,11 @@
 .message-card-header-close-button {
   padding-top: 15%;
   padding-left: 40%;
+  color: lightgrey;
+}
+.message-card-header-close-button:hover {
+  color: grey;
+  cursor: pointer;
 }
 .message-card-content {
   padding-left: 4%;
@@ -325,26 +343,4 @@
 .card-pagination {
   padding-top: 3%;
 }
-/*
-.ul {
-  padding: 0;
-}
-.n-card {
-  max-width: 90%;
-  margin: 10px auto;
-}
-.already-read {
-  position: absolute;
-  right: 75px;
-}
-.reply-read {
-  position: absolute;
-  right: 10px;
-}
-.close-button {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  
-}*/
 </style>

@@ -2,21 +2,29 @@
     import { BellOutlined } from '@ant-design/icons-vue';
     import { defineComponent } from 'vue';
     import { SearchOutline } from '@vicons/ionicons5'
+    import AdminTopNav from '../components/AdminTopNav.vue';
     export default defineComponent({
         name: 'AdminPageHeader',
         components: {
             BellOutlined,
             SearchOutline,
+            AdminTopNav,
+        },
+        data() {
+            return {
+                searchValue: '',
+            }
         },
         methods: {
-            gotoMessage() {
+            /*gotoMessage() {
                 this.$router.push({path:'/message'})
-            },
+            },*/
             search() {
-            if (this.searchValue.trim().length !== 0) {
-                console.log(`searchValue: ${this.searchValue}`)
-                // do search
-                this.searchValue = ''}
+                if (this.searchValue.trim().length !== 0) {
+                    console.log(`searchValue: ${this.searchValue}`)
+                    // do search
+                    this.searchValue = ''
+                }
             },
         }
     });
@@ -24,39 +32,7 @@
 
 
 <template>
-    <div class="message-page-header">
-        <!-- <a-page-header
-        :backIcon="false"
-        ></a-page-header> -->
-        <div>
-            <n-grid>
-                <n-gi :span="1">
-                    <a-button class="go-message-button" type="primary" shape="circle" @click="gotoMessage()">
-                        <template #icon><BellOutlined style="color:white"/></template>
-                    </a-button>
-                </n-gi>
-                <n-gi :span="4">
-                    <div class="isound-admin-style">
-                        iSound管理平台
-                    </div>
-                </n-gi>
-            </n-grid>
-            
-            
-        </div>
-        <div class="admin-avatar">
-            <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
-            
-        </div>
-            <!-- <a-space class="search-input" direction="vertical">
-                <a-input-search
-                v-model:value="value"
-                placeholder="input search text"
-                style="width: 200px"
-                @search="onSearch"
-                /> 
-            </a-space> -->
-    </div>
+    <div><admin-top-nav :isSearchPage="true"></admin-top-nav></div>
     <div class="message-page-search">
         <n-grid>
             <n-gi :span="3"></n-gi>
@@ -74,7 +50,7 @@
             <n-gi :span="4"></n-gi>
         </n-grid>      
     </div>
-    <div class="music-list-header">
+    <!-- <div class="music-list-header">
         <a-tabs v-model:activeKey="activeKey" >
         <a-tab-pane key="1">
         <template #tab>
@@ -95,7 +71,7 @@
         待插入歌单列表
         </a-tab-pane>
     </a-tabs>
-    </div>
+    </div> -->
     
 </template>
 
@@ -103,47 +79,16 @@
 .ant-space-item {
     background-color:aqua;
 }
-.message-page-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 55px;
-    border: 3px solid rgb(235, 237, 240)
-}
-.isound-admin-style {
-    padding-top: 1%;
-    font-size: 28px;
-}
-.go-message-button {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background-color: lightgray;
-    border-color: lightgray;
-}
-.admin-avatar {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-}
-.default-admin-avatar {
-    width: 35px;
-}
 .search-input {
-    position: fixed;
-    right: 60px;
-    top: 12px;
+   
+    
 }
 
 .message-page-search {
-    position: fixed;
-    top: 58px;
-    width: 60vw;
-    margin: 0 20vw;
+    padding-top: 2%;
 }
 .music-list-header {
-    position: fixed;
+   /* position: fixed;*/
     top: 170px;
     left: 10vw;
     width: 80vw;
@@ -154,6 +99,6 @@
 }
 .n-input {
     transform: scale(1.2, 1.2);
-    position: relative;
+  /*  position: relative;*/
 } 
 </style>

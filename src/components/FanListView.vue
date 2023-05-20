@@ -4,68 +4,78 @@
         <n-divider />
     </div>
     <div class="fan-list-border">
-    <div class="fan-container" v-for="(fan, idx) in 
-        fansList.slice(5*(page-1), 5*(page-1)+((5*page>fansList.length) ? (fansList.length%5) : 5))"
-        :key="idx">
-        <div class="fan-card">
-            <n-grid x-gap="12">
-                <n-gi :span="3"><img class="fan-card-image" :src="fan.avatarImg" /></n-gi>
-                <n-gi :span="18">
-                    <div class="fan-card-name">
-                        {{ fan.name }}
-                    </div>
-                    <div class="fan-card-bio">
-                        {{ fan.bio }}
-                    </div>
-                </n-gi>
-                <n-gi span="3">
-                    <n-button strong secondary round type="info" style="margin-top: 15px;">
-                        已关注
-                    </n-button>
-                </n-gi>
-            </n-grid>
-            <n-divider dashed />
-        </div>
-    </div>
-    <n-grid>
-        <n-gi :span="8"></n-gi>
-        <n-gi :span="8">
-            <div style="display: flex; justify-content: center;" v-if="fansList.length > 0">
-            <n-pagination v-model:page="page" :page-count="Math.ceil(fansList.length / 5)" />
+        <div class="fan-container" v-for="(fan, idx) in 
+        fansList.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > fansList.length) ? (fansList.length % 5) : 5))"
+            :key="idx">
+            <div class="fan-card">
+                <n-grid x-gap="12">
+                    <n-gi :span="3"><router-link :to="`/home/user/${fan.id}`"><img class="fan-card-image"
+                                :src="fan.avatarImg" /></router-link></n-gi>
+                    <n-gi :span="18">
+                        <router-link :to="`/home/user/${fan.id}`">
+                            <div class="fan-card-name">
+                                {{ fan.name }}
+                            </div>
+                        </router-link>
+                        <div class="fan-card-bio">
+                            <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
+                                <div style="  word-wrap: break-word;">
+                                    <span>
+                                        {{ fan.bio }}
+                                    </span>
+                                </div>
+                            </n-ellipsis>
+                        </div>
+                    </n-gi>
+                    <n-gi span="3">
+                        <n-button v-if="fan.isFollowed" strong secondary round type="info" style="margin-top: 15px;"
+                            @click="follow(fan)">已关注</n-button>
+                        <n-button v-else strong secondary round style="margin-top: 15px;" @click="follow(fan)">回关</n-button>
+                    </n-gi>
+                </n-grid>
+                <n-divider dashed />
             </div>
-            <div style="display: flex; justify-content: center; font-size: 20px" v-else>
-            您还没有粉丝哦~
-          </div>
-        </n-gi>
-        <n-gi :span="8"></n-gi>
-    </n-grid>
+        </div>
+        <n-grid>
+            <n-gi :span="8"></n-gi>
+            <n-gi :span="8">
+                <div style="display: flex; justify-content: center;" v-if="fansList.length > 0">
+                    <n-pagination v-model:page="page" :page-count="Math.ceil(fansList.length / 5)" />
+                </div>
+                <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+                    您还没有粉丝哦~
+                </div>
+            </n-gi>
+            <n-gi :span="8"></n-gi>
+        </n-grid>
     </div>
 </template>
 <script>
-
+import { ref } from 'vue';
 export default {
     data() {
         return {
             page: 1,
-            fansList: [
-                {
-                    name: "周一行",
-                    bio: "Hello World.",
-                    avatarImg: "/src/assets/song4.jpg"
-                },
-                {
-                    name: "王菲",
-                    bio: "匆匆那年",
-                    avatarImg: "/src/assets/song2.jpg"
-                },
-                {
-                    name: "iSound",
-                    bio: "我是一个很固执的人，从来不管别人怎么说，怎么做。如果你也和我一样，那么这件事情就真的，泰！裤！辣！",
-                    avatarImg: "/src/assets/default-admin.jpg"
-                },
-            ]
+            fansList: [],
         }
-    }
+    },
+    created() {
+        this.$http.get('/api/accounts/fans/0/').then((response) => {
+            console.log(response);
+            this.fansList = response.data.fans.map(fan => ({
+                id: fan.id,
+                name: fan.username,
+                bio: fan.profile,
+                avatarImg: fan.avatar,
+                isFollowed: true,
+            }));
+        });
+    },
+    methods: {
+        follow(fan) {
+            fan.isFollowed = !fan.isFollowed;
+        }
+    },
 }
 </script>
 <style>
