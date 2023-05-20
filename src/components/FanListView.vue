@@ -1,7 +1,7 @@
 <template>
     <div class="fan-list-title">
         全部粉丝
-        <n-divider />
+        <a-divider style="height: 1.8px; background-color: #dddddd"/>
     </div>
     <div class="fan-list-border">
         <div class="fan-container" v-for="(fan, idx) in 

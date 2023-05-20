@@ -26,10 +26,7 @@
                     </div>
                 </div>
             </n-gi>
-            <n-gi :span="1">
-                <!--这里本意是想用一个竖线隔开，但是这个方法不太行的通似乎。-->
-                <n-divider vertical />
-            </n-gi>
+            <n-gi :span="1"></n-gi>
             <n-gi :span="12">
                 <div class="user-other-info-container">
                     <div class="user-tabs">
@@ -38,8 +35,8 @@
                                 <n-tab-pane name="我的歌单" tab="我的歌单">
                                     <my-song-sheet-view />
                                 </n-tab-pane>
-                                <n-tab-pane name="我的收藏" tab="我的收藏">
-                                    <collect-song-sheet-view />
+                                <n-tab-pane name="分享歌单" tab="分享歌单">
+                                    <shared-song-sheet-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我的歌曲" tab="我的歌曲">
                                     <my-upload-song-view />
@@ -51,9 +48,9 @@
                                     <fan-list-view />
                                 </n-tab-pane>
                                 <template #suffix>
-                                    <!--maybe can add some icons-->
-                                    <!-- 粉丝：{{ fansList.length }}
-                                    关注：{{ followerList.length }} -->
+                                    <flower-outline style="width: 20px;"/>粉丝数：
+                                    <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd"/>
+                                    <flash-outline style="width: 20px;"/> 关注数：
                                 </template>
                             </n-tabs>
                         </div>
@@ -72,7 +69,7 @@
 import TopNav from '../components/TopNav.vue';
 import ModifyUserInfoView from './ModifyUserInfoView.vue';
 import MySongSheetView from '../components/MySongSheetView.vue';
-import CollectSongSheetView from '../components/CollectSongSheetView.vue';
+import SharedSongSheetView from '../components/SharedSongSheetView.vue';
 import MyUploadSongView from '../components/MyUploadSongView.vue';
 import FollowListView from "../components/FollowListView.vue";
 import FanListView from '../components/FanListView.vue';
@@ -80,13 +77,13 @@ import 'animate.css';
 import { ref } from "vue";
 import { NTabs, NTabPane } from "naive-ui";
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
-import { NewspaperOutline } from '@vicons/ionicons5'
+import { NewspaperOutline, FlowerOutline, FlashOutline} from '@vicons/ionicons5'
 
 export default {
     components: {
         ModifyUserInfoView,
         MySongSheetView,
-        CollectSongSheetView,
+        SharedSongSheetView,
         MyUploadSongView,
         FollowListView,
         FanListView,
@@ -96,7 +93,9 @@ export default {
         PaperPlaneOutline,
         PersonCircleSharp,
         PricetagOutline,
-        NewspaperOutline
+        NewspaperOutline,
+        FlowerOutline,
+        FlashOutline,
     },
     data() {
         return {

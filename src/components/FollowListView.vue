@@ -1,7 +1,7 @@
 <template>
     <div class="follower-list-title">
         全部关注
-        <n-divider />
+        <a-divider style="height: 1.8px; background-color: #dddddd"/>
     </div>
     <div class="follow-list-border">
         <div class="follower-container"
@@ -65,7 +65,7 @@ export default {
         }
     },
     created() {
-        this.$http.get('/api/accounts/following/0/').then((response) => {
+        this.$http.get(`/api/accounts/following/0/`).then((response) => {
             console.log(response);
             this.followerList = response.data.following.map(follower => ({
                 id: follower.id,
@@ -86,18 +86,18 @@ export default {
             }
         },
         followUser(user) {
-            this.$http.post('/api/follow/${user.id}/').then((response) => {
+            this.$http.post(`/api/follow/${user.id}/`).then((response) => {
                 console.log(response);
                 this.followerList.push(user);
             })
         },
         unFollowUser(user) {
-            this.$http.delete('/api/follow/${user.id}/').then((response) => {
+            this.$http.post(`/api/follow/${user.id}/`).then((response) => {
                 console.log(response);
-                const index = this.followerList.findIndex(follower => follower.id === user.id);
-                if (index != -1) {
-                    this.followerList.splice(index, 1);
-                }
+                // const index = this.followerList.findIndex(follower => follower.id === user.id);
+                // if (index != -1) {
+                //     this.followerList.splice(index, 1);
+                // }
             })
         }
     }

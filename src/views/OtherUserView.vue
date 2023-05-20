@@ -25,16 +25,18 @@
                                     </n-gi>
                                     <n-gi>
                                         <div class="user-email">
-                                            <newspaper-outline style="width: 20px; margin-top: 3px;" />邮箱：{{ this.userEmail
+                                            <newspaper-outline style="width: 20px; margin-top: 5px;" />邮箱：{{ this.userEmail
                                             }}
                                         </div>
                                     </n-gi>
                                     <n-gi>
                                         <div class="user-bio"><pricetag-outline
-                                                style="width: 20px; margin-top: 3px;" />个性签名：{{ this.userBio }}</div>
+                                                style="width: 20px; margin-top: 5px;" />个性签名：{{ this.userBio }}</div>
                                     </n-gi>
                                     <n-gi>
-                                        <n-button>+关注</n-button>
+                                        <div class="follow-unfollow-button">
+                                            <n-button @click="follow()">加关注</n-button>
+                                        </div>
                                     </n-gi>
                                 </n-grid>
                             </div>
@@ -44,11 +46,16 @@
                 <div class="user-song-songsheet">
                     <n-tabs type="line" animated>
                         <n-tab-pane name="ta的歌单" tab="ta的歌单">
-                            <other-user-song-sheet-view/>
+                            <other-user-song-sheet-view />
                         </n-tab-pane>
                         <n-tab-pane name="ta的歌曲" tab="ta的歌曲">
-                            <other-user-upload-song-view/>
+                            <other-user-upload-song-view />
                         </n-tab-pane>
+                        <template #suffix>
+                            <flower-outline style="width: 20px;" />粉丝数：
+                            <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd" />
+                            <flash-outline style="width: 20px;" /> 关注数：
+                        </template>
                     </n-tabs>
                 </div>
             </n-gi>
@@ -63,13 +70,15 @@ import MyUploadSongView from '../components/MyUploadSongView.vue';
 import OtherUserSongSheetView from '../components/OtherUserSongSheetView.vue';
 import OtherUserUploadSongView from '../components/OtherUserUploadedSongView.vue'
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline, ChevronBack } from '@vicons/ionicons5';
-import { NewspaperOutline } from '@vicons/ionicons5';
+import { NewspaperOutline, FlowerOutline, FlashOutline} from '@vicons/ionicons5';
 export default {
     components: {
         PersonCircleSharp,
         NewspaperOutline,
         PricetagOutline,
         ChevronBack,
+        FlowerOutline,
+        FlashOutline,
         MySongSheetView,
         MyUploadSongView,
         OtherUserUploadSongView,
@@ -81,6 +90,7 @@ export default {
             userBio: '',
             userAvatar: null,
             userEmail: '',
+            userIsFollowed: '',
         }
     },
     created() {
@@ -104,6 +114,24 @@ export default {
         back() {
             this.$router.go(-1);
         },
+        follow() {
+            this.userIsFollowed = !this.userIsFollowed;
+            if (this.userIsFollowed) {
+                this.followUser();
+            } else {
+                this.unFollowUser();
+            }
+        },
+        followUser() {
+            this.$http.post(`/api/follow/${this.userid}/`).then((response) => {
+                console.log(response);
+            })
+        },
+        unFollowUser(user) {
+            this.$http.post(`/api/follow/${this.userid}/`).then((response) => {
+                console.log(response);
+            })
+        }
     }
 }
 </script>
@@ -147,21 +175,25 @@ export default {
 .user-name {
     font-size: 60px;
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 .user-email {
-    font-size: 15px;
+    font-size: 16px;
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 400;
+    font-weight: bold;
     color: grey;
 }
 
 .user-bio {
-    font-size: 15px;
+    font-size: 16px;
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 400;
+    font-weight: bold;
     color: grey;
+}
+
+.follow-unfollow-button {
+    margin-top: 15px;
 }
 
 .user-song-songsheet {
