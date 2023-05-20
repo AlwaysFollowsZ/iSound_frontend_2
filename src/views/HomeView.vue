@@ -1,91 +1,111 @@
 <template>
   <div><top-nav></top-nav></div>
-  <div class="img-show">
+  <div class="img-show animate__animated animate__slideInUp">
     <n-grid>
-      <n-gi :span="14">
-        <div style="padding-bottom: 0%; padding-left: 8%">
+      <n-gi :span="24">
+        <div style="padding-bottom: 0%; padding-left: 4.5%">
           <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
             来点不一样的歌单
           </div>
         </div>
         <div class="carousel-container">
-          <n-carousel autoplay interval="3000" :style="{'border-radius': `20px`}">
-            <img
-              class="carousel-img"
-              v-for="(src, idx) in imgs" :key="idx" :src="src.path"
-              @click="jumpToSongList(src.jumpLink)"
-            >
+          <n-carousel autoplay :interval="3000"
+            effect="card"
+            prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
+            next-slide-style="transform: translateX(20%) translateZ(-500px);"
+            style="height: 85%"
+            :show-dots="true"
+          >
+            <n-carousel-item :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx" >
+              <img
+                class="carousel-img"
+                :src="src.path"
+                @click="jumpToSongList(src.jumpLink)"
+              >
+            </n-carousel-item>
           </n-carousel>
         </div>
       </n-gi>
-      <n-gi :span="10">
-        <div style="padding-bottom: 0%; padding-left: 0%">
-          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
-            猜你喜欢
-          </div>
-        </div>
-        <div class="card-container">
-          <n-grid :x-gap="12" :y-gap="6" :col="3">
-            <n-gi :span="8"  v-for="(song, idx) in songs" :key="idx">
-              <div>
-                <div class="single-card-container">
-                  <div class="single-card-img-container">
-                    <img class="single-card-img" :src="song.imgSrc">
-                  </div>
-                  <div class="single-card-info-container">
-                    <div class="single-card-info-name">
-                      {{ song.title }}
-                    </div>
-                    <div class="single-card-info-singer">
-                      {{ song.singer }}
-                    </div>
-                </div>
-              </div>
-              </div>
-            </n-gi>
-          </n-grid>
-        </div>
-      </n-gi>
     </n-grid>
   </div>
-  <div style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" >现在就听</div>
-  <div class="song-entry-outter">
-    <n-grid :x-gap="0" :y-gap="0" >
-      <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
-        <div class="song-entry-card-container">
-          <div class="song-entry-container">
-            <div style="padding-bottom: 3%; padding-top: 3%">
-              <hr style="box-shadow: none; border-color: rgb(255, 255, 255); margin: 0"/>
+  <div v-if="scrollPromptShouldDisplay" 
+    :class="[`${cardsShouldAnimate ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__delay-2s'}`]">
+    <n-grid>
+      <n-gi :span="9"></n-gi>
+      <n-gi :span="8">
+        <div class="scroll-prompt rainbow-text">往下滑，探索新世界</div>
+      </n-gi><n-gi :span="7"></n-gi>
+    </n-grid>
+  </div>
+  <div v-if="cardsShouldAnimate">
+    <div class="animate__animated" 
+      :class="{'animate__slideInLeft': cardsShouldAnimate}"
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" 
+    >猜你喜欢</div>
+    <div class="card-container animate__animated "
+      :class="{'animate__fadeInLeft animate__delay-2s': cardsShouldAnimate}"
+    >
+      <n-grid  :col="6">
+        <n-gi :span="4"  v-for="(song, idx) in songs" :key="idx">
+          <div>
+            <div class="single-card-container">
+              <div class="single-card-img-container">
+                <img class="single-card-img" :src="song.imgSrc">
+              </div>
+              <div class="single-card-info-container">
+                <div class="single-card-info-name">
+                  {{ song.title }}
+                </div>
+                <div class="single-card-info-singer">
+                  {{ song.singer }}
+                </div>
             </div>
-            <n-grid>
-              <n-gi :span="4">
-                <div class="song-entry-img-container" >
-                  <img class="song-entry-img" src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
-                </div>
-              </n-gi>
-              <n-gi :span="2"></n-gi>
-              <n-gi :span="15">
-                <div class="song-entry-info-container">
-                  <div class="song-entry-info-name">这里还有更多的歌</div>
-                  <div class="song-entry-info-singer">singer</div>
-                </div>
-              </n-gi>
-              <!-- <n-gi :span="3">
-                <div class="song-entry-heart">
-                  <n-icon size="30px"><HeartOutline/></n-icon>
-                </div>
-              </n-gi> -->
-            </n-grid>
           </div>
-        </div>
-      </n-gi>
-    </n-grid>
-  </div>
+          </div>
+        </n-gi>
+      </n-grid>
+    </div>
+  </div><div ref="songCardRef" class="placeholder" v-else></div>
+  <div v-if="songEntryShouldAnimate">
+    <div class="animate__animated" 
+      :class="{'animate__slideInLeft': songEntryShouldAnimate}"
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" >现在就听</div>
+    <div class="song-entry-outter animate__animated animate__delay-2s"
+      :class="{'animate__fadeInLeft': songEntryShouldAnimate}">
+      <n-grid :x-gap="0" :y-gap="0" >
+        <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
+          <div class="song-entry-card-container">
+            <div class="song-entry-container">
+              <div style="padding-bottom: 3%; padding-top: 3%">
+                <hr style="box-shadow: none; border-color: rgb(255, 255, 255); margin: 0"/>
+              </div>
+              <n-grid>
+                <n-gi :span="4">
+                  <div class="song-entry-img-container" >
+                    <img class="song-entry-img" src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
+                  </div>
+                </n-gi>
+                <n-gi :span="2"></n-gi>
+                <n-gi :span="15">
+                  <div class="song-entry-info-container">
+                    <div class="song-entry-info-name">这里还有更多的歌</div>
+                    <div class="song-entry-info-singer">singer</div>
+                  </div>
+                </n-gi>
+              </n-grid>
+            </div>
+          </div>
+        </n-gi>
+      </n-grid>
+    </div>
+  </div><div ref="songEntryRef" class="placeholder" v-else></div>
+  
 </template>
 
 <script>
 import TopNav from '../components/TopNav.vue'
 import { HeartOutline } from '@vicons/ionicons5'
+import 'animate.css'
 export default {
   components: {
     TopNav,
@@ -93,14 +113,13 @@ export default {
   },
   data() {
     return {
+      cardsShouldAnimate: false,
+      songEntryShouldAnimate: false,
+      scrollPromptShouldDisplay: true,
       imgs: [
         {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg",
           jumpLink: "a"
-        },
-        {
-          path: "/src/assets/picture5.png",
-          jumpLink: 'e'
         },
         {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg",
@@ -115,20 +134,9 @@ export default {
           jumpLink: "c"
         },
         {
-          path: "/src/assets/picture5.png",
-          jumpLink: 'e'
-        },
-        {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg",
           jumpLink: "d"
         },
-        {
-          path: "/src/assets/picture5.png",
-          jumpLink:'e'
-        },
-        
-        
-        
       ],
       songs: [
         {
@@ -171,6 +179,14 @@ export default {
       arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     }
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleSongEntryScroll)
+    window.addEventListener('scroll', this.handleCardsScroll)
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleSongEntryScroll)
+    window.removeEventListener('scroll', this.handleCardsScroll)
+  },
   methods: {
     jumpToSongList(jumpLink) {
       // this.$router.push(jumpLink)
@@ -179,7 +195,29 @@ export default {
     jumpToSong(jumpLink) {
       // this.$router.push(jumpLink)
       console.log(jumpLink)
-    }
+    },
+    handleCardsScroll() {
+      const componentElement = this.$refs.songCardRef
+      const componentOffsetTop = componentElement.offsetTop
+      const windowHeight = window.innerHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+      if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
+        this.cardsShouldAnimate = true
+        setTimeout(() => {
+          this.scrollPromptShouldDisplay = false
+        }, 500)
+      }
+        
+    },
+    handleSongEntryScroll() {
+      const componentElement = this.$refs.songEntryRef
+      const componentOffsetTop = componentElement.offsetTop
+      const windowHeight = window.innerHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
+        this.songEntryShouldAnimate = true
+      }
+    }, 
   }
 }
 
@@ -187,27 +225,28 @@ export default {
 
 <style>
   .img-show {
-    height: 70vh;
+    height: 60vh;
     /*border: dashed; */
   }
   .carousel-container {
     height: 60vh;
     align-items: center;
     padding-top: 1%;
-    padding-left: 8%;
-    padding-right: 8%;
+    padding-left: 10%;
+    padding-right: 10%;
     margin: auto;
   }
   .carousel-img {
     position: relative;
     width: 100%;
     height: 100%;
+    border-radius: 15px;
     overflow: hidden;
   }
   .card-container {
-    height: 65vh;
+    height: 30vh;
     padding-top: 1%;
-    padding-right: 8%;
+    padding-left: 5%;
     margin: auto;
   }
   .single-card-container {
@@ -219,7 +258,7 @@ export default {
   .single-card-img-container {
     width: 160px; 
     height: 160px; 
-    border-radius: 10px;
+    border-radius: 15px;
     display: flex; 
     justify-content: center; 
     align-items: center; 
@@ -289,10 +328,6 @@ export default {
     overflow: hidden
   }
   .song-entry-img {
-    /*margin-top: 70%;
-    margin-left: 70%;*/
-    /*margin-bottom: 20%;
-    margin-right: 20%;*/
     width: 100%; 
     height: 100%;
   }
@@ -313,5 +348,29 @@ export default {
     font-weight: bold;
     font-size: 8px;
     color: grey;
+  }
+  .placeholder {
+    height: 50vh;
+  }
+  .scroll-prompt {
+    margin-top: 1.5%;
+    font-size: 40px;
+    font-weight: bold;
+
+  }
+  @keyframes rainbow {
+    0% { color: red; }
+    14% { color: orange; }
+    28% { color: yellow; }
+    42% { color: green; }
+    57% { color: blue; }
+    71% { color: indigo; }
+    85% { color: violet; }
+    100% { color: red; }
+  }
+  .rainbow-text {
+    background: linear-gradient(to right, red, orange, #FFD700, green, blue, indigo, violet);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 </style>

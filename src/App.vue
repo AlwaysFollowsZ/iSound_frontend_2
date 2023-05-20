@@ -21,7 +21,7 @@ function playAll(playlistId) {
 }
 
 </script>
-
+·
 <template>
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->

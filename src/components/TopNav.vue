@@ -70,34 +70,34 @@
             showRegister: false,
             SearchOutline,
             options: [
-          {
-            label: "个人主页",
-            props: {
-                onClick: () => {
-                    this.$router.push('/home')
-                    console.log('user page')
+                {
+                    label: "个人主页",
+                    props: {
+                        onClick: () => {
+                            this.$router.push('/home')
+                            console.log('user page')
+                        }
+                    }
+                },
+                {
+                    label: "历史记录",
+                    props: {
+                        onClick: () => {
+                            this.$router.push('/history')
+                            console.log('history')
+                        }
+                    }
+                },
+                {
+                    label: "登出",
+                    props: {
+                        onClick: () => {
+                            this.setLogState(false)
+                            console.log('logout')
+                        }
+                    }
                 }
-            }
-          },
-          {
-            label: "历史记录",
-            props: {
-                onClick: () => {
-                    this.$router.push('/history')
-                    console.log('history')
-                }
-            }
-          },
-          {
-            label: "登出",
-            props: {
-                onClick: () => {
-                    this.setLogState(false)
-                    console.log('logout')
-                }
-            }
-          }
-        ],
+            ],
         }
     },
     methods: {
