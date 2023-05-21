@@ -18,10 +18,10 @@
                                     line-type="dashed">
                                     <n-grid :x-gap="12">
                                         <n-gi :span="3">
-                                            <img class="song-image" :src="item.music.cover" @click="playMusic()"/>
+                                            <img class="song-image" :src="item.music.cover" @click="playMusic(item.music.id)"/>
                                         </n-gi>
                                         <n-gi :span="21">
-                                            <div class="song-detail-card" @click="playMusic()">
+                                            <div class="song-detail-card" @click="playMusic(item.music.id)">
                                                 <span class="song-name">
                                                     {{ item.music.name }}
                                                 </span><br />
@@ -72,8 +72,8 @@ export default {
         }); 
     },
     methods: {
-        playMusic() {
-
+        playMusic(musicId) {
+            this.$EventBus.emit('play', musicId);
         }
     }
 }
