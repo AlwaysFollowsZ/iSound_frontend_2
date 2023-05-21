@@ -22,9 +22,10 @@ const xhr = new XMLHttpRequest();
 let ap;
 let launched = false;
 let currentMusicId;
+let currentLyricsUrl;
 
 function launch() {
-    if (currentMusicId != undefined) {
+    if (currentMusicId !== undefined) {
         if (launched) {
             proxy.$router.replace(`/player/${currentMusicId}`);
         }
@@ -67,11 +68,6 @@ function playAll(playlistId) {
     });
 }
 
-defineExpose({
-    play,
-    playAll,
-});
-
 onMounted(() => {
     ap = new APlayer({
         container: containerRef.value,
@@ -96,11 +92,20 @@ onMounted(() => {
         }
     );
 
+    ap.on('timeupdate', () => {
+        proxy.$EventBus.emit('timeupdate', ap.audio.currentTime);
+    });
+
     ap.on('listswitch', (e) => {
         currentMusicId = ap.list.audios[e.index].id;
         if (proxy.$router.currentRoute.value.name == 'player') {
-            launched = true;
-            launch();
+            if (launched) {
+                launch();
+            }
+            else {
+                currentMusicId = proxy.$route.params.musicId;
+                launched = true;
+            }
         }
         else {
             launched = false;
@@ -123,8 +128,17 @@ onMounted(() => {
 
     document.getElementsByClassName('aplayer-miniswitcher')[0].click();
 
+    proxy.$EventBus.on('play', (musicId) => {
+        play(musicId);
+    });
+
+    proxy.$EventBus.on('playAll', (playlistId) => {
+        playAll(playlistId);
+    });
+
     onBeforeUnmount(() => {
         ap.destroy();
+        proxy.$EventBus.all.clear();
     });
 });
 </script>

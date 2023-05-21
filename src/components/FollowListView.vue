@@ -1,7 +1,7 @@
 <template>
     <div class="follower-list-title">
         全部关注
-        <a-divider style="height: 1.8px; background-color: #dddddd"/>
+        <a-divider style="height: 1.8px; background-color: #dddddd" />
     </div>
     <div class="follow-list-border">
         <div class="follower-container"
@@ -29,8 +29,13 @@
                         </div>
                     </n-gi>
                     <n-gi span="3">
-                        <n-button v-if="follower.isFollowing" strong secondary round type="info" style="margin-top: 15px;"
-                            @click="follow(follower)">已关注</n-button>
+                        <n-popconfirm v-if="follower.isFollowing" @positive-click="follow(follower)" positive-text="确认"
+                            negative-text="取消">
+                            <template #trigger>
+                                <n-button strong secondary round type="primary">已关注</n-button>
+                            </template>
+                            您要确定要取消关注该用户吗？
+                        </n-popconfirm>
                         <n-button v-else strong secondary round style="margin-top: 15px;"
                             @click="follow(follower)">加关注</n-button>
                     </n-gi>
@@ -88,7 +93,7 @@ export default {
         followUser(user) {
             this.$http.post(`/api/follow/${user.id}/`).then((response) => {
                 console.log(response);
-                this.followerList.push(user);
+                // this.followerList.push(user);
             })
         },
         unFollowUser(user) {

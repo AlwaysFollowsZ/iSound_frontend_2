@@ -131,6 +131,7 @@ export default defineComponent({
         },
         handleSongSrcFileChange(e) {
             this.songSrcFile = e.target.files[0];
+            console.log('change');
         },
         handleSongLyricFileChange(e) {
             this.songLyricFile = e.target.files[0];
