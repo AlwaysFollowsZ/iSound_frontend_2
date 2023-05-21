@@ -21,18 +21,17 @@ function playAll(playlistId) {
 }
 
 </script>
-·
 <template>
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
     <div :style="{ 'background': backgroundColor }" class='page_background'> </div>
     <RouterView @play="play" @playAll="playAll" />
-    <div :style="{'text-align':'center'}">
+    <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px)(高度可略)-->
-      <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
-      </div>
-    <list-table :position="'PublicView'"></list-table>
+      <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
+      </div> -->
+    <!-- <list-table :position="'PublicView'"></list-table> -->
   
   <Player />
 </template>

@@ -66,8 +66,8 @@ export default {
         //收藏单首歌曲
         handleCollect(key, listId) {
             if (this.songData[key].CollectedLists.indexOf(listId) < 0) {
-                this.songData[key].CollectedLists.push(listId)
-                this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
+            this.songData[key].CollectedLists.push(listId)
+            this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
             }
             this.cleanChangeReaction()
         },

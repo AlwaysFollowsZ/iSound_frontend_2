@@ -35,14 +35,14 @@
                                     </n-gi>
                                     <n-gi>
                                         <div class="follow-unfollow-button">
-                                            <!-- <n-popconfirm v-if="this.userIsFollowed" positive-text="确认">
+                                            <n-popconfirm v-if="this.userIsFollowed" @positive-click="follow" positive-text="确认" negative-text="取消">
                                                 <template #trigger>
-                                                    <n-button @click="follow()" strong secondary round type="primary">已关注</n-button>
+                                                    <n-button strong secondary round type="primary">已关注</n-button>
                                                 </template>
-                                                你确认取消关注吗？
+                                                您要确定要取消关注该用户吗？
                                             </n-popconfirm>
                                             <n-button v-else @click="follow()" strong secondary round
-                                                type="default">加关注</n-button> -->
+                                                type="default">加关注</n-button>
                                         </div>
                                     </n-gi>
                                 </n-grid>
