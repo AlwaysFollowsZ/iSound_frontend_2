@@ -14,17 +14,21 @@ import Player from './components/Player.vue';
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-
-  <div :style="{'background':backgroundColor }" class='page_background'></div> 
-  <RouterView />
-    <!-- <div :style="{'text-align':'center'}"> -->
+    <div :style="{ 'background': backgroundColor }" class='page_background'> </div>
+    <RouterView @play="play" @playAll="playAll" />
+    <div :style="{'text-align':'center'}">
       <!-- 请直接传入数字(px)(高度可略)-->
-      <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->
-    
+      <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
+      </div>
+    <list-table :position="'PublicView'"></list-table>
+  
   <Player />
 </template>
 
 <style scoped>
+*{
+scroll-behavior: smooth !important;
+}
 header {
   line-height: 1.5;
   max-height: 100vh;
