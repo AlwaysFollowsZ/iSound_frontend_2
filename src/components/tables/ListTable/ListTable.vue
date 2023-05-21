@@ -41,13 +41,10 @@ export default {
                 CollectedLists: [],
                 imgSrc: "/src/assets/song4.jpg"
             },],
-            currentListKey: 0//当前所在的收藏夹ID
+            currentListId: 0//当前所在的收藏夹ID
         }
     },
     methods: {
-        changePosition: {
-            if
-        }
         //喜欢全部歌曲
         handleLikeAll(keys) {
             for (let i = 0; i < keys.length; i++) {
@@ -68,21 +65,23 @@ export default {
         },
         //收藏单首歌曲
         handleCollect(key, listId) {
-            this.songData[key].isCollectChanged = true
-            this.songData[key].CollectedLists.push(listId)
-            this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
+            if (this.songData[key].CollectedLists.indexOf(listId) < 0) {
+                this.songData[key].CollectedLists.push(listId)
+                this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
+            }
             this.cleanChangeReaction()
+        },
+        handleRecollect(key) {
+            this.handleCollect(key,this.currentListKey)
         },
         //在公共区域，清空所有对应收藏夹中的歌曲记录
         handleDiscollectOnPublic(key) {
-            this.songData[key].isCollectChanged = true
             this.songData[key].CollectedLists = []
             this.songData[key].isCollected = false
             this.cleanChangeReaction()
         },
         //在收藏夹区域，清空本收藏夹中的歌曲记录
         handleDiscollectOnCollection(key) {
-            this.songData[key].isCollectChanged = true
             this.songData[key].CollectedLists = this.songData[key].CollectedLists.filter((value) => value !== key)
             if (this.songData[key].CollectedLists.length === 0) {
                 this.songData[key].isCollected = false
@@ -114,7 +113,7 @@ export default {
 </script>
 
 <template>
-    <list-table-body @likeAll="handleLikeAll" @like="handleLike" @collectAll="handleCollectAll" @collect="handleCollect"
+    <list-table-body :currentListId="currentListId" @likeAll="handleLikeAll" @like="handleLike" @collectAll="handleCollectAll" @collect="handleCollect"
         :songData="songData" :viewMode="viewMode" :position="position" @discollectOnPublic="handleDiscollectOnPublic"
-        @discollectOnCollection="handleDiscollectOnCollection"></list-table-body>
+        @discollectOnCollection="handleDiscollectOnCollection" @recollect="handleRecollect"></list-table-body>
 </template>

@@ -300,51 +300,56 @@ export default {
                                 },
                                 ['添加到收藏夹'])
                         }),
-                        //标题模态框
-                        h(NModal, {
-                            show: this.showCollection,
-                            'on-mask-click': () => {
-                                this.showCollection = false
-                            },
-                        }
-                            , h('div', {
+                    //标题模态框
+                    h(NModal, {
+                        show: this.showCollection,
+                        'on-mask-click': () => {
+                            this.showCollection = false
+                        },
+                    }
+                        , h('div', {
+                            style: {
+                                'text-align': 'center',
+                                'border-radius': '50px'
+                            }
+                        }, [
+                            //除了多选外，“请选择收藏夹”的标题不会在收藏夹页面出现
+                            h('div', {
                                 style: {
-                                    'text-align': 'center',
-                                    'border-radius': '50px'
-                                }
-                            }, [
-                                //除了多选外，“请选择收藏夹”的标题不会在收藏夹页面出现
-                                h('div', {
-                                    style: {
-                                        'margin': '20px',
-                                        'font-size': '25px',
-                                        'font-weight': '700',
-                                        'background-color': getRGBString(BackgroundColorString.value, 0.8),
-                                        'color': getRGBString(fontColorString.value, 0.8),
-                                        'margin-top': '20px',
-                                        'border-radius': '50px',
-                                        'animation': this.isCollectChanged ? 'bounceIn' : '',
-                                        'animation-duration': '1s'
-                                    },
-                                }, this.headChange === true ? '添加成功' : '请选择收藏夹'),
-                                //除了多选外，“选择收藏夹”的imageTable不会在收藏夹页面出现
-                                h(imageTable, {
-                                    tableSize: [1000, 500],
-                                    position: 'CollectionView',
-                                    handleClick: (listKey) => {
-                                        this.isCollectChanged=true
-                                        this.headChange = true
-                                        emit('collectAll', this.selectedEntries, listKey)
-                                        setTimeout(() => {
-                                            this.showCollection = false
-                                            this.headChange = false
-                                            setTimeout(() => {
-                                                this.isCollectChanged = false
-                                            },1000)
-                                        }, 1000)
+                                    'margin': '20px',
+                                    'font-size': '25px',
+                                    'font-weight': '700',
+                                    'background-color': getRGBString(BackgroundColorString.value, 0.8),
+                                    'color': getRGBString(fontColorString.value, 0.8),
+                                    'margin-top': '20px',
+                                    'border-radius': '50px',
+                                    'animation': this.isCollectChanged ? 'bounceIn' : '',
+                                    'animation-duration': '1s'
+                                },
+                            }, this.headChange === true ? '添加成功' : '请选择收藏夹'),
+                            //除了多选外，“选择收藏夹”的imageTable不会在收藏夹页面出现
+                            h(imageTable, {
+                                tableSize: [1000, 500],
+                                position: 'CollectionView',
+                                handleClick: (listKey) => {
+                                    this.isCollectChanged = true
+                                    this.headChange = true
+                                    //先设置所有项的isStarFilled和isCollectChanged
+                                    for (let i = 0; i < this.selectedEntries.length; i++){
+                                        this.songData[i].isCollectChanged = true
+                                        this.songData[i].isStarFilled=true
                                     }
-                                }, ''),
-                            ]))])
+                                    setTimeout(() => {
+                                        this.showCollection = false
+                                        this.headChange = false
+                                        setTimeout(() => {
+                                            emit('collectAll', this.selectedEntries, listKey)
+                                            this.isCollectChanged = false
+                                        }, 500)
+                                    }, 800)
+                                }
+                            }, ''),
+                        ]))])
                 },
                 render: (row) => {
                     const position = this.position
@@ -358,7 +363,14 @@ export default {
                         {
                             trigger: () => h(NButton, {
                                 onClick: () => {
-                                    row['showCollection'] = true
+                                    if (this.position === 'CollectionView' && row.CollectedLists.indexOf(this.currentListId) < 0) {
+                                        row.isStarFilled = true
+                                        row.isCollectChanged = true
+                                        emit('recollect', row.key)
+                                    }
+                                    else {
+                                        row.showCollection = true
+                                    }
                                 },
                                 style: {
                                     '--n-color': getRGBString(DataBackgroundColorString.value, 1, 'background',
@@ -382,7 +394,7 @@ export default {
                                 {
                                     icon: () => h(Star12Filled, {
                                         style: {
-                                            'color': row.isCollected ? 'rgb(255, 230, 120)' : 'white'
+                                            'color': row.isStarFilled === true ? 'rgb(255, 230, 120)' : 'white'
                                         }
                                     }),
                                 }),//收藏按钮
@@ -397,7 +409,7 @@ export default {
                         }), h(NModal, {
                             show: row['showCollection'],
                             'on-mask-click': () => {
-                                row['showCollection'] = false
+                                row.showCollection = false
                             },
                         }
                             , h('div', {
@@ -427,24 +439,27 @@ export default {
                                     tableSize: [1000, 500],
                                     position: 'CollectionView',//需要显示的是收藏夹页面
                                     handleClick: (listKey) => {
+                                        row.isStarFilled = true
                                         this.headChange = true
-                                        emit('collect', row.key, listKey)
+                                        row.isCollectChanged = true
                                         setTimeout(() => {
-                                            row['showCollection'] = false
+                                            row.showCollection = false
                                             setTimeout(() => {
+                                                emit('collect', row.key, listKey)
                                                 this.headChange = false
-                                            }, 1000)
-                                        }, 1000)
+                                            }, 500)
+                                        }, 800)
                                     }
                                 }, ''),
-                                //在收藏夹页面取消收藏的modal
+                                //取消收藏的modal
                                 h('div', {
                                     style: {
-                                        'display': (position === 'CollectionView') ? 'block' : 'none',
+                                        'display': (row.isCollected === true) ? 'block' : 'none',
+                                        'padding': '0 20px',
                                         'margin': '20px',
                                         'font-size': '25px',
                                         'font-weight': '700',
-                                        'background-color': getRGBString(BackgroundColorString.value, 0.8),
+                                        'background-color': getRGBString(BackgroundColorString.value, 0.7),
                                         'color': getRGBString(fontColorString.value, 0.8),
                                         'margin-top': '20px',
                                         'border-radius': '50px',
@@ -457,9 +472,10 @@ export default {
                                     color: getRGBString(this.BackgroundColorString, 0.8),
                                     circle: true,
                                     ghost: true,
+                                    focus: false,
                                     style: {
-                                        'display': (position === 'CollectionView') ? 'default' : 'none',
-                                        'font-size': '25px',
+                                        'display': (row.isCollected) ? 'default' : 'none',
+                                        'font-size': '30px',
                                         'margin': '50px 100px 50px 50px'
                                     },
                                     onClick: () => {
@@ -472,25 +488,29 @@ export default {
                                     color: getRGBString(this.BackgroundColorString, 0.8),
                                     circle: true,
                                     ghost: true,
+                                    focus: false,
                                     style: {
-                                        'display': (position === 'CollectionView') ? 'default' : 'none',
+                                        'display': (row.isCollected) ? 'default' : 'none',
                                         'font-size': '25px',
                                         'margin': '50px 50px 50px 100px'
                                     },
                                     onClick: () => {
                                         this.headChange = true
-                                        if (this.position === 'CollectionView') {
-                                            emit('discollectOnCollection', row.key)
-                                        }
-                                        else {
-                                            emit('discollectOnPublic', row.key)
-                                        }
+                                        row.isCollectChanged = true
+                                        row.isStarFilled = false
                                         setTimeout(() => {
-                                            row['showCollection'] = false
+
+                                            row.showCollection = false
                                             setTimeout(() => {
+                                                if (this.position === 'CollectionView') {
+                                                    emit('discollectOnCollection', row.key)
+                                                }
+                                                else {
+                                                    emit('discollectOnPublic', row.key)
+                                                }
                                                 this.headChange = false
-                                            }, 1000)
-                                        }, 1000)
+                                            }, 500)
+                                        }, 800)
                                     }
                                 }, h(NIcon, h(CheckmarkCircleOutline)))]
                             ]))])
@@ -503,7 +523,7 @@ export default {
         return {
             themeColor, HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
             isSelected, selectedEntries, columns, getRGBString, h, BackgroundColorString, headChange,
-            showCollection,isCollectChanged
+            showCollection, isCollectChanged
         }
     },
     props: {
@@ -534,6 +554,9 @@ export default {
             validator: (value) => {
                 return ['CollectionView', 'PublicView'].includes(value)
             }
+        },
+        currentListId: {
+            type: Number
         }
     },
     methods: {
