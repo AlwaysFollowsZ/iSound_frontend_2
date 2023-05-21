@@ -35,8 +35,14 @@
                                     </n-gi>
                                     <n-gi>
                                         <div class="follow-unfollow-button">
-                                            <n-button v-if="this.userIsFollowed" @click="follow()" strong secondary round type="primary">已关注</n-button>
-                                            <n-button v-else @click="follow()" strong secondary round type="default">加关注</n-button>
+                                            <!-- <n-popconfirm v-if="this.userIsFollowed" positive-text="确认">
+                                                <template #trigger>
+                                                    <n-button @click="follow()" strong secondary round type="primary">已关注</n-button>
+                                                </template>
+                                                你确认取消关注吗？
+                                            </n-popconfirm>
+                                            <n-button v-else @click="follow()" strong secondary round
+                                                type="default">加关注</n-button> -->
                                         </div>
                                     </n-gi>
                                 </n-grid>
@@ -71,7 +77,7 @@ import MyUploadSongView from '../components/MyUploadSongView.vue';
 import OtherUserSongSheetView from '../components/OtherUserSongSheetView.vue';
 import OtherUserUploadSongView from '../components/OtherUserUploadedSongView.vue'
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline, ChevronBack } from '@vicons/ionicons5';
-import { NewspaperOutline, FlowerOutline, FlashOutline} from '@vicons/ionicons5';
+import { NewspaperOutline, FlowerOutline, FlashOutline } from '@vicons/ionicons5';
 export default {
     components: {
         PersonCircleSharp,
