@@ -62,7 +62,7 @@
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">
                 <a-divider style="height: 1.8px; background-color: #dddddd" />
-                在这里放歌单列表组件
+                <list-table :view-mode="user"></list-table> 
             </n-gi>
             <n-gi :span="4"></n-gi>
         </n-grid>
@@ -106,6 +106,6 @@
     width: 100%;
     min-width: 0px;
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 </style>
