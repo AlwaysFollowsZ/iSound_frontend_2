@@ -30,7 +30,7 @@
     </n-grid>
   </div>
   <div v-if="scrollPromptShouldDisplay && !isLoggedIn" 
-    :class="(cardsShouldAnimate && !isLoggedIn )? ['animate__animated animate__zoomOut'] : ['animate__animated animate__zoomIn animate__slow']">
+    :class="[`${cardsShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
     <n-grid>
       <n-gi :span="9"></n-gi>
       <n-gi :span="8">
@@ -100,18 +100,20 @@
       </n-grid>
     </div>
   </div><div ref="songEntryRef" class="placeholder" v-else></div>
-  
+  <div><tag-table :width="80"/></div>
 </template>
 
 <script>
 import TopNav from '../components/TopNav.vue'
 import { HeartOutline } from '@vicons/ionicons5'
 import 'animate.css'
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
+import TagTable from '../components/tables/TagTable/TagTable.vue' // for test
 export default {
   components: {
     TopNav,
-    HeartOutline
+    HeartOutline,
+    TagTable,
   },
   computed: {
     ...mapState(['isLoggedIn']),
@@ -120,7 +122,7 @@ export default {
     return {
       cardsShouldAnimate: false,
       songEntryShouldAnimate: false,
-      scrollPromptShouldDisplay: true,
+      scrollPromptShouldDisplay: false,
       imgs: [
         {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg",
@@ -183,6 +185,11 @@ export default {
       ],
       arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     }
+  },
+  created() {
+    setTimeout(() => {
+      this.scrollPromptShouldDisplay = true
+    }, 800)
   },
   mounted() {
     window.addEventListener('scroll', this.handleSongEntryScroll)
@@ -328,8 +335,7 @@ export default {
     height: 60px; 
     border-radius: 10px;
     display: flex; 
-    justify-content: 
-    center; 
+    justify-content: center; 
     align-items: center; 
     overflow: hidden
   }
