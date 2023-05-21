@@ -8,18 +8,6 @@ import MessageSend from './components/message/MessageSend.vue';
 import TopNav from './components/TopNav.vue';
 import ListTable from './components/tables/ListTable/ListTable.vue';
 import Player from './components/Player.vue';
-import { ref } from 'vue';
-
-const playerRef = ref();
-
-function play(musicId) {
-  playerRef.value.play(musicId);
-}
-
-function playAll(playlistId) {
-  playerRef.value.playAll(playlistId);
-}
-
 </script>
 <template>
   <!-- <TopNav></TopNav> -->
