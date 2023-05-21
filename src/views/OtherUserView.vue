@@ -35,7 +35,8 @@
                                     </n-gi>
                                     <n-gi>
                                         <div class="follow-unfollow-button">
-                                            <n-button @click="follow()">加关注</n-button>
+                                            <n-button v-if="this.userIsFollowed" @click="follow()" strong secondary round type="primary">已关注</n-button>
+                                            <n-button v-else @click="follow()" strong secondary round type="default">加关注</n-button>
                                         </div>
                                     </n-gi>
                                 </n-grid>
@@ -104,6 +105,7 @@ export default {
                     this.userBio = response.data.profile;
                     this.userEmail = response.data.email;
                     this.userAvatar = response.data.avatar;
+                    this.userIsFollowed = response.data.is_followed;
                     console.log(response);
                 });
             },
