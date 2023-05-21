@@ -32,7 +32,7 @@ function playAll(playlistId) {
       <!-- 请直接传入数字(px)(高度可略)-->
       <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
       </div>
-    <list-table :position="'PublicView'"></list-table>
+    <list-table :position="'CollectionView'" :currentListId="3"></list-table>
   
   <Player />
 </template>

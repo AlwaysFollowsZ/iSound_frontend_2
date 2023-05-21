@@ -31,6 +31,7 @@ export default {
             document.documentElement.style.setProperty('--my-border-hover', `1px solid ${getRGBString(tempFontColorString.value, 0.6)}`)
             document.documentElement.style.setProperty('--my-border-active', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
             document.documentElement.style.setProperty('--my-border-focus', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
+            // document.documentElement.style.setProperty('--my-shadow', `0 0 1px 1px ${getRGBString(tempFontColorString.value, 0.5)}`)
             document.documentElement.style.setProperty('--my-shadow-active', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.6)}`)
             document.documentElement.style.setProperty('--my-shadow-focus', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.7)}`)
             document.documentElement.style.setProperty('--my-td-color-checked', `${getRGBString(tempFontColorString.value, 0.6)}`)
@@ -335,9 +336,9 @@ export default {
                                     this.isCollectChanged = true
                                     this.headChange = true
                                     //先设置所有项的isStarFilled和isCollectChanged
-                                    for (let i = 0; i < this.selectedEntries.length; i++){
+                                    for (let i = 0; i < this.selectedEntries.length; i++) {
                                         this.songData[i].isCollectChanged = true
-                                        this.songData[i].isStarFilled=true
+                                        this.songData[i].isStarFilled = true
                                     }
                                     setTimeout(() => {
                                         this.showCollection = false
@@ -552,7 +553,7 @@ export default {
             require: true,
             default: 'CollectionView',
             validator: (value) => {
-                return ['CollectionView', 'PublicView'].includes(value)
+                return ['CollectionView', 'PublicView','RecordView'].includes(value)
             }
         },
         currentListId: {
@@ -671,6 +672,7 @@ export default {
     --my-border-active: none;
     --my-border-focus: none;
     /* 输入框阴影 */
+    --my-shadow: none;
     --my-shadow-active: none;
     --my-shadow-focus: none;
     /* 选择框样式 */
@@ -734,19 +736,29 @@ export default {
 :deep(.n-data-table-th .n-checkbox-box) {
     --n-color-checked: var(--my-th-color-checked);
     --n-border-radius: 5px;
+    --n-border-focus:var(--my-border-focus);
+    /* --n-box-shadow: var(--my-shadow); */
+    --n-box-shadow-focus: var(--my-shadow-focus) ;
+    --n-box-shadow-active: var(--my-shadow-active) ;
 }
 
 /* 数据的选择框样式 */
 :deep(.n-data-table-td .n-checkbox-box) {
     --n-color-checked: var(--my-td-color-checked);
     --n-border-radius: 10px;
+    --n-border-focus:var(--my-border-focus);
+    /* --n-box-shadow: var(--my-shadow); */
+    --n-box-shadow-focus: var(--my-shadow-focus);
+    --n-box-shadow-active: var(--my-shadow-active);
 }
 
 :deep(.n-data-table-th .n-checkbox-box__border) {
     --n-border-checked: var(--my-th-border-checked);
+    --n-border:none;
 }
 
 :deep(.n-data-table-td .n-checkbox-box__border) {
     --n-border-checked: var(--my-td-border-checked);
+    --n-border:none
 }
 </style>
