@@ -22,7 +22,7 @@
         },
         created() {
             this.$EventBus.on('timeupdate', (currentTime) => {
-                console.log(currentTime);
+                this.timeupdate(currentTime);
             });
             this.$watch(
                 () => this.$route.params,
@@ -35,7 +35,7 @@
                         this.$http.get(`${this.music.lrc}`).then((response) => {
                             this.updateLyrics(response.data);
                         });
-                        changeThemeColorByImage(this.music.cover)
+                        changeThemeColorByImage(this.music.cover);
                     });
                     this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
                         this.comments = response.data.comment_set;
@@ -43,6 +43,9 @@
                 },
                 { immediate: true },
             );
+        },
+        mounted() {
+            console.log(this.lyricsRef.value.children);
         },
         setup() {
             return {
@@ -66,6 +69,7 @@
                 islike: ref(false),
                 iscollect: ref(false),
                 iscomplain: ref(false),
+                lyricsRef: ref(),
             };
         },
         data() {
@@ -74,6 +78,7 @@
                 page: 1,
                 comments: [],
                 music: {},
+                lyricsIndex: 0,
                 lyricsObjArr: [],
                 getRGBString,
                 backgroundColorString: getBackgroundColorString(globalThemeColor,225),
@@ -142,7 +147,6 @@
             updateLyrics(lyrics) {
                 this.lyricsObjArr = [];
                 const rows = lyrics.split(/\n/);
-                console.log(lyrics);
                 rows.forEach((row) => {
                     if (row == '') {
                         return;
@@ -155,7 +159,14 @@
                         this.lyricsObjArr.push(obj);
                     }
                 });
-            }
+            },
+            timeupdate(currentTime) {
+                for (let i = 0; i < this.lyricsObjArr.length; i++) {
+                    if (currentTime > parseInt(this.lyricsObjArr[i].time)) {
+
+                    }
+                }
+            },
         }
     });
 </script>
@@ -214,8 +225,8 @@
                         </n-gi>
                         <n-gi>
                             <div style="font-size: larger;">
-                                <n-scrollbar style="max-height: 300px">
-                                    <p v-for="(obj, i) in lyricsObjArr" :key="i" ref="lyricsRef">
+                                <n-scrollbar style="max-height: 300px" ref="lyricsRef">
+                                    <p v-for="(obj, i) in lyricsObjArr" :style="{opacity: lyricsIndex === i ? 1 : 0.5}" :key="i">
                                         {{ obj.lyrics }}
                                     </p>
                                 </n-scrollbar>
