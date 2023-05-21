@@ -35,7 +35,6 @@ function playAll(playlistId) {
     <list-table :position="'PublicView'"></list-table>
   
   <Player />
- 
 </template>
 
 <style scoped>
@@ -83,7 +82,7 @@ nav a:first-of-type {
   height: 100vh;
   width: 100vw;
   transition: height cubic-bezier(0.165, 0.84, 0.44, 1) 1s,
-              background-color cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+    background-color cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 @media (min-width: 1024px) {
