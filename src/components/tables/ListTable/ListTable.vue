@@ -40,30 +40,54 @@ export default {
                 isCollected: false,
                 CollectedLists: [],
                 imgSrc: "/src/assets/song4.jpg"
-            },]
+            },],
+            currentListKey: 0//当前所在的收藏夹ID
         }
     },
     methods: {
+        changePosition: {
+            if
+        }
+        //喜欢全部歌曲
         handleLikeAll(keys) {
             for (let i = 0; i < keys.length; i++) {
-                this.songData[keys[i]].isLiked = !this.songData[keys[i]].isLiked
-                this.songData[keys[i]].isLikeChanged = true
+                this.handleLike(keys[i])
             }
-            this.cleanChangeReaction()
         },
+        //喜欢单首歌曲
         handleLike(key) {
+            this.songData[key].isLikeChanged = true
             this.songData[key].isLiked = !this.songData[key].isLiked
             this.cleanChangeReaction()
         },
-        handleCollectAll(keys) {
+        //收藏全部歌曲
+        handleCollectAll(keys, listId) {//将选中的歌曲添加到listId中
             for (let i = 0; i < keys.length; i++) {
-                this.songData[keys[i]].isCollected = !this.songData[keys[i]].isCollected
-                this.songData[keys[i]].isCollectChanged = true
+                this.handleCollect(keys[i],listId)
             }
+        },
+        //收藏单首歌曲
+        handleCollect(key, listId) {
+            this.songData[key].isCollectChanged = true
+            this.songData[key].CollectedLists.push(listId)
+            this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
             this.cleanChangeReaction()
         },
-        handleCollect(key) {
-            this.songData[key].isCollected = !this.songData[key].isCollected
+        //在公共区域，清空所有对应收藏夹中的歌曲记录
+        handleDiscollectOnPublic(key) {
+            this.songData[key].isCollectChanged = true
+            this.songData[key].CollectedLists = []
+            this.songData[key].isCollected = false
+            this.cleanChangeReaction()
+        },
+        //在收藏夹区域，清空本收藏夹中的歌曲记录
+        handleDiscollectOnCollection(key) {
+            this.songData[key].isCollectChanged = true
+            this.songData[key].CollectedLists = this.songData[key].CollectedLists.filter((value) => value !== key)
+            if (this.songData[key].CollectedLists.length === 0) {
+                this.songData[key].isCollected = false
+            }//更新"是否收藏"选项
+            console.log(this.songData[key].CollectedLists);
             this.cleanChangeReaction()
         },
         cleanChangeReaction() {
@@ -74,6 +98,16 @@ export default {
                 }
             }, 500)
         }
+    },
+    props: {
+        position: {
+            type: String,
+            require: true,
+            default: 'CollectionView',
+            validator: (value) => {
+                return ['CollectionView','PublicView'].includes(value)
+            }
+        }
     }
 
 }
@@ -81,5 +115,6 @@ export default {
 
 <template>
     <list-table-body @likeAll="handleLikeAll" @like="handleLike" @collectAll="handleCollectAll" @collect="handleCollect"
-        :songData="songData" :viewMode="viewMode"></list-table-body>
+        :songData="songData" :viewMode="viewMode" :position="position" @discollectOnPublic="handleDiscollectOnPublic"
+        @discollectOnCollection="handleDiscollectOnCollection"></list-table-body>
 </template>

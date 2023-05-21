@@ -1,14 +1,19 @@
 <script>
 import { h, ref, defineProps, computed } from 'vue'
 import { Rows } from '/src/components/tables/ImageTable/ImageRowData'
-import { NDataTable, NButton, NPopover, NEllipsis, NPagination, NConfigProvider, NModal } from 'naive-ui'
+import { NDataTable, NButton, NPopover, NEllipsis, NPagination, NConfigProvider, NModal, NIcon } from 'naive-ui'
 import { Heart12Filled, Star12Filled } from '@vicons/fluent';
+import { ArrowBack, CheckmarkCircleOutline } from '@vicons/ionicons5';
 import { getFontColorString, getBackgroundColorString, globalThemeColor, changeThemeColorByImage, getRGBString, antiBackgroundColor } from '/src/colorMode'
 import imageTable from '../ImageTable/ImageTable.vue';
 import 'animate.css';
+import { backgroundColor } from '../../../colorMode';
 export default {
     data() {
         let viewMode = this.viewMode//转换一下
+        let headChange = false//模态框标题是否转换
+        let showCollection = false//表头的收藏夹是否显示模态框(表项的在每一行定义)
+        let isCollectChanged = false
         const themeColor = globalThemeColor
         const HeadBackgroundColorString = getBackgroundColorString(themeColor, 225)
         const DataBackgroundColorString = getBackgroundColorString(themeColor, 180)
@@ -70,7 +75,7 @@ export default {
                 },
                 key: 'name',
                 resizable: true,
-                maxWidth: '500px',
+                maxWidth: '900px',
                 sorter: 'default',
                 render(row) {
                     return h(NEllipsis, {
@@ -152,37 +157,53 @@ export default {
                 }
             },
             {
-                key: 'actions',
+                key: 'like',
                 width: '10px',
-                title: (column) => h(NButton, {
-                    onClick: () => {
-                        emit('likeAll', this.selectedEntries)
-                    },
+                title: (column) => h(NPopover, {
+                    trigger: 'hover',
                     style: {
-                        'opacity': this.isSelected ? '1' : '0',
-                        '--n-color': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
-                        '--n-color-hover': getRGBString(fontColorString.value, 0.5, 'background', viewMode),
-                        '--n-color-focus': getRGBString(fontColorString.value, 0.4, 'background', viewMode),
-                        '--n-color-pressed': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
-                        '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
-                        '--n-border-focus': `none`,
-                        '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
-                        '--n-border-disabled': `none`,
-                        '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode),
-                        'animation': this.isSelected ? 'bounceIn' : 'heartBeat',
-                        'animation-duration': '0.5s'
-                    },
-                }, {
-                    icon: () => h(Heart12Filled, {
-                        style: {
-                            'color': 'rgb(204,12,32)'
-                        }
-                    })
-                }),
+                        'color': getRGBString(fontColorString.value, 1, 'font', viewMode),
+                        '--n-color': getRGBString(HeadBackgroundColorString.value, 0.8, 'background', viewMode)
+                    }
+                },
+                    {
+                        trigger: () => h(NButton, {
+                            onClick: () => {
+                                emit('likeAll', this.selectedEntries)
+                            },
+                            style: {
+                                'display': this.isSelected ? '' : 'none',
+                                '--n-color': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
+                                '--n-color-hover': getRGBString(fontColorString.value, 0.5, 'background', viewMode),
+                                '--n-color-focus': getRGBString(fontColorString.value, 0.4, 'background', viewMode),
+                                '--n-color-pressed': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
+                                '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
+                                '--n-border-focus': `none`,
+                                '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
+                                '--n-border-disabled': `none`,
+                                '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode),
+                                'animation': this.isSelected ? 'bounceIn' : 'heartBeat',
+                                'animation-duration': '0.5s'
+                            },
+                        }, {
+                            icon: () => h(Heart12Filled, {
+                                style: {
+                                    'color': 'rgb(204,12,32)'
+                                }
+                            })
+                        }),
+                        default: () => h('span',
+                            {
+                                style: {
+                                    'font-size': '12px'
+                                }
+                            },
+                            ['从"我喜欢"移除 / 添加到"我喜欢"'])
+                    }),
                 style: {
                     "text-align": "center"
                 },
-                render(row) {
+                render: (row) => {
                     return h(NPopover, {
                         trigger: 'hover',
                         style: {
@@ -193,9 +214,8 @@ export default {
                         {
                             trigger: () => h(NButton, {
                                 onClick: () => {
-                                    row['isLikeChanged'] = true
                                     emit('like', row.key)
-                                    setTimeout(() => { row['isLikeChanged'] = false }, 200)
+                                    // setTimeout(() => { row['isLikeChanged'] = false }, 200)
                                 },
                                 style: {
                                     '--n-color': getRGBString(DataBackgroundColorString.value, 1, 'background',
@@ -237,33 +257,97 @@ export default {
             {
                 key: "collect",
                 width: '10px',
-                title: (column) => h(NButton, {
-
-                    onClick: () => {
-                        emit('collectAll', this.selectedEntries)
-                    },
-                    style: {
-                        'opacity': this.isSelected ? '1' : '0',
-                        '--n-color': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
-                        '--n-color-hover': getRGBString(fontColorString.value, 0.5, 'background', viewMode),
-                        '--n-color-focus': getRGBString(fontColorString.value, 0.4, 'background', viewMode),
-                        '--n-color-pressed': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
-                        '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
-                        '--n-border-focus': `none`,
-                        '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
-                        '--n-border-disabled': `none`,
-                        '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode),
-                        'animation': this.isSelected ? 'bounceIn' : 'heartBeat',
-                        'animation-duration': '0.5s'
-                    }
-                }, {
-                    icon: () => h(Star12Filled, {
+                title: (column) => {
+                    const position = this.position
+                    return h('div', [h(NPopover, {
+                        trigger: 'hover',
                         style: {
-                            'color': 'rgb(255, 230, 120)'
+                            'color': getRGBString(fontColorString.value, 1, 'font', viewMode),
+                            '--n-color': getRGBString(HeadBackgroundColorString.value, 0.8, 'background', viewMode)
                         }
-                    })
-                }),
-                render(row) {
+                    },
+                        {
+                            trigger: () => h(NButton, {
+                                onClick: () => {
+                                    this.showCollection = true
+                                },
+                                style: {
+                                    'display': this.isSelected ? '' : 'none',
+                                    '--n-color': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
+                                    '--n-color-hover': getRGBString(fontColorString.value, 0.5, 'background', viewMode),
+                                    '--n-color-focus': getRGBString(fontColorString.value, 0.4, 'background', viewMode),
+                                    '--n-color-pressed': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
+                                    '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
+                                    '--n-border-focus': `none`,
+                                    '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
+                                    '--n-border-disabled': `none`,
+                                    '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode),
+                                    'animation': this.isSelected ? 'bounceIn' : 'heartBeat',
+                                    'animation-duration': '0.5s'
+                                }
+                            }, {
+                                icon: () => h(Star12Filled, {
+                                    style: {
+                                        'color': 'rgb(255, 230, 120)'
+                                    }
+                                })
+                            }),
+                            default: () => h('span',
+                                {
+                                    style: {
+                                        'font-size': '12px'
+                                    }
+                                },
+                                ['添加到收藏夹'])
+                        }),
+                        //标题模态框
+                        h(NModal, {
+                            show: this.showCollection,
+                            'on-mask-click': () => {
+                                this.showCollection = false
+                            },
+                        }
+                            , h('div', {
+                                style: {
+                                    'text-align': 'center',
+                                    'border-radius': '50px'
+                                }
+                            }, [
+                                //除了多选外，“请选择收藏夹”的标题不会在收藏夹页面出现
+                                h('div', {
+                                    style: {
+                                        'margin': '20px',
+                                        'font-size': '25px',
+                                        'font-weight': '700',
+                                        'background-color': getRGBString(BackgroundColorString.value, 0.8),
+                                        'color': getRGBString(fontColorString.value, 0.8),
+                                        'margin-top': '20px',
+                                        'border-radius': '50px',
+                                        'animation': this.isCollectChanged ? 'bounceIn' : '',
+                                        'animation-duration': '1s'
+                                    },
+                                }, this.headChange === true ? '添加成功' : '请选择收藏夹'),
+                                //除了多选外，“选择收藏夹”的imageTable不会在收藏夹页面出现
+                                h(imageTable, {
+                                    tableSize: [1000, 500],
+                                    position: 'CollectionView',
+                                    handleClick: (listKey) => {
+                                        this.isCollectChanged=true
+                                        this.headChange = true
+                                        emit('collectAll', this.selectedEntries, listKey)
+                                        setTimeout(() => {
+                                            this.showCollection = false
+                                            this.headChange = false
+                                            setTimeout(() => {
+                                                this.isCollectChanged = false
+                                            },1000)
+                                        }, 1000)
+                                    }
+                                }, ''),
+                            ]))])
+                },
+                render: (row) => {
+                    const position = this.position
                     return h('div', [h(NPopover, {
                         trigger: 'hover',
                         style: {
@@ -311,7 +395,7 @@ export default {
                                 [row.isCollected ? '从"收藏夹"移除' : '添加到"收藏夹"']),
                             // 
                         }), h(NModal, {
-                            'show': row['showCollection'],
+                            show: row['showCollection'],
                             'on-mask-click': () => {
                                 row['showCollection'] = false
                             },
@@ -321,32 +405,95 @@ export default {
                                     'text-align': 'center',
                                     'border-radius': '50px'
                                 }
-                            }, [h('div', {
-                                style: {
-                                    'margin': '20px',
-                                    'font-size': '25px',
-                                    'font-weight': '700',
-                                    'background-color': getRGBString(BackgroundColorString.value, 0.8),
-                                    'color': getRGBString(fontColorString.value, 0.8),
-                                    'margin-top': '20px',
-                                    'border-radius': '50px',
-                                },
-                            }, '请选择收藏夹'), h(imageTable, {
-                                //一些收藏夹的参数
-                                tableSize: [1000, 500],
-                                position: 'CollectionView',
-                                handleClick: (key) => {
-                                    console.log('添加成功:' + key)
-                                    row['isCollectChanged'] = true
-                                    row['showCollection'] = false
-                                    if (row['CollectedLists'].indexOf(key) >= 0) {
-                                        row.push(key)
+                            }, [
+                                //“请选择收藏夹”的标题不会在收藏夹页面出现，也不会在已经收藏的情况下出现
+                                h('div', {
+                                    style: {
+                                        'display': (position !== 'CollectionView' && row.isCollected === false) ? 'default' : 'none',
+                                        'margin': '20px',
+                                        'font-size': '25px',
+                                        'font-weight': '700',
+                                        'background-color': getRGBString(BackgroundColorString.value, 0.8),
+                                        'color': getRGBString(fontColorString.value, 0.8),
+                                        'margin-top': '20px',
+                                        'border-radius': '50px',
+                                    },
+                                }, '请选择收藏夹'),
+                                //“选择收藏夹”的imageTable不会在收藏夹页面出现，也不会在已经收藏的情况下出现
+                                h(imageTable, {
+                                    style: {
+                                        'display': (position !== 'CollectionView' && row.isCollected === false) ? 'default' : 'none',
+                                    },
+                                    tableSize: [1000, 500],
+                                    position: 'CollectionView',//需要显示的是收藏夹页面
+                                    handleClick: (listKey) => {
+                                        this.headChange = true
+                                        emit('collect', row.key, listKey)
+                                        setTimeout(() => {
+                                            row['showCollection'] = false
+                                            setTimeout(() => {
+                                                this.headChange = false
+                                            }, 1000)
+                                        }, 1000)
                                     }
-                                    console.log(row['CollectedLists'])
-                                    emit('collect', row.key)
-                                    setTimeout(() => { row['isCollectChanged'] = false }, 500)
-                                }
-                            }, '')]))])
+                                }, ''),
+                                //在收藏夹页面取消收藏的modal
+                                h('div', {
+                                    style: {
+                                        'display': (position === 'CollectionView') ? 'block' : 'none',
+                                        'margin': '20px',
+                                        'font-size': '25px',
+                                        'font-weight': '700',
+                                        'background-color': getRGBString(BackgroundColorString.value, 0.8),
+                                        'color': getRGBString(fontColorString.value, 0.8),
+                                        'margin-top': '20px',
+                                        'border-radius': '50px',
+                                        'animation': row.isCollectChanged === true ? 'bounceIn' : 'none',
+                                        'animation-duration': '1s'
+                                    },
+                                }, [this.headChange === true ? '取消收藏成功' : (position === 'CollectionView' ? '是否取消收藏？' : '是否从所有收藏夹中移除歌曲？')]),
+                                //取消按钮
+                                [h(NButton, {
+                                    color: getRGBString(this.BackgroundColorString, 0.8),
+                                    circle: true,
+                                    ghost: true,
+                                    style: {
+                                        'display': (position === 'CollectionView') ? 'default' : 'none',
+                                        'font-size': '25px',
+                                        'margin': '50px 100px 50px 50px'
+                                    },
+                                    onClick: () => {
+                                        row['showCollection'] = false
+                                    }
+                                },
+                                    h(NIcon, h(ArrowBack))),
+                                //确定按钮
+                                h(NButton, {
+                                    color: getRGBString(this.BackgroundColorString, 0.8),
+                                    circle: true,
+                                    ghost: true,
+                                    style: {
+                                        'display': (position === 'CollectionView') ? 'default' : 'none',
+                                        'font-size': '25px',
+                                        'margin': '50px 50px 50px 100px'
+                                    },
+                                    onClick: () => {
+                                        this.headChange = true
+                                        if (this.position === 'CollectionView') {
+                                            emit('discollectOnCollection', row.key)
+                                        }
+                                        else {
+                                            emit('discollectOnPublic', row.key)
+                                        }
+                                        setTimeout(() => {
+                                            row['showCollection'] = false
+                                            setTimeout(() => {
+                                                this.headChange = false
+                                            }, 1000)
+                                        }, 1000)
+                                    }
+                                }, h(NIcon, h(CheckmarkCircleOutline)))]
+                            ]))])
                 }
             },
             {
@@ -355,7 +502,8 @@ export default {
         ]//表头和表项
         return {
             themeColor, HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
-            isSelected, selectedEntries, columns, getRGBString,h
+            isSelected, selectedEntries, columns, getRGBString, h, BackgroundColorString, headChange,
+            showCollection,isCollectChanged
         }
     },
     props: {
@@ -377,10 +525,15 @@ export default {
             type: String,
             default: 'user'
         },//是否在管理员界面
-        //使用该组件的位置，包括公开页面和自己的收藏夹页面/播放记录页面
+        //使用该组件的位置，包括公开页面PublicView和自己的收藏夹页面CollectionView/播放记录页面RecordView
+        //在公开页面和播放记录页面，收藏按钮点击后可以选择需要收藏的收藏夹；而在收藏夹界面，点击后只会弹出“是否取消收藏”。
         position: {
             type: String,
-            default: 'PublicView'
+            require: true,
+            default: 'CollectionView',
+            validator: (value) => {
+                return ['CollectionView', 'PublicView'].includes(value)
+            }
         }
     },
     methods: {
@@ -394,7 +547,7 @@ export default {
             }
         }
     },
-    emits: ['like', 'collect', 'likeAll', 'collectAll']
+    emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection']
 }
 </script>
 
@@ -406,7 +559,7 @@ export default {
             style: {
                 'font-weight': '700',
                 //页面按钮
-                '--n-item-text-color': getRGBString(fontColorString,0.8 ,'font'),
+                '--n-item-text-color': getRGBString(fontColorString, 0.8, 'font'),
                 '--n-item-text-color-hover': getRGBString(fontColorString, 0.8, 'font'),
                 '--n-item-text-color-active': getRGBString(fontColorString, 0.5),
                 '--n-item-text-color-pressed': getRGBString(fontColorString, 0.2),
