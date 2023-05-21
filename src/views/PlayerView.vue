@@ -333,7 +333,13 @@
                         </template>
                         <template #content>
                         <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px;">
-                            {{ comment.content }}
+                            <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
+                                <div style="  word-wrap: break-word;">
+                                    <span>
+                                        {{ comment.content }}
+                                    </span>
+                                </div>
+                            </n-ellipsis>
                         </p>
                         </template>
                         <template #datetime>

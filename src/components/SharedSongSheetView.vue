@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="collect-song-sheet-title">
-            收藏歌单
-            <n-divider />
+        <div class="shared-song-sheet-title">
+           全部分享歌单
+            <a-divider style="height: 1.8px; background-color: #dddddd"/>
         </div>
         <div class="song-sheet-container">
             <n-grid :x-gap="12" :y-gap="6" :col="3">
@@ -26,9 +26,11 @@
     </div>
 </template>
 <script>
+import 'animate.css';
 export default {
     data() {
         return {
+            
             songSheets: [
                 {
                     imgSrc: "/src/assets/song2.jpg",
@@ -59,8 +61,8 @@ export default {
     },
 }
 </script>
-<style>
-.collect-song-sheet-title {
+<style scoped>
+.shared-song-sheet-title {
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
     font-weight: bold;

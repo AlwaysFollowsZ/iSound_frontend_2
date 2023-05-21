@@ -2,7 +2,7 @@
     <div class="upload-song-sheet-container">
         <div class="upload-song-sheet-title">
             上传歌曲
-            <n-divider />
+            <a-divider style="height: 1.8px; background-color: #dddddd"/>
         </div>
         <div>
             <n-popover trigger="hover">
@@ -84,7 +84,7 @@ export default {
     },
 }
 </script>
-<style>
+<style scoped>
 .upload-song-sheet-title {
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
