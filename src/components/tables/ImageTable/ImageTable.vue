@@ -42,15 +42,15 @@ export default {
             return Math.ceil(this.rows.length / this.pageArgs.pageSize)
         },
         currentPageData() {
-            console.log(this.position)
-            const rows = this.rows
+            const rows = JSON.parse(JSON.stringify(this.rows))//todo:深拷贝
+            console.log(rows)
             const startIndex = (this.pageArgs.currentPage - 1) * this.pageArgs.pageSize
             if (this.position === 'CollectionView') {
                 for (let i = 0; i < rows.length; i++) {
                     rows[i]['imageSize'] = 150
                 }
             }
-            return this.rows.slice(startIndex, startIndex + this.pageArgs.pageSize)
+            return rows.slice(startIndex, startIndex + this.pageArgs.pageSize)
         },
     },
     props: {
@@ -59,6 +59,7 @@ export default {
             default: ['1000',]
         },
         //使用该组件的位置包括个人主页/收藏夹选择悬浮框和音乐馆主页
+        //分别为PersonalView,CollectionView,HomeView
         position: {
             type: String,
             default: 'PersonalView'
@@ -76,6 +77,7 @@ export default {
             type: Function,
             default: (Key) => {
                 alert(Key)
+                changeColorMode()
             }
         }
     },
@@ -83,7 +85,7 @@ export default {
 </script>
 <template>
     <div class="image_table" :style="{
-        'background-color': `rgba(${BackgroundColorString},0.3)`,
+        'background-color': getRGBString(BackgroundColorString,0.2),
         'border-radius': '50px',
         'width': `${tableSize[0]}px`,
         'height': `${tableSize[1]}px`
@@ -169,7 +171,7 @@ export default {
                 </n-button>
             </div>
             <div class="image_table_list" :style="{
-                'background-color': `rgba(${BackgroundColorString},0.4)`,
+                'background-color': `rgba(${BackgroundColorString},0.25)`,
                 'border': `5px solid rgb(${BackgroundColorString},0.7)`,
                 'border-radius': '50px',
                 'height': `${tableSize[1] - 100}px`

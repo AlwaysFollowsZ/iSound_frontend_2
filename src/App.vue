@@ -30,7 +30,7 @@ function playAll(playlistId) {
     <RouterView @play="play" @playAll="playAll" />
     <!-- <div :style="{'text-align':'center'}"> -->
     <!-- 请直接传入数字(px)(高度可略)-->
-    <image-table :table-size="[1000,]"></image-table>
+    <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
     <list-table :view-mode="user"></list-table>
 
     <Player ref="playerRef"/>

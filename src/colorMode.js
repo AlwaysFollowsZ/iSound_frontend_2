@@ -8,10 +8,20 @@ import ColorThief from 'colorthief'
 const colorThief = new ColorThief()
 
 export const colorMode = computed(() => store.state.colorMode)//从这里获取白天和黑夜模式
-export const globalThemeColor = computed(() =>  Object.assign([], store.state.currentThemeColor))//全局的主题色
+export const globalThemeColor = computed(() => Object.assign([], store.state.currentThemeColor))//全局的主题色
 export const backgroundColor = computed(() => {
-    return colorMode.value === 'black' ?
-        'rgb(15,15,20)' : 'rgb(245,245,245)'
+    let colorBaseWhite = 200
+    let colorBaseBlack = 220
+    let oppositeColorBase = 255 - colorBaseBlack
+    let whiteRate = (255 - colorBaseWhite) / 255
+    let blackRate = oppositeColorBase / 255
+    let themeColor = globalThemeColor.value
+    if (colorMode.value === 'black') {
+        return `rgb(${oppositeColorBase + blackRate * themeColor[0]},${oppositeColorBase + blackRate * themeColor[1]},${oppositeColorBase + blackRate * themeColor[2]})`
+    }
+    else {
+        return `rgb(${colorBaseWhite + whiteRate * themeColor[0]},${colorBaseWhite + whiteRate * themeColor[1]},${colorBaseWhite + whiteRate * themeColor[2]})`
+    }
 })//从这里获取白天/黑夜模式的背景色
 export const antiBackgroundColor = computed(() => {
     return colorMode.value === 'white' ?
@@ -39,7 +49,6 @@ export const getFontColorString = (themeColorInput, colorBase = 125) => {
             `${colorBase + themeColor[0] * whiteColorRate},${colorBase + themeColor[1] * whiteColorRate},${colorBase + themeColor[2] * whiteColorRate}`
             : `${themeColor[0] * blackColorRate},${themeColor[1] * blackColorRate},${themeColor[2] * blackColorRate}`
         return fontColorString
-
     })
 }
 //获取主题背景色的方法,返回'a,b,c'形式的字符串
@@ -60,8 +69,16 @@ export const getBackgroundColorString = (themeColorInput) => {
 
 //输入形如'a,b,c'的颜色字符串、不透明度和类型(仅在管理员模式下有效),viewMode(仅在管理员模式下有效)
 //获取形如'rgba(a,b,c,opacity)'的rgba字段
-export const getRGBString = (color, opacity = 1, type = 'normal', viewMode = 'user') => {
-    if (viewMode === 'user') {
+export const getRGBString = (colorInput, opacity = 1, type = 'normal', viewMode = 'user') => {
+    let color
+    if (typeof (colorInput) === 'string') {
+        color = colorInput
+    }
+    else {
+        color = colorInput.value
+    }
+    //转换成value
+    if (viewMode !== 'admin') {
         return `rgba(${color},${opacity})`
     }
     else {
