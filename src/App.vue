@@ -8,17 +8,6 @@ import MessageSend from './components/message/MessageSend.vue';
 import TopNav from './components/TopNav.vue';
 import ListTable from './components/tables/ListTable/ListTable.vue';
 import Player from './components/Player.vue';
-import { ref } from 'vue';
-
-const playerRef = ref();
-
-function play(musicId) {
-  playerRef.value.play(musicId);
-}
-
-function playAll(playlistId) {
-  playerRef.value.playAll(playlistId);
-}
 </script>
 
 <template>
@@ -27,13 +16,13 @@ function playAll(playlistId) {
   <!-- <message-send></message-send> -->
 
   <div :style="{'background':backgroundColor }" class='page_background'></div> 
-    <RouterView @play="play" @playAll="playAll" />
+    <RouterView />
     <!-- <div :style="{'text-align':'center'}"> -->
       <!-- 请直接传入数字(px)(高度可略)-->
       <!-- <image-table :table-size="[1000,]"></image-table>
      <list-table :view-mode="user"></list-table>  -->
   
-  <Player ref="playerRef"/>
+  <Player />
   <!-- </div> -->
 </template>
 

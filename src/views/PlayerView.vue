@@ -21,6 +21,9 @@
             Warning,
         },
         created() {
+            this.$EventBus.on('timeupdate', (currentTime) => {
+                console.log(currentTime);
+            });
             this.$watch(
                 () => this.$route.params,
                 () => {
@@ -29,7 +32,9 @@
                         this.music = response.data.music_set[0];
                         this.islike = this.music.is_like;
                         this.iscollect = this.music.is_favorite;
-                        console.log(this.music.cover);
+                        this.$http.get(`${this.music.lrc}`).then((response) => {
+                            this.updateLyrics(response.data);
+                        });
                         changeThemeColorByImage(this.music.cover)
                     });
                     this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
@@ -69,6 +74,7 @@
                 page: 1,
                 comments: [],
                 music: {},
+                lyricsObjArr: [],
                 getRGBString,
                 backgroundColorString: getBackgroundColorString(globalThemeColor,225),
             }
@@ -91,9 +97,6 @@
                 //todo
                 this.iscomplain = !this.iscomplain;
             },
-            // getImageUrl(url) {
-            //     return new URL(url, import.meta.url).href;
-            // },
             cleanComment() {
                 this.value="";
             },
@@ -128,6 +131,31 @@
                     document.querySelector('#comment-fold').click();
                 }
             },
+            parseTime(time) {
+                const min = parseInt(time.match(/.*:/)[0].slice(0, 2));
+                let sec = parseInt(time.match(/:.*\./)[0].slice(1, 3));
+                const msIndex = time.match(/\./).index;
+                const ms = time.slice(msIndex + 1);
+                sec += min * 60;
+                return Number(sec + '.' + ms);
+            },
+            updateLyrics(lyrics) {
+                this.lyricsObjArr = [];
+                const rows = lyrics.split(/\n/);
+                console.log(lyrics);
+                rows.forEach((row) => {
+                    if (row == '') {
+                        return;
+                    }
+                    const obj = {};
+                    const time = row.match(/\[\d{2}:\d{2}.\d{2,3}\]/);
+                    obj.lyrics = row.split(']')[1].trim();
+                    obj.time = time ? this.parseTime(time[0].slice(1, time[0].length - 1)) : 0;
+                    if (obj.lyrics != '') {
+                        this.lyricsObjArr.push(obj);
+                    }
+                });
+            }
         }
     });
 </script>
@@ -186,7 +214,11 @@
                         </n-gi>
                         <n-gi>
                             <div style="font-size: larger;">
-                            我是一句歌词
+                                <n-scrollbar style="max-height: 300px">
+                                    <p v-for="(obj, i) in lyricsObjArr" :key="i" ref="lyricsRef">
+                                        {{ obj.lyrics }}
+                                    </p>
+                                </n-scrollbar>
                             </div>
                         </n-gi>
                     </n-grid>
