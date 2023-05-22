@@ -5,11 +5,11 @@ import ImageTableEntry from './ImageTableEntry.vue'
 import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor } from '/src/colorMode'
 import { Rows } from './ImageRowData'
 import { backgroundColor } from '../../../colorMode'
-//传入props
+
 export default {
     data() {
         const fontColorString = getFontColorString(globalThemeColor)
-        const BackgroundColorString = getBackgroundColorString(globalThemeColor)
+        const defaultBGString=getBackgroundColorString(globalThemeColor)
         //在这里设置需要使用:deep更改的穿透样式，并在:root中定义相应变量
         watch(globalThemeColor, () => {
             const tempFontColorString = getFontColorString(globalThemeColor)
@@ -31,8 +31,8 @@ export default {
             getRGBString,
             antiBackgroundColor,
             pageArgs: { currentPage: 1, pageSize: 10 },
-            BackgroundColorString,
             fontColorString,
+            defaultBGString,
             changeColorMode,
             h
         }
@@ -54,6 +54,11 @@ export default {
         },
     },
     props: {
+        //可自定义imageTable的背景色。默认和歌曲封面主题色对齐
+        BackgroundColorString: {
+            type: String,
+            default: getBackgroundColorString(globalThemeColor)
+        },
         tableSize: {
             type: Array,
             default: ['1000',]
@@ -151,20 +156,20 @@ export default {
         <template v-else>
             <div class="list_top_nav">
                 <n-button class="more_button" :style="{
-                    '--n-color': `rgba(${BackgroundColorString},0.15)`,
-                    '--n-color-hover': `rgba(${BackgroundColorString},0.4)`,
-                    '--n-color-pressed': `rgba(${BackgroundColorString},0.6)`,
-                    '--n-color-focus': `rgba(${BackgroundColorString},0.1)`,
-                    '--n-border': `3px solid rgba(${BackgroundColorString},0.5)`,
+                    '--n-color': getRGBString(BackgroundColorString,0.15),
+                    '--n-color-hover': getRGBString(BackgroundColorString, 0.4),
+                    '--n-color-pressed': getRGBString(BackgroundColorString, 0.6),
+                    '--n-color-focus': getRGBString(BackgroundColorString, 0.1),
+                    '--n-border': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
                     '--n-border-radius': '10px',
-                    '--n-border-hover': `3px solid rgba(${BackgroundColorString},0.5)`,
-                    '--n-border-pressed': `3px solid rgba(${BackgroundColorString},0.3)`,
-                    '--n-border-focus': `3px solid rgba(${BackgroundColorString},0.5)`,
-                    '--n-text-color': `rgba(${fontColorString},0.6)`,
-                    '--n-text-color-hover': `rgba(${fontColorString},0.8)`,
-                    '--n-text-color-pressed': `rgba(${fontColorString})`,
-                    '--n-text-color-focus': `rgba(${fontColorString},0.6)`,
-                    '--n-ripple-color': `rgba(${fontColorString},0.5)`,
+                    '--n-border-hover': `3px solid ${getRGBString(BackgroundColorString,0.5)}`,
+                    '--n-border-pressed': `3px solid ${getRGBString(BackgroundColorString, 0.3)})`,
+                    '--n-border-focus': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
+                    '--n-text-color': getRGBString(fontColorString, 0.6),
+                    '--n-text-color-hover':  getRGBString(fontColorString, 0.8) ,
+                    '--n-text-color-pressed': getRGBString(fontColorString, 1),
+                    '--n-text-color-focus': getRGBString(fontColorString, 0.6),
+                    '--n-ripple-color': getRGBString(fontColorString, 0.5),
                     '--n-wave-opacity': '1'
                 }" @click="changeColorMode">
                     更多
