@@ -1,7 +1,6 @@
 <template>
   <div><top-nav></top-nav></div>
-  <div class="img-show" 
-    :class="{'animate__animated animate__zoomIn': !isLoggedIn}">
+  <div class="img-show" :class="{ 'animate__animated animate__zoomIn': !isLoggedIn }">
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
@@ -10,8 +9,7 @@
           </div>
         </div>
         <div class="carousel-container">
-          <n-carousel autoplay :interval="3000"
-            effect="card"
+          <n-carousel autoplay :interval="3000" effect="card"
             prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
             next-slide-style="transform: translateX(20%) translateZ(-500px);"
             style="height: 85%"
@@ -61,21 +59,22 @@
                 <div class="single-card-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">
                   {{ song.singer }}
                 </div>
+              </div>
             </div>
-          </div>
           </div>
         </n-gi>
       </n-grid>
     </div>
-  </div><div ref="songCardRef" class="placeholder" v-else></div>
+  </div>
+  <div ref="songCardRef" class="placeholder" v-else></div>
   <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn}"
       style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
     >现在就听</div>
     <div class="song-entry-outter animate__animated"
-      :class="{'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn}">
-      <n-grid :x-gap="0" :y-gap="0" >
+      :class="{ 'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn }">
+      <n-grid :x-gap="0" :y-gap="0">
         <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
           <div class="song-entry-card-container">
             <div class="song-entry-container">
@@ -86,8 +85,9 @@
               </div>
               <n-grid>
                 <n-gi :span="4">
-                  <div class="song-entry-img-container" >
-                    <img class="song-entry-img" src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
+                  <div class="song-entry-img-container">
+                    <img class="song-entry-img"
+                      src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
                   </div>
                 </n-gi>
                 <n-gi :span="2"></n-gi>
@@ -237,7 +237,7 @@ export default {
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-        if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
+        if (componentOffsetTop <= scrollTop + windowHeight * 0.6) {
           this.cardsShouldAnimate = true
           setTimeout(() => {
             this.scrollPromptShouldDisplay = false
@@ -251,11 +251,11 @@ export default {
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
+        if (componentOffsetTop <= scrollTop + windowHeight * 0.6) {
           this.songEntryShouldAnimate = true
         }
       }
-    }, 
+    },
   }
 }
 
