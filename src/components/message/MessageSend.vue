@@ -73,7 +73,7 @@
 </template>
   
 <style>
-.cancel-button {
+/*.cancel-button {
   position: fixed;
   right: 290px;
 }
@@ -85,7 +85,7 @@
 
 .receive-person {
   width: 60px;
-}
+}*/
 
 
 </style>

@@ -4,24 +4,32 @@
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
-          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
+          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}">
             来点不一样的歌单
           </div>
         </div>
         <div class="carousel-container">
           <n-carousel autoplay :interval="3000" effect="card"
             prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
-            next-slide-style="transform: translateX(20%) translateZ(-500px);" style="height: 85%" :show-dots="true">
-            <n-carousel-item :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx">
-              <img class="carousel-img" :src="src.path" @click="jumpToSongList(src.jumpLink)">
+            next-slide-style="transform: translateX(20%) translateZ(-500px);"
+            style="height: 85%"
+            :show-dots="true"
+          >
+            <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx" >
+                <img
+                  class="carousel-img"
+                  :src="src.path"
+                  draggable="false"
+                  @click="jumpToSongList(src.jumpLink)"
+                >
             </n-carousel-item>
           </n-carousel>
         </div>
       </n-gi>
     </n-grid>
   </div>
-  <div v-if="scrollPromptShouldDisplay && !isLoggedIn"
-    :class="(cardsShouldAnimate && !isLoggedIn) ? ['animate__animated animate__zoomOut'] : ['animate__animated animate__zoomIn animate__slow']">
+  <div v-if="scrollPromptShouldDisplay && !isLoggedIn" 
+    :class="[`${cardsShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
     <n-grid>
       <n-gi :span="9"></n-gi>
       <n-gi :span="8">
@@ -30,21 +38,25 @@
     </n-grid>
   </div>
   <div v-if="cardsShouldAnimate || isLoggedIn">
-    <div class="animate__animated" :class="{ 'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn }"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold">猜你喜欢</div>
-    <div class="card-container animate__animated " :class="{ 'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn }">
-      <n-grid :col="6">
-        <n-gi :span="4" v-for="(song, idx) in songs" :key="idx">
+    <div class="animate__animated" 
+      :class="{'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn}"
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
+    >猜你喜欢</div>
+    <div class="card-container animate__animated "
+      :class="{'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn}"
+    >
+      <n-grid  :col="6">
+        <n-gi :span="4"  v-for="(song, idx) in songs" :key="idx">
           <div>
             <div class="single-card-container">
               <div class="single-card-img-container">
                 <img class="single-card-img" :src="song.imgSrc">
               </div>
               <div class="single-card-info-container">
-                <div class="single-card-info-name">
+                <div class="single-card-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
                   {{ song.title }}
                 </div>
-                <div class="single-card-info-singer">
+                <div class="single-card-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">
                   {{ song.singer }}
                 </div>
               </div>
@@ -56,8 +68,10 @@
   </div>
   <div ref="songCardRef" class="placeholder" v-else></div>
   <div v-if="songEntryShouldAnimate || isLoggedIn">
-    <div class="animate__animated" :class="{ 'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn }"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold">现在就听</div>
+    <div class="animate__animated" 
+      :class="{'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn}"
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
+    >现在就听</div>
     <div class="song-entry-outter animate__animated"
       :class="{ 'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn }">
       <n-grid :x-gap="0" :y-gap="0">
@@ -65,7 +79,9 @@
           <div class="song-entry-card-container">
             <div class="song-entry-container">
               <div style="padding-bottom: 3%; padding-top: 3%">
-                <hr style="box-shadow: none; border-color: rgb(255, 255, 255); margin: 0" />
+                <hr style="box-shadow: none;  margin: 0" 
+                :style="{'border-color': 'rgba(' + this.accentColor + ',0.7)', 'background-color': 'rgba(' + this.accentColor + ',0.7)'}"
+                />
               </div>
               <n-grid>
                 <n-gi :span="4">
@@ -77,8 +93,8 @@
                 <n-gi :span="2"></n-gi>
                 <n-gi :span="15">
                   <div class="song-entry-info-container">
-                    <div class="song-entry-info-name">这里还有更多的歌</div>
-                    <div class="song-entry-info-singer">singer</div>
+                    <div class="song-entry-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">这里还有更多的歌</div>
+                    <div class="song-entry-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">singer</div>
                   </div>
                 </n-gi>
               </n-grid>
@@ -87,8 +103,8 @@
         </n-gi>
       </n-grid>
     </div>
-  </div>
-  <div ref="songEntryRef" class="placeholder" v-else></div>
+  </div><div ref="songEntryRef" class="placeholder" v-else></div>
+  <div><tag-table :width="80"/></div>
 </template>
 
 <script>
@@ -96,13 +112,15 @@ import TopNav from '../components/TopNav.vue'
 import { HeartOutline } from '@vicons/ionicons5'
 import 'animate.css'
 import { mapState, mapMutations } from 'vuex'
+import TagTable from '../components/tables/TagTable/TagTable.vue' // for test
 export default {
   components: {
     TopNav,
-    HeartOutline
+    HeartOutline,
+    TagTable,
   },
   computed: {
-    ...mapState(['isLoggedIn']),
+    ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
   },
   data() {
     return {
@@ -186,6 +204,25 @@ export default {
     window.removeEventListener('scroll', this.handleCardsScroll)
   },
   methods: {
+    ...mapMutations(['setAccentColor']),
+    getCorrectAccentColor() {
+      if (this.colorMode === 'white') {
+        return this.accentColor
+      } else if (this.colorMode === 'black') {
+        if (this.accentColor === '0,0,0') {
+          return '255,255,255'
+        } else {
+          return this.accentColor
+        }
+      }
+    },
+    getCorrectBasicColor() {
+      if (this.colorMode === 'white') {
+        return '0,0,0'
+      } else if (this.colorMode === 'black') {
+        return '255,255,255'
+      }
+    },
     jumpToSongList(jumpLink) {
       // this.$router.push(jumpLink)
       console.log(jumpLink)
@@ -225,162 +262,143 @@ export default {
 </script>
 
 <style>
-.img-show {
-  height: 60vh;
-  /*border: dashed; */
-}
-
-.carousel-container {
-  height: 60vh;
-  align-items: center;
-  padding-top: 1%;
-  padding-left: 10%;
-  padding-right: 10%;
-  margin: auto;
-}
-
-.carousel-img {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 15px;
-  overflow: hidden;
-}
-
-.card-container {
-  height: 30vh;
-  padding-top: 1%;
-  padding-left: 5%;
-  margin: auto;
-  animation-delay: 300ms;
-  animation-duration: 1500ms;
-}
-
-.single-card-container {
-  max-width: 180px;
-  padding-top: 3%;
-  padding-bottom: 3%;
-  word-wrap: break-word;
-}
-
-.single-card-img-container {
-  width: 160px;
-  height: 160px;
-  border-radius: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden
-}
-
-.single-card-img {
-  width: 100%;
-  height: 100%;
-}
-
-.single-card-info-name {
-  font-size: medium;
-  font-weight: 700;
-}
-
-.single-card-info-singer {
-  font-size: small;
-  font-weight: 500;
-  color: grey;
-}
-
-.single-card-img-container {
-  width: 160px;
-  height: 160px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden
-}
-
-.single-card-img {
-  width: 100%;
-  height: 100%;
-}
-
-.single-card-info-name {
-  font-size: medium;
-  font-weight: 700;
-}
-
-.single-card-info-singer {
-  font-size: small;
-  font-weight: 500;
-  color: grey;
-}
-
-.song-entry-outter {
-  height: 40vh;
-  animation-delay: 300ms;
-  animation-duration: 1500ms;
-}
-
-.song-entry-card-container {
-  padding-left: 19%;
-}
-
-.song-entry-container {
-  width: 18vw;
-  margin-top: 0%;
-  margin-bottom: 0%;
-}
-
-.song-entry-img-container {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  display: flex;
-  justify-content:
-    center;
-  align-items: center;
-  overflow: hidden
-}
-
-.song-entry-img {
-  width: 100%;
-  height: 100%;
-}
-
-.song-entry-info-container {
-  padding-top: 1.5%;
-
-}
-
-.song-entry-info-name {
-  max-width: 12vw;
-  padding-top: 3%;
-  word-wrap: break-word;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.song-entry-info-singer {
-  max-width: 12vw;
-  word-wrap: break-word;
-  font-weight: bold;
-  font-size: 8px;
-  color: grey;
-}
-
-.placeholder {
-  height: 50vh;
-}
-
-.scroll-prompt {
-  margin-top: 1.5%;
-  font-size: 40px;
-  font-weight: bold;
-}
-
-.rainbow-text {
-  background: linear-gradient(to right, green, rgba(0, 0, 255, 0.66), indigo, violet);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+  .img-show {
+    height: 60vh;
+    color:rgb(224, 224, 230);
+    /*border: dashed; */
+  }
+  .carousel-container {
+    height: 60vh;
+    align-items: center;
+    padding-top: 1%;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin: auto;
+  }
+  .carousel-img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  .carousel-img:hover {
+    cursor: pointer;
+  }
+  .card-container {
+    height: 30vh;
+    padding-top: 1%;
+    padding-left: 5%;
+    margin: auto;
+    animation-delay: 300ms;
+    animation-duration: 1500ms;
+  }
+  .single-card-container {
+    max-width: 180px;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    word-wrap: break-word;
+  }
+  .single-card-img-container {
+    width: 160px; 
+    height: 160px; 
+    border-radius: 15px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    overflow: hidden
+  }
+  .single-card-img {
+    width: 100%; 
+    height: 100%;
+  }
+  .single-card-info-name {
+    font-size: medium;
+    font-weight: 700;
+  }
+  .single-card-info-singer {
+    font-size: small;
+    font-weight: 500;
+    color: grey;
+  }
+  .single-card-img-container {
+    width: 160px; 
+    height: 160px; 
+    border-radius: 10px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    overflow: hidden
+  }
+  .single-card-img {
+    width: 100%; 
+    height: 100%;
+  }
+  .single-card-info-name {
+    font-size: medium;
+    font-weight: 700;
+  }
+  .single-card-info-singer {
+    font-size: small;
+    font-weight: 500;
+    color: grey;
+  }
+ 
+  .song-entry-outter {
+    height: 40vh;
+    animation-delay: 300ms;
+    animation-duration: 1500ms;
+  }
+  .song-entry-card-container {
+    padding-left: 19%;
+  }
+  .song-entry-container {
+    width: 18vw;
+    margin-top: 0%;
+    margin-bottom: 0%;
+  }
+  .song-entry-img-container {
+    width: 60px; 
+    height: 60px; 
+    border-radius: 10px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    overflow: hidden
+  }
+  .song-entry-img {
+    width: 100%; 
+    height: 100%;
+  }
+  .song-entry-info-container {
+    padding-top: 1.5%;
+    
+  }
+  .song-entry-info-name {
+    max-width: 12vw;
+    padding-top: 3%;
+    word-wrap: break-word;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .song-entry-info-singer {
+    max-width: 12vw;
+    word-wrap: break-word;
+    font-weight: bold;
+    font-size: 8px;
+    color: grey;
+  }
+  .placeholder {
+    height: 50vh;
+  }
+  .scroll-prompt {
+    margin-top: 1.5%;
+    font-size: 40px;
+    font-weight: bold;
+  }
+  .rainbow-text {
+    background: linear-gradient(to right,  green, rgba(0, 0, 255, 0.66), indigo, violet);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 </style>
