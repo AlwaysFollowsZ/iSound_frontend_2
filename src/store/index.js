@@ -6,11 +6,16 @@ export default new Vuex.Store({
         colorMode: 'white',
         currentThemeColor: [200,200,200],
         isLoggedIn: false,
-        //isAdmin: false,      // 测试阶段设为 true，正式情况下将设为 false
+        accentColor: '0,0,0'
     },
     mutations: {
         changeColorMode(state) {
             state.colorMode = state.colorMode === 'white' ? 'black' : 'white'
+            if (state.colorMode === 'black' && state.accentColor === '0,0,0') {
+                state.accentColor = '255,255,255'
+            } else if (state.colorMode === 'white' && state.accentColor === '255,255,255') {
+                state.accentColor = '0,0,0'
+            }
         },
         changeThemeColor(state, rgb) {
             state.currentThemeColor = rgb
@@ -18,8 +23,8 @@ export default new Vuex.Store({
         setLogState(state, b) {
             state.isLoggedIn = b
         },
-        // setIsAdmin(state, b) {
-        //     state.isAdmin = b
-        // },
+        setAccentColor(state, c) {
+            state.accentColor = c
+        },
     }
 })
