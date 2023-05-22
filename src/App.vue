@@ -26,15 +26,15 @@ function playAll(playlistId) {
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-    <div :style="{ 'background': backgroundColor }" class='page_background'></div>
+    <div :style="{ 'background': backgroundColor }" class='page_background'> </div>
     <RouterView @play="play" @playAll="playAll" />
     <!-- <div :style="{'text-align':'center'}"> -->
-    <!-- 请直接传入数字(px)(高度可略)-->
-    <!-- <image-table :table-size="[1000,]" position="HomePage"></image-table>
-    <list-table :view-mode="user"></list-table> -->
-
-    <Player ref="playerRef"/>
-    <!-- </div> -->
+      <!-- 请直接传入数字(px)(高度可略)-->
+      <!-- <image-table :table-size="[1000,]"></image-table> -->
+    
+  
+  <Player />
+ 
 </template>
 
 <style scoped>

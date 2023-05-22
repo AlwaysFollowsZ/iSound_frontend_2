@@ -5,7 +5,7 @@
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
-          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
+          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}">
             来点不一样的歌单
           </div>
         </div>
@@ -17,12 +17,13 @@
             style="height: 85%"
             :show-dots="true"
           >
-            <n-carousel-item :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx" >
-              <img
-                class="carousel-img"
-                :src="src.path"
-                @click="jumpToSongList(src.jumpLink)"
-              >
+            <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx" >
+                <img
+                  class="carousel-img"
+                  :src="src.path"
+                  draggable="false"
+                  @click="jumpToSongList(src.jumpLink)"
+                >
             </n-carousel-item>
           </n-carousel>
         </div>
@@ -41,7 +42,7 @@
   <div v-if="cardsShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" 
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
     >猜你喜欢</div>
     <div class="card-container animate__animated "
       :class="{'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn}"
@@ -54,10 +55,10 @@
                 <img class="single-card-img" :src="song.imgSrc">
               </div>
               <div class="single-card-info-container">
-                <div class="single-card-info-name">
+                <div class="single-card-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
                   {{ song.title }}
                 </div>
-                <div class="single-card-info-singer">
+                <div class="single-card-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">
                   {{ song.singer }}
                 </div>
             </div>
@@ -70,7 +71,8 @@
   <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" >现在就听</div>
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
+    >现在就听</div>
     <div class="song-entry-outter animate__animated"
       :class="{'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn}">
       <n-grid :x-gap="0" :y-gap="0" >
@@ -78,7 +80,9 @@
           <div class="song-entry-card-container">
             <div class="song-entry-container">
               <div style="padding-bottom: 3%; padding-top: 3%">
-                <hr style="box-shadow: none; border-color: rgb(255, 255, 255); margin: 0"/>
+                <hr style="box-shadow: none;  margin: 0" 
+                :style="{'border-color': 'rgba(' + this.accentColor + ',0.7)', 'background-color': 'rgba(' + this.accentColor + ',0.7)'}"
+                />
               </div>
               <n-grid>
                 <n-gi :span="4">
@@ -89,8 +93,8 @@
                 <n-gi :span="2"></n-gi>
                 <n-gi :span="15">
                   <div class="song-entry-info-container">
-                    <div class="song-entry-info-name">这里还有更多的歌</div>
-                    <div class="song-entry-info-singer">singer</div>
+                    <div class="song-entry-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">这里还有更多的歌</div>
+                    <div class="song-entry-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">singer</div>
                   </div>
                 </n-gi>
               </n-grid>
@@ -107,7 +111,7 @@
 import TopNav from '../components/TopNav.vue'
 import { HeartOutline } from '@vicons/ionicons5'
 import 'animate.css'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import TagTable from '../components/tables/TagTable/TagTable.vue' // for test
 export default {
   components: {
@@ -116,7 +120,7 @@ export default {
     TagTable,
   },
   computed: {
-    ...mapState(['isLoggedIn']),
+    ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
   },
   data() {
     return {
@@ -200,6 +204,25 @@ export default {
     window.removeEventListener('scroll', this.handleCardsScroll)
   },
   methods: {
+    ...mapMutations(['setAccentColor']),
+    getCorrectAccentColor() {
+      if (this.colorMode === 'white') {
+        return this.accentColor
+      } else if (this.colorMode === 'black') {
+        if (this.accentColor === '0,0,0') {
+          return '255,255,255'
+        } else {
+          return this.accentColor
+        }
+      }
+    },
+    getCorrectBasicColor() {
+      if (this.colorMode === 'white') {
+        return '0,0,0'
+      } else if (this.colorMode === 'black') {
+        return '255,255,255'
+      }
+    },
     jumpToSongList(jumpLink) {
       // this.$router.push(jumpLink)
       console.log(jumpLink)
@@ -241,6 +264,7 @@ export default {
 <style>
   .img-show {
     height: 60vh;
+    color:rgb(224, 224, 230);
     /*border: dashed; */
   }
   .carousel-container {
@@ -257,6 +281,9 @@ export default {
     height: 100%;
     border-radius: 15px;
     overflow: hidden;
+  }
+  .carousel-img:hover {
+    cursor: pointer;
   }
   .card-container {
     height: 30vh;
