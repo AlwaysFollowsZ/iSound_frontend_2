@@ -100,7 +100,7 @@ export default {
         let t1 = setInterval(() => {
             this.loadingPercentage += 1
         }, 300)
-        this.$http.get(`/api/accounts/following/0/`).then((response) => {
+        this.$http.get(`/api/accounts/following/`).then((response) => {
             console.log(response);
             this.followerList = response.data.following.map(follower => ({
                 id: follower.id,
