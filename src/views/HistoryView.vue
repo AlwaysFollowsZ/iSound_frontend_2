@@ -92,7 +92,7 @@
                                                     {{ item.music.artist }}
                                                 </div>
                                                 <span class="song-upload-username" :style="{'color': this.colorMode === 'white' ? 'grey' : 'lightgrey'}">
-                                                    {{ item.music.up }}
+                                                    {{ item.music.up.username }}
                                                 </span>
                                                 <span class="song-tags" :style="{'color': this.colorMode === 'white' ? 'grey' : 'lightgrey'}">
                                                     <!-- {{ item.tags }} -->
