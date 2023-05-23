@@ -10,16 +10,17 @@ export default new Vuex.Store({
         accentColor: '0,0,0'
     },
     mutations: {
-        changeColorMode(state) {
+        changeColorMode(state) {//请不要直接调用这个方法，而是调用colorMode.js中的同名方法
             state.colorMode = state.colorMode === 'white' ? 'black' : 'white'
             if (state.colorMode === 'black' && state.accentColor === '0,0,0') {
                 state.accentColor = '255,255,255'
             } else if (state.colorMode === 'white' && state.accentColor === '255,255,255') {
                 state.accentColor = '0,0,0'
             }
-            return 0
         },
         changeThemeColor(state, [fixedRgb, originalRgb]) {//谔谔，不能超过两个参数
+            console.log(fixedRgb, originalRgb);
+            // alert(originalRgb,fixedRgb)
             state.currentThemeColor = fixedRgb
             state.originalThemeColor=originalRgb
         },

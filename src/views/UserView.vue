@@ -48,9 +48,11 @@
                                     <fan-list-view />
                                 </n-tab-pane>
                                 <template #suffix>
-                                    <flower-outline style="width: 20px;"/>粉丝数：
+                                    <!-- <flower-outline style="width: 20px;"/> -->
+                                    粉丝数:{{ this.fansNum }}
                                     <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd"/>
-                                    <flash-outline style="width: 20px;"/> 关注数：
+                                    <!-- <flash-outline style="width: 20px;"/>  -->
+                                    关注数:{{ this.followingNum }}
                                 </template>
                             </n-tabs>
                         </div>
@@ -106,11 +108,9 @@ export default {
             email: '',
             avatarUrl: '',
             avatarFile: '',
+            fansNum: '',
+            followingNum: '',
         }
-    },
-    props: {
-        fansList: [],
-        followerList: [],
     },
     created() {
         this.$http.get('/api/accounts/detail/0/').then(response => {
@@ -120,6 +120,8 @@ export default {
             this.bio = response.data.profile;
             this.avatarFile = response.data.avatar;
             this.avatarUrl = this.avatarFile;
+            this.fansNum = response.data.fans;
+            this.followingNum = response.data.following;
         }).catch(error => {
             console.error(error);
         });

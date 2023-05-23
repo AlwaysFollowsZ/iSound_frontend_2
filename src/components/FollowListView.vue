@@ -3,7 +3,23 @@
         全部关注
         <a-divider style="height: 1.8px; background-color: #dddddd" />
     </div>
-    <div class="follow-list-border">
+    <div class="loading-animate" v-if="isLoading">
+        <n-progress style="height: 200px; width: 200px" class="animate__animated" type="line"
+            :percentage="loadingPercentage" rail-color="lightgrey" :style="{
+                '--n-fill-color':
+                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                        'grey' :
+                        'rgb(' + this.accentColor + ')',
+            }" :class="[`${this.loadingIconShouldOut ? 'animate__zoomOut' : 'animate__zoomIn'}`]">
+            <template #default>
+                <div v-if="this.loadingPercentage < 95">
+                </div>
+                <div v-else>
+                </div>
+            </template>
+        </n-progress>
+    </div>
+    <div class="follow-list-border" v-else>
         <div class="follower-container"
             v-for="(follower, idx) in 
         followerList.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > followerList.length) ? (followerList.length % 5) : 5))" :key="idx">
@@ -59,18 +75,32 @@
 </template>
 <script>
 import { NGrid } from 'naive-ui'
+import { mapState } from 'vuex'
+import 'animate.css'
+import { MusicalNotesOutline, CheckmarkCircleOutline } from '@vicons/ionicons5';
 export default {
     components: {
         NGrid,
+        MusicalNotesOutline,
+        CheckmarkCircleOutline,
     },
     data() {
         return {
+            loadingPercentage: 0,
+            loadingIconShouldOut: false,
+            isLoading: true,
             page: 1,
             followerList: [],
         }
     },
-    created() {
-        this.$http.get(`/api/accounts/following/0/`).then((response) => {
+    computed: {
+        ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
+    },
+    async created() {
+        let t1 = setInterval(() => {
+            this.loadingPercentage += 1
+        }, 300)
+        this.$http.get(`/api/accounts/following/`).then((response) => {
             console.log(response);
             this.followerList = response.data.following.map(follower => ({
                 id: follower.id,
@@ -79,6 +109,25 @@ export default {
                 avatarImg: follower.avatar,
                 isFollowing: true,
             }));
+            if (this.loadingPercentage >= 100) {
+                clearInterval(t1)
+                this.loadingIconShouldOut = true
+                setTimeout(() => {
+                    this.isLoading = false
+                }, 500)
+            } else {
+                let t2 = setInterval(() => {
+                    this.loadingPercentage += 10
+                }, 50)
+                setTimeout(() => {
+                    clearInterval(t1)
+                    clearInterval(t2)
+                    this.loadingIconShouldOut = true
+                    setTimeout(() => {
+                        this.isLoading = false
+                    }, 500)
+                }, 1500)
+            }
         });
     },
     methods: {
@@ -114,6 +163,13 @@ export default {
     font-size: 30px;
     font-weight: bold;
     /* text-align: center; */
+}
+
+.loading-animate {
+    padding-top: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .follower-card {
