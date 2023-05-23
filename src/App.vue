@@ -14,7 +14,7 @@ import Player from "./components/Player.vue";
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
   <background></background>
-  <RouterView @play="play" @playAll="playAll" />
+  <RouterView />
   <!-- <div :style="{'text-align':'center'}"> -->
   <!-- 请直接传入数字(px)(高度可略)-->
   <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->
