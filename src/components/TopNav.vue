@@ -24,6 +24,7 @@
                     }"
                     @mouseover="backToHomeIsHovered = true"
                     @mouseout="backToHomeIsHovered = false"
+                    @click="this.$router.push('/')"
                 >
                     音乐馆
                 </div>
