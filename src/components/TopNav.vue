@@ -3,48 +3,40 @@
         <n-grid x-gap="0">
             <n-gi :span="4">
                 <router-link to="/">
-                    <n-image
-                    width="45"
-                    src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-                    style="padding-left: 4%"
-                    preview-disabled="true"
-                    />
+                    <n-image width="45" src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
+                        style="padding-left: 4%" preview-disabled="true" />
                     <div class="isound-style">iSound</div>
                 </router-link>
             </n-gi>
             <n-gi :span="13">
                 <!-- test -->
-                
+
             </n-gi>
             <n-gi :span="6">
                 <n-grid>
                     <n-gi :span="3" v-if="!this.isLoggedIn"></n-gi>
                     <n-gi :span="15">
                         <div style="padding-top: 3%; padding-right: 3%; padding-left: 7%;">
-                            <n-input
-                                :style="{
-                                    '--n-color': this.colorMode === 'white' ? 'white' : 'black',
-                                    '--n-color-focus': this.colorMode === 'white' ? 'white' : 'black',
-                                    '--n-border-radius': `10px`,
-                                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                                    'border': '1px solid rgb(224, 224, 230)',
-                                    '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')', 
-                                    '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',  
-                                    '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                                }"
-                                type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" 
-                            />
+                            <n-input :style="{
+                                '--n-color': this.colorMode === 'white' ? 'white' : 'black',
+                                '--n-color-focus': this.colorMode === 'white' ? 'white' : 'black',
+                                '--n-border-radius': `10px`,
+                                '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                                'border': '1px solid rgb(224, 224, 230)',
+                                '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                                '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                                '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字"
+                                @keyup.enter="search" />
                         </div>
                     </n-gi>
                     <n-gi :span="3">
                         <div style="padding-top: 25%" class="search-icon-container"
-                            :style="{'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey'}"
-                            @mouseover="this.searchIconIsHovered = true"
-                            @mouseout="this.searchIconIsHovered = false"
-                        >
-                            <n-icon :component="SearchOutline" size="27px" @click="search" />  
-                        </div>  
+                            :style="{ 'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey' }"
+                            @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
+                            <n-icon :component="SearchOutline" size="27px" @click="search" />
+                        </div>
                     </n-gi>
                     <n-gi :span="3">
                         <div class="color-icon-container">
@@ -55,8 +47,9 @@
                             >
                                 <template #trigger>
                                     <div style="color: lightgrey">
-                                        <n-icon size="27px" v-if="this.colorMode === 'white'" @click="changeColorMode"><moon-outline/></n-icon>
-                                        <n-icon size="27px" v-else @click="changeColorMode"><sunny-outline/></n-icon>
+                                        <n-icon size="27px" v-if="this.colorMode === 'white'"
+                                            @click="changeColorMode"><moon-outline /></n-icon>
+                                        <n-icon size="27px" v-else @click="changeColorMode"><sunny-outline /></n-icon>
                                     </div>
                                 </template>
                                 <template #default>
@@ -67,25 +60,23 @@
                                             默认
                                         </span>
                                         <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
-                                            <button 
-                                                class="round-button" 
-                                                :style="{'background-color': 'rgb(' + c + ')', 'border': '1px solid rgb(' + c + ')'}"
-                                                @click="this.setAccentColor(c)"
-                                            ></button>
+                                            <button class="round-button"
+                                                :style="{ 'background-color': 'rgb(' + c + ')', 'border': '1px solid rgb(' + c + ')' }"
+                                                @click="this.setAccentColor(c)"></button>
                                             <!-- < :style="{'--n-color': }" @click="this.setAccentColor(c); console.log(c)"/> -->
                                         </span>
                                     </div>
-                                    
+
                                 </template>
                             </n-tooltip>
                         </div>
                     </n-gi>
-                    <n-gi :span="3" v-if="this.isLoggedIn">                
-                        <div style="padding-top: 25%" >
+                    <n-gi :span="3" v-if="this.isLoggedIn">
+                        <div style="padding-top: 25%">
                             <n-badge dot :offset="[-2.5, 7.5]" :value="messageNum" :max="99">
                                 <n-icon :component="MailOutline" size="27px" @click="readMessage" color="lightgray" />
                             </n-badge>
-                        </div> 
+                        </div>
                     </n-gi>
                 </n-grid>
             </n-gi>
@@ -97,21 +88,18 @@
                     <template #trigger>
                         <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
                     </template>
-                    已有账号？请<a style="color:cornflowerblue" @click="showLogin = true">登录</a>；未注册账号？请<a style="color:cornflowerblue" @click="showRegister = true">注册</a>。
-                  </n-tooltip>
+                    已有账号？请<a style="color:cornflowerblue" @click="showLogin = true">登录</a>；未注册账号？请<a
+                        style="color:cornflowerblue" @click="showRegister = true">注册</a>。
+                </n-tooltip>
             </n-gi>
         </n-grid>
     </div>
-    <login-view 
-        :showLogin="showLogin" 
-        @closeLoginWindow="showLogin = false" 
-        @switch="showLogin = false; showRegister = true"
-        @login="toLogIn"
-    ></login-view>
+    <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false"
+        @switch="showLogin = false; showRegister = true" @login="toLogIn"></login-view>
     <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view>
     <modify-user-message-view :showModifyUserMessage="showModifyUserMessage"
         @closeModifyWindow="showModifyUserMessage = false"></modify-user-message-view>
-  </template>
+</template>
   
 <script>
 import { SearchOutline, MailOutline, SunnyOutline, MoonOutline } from '@vicons/ionicons5'
@@ -119,9 +107,10 @@ import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import { mapState, mapMutations } from 'vuex';
 import ModifyUserMessageView from '../views/ModifyUserMessageView.vue';
+import { changeColorMode } from '/src/colorMode'
 import { message } from 'ant-design-vue';
-  
-  export default {
+
+export default {
     name: 'TopNav',
     components: {
         SearchOutline,
@@ -156,38 +145,38 @@ import { message } from 'ant-design-vue';
             MailOutline,
             messageNum: ref(0), //每个用户收到的信息数
             options: [
-            {
-                label: "个人主页",
-                props: {
-                    onClick: () => {
-                        this.$router.push('/home')
-                        console.log('user page')
+                {
+                    label: "个人主页",
+                    props: {
+                        onClick: () => {
+                            this.$router.push('/home')
+                            console.log('user page')
+                        }
+                    }
+                },
+                {
+                    label: "历史记录",
+                    props: {
+                        onClick: () => {
+                            this.$router.push('/history')
+                            console.log('history')
+                        }
+                    }
+                },
+                {
+                    label: "登出",
+                    props: {
+                        onClick: () => {
+                            this.setLogState(false)
+                            console.log('logout')
+                        }
                     }
                 }
-            },
-            {
-                label: "历史记录",
-                props: {
-                    onClick: () => {
-                        this.$router.push('/history')
-                        console.log('history')
-                    }
-                }
-            },
-            {
-                label: "登出",
-                props: {
-                    onClick: () => {
-                        this.setLogState(false)
-                        console.log('logout')
-                    }
-                }
-            }
-          ],
+            ],
         }
     },
     methods: {
-        ...mapMutations(['setLogState', 'setAccentColor', 'changeColorMode']),
+        ...mapMutations(['setLogState', 'setAccentColor']),
         search() {
             if (this.searchValue.trim().length !== 0) {
                 console.log(`searchValue: ${this.searchValue}`)
@@ -202,6 +191,7 @@ import { message } from 'ant-design-vue';
         readMessage() {
             this.showModifyUserMessage = true;
         },
+        changeColorMode
     }
 };
 </script>
@@ -212,9 +202,12 @@ import { message } from 'ant-design-vue';
     padding-bottom: 7px;
     /*border: dashed;*/
 }
+
 .router-link-active {
-    text-decoration: none; /* 去除 router-link 中文字的下划线 */
+    text-decoration: none;
+    /* 去除 router-link 中文字的下划线 */
 }
+
 .isound-style {
     display: inline;
     vertical-align: text-bottom;
@@ -224,6 +217,7 @@ import { message } from 'ant-design-vue';
     font-size: 35px;
     padding-left: 5%;
 }
+
 .search-icon-container:hover {
     cursor: pointer;
 }
@@ -233,12 +227,14 @@ import { message } from 'ant-design-vue';
 .color-icon-container:hover {
     cursor: pointer;
 }
+
 .color-btn {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    
+
 }
+
 .round-button {
     margin-left: 4px;
     margin-right: 4px;
