@@ -47,7 +47,7 @@ export default {
             const startIndex = (this.pageArgs.currentPage - 1) * this.pageArgs.pageSize
             if (this.position === 'CollectionView') {
                 for (let i = 0; i < rows.length; i++) {
-                    rows[i]['imageSize'] = [150,150]
+                    rows[i]['imageSize'] = 150
                 }
             }
             return rows.slice(startIndex, startIndex + this.pageArgs.pageSize)
