@@ -44,9 +44,6 @@
                 { immediate: true },
             );
         },
-        mounted() {
-            console.log(this.lyricsRef.value.children);
-        },
         setup() {
             return {
                 handlePositiveClick(comment) {
@@ -81,7 +78,7 @@
                 lyricsIndex: 0,
                 lyricsObjArr: [],
                 getRGBString,
-                backgroundColorString: getBackgroundColorString(globalThemeColor,225),
+                backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
             }
         },
         methods: {
@@ -163,7 +160,7 @@
             timeupdate(currentTime) {
                 for (let i = 0; i < this.lyricsObjArr.length; i++) {
                     if (currentTime > parseInt(this.lyricsObjArr[i].time)) {
-
+                        this.lyricsIndex = i;
                     }
                 }
             },
@@ -333,13 +330,7 @@
                         </template>
                         <template #content>
                         <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px;">
-                            <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
-                                <div style="  word-wrap: break-word;">
-                                    <span>
-                                        {{ comment.content }}
-                                    </span>
-                                </div>
-                            </n-ellipsis>
+                            {{ comment.content }}
                         </p>
                         </template>
                         <template #datetime>
