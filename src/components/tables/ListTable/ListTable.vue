@@ -1,47 +1,50 @@
 <script>
 import listTableBody from './ListTableBody.vue'
+import 'animate.css'
 export default {
+    mounted() {
+        let key = 0;
+        if (this.position === 'CollectionView') {
+            this.$http.get(`/api/playlist/detail/${this.currentListId}`).then((response) => {
+
+                this.songData = response.data.music_set.map((music) => ({
+                    key: key++,//在当前列表的序号
+                    id: music.id,//歌曲总表的序号
+                    name: music.name,
+                    singer: music.artist,
+                    length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
+                    isliked: music.is_like,
+                    isCollected: music.is_favorite,
+                    imgSrc: music.cover,
+                    showCollection: false
+                }));
+                this.isReady = true;
+            });
+        }
+        else if (this.position === 'PublicView') {//公开页面,假设是要获取所有歌曲
+            this.$http.get(`/api/index/`).then((response) => {
+                this.songData = response.data.music_set.map((music) => ({
+                    key: key++,
+                    id: music.id,
+                    name: music.name,
+                    singer: music.artist,
+                    length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
+                    isliked: music.is_like,
+                    isCollected: music.is_favorite,
+                    imgSrc: music.cover,
+                    showCollection:false
+                }));
+                this.isReady = true;
+            });
+        }
+        else {//用户的播放记录
+
+        }
+    },
     data() {
         return {
-            songData: [{
-                key: 0,
-                name: '只因你太美',
-                singer: '蔡只因',
-                length: '3:40',
-                isLiked: false,
-                isCollected: false,
-                CollectedLists: [],
-                imgSrc: "/src/assets/song5.png"
-            },
-            {
-                key: 1,
-                name: '给自己的情书',
-                singer: '王菲',
-                length: '4:05',
-                isLiked: false,
-                isCollected: false,
-                CollectedLists: [],
-                imgSrc: "/src/assets/song2.jpg"
-            }, {
-                key: 2,
-                name: 'Yesterday Once More',
-                singer: 'Carpenters',
-                length: '4:24',
-                isLiked: false,
-                isCollected: false,
-                CollectedLists: [],
-                imgSrc: "/src/assets/song3.jpg"
-            }, {
-                key: 3,
-                name: '守时',
-                singer: '王菲',
-                length: '3:56',
-                isLiked: false,
-                isCollected: false,
-                CollectedLists: [],
-                imgSrc: "/src/assets/song4.jpg"
-            },],
-            currentListId: 0//当前所在的收藏夹ID
+            songData: [],
+            isReady: false
         }
     },
     methods: {
@@ -60,19 +63,20 @@ export default {
         //收藏全部歌曲
         handleCollectAll(keys, listId) {//将选中的歌曲添加到listId中
             for (let i = 0; i < keys.length; i++) {
-                this.handleCollect(keys[i],listId)
+                this.handleCollect(keys[i], listId)
             }
         },
         //收藏单首歌曲
         handleCollect(key, listId) {
             if (this.songData[key].CollectedLists.indexOf(listId) < 0) {
-            this.songData[key].CollectedLists.push(listId)
-            this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
+                this.songData[key].CollectedLists.push(listId)//todo:提交到服务器端
+                this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
             }
             this.cleanChangeReaction()
         },
+        //在收藏夹页面，在本收藏夹重新收藏
         handleRecollect(key) {
-            this.handleCollect(key,this.currentListKey)
+            this.handleCollect(key, this.currentListId)
         },
         //在公共区域，清空所有对应收藏夹中的歌曲记录
         handleDiscollectOnPublic(key) {
@@ -104,16 +108,49 @@ export default {
             require: true,
             default: 'CollectionView',
             validator: (value) => {
-                return ['CollectionView','PublicView'].includes(value)
+                return ['CollectionView', 'PublicView', 'RecordView'].includes(value)
+            }
+        },
+        //若在CollectionView,请传入所在的收藏夹ID
+        currentListId: {
+            type: Number,
+        },
+        //若在PublicView,请传入本歌曲需要显示的参数，数组形式
+        publicSpace: {
+            type: Array
+        },
+        viewMode: {
+            type: String,
+            default: 'user',
+            validator: (value) => {
+                return ['user','admin'].includes(value)
             }
         }
     }
 
 }
 </script>
-
 <template>
-    <list-table-body :currentListId="currentListId" @likeAll="handleLikeAll" @like="handleLike" @collectAll="handleCollectAll" @collect="handleCollect"
-        :songData="songData" :viewMode="viewMode" :position="position" @discollectOnPublic="handleDiscollectOnPublic"
-        @discollectOnCollection="handleDiscollectOnCollection" @recollect="handleRecollect"></list-table-body>
+    <template v-if="isReady === true">
+        <list-table-body :currentListId="currentListId" @likeAll="handleLikeAll" @like="handleLike"
+            @collectAll="handleCollectAll" @collect="handleCollect" :songData="songData" :viewMode="viewMode"
+            :position="position" @discollectOnPublic="handleDiscollectOnPublic"
+            @discollectOnCollection="handleDiscollectOnCollection" @recollect="handleRecollect" :style="{
+                'animation': isReady === true ? 'fadeInUp' : 'none',
+                'animation-duration': '2s',
+            }"></list-table-body>
+    </template>
+
+    <template v-else>
+        <div class="unready_box"></div>
+    </template>
 </template>
+<style scoped>
+list-table-body {
+    transition: opacity cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
+
+.unready_box {
+    height: 300px;
+}
+</style>

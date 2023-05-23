@@ -14,11 +14,10 @@ export default {
         let headChange = false//模态框标题是否转换
         let showCollection = false//表头的收藏夹是否显示模态框(表项的在每一行定义)
         let isCollectChanged = false
-        const themeColor = globalThemeColor
-        const HeadBackgroundColorString = getBackgroundColorString(themeColor, 225)
-        const DataBackgroundColorString = getBackgroundColorString(themeColor, 180)
+        const HeadBackgroundColorString = getBackgroundColorString(globalThemeColor)
+        const DataBackgroundColorString = getBackgroundColorString(globalThemeColor)
         const BackgroundColorString = DataBackgroundColorString
-        const fontColorString = getFontColorString(themeColor)
+        const fontColorString = getFontColorString(globalThemeColor)
         watch(globalThemeColor, () => {
             const tempFontColorString = getFontColorString(globalThemeColor)
             const tempBackgroundColorString = getBackgroundColorString(globalThemeColor)
@@ -31,6 +30,7 @@ export default {
             document.documentElement.style.setProperty('--my-border-hover', `1px solid ${getRGBString(tempFontColorString.value, 0.6)}`)
             document.documentElement.style.setProperty('--my-border-active', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
             document.documentElement.style.setProperty('--my-border-focus', `1px solid ${getRGBString(tempFontColorString.value, 0.8)}`)
+            // document.documentElement.style.setProperty('--my-shadow', `0 0 1px 1px ${getRGBString(tempFontColorString.value, 0.5)}`)
             document.documentElement.style.setProperty('--my-shadow-active', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.6)}`)
             document.documentElement.style.setProperty('--my-shadow-focus', `0 0 0 2px ${getRGBString(tempFontColorString.value, 0.7)}`)
             document.documentElement.style.setProperty('--my-td-color-checked', `${getRGBString(tempFontColorString.value, 0.6)}`)
@@ -59,6 +59,7 @@ export default {
                             if (viewMode === 'user') {
                                 changeThemeColorByImage(row.imgSrc)
                             }
+                            this.$EventBus.emit('play', row.id)
                         }
                     })
                 }
@@ -75,9 +76,9 @@ export default {
                 },
                 key: 'name',
                 resizable: true,
-                maxWidth: '900px',
+                maxWidth: '1000px',
                 sorter: 'default',
-                render(row) {
+                render: (row) => {
                     return h(NEllipsis, {
                         'line-clamp': 1,
                         'tooltip': {
@@ -98,6 +99,7 @@ export default {
                             if (viewMode === 'user') {
                                 changeThemeColorByImage(row.imgSrc)
                             }
+                            this.$EventBus.emit('play', row.id)
                         }
                     }, row.name)])
                 }
@@ -192,14 +194,17 @@ export default {
                                 }
                             })
                         }),
-                        default: () => h('span',
-                            {
-                                style: {
-                                    'font-size': '12px'
-                                }
-                            },
-                            ['从"我喜欢"移除 / 添加到"我喜欢"'])
-                    }),
+                        default: () => {
+                            return h('span',
+                                {
+                                    style: {
+                                        'font-size': '12px'
+                                    }
+                                },
+                                ['从"我喜欢"移除 / 添加到"我喜欢"'])
+                        }
+                    })
+                ,
                 style: {
                     "text-align": "center"
                 },
@@ -239,17 +244,19 @@ export default {
                                 {
                                     icon: () => h(Heart12Filled, {
                                         style: {
-                                            'color': row.isLiked ? 'rgb(204,12,32)' : 'white'
+                                            'color': row.isLiked ? 'rgb(204,12,32)' : 'rgb(235,245,235)'
                                         }
                                     })
                                 }),//"我喜欢按钮"
-                            default: () => h('span',
-                                {
-                                    style: {
-                                        'font-size': '12px'
-                                    }
-                                },
-                                [row.isLiked ? '从"我喜欢"移除' : '添加到"我喜欢"'])
+                            default: () => {
+                                return h('span',
+                                    {
+                                        style: {
+                                            'font-size': '12px'
+                                        }
+                                    },
+                                    [row.isLiked ? '从"我喜欢"移除' : '添加到"我喜欢"'])
+                            }
                         })
 
                 }
@@ -292,13 +299,15 @@ export default {
                                     }
                                 })
                             }),
-                            default: () => h('span',
-                                {
-                                    style: {
-                                        'font-size': '12px'
-                                    }
-                                },
-                                ['添加到收藏夹'])
+                            default: () => {
+                                return h('span',
+                                    {
+                                        style: {
+                                            'font-size': '12px'
+                                        }
+                                    },
+                                    ['添加到收藏夹'])
+                            }
                         }),
                     //标题模态框
                     h(NModal, {
@@ -335,9 +344,9 @@ export default {
                                     this.isCollectChanged = true
                                     this.headChange = true
                                     //先设置所有项的isStarFilled和isCollectChanged
-                                    for (let i = 0; i < this.selectedEntries.length; i++){
+                                    for (let i = 0; i < this.selectedEntries.length; i++) {
                                         this.songData[i].isCollectChanged = true
-                                        this.songData[i].isStarFilled=true
+                                        this.songData[i].isStarFilled = true
                                     }
                                     setTimeout(() => {
                                         this.showCollection = false
@@ -394,20 +403,22 @@ export default {
                                 {
                                     icon: () => h(Star12Filled, {
                                         style: {
-                                            'color': row.isStarFilled === true ? 'rgb(255, 230, 120)' : 'white'
+                                            'color': row.isStarFilled === true ? 'rgb(255, 230, 120)' : 'rgb(235,245,235)'
                                         }
                                     }),
                                 }),//收藏按钮
-                            default: () => h('span',
-                                {
-                                    style: {
-                                        'font-size': '12px',
-                                    }
-                                },
-                                [row.isCollected ? '从"收藏夹"移除' : '添加到"收藏夹"']),
+                            default: () => {
+                                return h('span',
+                                    {
+                                        style: {
+                                            'font-size': '12px',
+                                        }
+                                    },
+                                    [row.isCollected ? '从"收藏夹"移除' : '添加到"收藏夹"'])
+                            },
                             // 
                         }), h(NModal, {
-                            show: row['showCollection'],
+                            show: row.showCollection,
                             'on-mask-click': () => {
                                 row.showCollection = false
                             },
@@ -521,7 +532,7 @@ export default {
             },
         ]//表头和表项
         return {
-            themeColor, HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
+            HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
             isSelected, selectedEntries, columns, getRGBString, h, BackgroundColorString, headChange,
             showCollection, isCollectChanged
         }
@@ -552,7 +563,7 @@ export default {
             require: true,
             default: 'CollectionView',
             validator: (value) => {
-                return ['CollectionView', 'PublicView'].includes(value)
+                return ['CollectionView', 'PublicView', 'RecordView'].includes(value)
             }
         },
         currentListId: {
@@ -637,9 +648,10 @@ export default {
             }]
         }" @update:checked-row-keys="handleCheck" class="data-table" :style="{
     // 调节字体、背景、边框颜色
+    '--n-border-color': getRGBString(fontColorString,0.3,'background',viewMode),
     '--n-loading-color': getRGBString(fontColorString, 0.5, 'font', viewMode),
     '--n-th-text-color': getRGBString(fontColorString, 1, 'font', viewMode),
-    '--n-td-text-color': getRGBString(fontColorString, 0.8, 'font', viewMode),
+    '--n-td-text-color': getRGBString(fontColorString, 1, 'font', viewMode),
     '--n-th-icon-color': getRGBString(fontColorString, 0.5, 'font', viewMode),
     '--n-th-icon-color-active': getRGBString(fontColorString, 1, 'font', viewMode),
     '--n-td-color': getRGBString(HeadBackgroundColorString, 0.4, 'background', viewMode),
@@ -671,6 +683,7 @@ export default {
     --my-border-active: none;
     --my-border-focus: none;
     /* 输入框阴影 */
+    --my-shadow: none;
     --my-shadow-active: none;
     --my-shadow-focus: none;
     /* 选择框样式 */
@@ -734,19 +747,29 @@ export default {
 :deep(.n-data-table-th .n-checkbox-box) {
     --n-color-checked: var(--my-th-color-checked);
     --n-border-radius: 5px;
+    --n-border-focus: var(--my-border-focus);
+    /* --n-box-shadow: var(--my-shadow); */
+    --n-box-shadow-focus: var(--my-shadow-focus);
+    --n-box-shadow-active: var(--my-shadow-active);
 }
 
 /* 数据的选择框样式 */
 :deep(.n-data-table-td .n-checkbox-box) {
     --n-color-checked: var(--my-td-color-checked);
     --n-border-radius: 10px;
+    --n-border-focus: var(--my-border-focus);
+    /* --n-box-shadow: var(--my-shadow); */
+    --n-box-shadow-focus: var(--my-shadow-focus);
+    --n-box-shadow-active: var(--my-shadow-active);
 }
 
 :deep(.n-data-table-th .n-checkbox-box__border) {
     --n-border-checked: var(--my-th-border-checked);
+    --n-border: none;
 }
 
 :deep(.n-data-table-td .n-checkbox-box__border) {
     --n-border-checked: var(--my-td-border-checked);
+    --n-border: none
 }
 </style>

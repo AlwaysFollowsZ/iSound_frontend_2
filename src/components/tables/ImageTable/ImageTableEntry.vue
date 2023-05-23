@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref} from 'vue'
+import { defineProps, ref,computed} from 'vue'
 import { NButton, NEllipsis, NInput, NIcon, NIconWrapper, NTooltip, NPopover,NConfigProvider } from 'naive-ui'
 import { MusicNote220Regular } from '@vicons/fluent' 
 import { LibraryMusicOutlined } from '@vicons/material'
@@ -40,6 +40,7 @@ const { Key, Type, imagePath, songCount, Name, imageSize, handleClick } = define
 })
 const themeColor = ref([])
 getThemeColorByImage(imagePath,themeColor)
+
 const fontSize = imageSize/12
 const fontColorString = getFontColorString(themeColor)
 const themeColorString = getBackgroundColorString(themeColor)
