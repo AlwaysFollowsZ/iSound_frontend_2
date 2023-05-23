@@ -31,7 +31,7 @@
                 <n-grid>
                     <n-gi :span="1"></n-gi>
                     <n-gi :span="22">
-                        <span class="modify-title">我的消息</span>
+                        <span class="modify-title"><h3 class="message-card-title">我的消息</h3></span>
                     </n-gi>
                     <n-gi :span="1">
                         <div class="close-message-modify">                        
@@ -55,6 +55,17 @@
 }
 .close-message-modify {
     margin-right: 0px;
+    margin-top: 0px;
+}
+.message-card-title {
+    display: flex;
+    font-weight: bold;
+}
+.modify-title {
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 0px;
 }
 </style>

@@ -90,7 +90,7 @@
                     </n-gi>
                     <n-gi :span="3" v-if="this.isLoggedIn">
                         <div style="padding-top: 25%">
-                            <n-badge dot :offset="[-2.5, 7.5]" :value="messageNum" :max="99">
+                            <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
                                 <n-icon :component="MailOutline" size="27px" @click="readMessage" color="lightgray" />
                             </n-badge>
                         </div>
@@ -141,6 +141,24 @@ export default {
     computed: {
         ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
     },
+    created() {
+        this.$http.get('/api/message/of/0/').then((response) => {
+            if (response.data.unread == 0) {
+                this.showMessage = false;
+            }
+            else {
+                this.showMessage = true;
+            }
+        });
+        this.$EventBus.on('setShowMessage', (unread) => {
+            if (unread == 0) {
+                this.showMessage = false;
+            }
+            else {
+                this.showMessage = true;
+            }
+        });
+    },
     data() {
         return {
             accentColorChoices: [
@@ -161,7 +179,7 @@ export default {
             backToHomeIsHovered: false,
             SearchOutline,
             MailOutline,
-            messageNum: ref(0), //每个用户收到的信息数
+            showMessage: ref(true),
             options: [
                 {
                     label: "个人主页",
