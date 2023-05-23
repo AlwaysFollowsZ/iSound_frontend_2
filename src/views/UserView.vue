@@ -48,9 +48,11 @@
                                     <fan-list-view />
                                 </n-tab-pane>
                                 <template #suffix>
-                                    <flower-outline style="width: 20px;"/>粉丝数：
+                                    <!-- <flower-outline style="width: 20px;"/> -->
+                                    粉丝数:{{ this.fansList.length }}
                                     <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd"/>
-                                    <flash-outline style="width: 20px;"/> 关注数：
+                                    <!-- <flash-outline style="width: 20px;"/>  -->
+                                    关注数:{{ this.followingList.length }}
                                 </template>
                             </n-tabs>
                         </div>
@@ -106,11 +108,11 @@ export default {
             email: '',
             avatarUrl: '',
             avatarFile: '',
+            // fansNum: '',
+            // followingNum: '',
+            fansList: [],
+            followingList: [],
         }
-    },
-    props: {
-        fansList: [],
-        followerList: [],
     },
     created() {
         this.$http.get('/api/accounts/detail/0/').then(response => {
@@ -122,6 +124,24 @@ export default {
             this.avatarUrl = this.avatarFile;
         }).catch(error => {
             console.error(error);
+        });
+        this.$http.get(`/api/accounts/fans/0/`).then((response) => {
+            console.log(response);
+            this.fansList = response.data.fans.map(fan => ({
+                id: fan.id,
+                name: fan.username,
+                bio: fan.profile,
+                avatarImg: fan.avatar,
+            }));
+        });
+        this.$http.get(`/api/accounts/following/0/`).then((response) => {
+            console.log(response);
+            this.followingList = response.data.following.map(following => ({
+                id: following.id,
+                name: following.username,
+                bio: following.profile,
+                avatarImg: following.avatar,
+            }));
         });
     },
     methods: {
