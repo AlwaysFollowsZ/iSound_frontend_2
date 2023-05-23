@@ -27,8 +27,7 @@
                                 '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字"
-                                @keyup.enter="search" />
+                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" />
                         </div>
                     </n-gi>
                     <n-gi :span="3">
@@ -39,12 +38,9 @@
                         </div>
                     </n-gi>
                     <n-gi :span="3">
-                        <div class="color-icon-container">
-                            <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }"
-                                placement="bottom-start"
-                                trigger="hover"
-                                @update:show="handleUpdateShow"
-                            >
+                        <div class="color-icon-container" style="padding-top: 25%">
+                            <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }" placement="bottom"
+                                trigger="hover" @update:show="handleUpdateShow">
                                 <template #trigger>
                                     <div style="color: lightgrey">
                                         <n-icon size="27px" v-if="this.colorMode === 'white'"
@@ -53,12 +49,7 @@
                                     </div>
                                 </template>
                                 <template #default>
-                                    <div >
-                                        <span class="choose-color-default"
-                                            @click="this.setAccentColor(this.colorMode === 'white' ? '0,0,0' : '255,255,255')"
-                                        >
-                                            默认
-                                        </span>
+                                    <div>
                                         <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
                                             <button class="round-button"
                                                 :style="{ 'background-color': 'rgb(' + c + ')', 'border': '1px solid rgb(' + c + ')' }"
@@ -167,8 +158,9 @@ export default {
                     label: "登出",
                     props: {
                         onClick: () => {
-                            this.setLogState(false)
-                            console.log('logout')
+                            this.setLogState(false);
+                            this.handleLogout();
+                            console.log('logout');
                         }
                     }
                 }
@@ -190,6 +182,16 @@ export default {
         },
         readMessage() {
             this.showModifyUserMessage = true;
+        },
+        handleLogout() {
+            this.$http.post('/api/accounts/logout/').then(response => {
+                console.log(response);
+                if (response.data.code == '0') {
+                    console.log('logout succeed');
+                } else if (response.data.code == '-1') {
+                    console.log('logout failed');
+                }
+            });
         },
         changeColorMode
     }
@@ -221,9 +223,7 @@ export default {
 .search-icon-container:hover {
     cursor: pointer;
 }
-.color-icon-container {
-    padding-top: 20%;
-}
+
 .color-icon-container:hover {
     cursor: pointer;
 }
@@ -242,13 +242,6 @@ export default {
     height: 16px;
     border-radius: 50%;
     line-height: 16px;
-    cursor: pointer;
-}
-.choose-color-default {
-    text-decoration: underline;
-    margin-right: 3px;
-}
-.choose-color-default:hover {
     cursor: pointer;
 }
 </style>
