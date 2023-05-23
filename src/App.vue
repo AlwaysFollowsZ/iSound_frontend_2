@@ -1,27 +1,27 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
-import { backgroundColor, getRGBString } from '/src/colorMode';
-import HelloWorld from './components/HelloWorld.vue';
-import ImageTable from './components/tables/ImageTable/ImageTable.vue';
-import MessageItem from './components/message/MessageItem.vue';
-import MessageSend from './components/message/MessageSend.vue';
-import TopNav from './components/TopNav.vue';
-import ListTable from './components/tables/ListTable/ListTable.vue';
-import Player from './components/Player.vue';
+import { RouterLink, RouterView } from "vue-router";
+import { backgroundColor, getRGBString } from "/src/colorMode";
+import HelloWorld from "./components/HelloWorld.vue";
+import ImageTable from "./components/tables/ImageTable/ImageTable.vue";
+import MessageItem from "./components/message/MessageItem.vue";
+import MessageSend from "./components/message/MessageSend.vue";
+import TopNav from "./components/TopNav.vue";
+import ListTable from "./components/tables/ListTable/ListTable.vue";
+import Player from "./components/Player.vue";
 </script>
 <template>
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-  <div :style="{ 'background': backgroundColor }" class='page_background'> </div>
-  <RouterView @play="play" @playAll="playAll" />
+  <div :style="{ background: backgroundColor }" class="page_background"></div>
+  <RouterView />
   <!-- <div :style="{'text-align':'center'}"> -->
   <!-- 请直接传入数字(px)(高度可略)-->
-  <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
+  <!-- <image-table :table-size="[1000]" :position="'HomeView'"></image-table>
   <list-table :position="'CollectionView'" :currentListId="3"></list-table>
-  <list-table :position="'PublicView'" :viewMode="'user'"></list-table>
+  <list-table :position="'PublicView'" :viewMode="'user'"></list-table> -->
 
-<temp></temp>
+  <!-- <temp></temp> -->
   <Player />
 </template>
 
