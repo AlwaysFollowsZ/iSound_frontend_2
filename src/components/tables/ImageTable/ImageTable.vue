@@ -5,11 +5,11 @@ import ImageTableEntry from './ImageTableEntry.vue'
 import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor } from '/src/colorMode'
 import { Rows } from './ImageRowData'
 import { backgroundColor } from '../../../colorMode'
-
+// 说明：单个table组件。所有元素之间水平对齐。适用于局部布局
 export default {
     data() {
         const fontColorString = getFontColorString(globalThemeColor)
-        const defaultBGString=getBackgroundColorString(globalThemeColor)
+        const defaultBGString = getBackgroundColorString(globalThemeColor)
         //在这里设置需要使用:deep更改的穿透样式，并在:root中定义相应变量
         watch(globalThemeColor, () => {
             const tempFontColorString = getFontColorString(globalThemeColor)
@@ -47,7 +47,7 @@ export default {
             const startIndex = (this.pageArgs.currentPage - 1) * this.pageArgs.pageSize
             if (this.position === 'CollectionView') {
                 for (let i = 0; i < rows.length; i++) {
-                    rows[i]['imageSize'] = [150,150]
+                    rows[i]['imageSize'] = [150, 150]
                 }
             }
             return rows.slice(startIndex, startIndex + this.pageArgs.pageSize)
@@ -59,6 +59,7 @@ export default {
             type: String,
             default: getBackgroundColorString(globalThemeColor)
         },
+        //table的大小(宽和高)
         tableSize: {
             type: Array,
             default: ['1000',]
@@ -69,10 +70,12 @@ export default {
             type: String,
             default: 'PersonalView'
         },
+        //歌曲总数
         count: {
             type: Number,
-            default: 10,
+            default: Rows.length
         },
+        //数据来源
         rows: {
             type: JSON.type,
             default: Rows
@@ -90,14 +93,15 @@ export default {
 </script>
 <template>
     <div class="image_table" :style="{
-        'background-color': getRGBString(BackgroundColorString,0.2),
+        'background-color': getRGBString(BackgroundColorString, 0.2),
         'border-radius': '50px',
         'width': `${tableSize[0]}px`,
         'height': `${tableSize[1]}px`
     }">
         <n-scrollbar v-if="['PersonalView', 'CollectionView'].includes(position)" class="image_table_list">
             <template v-for="data in currentPageData" :key="data.Key">
-                <image-table-entry v-bind="data" style="vertical-align: middle;" @clickEntry="handleClick"></image-table-entry>
+                <image-table-entry v-bind="data" style="vertical-align: middle;"
+                    @clickEntry="handleClick"></image-table-entry>
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
@@ -156,17 +160,17 @@ export default {
         <template v-else>
             <div class="list_top_nav">
                 <n-button class="more_button" :style="{
-                    '--n-color': getRGBString(BackgroundColorString,0.15),
+                    '--n-color': getRGBString(BackgroundColorString, 0.15),
                     '--n-color-hover': getRGBString(BackgroundColorString, 0.4),
                     '--n-color-pressed': getRGBString(BackgroundColorString, 0.6),
                     '--n-color-focus': getRGBString(BackgroundColorString, 0.1),
                     '--n-border': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
                     '--n-border-radius': '10px',
-                    '--n-border-hover': `3px solid ${getRGBString(BackgroundColorString,0.5)}`,
+                    '--n-border-hover': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
                     '--n-border-pressed': `3px solid ${getRGBString(BackgroundColorString, 0.3)})`,
                     '--n-border-focus': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
                     '--n-text-color': getRGBString(fontColorString, 0.6),
-                    '--n-text-color-hover':  getRGBString(fontColorString, 0.8) ,
+                    '--n-text-color-hover': getRGBString(fontColorString, 0.8),
                     '--n-text-color-pressed': getRGBString(fontColorString, 1),
                     '--n-text-color-focus': getRGBString(fontColorString, 0.6),
                     '--n-ripple-color': getRGBString(fontColorString, 0.5),
@@ -212,7 +216,7 @@ export default {
 }
 
 .image_table {
-    margin: 30px 30px;
+    margin: 0;/*设置为0，由父级设置padding*/
     padding: 20px 0px 0 0px;
     display: inline-block;
     overflow: hidden;

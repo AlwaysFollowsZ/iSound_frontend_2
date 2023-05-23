@@ -72,7 +72,7 @@ export default {
 
 <template>
     <div class='page_background bg-pan-bottom' :style="{
-        'transition': `height cubic-bezier(0.165, 0.84, 0.44, 1) 1s ,background-color linear ${transitionTime}s`,
+        'transition': `height  cubic-bezier(0.19, 1, 0.22, 1) 1s ,background-color linear ${transitionTime}s`,
         'background-color': getRGBString(currentColor.join(','))
     }"></div>
 </template>
