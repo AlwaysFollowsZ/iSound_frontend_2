@@ -92,7 +92,7 @@
                                                     {{ item.music.artist }}
                                                 </div>
                                                 <span class="song-upload-username" :style="{'color': this.colorMode === 'white' ? 'grey' : 'lightgrey'}">
-                                                    {{ item.music.up }}
+                                                    {{ item.music.up.username }}
                                                 </span>
                                                 <span class="song-tags" :style="{'color': this.colorMode === 'white' ? 'grey' : 'lightgrey'}">
                                                     <!-- {{ item.tags }} -->
@@ -113,13 +113,25 @@
                 </div>
             </div>
             <div v-else>
-                你还没有听歌记录。
+                <div class="no-history-container animate__animated animate__zoomIn" 
+                    :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}"
+                >
+                    你还没有听歌记录
+                </div>
+                <div style="padding-left: 8%; font-size: 30px; font-weight: bold; margin-top: 1%;margin-bottom: 1%; animation-delay: 0.3s"
+                    :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}"
+                    class="animate__animated animate__slideInLeft"
+                >
+                    为你推荐
+                </div>
+                <div><recommend-for-you/></div>
             </div>
         </div>
     </div>
 </template>
 <script>
 import { Alarm, MusicalNotesOutline, CheckmarkCircleOutline } from '@vicons/ionicons5';
+import RecommendForYou from '/src/components/RecommendForYou.vue'
 import { mapState } from 'vuex'
 import 'animate.css'
 export default {
@@ -128,6 +140,7 @@ export default {
         Alarm,
         MusicalNotesOutline,
         CheckmarkCircleOutline,
+        RecommendForYou,
     },
     computed: {
         ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
@@ -214,7 +227,7 @@ export default {
 </script>
 <style scoped>
 .page-title-container {
-    margin-bottom: 2%;
+    margin-bottom: 1%;
 }
 .loading-animate {
     padding-top: 3%;
@@ -255,4 +268,11 @@ export default {
     font-weight: 350;
     /* position: absolute;
     bottom: 0; */
-}</style>
+}
+.no-history-container {
+    width: 100%;
+    font-size: 25px;
+    font-weight: 400;
+    text-align: center;
+}
+</style>
