@@ -36,7 +36,7 @@
                         </router-link>
                         <div class="follower-card-bio">
                             <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
-                                <div style="  word-wrap: break-word;">
+                                <div style="word-wrap: break-word;">
                                     <span>
                                         {{ follower.bio }}
                                     </span>
@@ -48,7 +48,7 @@
                         <n-popconfirm v-if="follower.isFollowing" @positive-click="follow(follower)" positive-text="确认"
                             negative-text="取消">
                             <template #trigger>
-                                <n-button strong secondary round type="primary">已关注</n-button>
+                                <n-button strong secondary round type="primary" style="margin-top: 15px;">已关注</n-button>
                             </template>
                             您要确定要取消关注该用户吗？
                         </n-popconfirm>

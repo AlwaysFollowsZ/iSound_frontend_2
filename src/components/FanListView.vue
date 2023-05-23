@@ -20,7 +20,7 @@
         </n-progress>
     </div>
     <div class="fan-list-border" v-else>
-        <div class="card-container" v-for="(fan, idx) in 
+        <div class="fan-container" v-for="(fan, idx) in 
         fansList.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > fansList.length) ? (fansList.length % 5) : 5))"
             :key="idx">
             <div class="fan-card">
@@ -35,7 +35,7 @@
                         </router-link>
                         <div class="fan-card-bio">
                             <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
-                                <div style="  word-wrap: break-word;">
+                                <div style="word-wrap: break-word;">
                                     <span>
                                         {{ fan.bio }}
                                     </span>
@@ -44,8 +44,12 @@
                         </div>
                     </n-gi>
                     <n-gi span="3">
-                        <n-button v-if="fan.isFollowed" strong secondary round type="info" style="margin-top: 15px;"
-                            @click="follow(fan)">已互粉</n-button>
+                        <n-popconfirm v-if="fan.isFollowed" @positive-click="follow(fan)" positive-text="确认" negative-text="取消">
+                            <template #trigger>
+                                <n-button strong secondary round type="info" style="margin-top: 15px;">已互粉</n-button>
+                            </template>
+                            您要确定要取消关注该用户吗？
+                        </n-popconfirm>
                         <n-button v-else strong secondary round style="margin-top: 15px;" @click="follow(fan)">回关</n-button>
                     </n-gi>
                 </n-grid>

@@ -79,6 +79,7 @@ import OtherUserUploadSongView from '../components/OtherUserUploadedSongView.vue
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline, ChevronBack } from '@vicons/ionicons5';
 import { NewspaperOutline, FlowerOutline, FlashOutline } from '@vicons/ionicons5';
 export default {
+    name: 'OtherUserView',
     components: {
         PersonCircleSharp,
         NewspaperOutline,
