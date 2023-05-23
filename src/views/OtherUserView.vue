@@ -59,9 +59,9 @@
                             <other-user-upload-song-view />
                         </n-tab-pane>
                         <template #suffix>
-                            <flower-outline style="width: 20px;" />粉丝数：
+                            <flower-outline style="width: 20px;" />粉丝数:{{ this.userFansNum }}
                             <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd" />
-                            <flash-outline style="width: 20px;" /> 关注数：
+                            <flash-outline style="width: 20px;" /> 关注数:{{ this.userFollowingNum }}
                         </template>
                     </n-tabs>
                 </div>
@@ -98,6 +98,8 @@ export default {
             userAvatar: null,
             userEmail: '',
             userIsFollowed: '',
+            userFansNum: '',
+            userFollowingNum: '',
         }
     },
     created() {
@@ -112,6 +114,8 @@ export default {
                     this.userEmail = response.data.email;
                     this.userAvatar = response.data.avatar;
                     this.userIsFollowed = response.data.is_followed;
+                    this.userFansNum = response.data.fans;
+                    this.userFollowingNum = response.data.following;
                     console.log(response);
                 });
             },
@@ -135,7 +139,7 @@ export default {
                 console.log(response);
             })
         },
-        unFollowUser(user) {
+        unFollowUser() {
             this.$http.post(`/api/follow/${this.userid}/`).then((response) => {
                 console.log(response);
             })

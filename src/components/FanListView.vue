@@ -92,7 +92,7 @@ export default {
         let t1 = setInterval(() => {
             this.loadingPercentage += 1
         }, 300)
-        this.$http.get('/api/accounts/fans/0/').then((response) => {
+        this.$http.get('/api/accounts/fans/').then((response) => {
             console.log(response);
             this.fansList = response.data.fans.map(fan => ({
                 id: fan.id,
