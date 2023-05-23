@@ -34,17 +34,19 @@
                         <div>
                             <span>歌曲文件</span>
                             <n-space>
-                                <n-button dashed @click="uploadFile" @change="handleSongSrcFileChange">
+                                <!-- <n-button dashed @click="uploadFile" @change="handleSongSrcFileChange">
                                     <template #icon><n-icon><arrow-up-outline /></n-icon></template>请上传音频格式文件
-                                </n-button>
+                                </n-button> -->
+                                <input type="file" @change="handleSongSrcFileChange"/>
                             </n-space>
                         </div>
                         <div>
                             <span>歌词文件</span>
                             <n-space>
-                                <n-button dashed @click="uploadFile" @change="handleSongLyricFileChange">
+                                <!-- <n-button dashed @click="uploadFile" @change="handleSongLyricFileChange">
                                     <template #icon><n-icon><arrow-up-outline /></n-icon></template>请上传歌词格式文件
-                                </n-button>
+                                </n-button> -->
+                                <input type="file" @change="handleSongLyricFileChange"/>
                             </n-space>
                         </div>
                         <div>
@@ -79,6 +81,7 @@
   
 <script>
 import { CloseOutline, ArrowUpOutline } from '@vicons/ionicons5'
+import { NInput } from 'naive-ui';
 import { defineComponent, ref } from "vue";
 export default defineComponent({
     name: "UploadSong",
@@ -107,9 +110,10 @@ export default defineComponent({
         }
     },
     components: {
-        CloseOutline,
-        ArrowUpOutline,
-    },
+    CloseOutline,
+    ArrowUpOutline,
+    NInput
+},
     props: {
         goToUploadSong: Boolean,
     },
@@ -123,27 +127,28 @@ export default defineComponent({
         },
         handleSongPageChange(e) {
             this.songPageFile = e.target.files[0];
-            // this.SongPageUrl = URL.createObjectURL(this.songPageFile);
+            this.SongPageUrl = URL.createObjectURL(this.songPageFile);
         },
         handleSongSrcFileChange(e) {
             this.songSrcFile = e.target.files[0];
+            console.log('change');
         },
         handleSongLyricFileChange(e) {
             this.songLyricFile = e.target.files[0];
         },
         submitUpload() {
             let data = new FormData();
-            // data.append('title', this.songName);
-            // data.append('artist', this.songAuthor);
-            // data.append('cover', this.songPageFile);
+            data.append('title', this.songName);
+            data.append('artist', this.songAuthor);
+            data.append('cover', this.songPageFile);
             data.append('source', this.songSrcFile);
-            // data.append('lyrics', this.songLyricFile);
+            data.append('lyrics', this.songLyricFile);
             this.$http.post('/api/music/upload/', data).then(response => {
                 console.log(response);
-                if (response.data.code === '0') {
+                if (response.data.code == '0') {
                     this.closeUWindow();
                     alert('上传歌曲成功!')
-                } else if (response.data.code === '-1') {
+                } else if (response.data.code == '-1') {
                     alert('上传歌曲失败，请重新上传!');
                 }
             });

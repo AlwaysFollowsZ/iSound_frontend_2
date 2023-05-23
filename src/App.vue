@@ -8,36 +8,28 @@ import MessageSend from './components/message/MessageSend.vue';
 import TopNav from './components/TopNav.vue';
 import ListTable from './components/tables/ListTable/ListTable.vue';
 import Player from './components/Player.vue';
-import { ref } from 'vue';
-
-const playerRef = ref();
-
-function play(musicId) {
-  playerRef.value.play(musicId);
-}
-
-function playAll(playlistId) {
-  playerRef.value.playAll(playlistId);
-}
-
 </script>
-·
 <template>
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-    <div :style="{ 'background': backgroundColor }" class='page_background'> </div>
-    <RouterView @play="play" @playAll="playAll" />
-    <!-- <div :style="{'text-align':'center'}"> -->
-      <!-- 请直接传入数字(px)(高度可略)-->
-      <!-- <image-table :table-size="[1000,]"></image-table> -->
-    
-  
+  <div :style="{ 'background': backgroundColor }" class='page_background'> </div>
+  <RouterView @play="play" @playAll="playAll" />
+  <!-- <div :style="{'text-align':'center'}"> -->
+  <!-- 请直接传入数字(px)(高度可略)-->
+  <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
+  <list-table :position="'CollectionView'" :currentListId="3"></list-table>
+  <list-table :position="'PublicView'" :viewMode="'user'"></list-table>
+
+<temp></temp>
   <Player />
- 
 </template>
 
 <style scoped>
+* {
+  scroll-behavior: smooth !important;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -79,7 +71,7 @@ nav a:first-of-type {
   height: 100vh;
   width: 100vw;
   transition: height cubic-bezier(0.165, 0.84, 0.44, 1) 1s,
-              background-color cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+    background-color cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 @media (min-width: 1024px) {

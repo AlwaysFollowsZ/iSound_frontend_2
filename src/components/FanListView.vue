@@ -1,7 +1,7 @@
 <template>
     <div class="fan-list-title">
         全部粉丝
-        <n-divider />
+        <a-divider style="height: 1.8px; background-color: #dddddd"/>
     </div>
     <div class="fan-list-border">
         <div class="fan-container" v-for="(fan, idx) in 
@@ -78,7 +78,7 @@ export default {
     },
 }
 </script>
-<style>
+<style scoped>
 .fan-list-title {
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;

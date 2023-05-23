@@ -21,6 +21,9 @@
             Warning,
         },
         created() {
+            this.$EventBus.on('timeupdate', (currentTime) => {
+                this.timeupdate(currentTime);
+            });
             this.$watch(
                 () => this.$route.params,
                 () => {
@@ -29,8 +32,10 @@
                         this.music = response.data.music_set[0];
                         this.islike = this.music.is_like;
                         this.iscollect = this.music.is_favorite;
-                        console.log(this.music.cover);
-                        changeThemeColorByImage(this.music.cover)
+                        this.$http.get(`${this.music.lrc}`).then((response) => {
+                            this.updateLyrics(response.data);
+                        });
+                        changeThemeColorByImage(this.music.cover);
                     });
                     this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
                         this.comments = response.data.comment_set;
@@ -38,6 +43,9 @@
                 },
                 { immediate: true },
             );
+        },
+        mounted() {
+            console.log(this.lyricsRef.value.children);
         },
         setup() {
             return {
@@ -61,6 +69,7 @@
                 islike: ref(false),
                 iscollect: ref(false),
                 iscomplain: ref(false),
+                lyricsRef: ref(),
             };
         },
         data() {
@@ -69,6 +78,8 @@
                 page: 1,
                 comments: [],
                 music: {},
+                lyricsIndex: 0,
+                lyricsObjArr: [],
                 getRGBString,
                 backgroundColorString: getBackgroundColorString(globalThemeColor,225),
             }
@@ -91,9 +102,6 @@
                 //todo
                 this.iscomplain = !this.iscomplain;
             },
-            // getImageUrl(url) {
-            //     return new URL(url, import.meta.url).href;
-            // },
             cleanComment() {
                 this.value="";
             },
@@ -126,6 +134,37 @@
                 });
                 if (document.querySelector('.n-input-wrapper') == null) {
                     document.querySelector('#comment-fold').click();
+                }
+            },
+            parseTime(time) {
+                const min = parseInt(time.match(/.*:/)[0].slice(0, 2));
+                let sec = parseInt(time.match(/:.*\./)[0].slice(1, 3));
+                const msIndex = time.match(/\./).index;
+                const ms = time.slice(msIndex + 1);
+                sec += min * 60;
+                return Number(sec + '.' + ms);
+            },
+            updateLyrics(lyrics) {
+                this.lyricsObjArr = [];
+                const rows = lyrics.split(/\n/);
+                rows.forEach((row) => {
+                    if (row == '') {
+                        return;
+                    }
+                    const obj = {};
+                    const time = row.match(/\[\d{2}:\d{2}.\d{2,3}\]/);
+                    obj.lyrics = row.split(']')[1].trim();
+                    obj.time = time ? this.parseTime(time[0].slice(1, time[0].length - 1)) : 0;
+                    if (obj.lyrics != '') {
+                        this.lyricsObjArr.push(obj);
+                    }
+                });
+            },
+            timeupdate(currentTime) {
+                for (let i = 0; i < this.lyricsObjArr.length; i++) {
+                    if (currentTime > parseInt(this.lyricsObjArr[i].time)) {
+
+                    }
                 }
             },
         }
@@ -186,7 +225,11 @@
                         </n-gi>
                         <n-gi>
                             <div style="font-size: larger;">
-                            我是一句歌词
+                                <n-scrollbar style="max-height: 300px" ref="lyricsRef">
+                                    <p v-for="(obj, i) in lyricsObjArr" :style="{opacity: lyricsIndex === i ? 1 : 0.5}" :key="i">
+                                        {{ obj.lyrics }}
+                                    </p>
+                                </n-scrollbar>
                             </div>
                         </n-gi>
                     </n-grid>
@@ -290,7 +333,13 @@
                         </template>
                         <template #content>
                         <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px;">
-                            {{ comment.content }}
+                            <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
+                                <div style="  word-wrap: break-word;">
+                                    <span>
+                                        {{ comment.content }}
+                                    </span>
+                                </div>
+                            </n-ellipsis>
                         </p>
                         </template>
                         <template #datetime>

@@ -12,29 +12,78 @@
                     <div class="isound-style">iSound</div>
                 </router-link>
             </n-gi>
-            <n-gi :span="14"></n-gi>
-            <n-gi :span="5">
+            <n-gi :span="13">
+                <!-- test -->
+                
+            </n-gi>
+            <n-gi :span="6">
                 <n-grid>
-                    <n-gi :span="18">
+                    <n-gi :span="3" v-if="!this.isLoggedIn"></n-gi>
+                    <n-gi :span="15">
                         <div style="padding-top: 3%; padding-right: 3%; padding-left: 7%;">
-                            <n-input round type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" />
+                            <n-input
+                                :style="{
+                                    '--n-color': this.colorMode === 'white' ? 'white' : 'black',
+                                    '--n-color-focus': this.colorMode === 'white' ? 'white' : 'black',
+                                    '--n-border-radius': `10px`,
+                                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    'border': '1px solid rgb(224, 224, 230)',
+                                    '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')', 
+                                    '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',  
+                                    '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                }"
+                                type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" 
+                            />
                         </div>
                     </n-gi>
                     <n-gi :span="3">
-                        <div style="color:lightgray; padding-top: 25%">
+                        <div style="padding-top: 25%" class="search-icon-container"
+                            :style="{'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey'}"
+                            @mouseover="this.searchIconIsHovered = true"
+                            @mouseout="this.searchIconIsHovered = false"
+                        >
                             <n-icon :component="SearchOutline" size="27px" @click="search" />  
                         </div>  
                     </n-gi>
-                    <n-gi :span="3">                
-                        <div style="padding-top: 25%">
-                            <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
+                    <n-gi :span="3">
+                        <div class="color-icon-container" style="padding-top: 25%">
+                            <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }"
+                                placement="bottom"
+                                trigger="hover"
+                                @update:show="handleUpdateShow"
+                            >
+                                <template #trigger>
+                                    <div style="color: lightgrey">
+                                        <n-icon size="27px" v-if="this.colorMode === 'white'" @click="changeColorMode"><moon-outline/></n-icon>
+                                        <n-icon size="27px" v-else @click="changeColorMode"><sunny-outline/></n-icon>
+                                    </div>
+                                </template>
+                                <template #default>
+                                    <div >
+                                        <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
+                                            <button 
+                                                class="round-button" 
+                                                :style="{'background-color': 'rgb(' + c + ')', 'border': '1px solid rgb(' + c + ')'}"
+                                                @click="this.setAccentColor(c)"
+                                            ></button>
+                                            <!-- < :style="{'--n-color': }" @click="this.setAccentColor(c); console.log(c)"/> -->
+                                        </span>
+                                    </div>
+                                    
+                                </template>
+                            </n-tooltip>
+                        </div>
+                    </n-gi>
+                    <n-gi :span="3" v-if="this.isLoggedIn">                
+                        <div style="padding-top: 25%" >
+                            <n-badge dot :offset="[-2.5, 7.5]" :value="messageNum" :max="99">
                                 <n-icon :component="MailOutline" size="27px" @click="readMessage" color="lightgray" />
                             </n-badge>
                         </div> 
                     </n-gi>
                 </n-grid>
             </n-gi>
-            <!-- <n-gi :span="1"></n-gi> -->
             <n-gi :span="1">
                 <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options">
                     <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
@@ -60,7 +109,7 @@
   </template>
   
 <script>
-import { SearchOutline, MailOutline } from '@vicons/ionicons5'
+import { SearchOutline, MailOutline, SunnyOutline, MoonOutline } from '@vicons/ionicons5'
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import { mapState, mapMutations } from 'vuex';
@@ -74,10 +123,12 @@ import { message } from 'ant-design-vue';
         LoginView,
         RegisterView,
         MailOutline,
+        SunnyOutline,
+        MoonOutline,
         ModifyUserMessageView,
     },
     computed: {
-        ...mapState(['isLoggedIn']),
+        ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
     },
     created() {
         this.$http.get('/api/message/of/0/').then((response) => {
@@ -99,10 +150,21 @@ import { message } from 'ant-design-vue';
     },
     data() {
         return {
+            accentColorChoices: [
+                '0,122,255',   // 蓝色
+                '150,62,150',  // 紫色
+                '248,79,158',  // 粉色
+                '224,56,61',  // 红色
+                '246,130,27',  // 橙色
+                '255,200,37',  // 黄色
+                '98,186,70',   // 绿色
+                '152,152,152', // 灰色
+            ],
             showModifyUserMessage: false,
             searchValue: '',
             showLogin: false,
             showRegister: false,
+            searchIconIsHovered: false,
             SearchOutline,
             MailOutline,
             showMessage: ref(true),
@@ -138,7 +200,7 @@ import { message } from 'ant-design-vue';
         }
     },
     methods: {
-        ...mapMutations(['setLogState']),
+        ...mapMutations(['setLogState', 'setAccentColor', 'changeColorMode']),
         search() {
             if (this.searchValue.trim().length !== 0) {
                 console.log(`searchValue: ${this.searchValue}`)
@@ -175,4 +237,25 @@ import { message } from 'ant-design-vue';
     font-size: 35px;
     padding-left: 5%;
 }
+.search-icon-container:hover {
+    cursor: pointer;
+}
+.color-icon-container:hover {
+    cursor: pointer;
+}
+.color-btn {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    
+}
+.round-button {
+    margin-left: 4px;
+    margin-right: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    line-height: 16px;
+    cursor: pointer;
+  }
 </style>

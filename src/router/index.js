@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import UserView from '../views/UserView.vue'
+import { ImproveRelevance } from '@vicons/carbon'
+import { ImportContactsFilled } from '@vicons/material'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -85,6 +87,11 @@ const router = createRouter({
     //   name: 'usermessage',
     //   component: () => import('../components/message/UserMessageItem.vue')
     // },
+    {
+      path: '/history',
+      name: 'HistoryView',
+      component:() => import('../views/HistoryView.vue')
+    },
   ]
 })
 

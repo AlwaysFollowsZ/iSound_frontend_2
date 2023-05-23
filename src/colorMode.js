@@ -1,4 +1,4 @@
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import store from '/src/store'
 
 import ColorThief from 'colorthief'
@@ -8,10 +8,21 @@ import ColorThief from 'colorthief'
 const colorThief = new ColorThief()
 
 export const colorMode = computed(() => store.state.colorMode)//从这里获取白天和黑夜模式
-export const globalThemeColor = computed(() =>  Object.assign([], store.state.currentThemeColor))//全局的主题色
+export const globalThemeColor = computed(() => Object.assign([], store.state.currentThemeColor))//全局的主题色
+const originalThemeColor = computed(() => Object.assign([], store.state.originalThemeColor))//原始主题色
 export const backgroundColor = computed(() => {
-    return colorMode.value === 'black' ?
-        'rgb(15,15,20)' : 'rgb(245,245,245)'
+    let colorBaseWhite = 150
+    let colorBaseBlack = 230
+    let oppositeColorBase = 255 - colorBaseBlack
+    let whiteRate = (255 - colorBaseWhite) / 255
+    let blackRate = oppositeColorBase / 255
+    let themeColor = globalThemeColor.value
+    if (colorMode.value === 'black') {
+        return `rgb(${oppositeColorBase + blackRate * themeColor[0]},${oppositeColorBase + blackRate * themeColor[1]},${oppositeColorBase + blackRate * themeColor[2]})`
+    }
+    else {
+        return `rgb(${colorBaseWhite + whiteRate * themeColor[0]},${colorBaseWhite + whiteRate * themeColor[1]},${colorBaseWhite + whiteRate * themeColor[2]})`
+    }
 })//从这里获取白天/黑夜模式的背景色
 export const antiBackgroundColor = computed(() => {
     return colorMode.value === 'white' ?
@@ -39,29 +50,35 @@ export const getFontColorString = (themeColorInput, colorBase = 125) => {
             `${colorBase + themeColor[0] * whiteColorRate},${colorBase + themeColor[1] * whiteColorRate},${colorBase + themeColor[2] * whiteColorRate}`
             : `${themeColor[0] * blackColorRate},${themeColor[1] * blackColorRate},${themeColor[2] * blackColorRate}`
         return fontColorString
-
     })
 }
 //获取主题背景色的方法,返回'a,b,c'形式的字符串
 export const getBackgroundColorString = (themeColorInput) => {
+    //当歌曲主题色未解析完时可能投入空数组，忽略即可
     return computed(() => {
-        const a = globalThemeColor.value
+        //const a = [globalThemeColor.value,colorMode.value]
         let themeColor//不能直接对传入的对象进行更改，因此设置一个中间变量
-        if (themeColorInput instanceof Array == false) {
-            themeColor = fixColor(themeColorInput.value)
-        }
-        else {
-            themeColor = fixColor(themeColorInput)
+        if ((typeof themeColorInput == Array) == false) {
+            themeColor = themeColorInput.value
         }
         const themeColorString = `${themeColor[0]},${themeColor[1]},${themeColor[2]}`
+        console.log(themeColor)
         return themeColorString
     })
 }
 
 //输入形如'a,b,c'的颜色字符串、不透明度和类型(仅在管理员模式下有效),viewMode(仅在管理员模式下有效)
 //获取形如'rgba(a,b,c,opacity)'的rgba字段
-export const getRGBString = (color, opacity = 1, type = 'normal', viewMode = 'user') => {
-    if (viewMode === 'user') {
+export const getRGBString = (colorInput, opacity = 1, type = 'normal', viewMode = 'user') => {
+    let color
+    if (typeof (colorInput) === 'string') {
+        color = colorInput
+    }
+    else {
+        color = colorInput.value
+    }
+    //转换成value
+    if (viewMode !== 'admin') {
         return `rgba(${color},${opacity})`
     }
     else {
@@ -77,17 +94,18 @@ export const getRGBString = (color, opacity = 1, type = 'normal', viewMode = 'us
 //更改白天/黑夜模式
 export const changeColorMode = () => {
     store.commit('changeColorMode')
+    changeThemeColor(originalThemeColor.value)//由于模式变化，需要刷新主题色
 }
 
 //更改主题色。请传入RGB数组
 export const changeThemeColor = (colorInput = [200, 200, 200]) => {
     let color = fixColor(colorInput)
-    store.commit('changeThemeColor', color)
+    store.commit('changeThemeColor', [ color, colorInput ])//修改后的和原始的颜色都要存储，方便白天黑夜模式切换
 }
 //根据传入的图片路径直接更改传入的ref变量"color"
 //注意！请不要放入svg图片
 export const getThemeColorByImage = async (imageUrl, color) => {
-    colorThief.getColorFromUrl(imageUrl, (res) => { color.value = res })
+    colorThief.getColorFromUrl(imageUrl, (res) => { color.value = fixColor(res) })
 }
 //根据传入的图片路径更换主题色
 //注意！请不要放入svg图片

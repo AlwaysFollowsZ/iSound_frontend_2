@@ -1,28 +1,27 @@
 <template>
   <div><top-nav></top-nav></div>
-  <div class="img-show" 
-    :class="{'animate__animated animate__zoomIn': !isLoggedIn}">
+  <div class="img-show" :class="{ 'animate__animated animate__zoomIn': !isLoggedIn }">
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
-          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold">
+          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}">
             来点不一样的歌单
           </div>
         </div>
         <div class="carousel-container">
-          <n-carousel autoplay :interval="3000"
-            effect="card"
+          <n-carousel autoplay :interval="3000" effect="card"
             prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
             next-slide-style="transform: translateX(20%) translateZ(-500px);"
             style="height: 85%"
             :show-dots="true"
           >
-            <n-carousel-item :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx" >
-              <img
-                class="carousel-img"
-                :src="src.path"
-                @click="jumpToSongList(src.jumpLink)"
-              >
+            <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx" >
+                <img
+                  class="carousel-img"
+                  :src="src.path"
+                  draggable="false"
+                  @click="jumpToSongList(src.jumpLink)"
+                >
             </n-carousel-item>
           </n-carousel>
         </div>
@@ -30,7 +29,7 @@
     </n-grid>
   </div>
   <div v-if="scrollPromptShouldDisplay && !isLoggedIn" 
-    :class="(cardsShouldAnimate && !isLoggedIn )? ['animate__animated animate__zoomOut'] : ['animate__animated animate__zoomIn animate__slow']">
+    :class="[`${cardsShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
     <n-grid>
       <n-gi :span="9"></n-gi>
       <n-gi :span="8">
@@ -41,7 +40,7 @@
   <div v-if="cardsShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" 
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
     >猜你喜欢</div>
     <div class="card-container animate__animated "
       :class="{'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn}"
@@ -54,43 +53,48 @@
                 <img class="single-card-img" :src="song.imgSrc">
               </div>
               <div class="single-card-info-container">
-                <div class="single-card-info-name">
+                <div class="single-card-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
                   {{ song.title }}
                 </div>
-                <div class="single-card-info-singer">
+                <div class="single-card-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">
                   {{ song.singer }}
                 </div>
+              </div>
             </div>
-          </div>
           </div>
         </n-gi>
       </n-grid>
     </div>
-  </div><div ref="songCardRef" class="placeholder" v-else></div>
+  </div>
+  <div ref="songCardRef" class="placeholder" v-else></div>
   <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" >现在就听</div>
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
+    >现在就听</div>
     <div class="song-entry-outter animate__animated"
-      :class="{'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn}">
-      <n-grid :x-gap="0" :y-gap="0" >
+      :class="{ 'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn }">
+      <n-grid :x-gap="0" :y-gap="0">
         <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
           <div class="song-entry-card-container">
             <div class="song-entry-container">
               <div style="padding-bottom: 3%; padding-top: 3%">
-                <hr style="box-shadow: none; border-color: rgb(255, 255, 255); margin: 0"/>
+                <hr style="box-shadow: none;  margin: 0" 
+                :style="{'border-color': 'rgba(' + this.accentColor + ',0.7)', 'background-color': 'rgba(' + this.accentColor + ',0.7)'}"
+                />
               </div>
               <n-grid>
                 <n-gi :span="4">
-                  <div class="song-entry-img-container" >
-                    <img class="song-entry-img" src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
+                  <div class="song-entry-img-container">
+                    <img class="song-entry-img"
+                      src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
                   </div>
                 </n-gi>
                 <n-gi :span="2"></n-gi>
                 <n-gi :span="15">
                   <div class="song-entry-info-container">
-                    <div class="song-entry-info-name">这里还有更多的歌</div>
-                    <div class="song-entry-info-singer">singer</div>
+                    <div class="song-entry-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">这里还有更多的歌</div>
+                    <div class="song-entry-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">singer</div>
                   </div>
                 </n-gi>
               </n-grid>
@@ -100,7 +104,7 @@
       </n-grid>
     </div>
   </div><div ref="songEntryRef" class="placeholder" v-else></div>
-  
+  <div><tag-table :width="80"/></div>
 </template>
 
 <script>
@@ -108,19 +112,21 @@ import TopNav from '../components/TopNav.vue'
 import { HeartOutline } from '@vicons/ionicons5'
 import 'animate.css'
 import { mapState, mapMutations } from 'vuex'
+import TagTable from '../components/tables/TagTable/TagTable.vue' // for test
 export default {
   components: {
     TopNav,
-    HeartOutline
+    HeartOutline,
+    TagTable,
   },
   computed: {
-    ...mapState(['isLoggedIn']),
+    ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
   },
   data() {
     return {
       cardsShouldAnimate: false,
       songEntryShouldAnimate: false,
-      scrollPromptShouldDisplay: true,
+      scrollPromptShouldDisplay: false,
       imgs: [
         {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg",
@@ -184,6 +190,11 @@ export default {
       arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     }
   },
+  created() {
+    setTimeout(() => {
+      this.scrollPromptShouldDisplay = true
+    }, 800)
+  },
   mounted() {
     window.addEventListener('scroll', this.handleSongEntryScroll)
     window.addEventListener('scroll', this.handleCardsScroll)
@@ -193,6 +204,25 @@ export default {
     window.removeEventListener('scroll', this.handleCardsScroll)
   },
   methods: {
+    ...mapMutations(['setAccentColor']),
+    getCorrectAccentColor() {
+      if (this.colorMode === 'white') {
+        return this.accentColor
+      } else if (this.colorMode === 'black') {
+        if (this.accentColor === '0,0,0') {
+          return '255,255,255'
+        } else {
+          return this.accentColor
+        }
+      }
+    },
+    getCorrectBasicColor() {
+      if (this.colorMode === 'white') {
+        return '0,0,0'
+      } else if (this.colorMode === 'black') {
+        return '255,255,255'
+      }
+    },
     jumpToSongList(jumpLink) {
       // this.$router.push(jumpLink)
       console.log(jumpLink)
@@ -207,7 +237,7 @@ export default {
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-        if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
+        if (componentOffsetTop <= scrollTop + windowHeight * 0.6) {
           this.cardsShouldAnimate = true
           setTimeout(() => {
             this.scrollPromptShouldDisplay = false
@@ -221,11 +251,11 @@ export default {
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        if (componentOffsetTop <= scrollTop + windowHeight * 0.6 ) {
+        if (componentOffsetTop <= scrollTop + windowHeight * 0.6) {
           this.songEntryShouldAnimate = true
         }
       }
-    }, 
+    },
   }
 }
 
@@ -234,6 +264,7 @@ export default {
 <style>
   .img-show {
     height: 60vh;
+    color:rgb(224, 224, 230);
     /*border: dashed; */
   }
   .carousel-container {
@@ -250,6 +281,9 @@ export default {
     height: 100%;
     border-radius: 15px;
     overflow: hidden;
+  }
+  .carousel-img:hover {
+    cursor: pointer;
   }
   .card-container {
     height: 30vh;
@@ -328,8 +362,7 @@ export default {
     height: 60px; 
     border-radius: 10px;
     display: flex; 
-    justify-content: 
-    center; 
+    justify-content: center; 
     align-items: center; 
     overflow: hidden
   }
