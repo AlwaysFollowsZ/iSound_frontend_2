@@ -27,8 +27,7 @@
                                 '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字"
-                                @keyup.enter="search" />
+                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" />
                         </div>
                     </n-gi>
                     <n-gi :span="3">
@@ -182,6 +181,15 @@ export default {
         },
         readMessage() {
             this.showModifyUserMessage = true;
+        },
+        handleLogout() {
+            this.$http.post('/api/accounts/logout/').then(response => {
+                if (response.data.code === '0') {
+                    console.log('logout succeed');
+                } else if (response.data.code === '-1') {
+                    console.log('logout failed');
+                }
+            });
         },
         changeColorMode
     }
