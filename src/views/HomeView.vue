@@ -4,7 +4,7 @@
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
-          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}">
+          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}">
             来点不一样的歌单
           </div>
         </div>
@@ -40,7 +40,7 @@
   <div v-if="cardsShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}"
     >猜你喜欢</div>
     <div class="card-container animate__animated "
       :class="{'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn}"
@@ -70,7 +70,7 @@
   <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold" :style="{'color': 'rgb(' + this.accentColor + ')'}"
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}"
     >现在就听</div>
     <div class="song-entry-outter animate__animated"
       :class="{ 'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn }">
@@ -78,10 +78,10 @@
         <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
           <div class="song-entry-card-container">
             <div class="song-entry-container">
-              <div style="padding-bottom: 3%; padding-top: 3%">
-                <hr style="box-shadow: none;  margin: 0" 
+              <div style="padding-bottom: 3%; padding-top: 3%; height: 15px">
+                <!-- <hr style="box-shadow: none;  margin: 0; transition: color 1s;" 
                 :style="{'border-color': 'rgba(' + this.accentColor + ',0.7)', 'background-color': 'rgba(' + this.accentColor + ',0.7)'}"
-                />
+                /> -->
               </div>
               <n-grid>
                 <n-gi :span="4">
@@ -104,7 +104,21 @@
       </n-grid>
     </div>
   </div><div ref="songEntryRef" class="placeholder" v-else></div>
-  <div><tag-table :width="80"/></div>
+  <div v-if="tagShouldAnimate || isLoggedIn">
+    <div class="animate__animated" 
+      :class="{'animate__slideInLeft': tagShouldAnimate && !isLoggedIn}"
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
+      :style="{'color': 'rgb(' + this.accentColor + ')'}"
+    >
+      分类标签：总有你的喜欢
+    </div>
+    <div class="tagtable-container animate__animated"
+      
+      >
+      <tag-table :width="1400"/>
+    </div>
+  </div><div ref="tagRef" class="placeholder" v-else></div>
+  
 </template>
 
 <script>
@@ -127,6 +141,7 @@ export default {
       cardsShouldAnimate: false,
       songEntryShouldAnimate: false,
       scrollPromptShouldDisplay: false,
+      tagShouldAnimate: false,
       imgs: [
         {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg",
@@ -198,10 +213,12 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.handleSongEntryScroll)
     window.addEventListener('scroll', this.handleCardsScroll)
+    window.addEventListener('scroll', this.handleTagScroll)
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleSongEntryScroll)
     window.removeEventListener('scroll', this.handleCardsScroll)
+    window.removeEventListener('scroll', this.handleTagScroll)
   },
   methods: {
     ...mapMutations(['setAccentColor']),
@@ -256,6 +273,17 @@ export default {
         }
       }
     },
+    handleTagScroll() {
+      if (!this.tagShouldAnimate) {
+        const componentElement = this.$refs.tagRef
+        const componentOffsetTop = componentElement.offsetTop
+        const windowHeight = window.innerHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (componentOffsetTop <= scrollTop + windowHeight * 0.6) {
+          this.tagShouldAnimate = true
+        }
+      }
+    }
   }
 }
 
@@ -313,10 +341,12 @@ export default {
     height: 100%;
   }
   .single-card-info-name {
+    transition: color 1s;
     font-size: medium;
     font-weight: 700;
   }
   .single-card-info-singer {
+    transition: color 1s;
     font-size: small;
     font-weight: 500;
     color: grey;
@@ -345,7 +375,7 @@ export default {
   }
  
   .song-entry-outter {
-    height: 40vh;
+    height: 32vh;
     animation-delay: 300ms;
     animation-duration: 1500ms;
   }
@@ -375,6 +405,7 @@ export default {
     
   }
   .song-entry-info-name {
+    transition: color 1s;
     max-width: 12vw;
     padding-top: 3%;
     word-wrap: break-word;
@@ -382,6 +413,7 @@ export default {
     font-size: 14px;
   }
   .song-entry-info-singer {
+    transition: color 1s;
     max-width: 12vw;
     word-wrap: break-word;
     font-weight: bold;
@@ -400,5 +432,13 @@ export default {
     background: linear-gradient(to right,  green, rgba(0, 0, 255, 0.66), indigo, violet);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+  .tagtable-container {
+    transition: color 1s;
+    margin-top: 1%;
+    display: flex; 
+    padding-left: 1%;
+    animation-delay: 300ms;
+    animation-duration: 1500ms;
   }
 </style>
