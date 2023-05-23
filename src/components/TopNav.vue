@@ -158,6 +158,7 @@ export default {
             showLogin: false,
             showRegister: false,
             searchIconIsHovered: false,
+            backToHomeIsHovered: false,
             SearchOutline,
             MailOutline,
             messageNum: ref(0), //每个用户收到的信息数
