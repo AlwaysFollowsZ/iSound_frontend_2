@@ -39,9 +39,12 @@
                         </div>
                     </n-gi>
                     <n-gi :span="3">
-                        <div class="color-icon-container" style="padding-top: 25%">
-                            <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }" placement="bottom"
-                                trigger="hover" @update:show="handleUpdateShow">
+                        <div class="color-icon-container">
+                            <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }"
+                                placement="bottom-start"
+                                trigger="hover"
+                                @update:show="handleUpdateShow"
+                            >
                                 <template #trigger>
                                     <div style="color: lightgrey">
                                         <n-icon size="27px" v-if="this.colorMode === 'white'"
@@ -50,7 +53,12 @@
                                     </div>
                                 </template>
                                 <template #default>
-                                    <div>
+                                    <div >
+                                        <span class="choose-color-default"
+                                            @click="this.setAccentColor(this.colorMode === 'white' ? '0,0,0' : '255,255,255')"
+                                        >
+                                            默认
+                                        </span>
                                         <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
                                             <button class="round-button"
                                                 :style="{ 'background-color': 'rgb(' + c + ')', 'border': '1px solid rgb(' + c + ')' }"
@@ -213,7 +221,9 @@ export default {
 .search-icon-container:hover {
     cursor: pointer;
 }
-
+.color-icon-container {
+    padding-top: 20%;
+}
 .color-icon-container:hover {
     cursor: pointer;
 }
@@ -232,6 +242,13 @@ export default {
     height: 16px;
     border-radius: 50%;
     line-height: 16px;
+    cursor: pointer;
+}
+.choose-color-default {
+    text-decoration: underline;
+    margin-right: 3px;
+}
+.choose-color-default:hover {
     cursor: pointer;
 }
 </style>

@@ -1,19 +1,20 @@
 <template>
-    <div :style="{ width: this.width + 'vw'}">
-        <n-grid :y-gap="12">
+    <div :style="{ width: this.width + 'px'}">
+        <n-grid :y-gap="16">
             <n-gi :span="3" v-for="(content, idx) in contents" :key="idx">
                 <div class="tag-entry-container">
                     <tag-entry 
+                        :index="idx"
                         :content="content"
-                        :color-display="idx % 2 === 0 ? 
-                                        this.getRGBString(this.getFontColorString(this.globalThemeColor, 80).value, 0.6) :
-                                        this.getRGBString(this.getBackgroundColorString(this.globalThemeColor).value, 0.6)"
-                        :color-hover="idx % 2 === 0 ? 
-                                      this.getRGBString(this.getFontColorString(this.globalThemeColor, 80).value, 0.9) :
-                                      this.getRGBString(this.getBackgroundColorString(this.globalThemeColor).value, 0.9)"
-                        :color-text="idx % 2 === 0 ? 
-                                     this.getRGBString(this.getBackgroundColorString(this.globalThemeColor).value, 0.9) :
-                                     this.getRGBString(this.getFontColorString(this.globalThemeColor, 80).value, 0.9)"
+                        :color-display="this.colorMode === 'white' ? 
+                                        (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.3)': 'rgba(' + this.accentColor + ', 0.5)') : 
+                                        (idx % 2 === 0 ? '#908e8e' : '#bcbbbb')"
+                        :color-hover="this.colorMode === 'white' ?
+                                      (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.6)' : 'rgba(' + this.accentColor + ', 0.65)') : 
+                                      (idx % 2 === 0 ? '#373333' : '#373333')"
+                        :color-text="this.colorMode === 'white' ?
+                                     (idx % 2 === 0 ? 'rgb(' + this.accentColor + ')' : 'white') : 
+                                     (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 1)' : 'rgba(' + this.accentColor + ', 0.9)')"
                     />
                 </div>
             </n-gi>
@@ -22,12 +23,16 @@
 </template>
 
 <script>
-import TagEntry from './TagEntry.vue';
+import TagEntry from './TagEntry.vue'
+import { mapState } from 'vuex'
 import { getFontColorString, getBackgroundColorString, getRGBString, globalThemeColor } from '/src/colorMode.js'
 export default {
     name: 'TagTable',
     components: {
         TagEntry,
+    },
+    computed: {
+        ...mapState(['accentColor', 'colorMode']),
     },
     props: {
         width: Number,
