@@ -14,6 +14,7 @@ import {
   Fitness,
   Star,
   Warning,
+  Play,
 } from "@vicons/ionicons5";
 dayjs.extend(relativeTime);
 import {
@@ -35,6 +36,7 @@ export default defineComponent({
     Fitness,
     Star,
     Warning,
+    Play,
   },
   created() {
     this.$EventBus.on("timeupdate", (currentTime) => {
@@ -174,36 +176,27 @@ export default defineComponent({
         const obj = {};
         const time = row.match(/\[\d{2}:\d{2}.\d{2,3}\]/);
         obj.lyrics = row.split("]")[1].trim();
-        obj.time = time ? this.parseTime(time[0].slice(1, time[0].length - 1)) : 0;
+        obj.timeStr = time[0].slice(1, time[0].length - 1);
+        obj.time = this.parseTime(obj.timeStr);
         if (obj.lyrics != "") {
           this.lyricsObjArr.push(obj);
         }
       });
     },
     timeupdate(currentTime) {
-      for (let i = 1; i < this.lyricsObjArr.length; i++) {
-        if (currentTime < parseInt(this.lyricsObjArr[i].time)) {
+      for (let i = 1; i <= this.lyricsObjArr.length; i++) {
+        if (
+          i == this.lyricsObjArr.length ||
+          currentTime < parseInt(this.lyricsObjArr[i].time)
+        ) {
           if (this.lyricsIndex != i - 1) {
             this.lyricsIndex = i - 1;
-            if (this.lyricsIndex > 3) {
-              this.lyricsRef.scrollTo({
-                left: 0,
-                top: 43.2 * (this.lyricsIndex - 3),
-                behavior: "smooth",
-              });
-            }
-          }
-          break;
-        } else if (i == this.lyricsObjArr.length - 1) {
-          if (this.lyricsIndex != i) {
-            this.lyricsIndex = i;
-            if (this.lyricsIndex > 3) {
-              this.lyricsRef.scrollTo({
-                left: 0,
-                top: 43.2 * (this.lyricsIndex - 3),
-                behavior: "smooth",
-              });
-            }
+            const top = this.lyricsIndex > 3 ? 43.2 * (this.lyricsIndex - 3) : 0;
+            this.lyricsRef.scrollTo({
+              left: 0,
+              top: top,
+              behavior: "smooth",
+            });
           }
           break;
         }
@@ -211,13 +204,12 @@ export default defineComponent({
     },
     jumpToLyrics(obj, i) {
       this.lyricsIndex = i;
-      if (this.lyricsIndex > 3) {
-        this.lyricsRef.scrollTo({
-          left: 0,
-          top: 43.2 * (this.lyricsIndex - 3),
-          behavior: "smooth",
-        });
-      }
+      const top = this.lyricsIndex > 3 ? 43.2 * (this.lyricsIndex - 3) : 0;
+      this.lyricsRef.scrollTo({
+        left: 0,
+        top: top,
+        behavior: "smooth",
+      });
       this.$EventBus.emit("seek", obj.time);
     },
   },
@@ -302,13 +294,22 @@ export default defineComponent({
             <n-gi>
               <div style="font-size: larger">
                 <n-scrollbar style="max-height: 302.4px" ref="lyricsRef">
-                  <p v-for="(obj, i) in lyricsObjArr" :key="i">
-                    <a
-                      class="lyricsJumpLink"
-                      :class="{ current: lyricsIndex === i }"
-                      @click="jumpToLyrics(obj, i)"
-                      >{{ obj.lyrics }}</a
-                    >
+                  <p
+                    v-for="(obj, i) in lyricsObjArr"
+                    :key="i"
+                    style="margin-bottom: 21.2px"
+                    class="lyrics"
+                    :class="{ current: lyricsIndex === i }"
+                  >
+                    {{ obj.lyrics }}
+                    <span class="lyricsTime">
+                      {{ obj.timeStr.slice(0, 5) + "&nbsp;" }}
+                      <Play
+                        class="lyricsJumpLink"
+                        @click="jumpToLyrics(obj, i)"
+                        width="14px"
+                      />
+                    </span>
                   </p>
                 </n-scrollbar>
               </div>
@@ -566,20 +567,39 @@ export default defineComponent({
 .my-comment-button {
   margin-bottom: 50px;
 }
-
 .html {
   scroll-behavior: smooth;
 }
-.lyricsJumpLink {
+.lyrics {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: #000;
   font-size: 14px;
   opacity: 0.5;
 }
 
-.lyricsJumpLink.current {
-  color: #000;
+.lyrics.current {
   font-size: 16px;
-  font-weight: bold;
-  opacity: 1;
+  font-weight: 600;
+  opacity: 0.8;
+}
+.lyrics:hover {
+  opacity: 0.8;
+}
+.lyrics > .lyricsTime {
+  display: none;
+}
+.lyrics:hover > .lyricsTime {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+  color: #000;
+  font-size: 12px;
+  font-weight: lighter;
+}
+
+.lyricsJumpLink:hover {
+  cursor: pointer;
 }
 </style>
