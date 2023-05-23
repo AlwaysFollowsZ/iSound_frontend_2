@@ -5,13 +5,31 @@
                 <router-link to="/">
                     <n-image width="45" src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
                         style="padding-left: 4%" preview-disabled="true" />
-                    <div class="isound-style">iSound</div>
+                    <div class="isound-style"
+                        :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}"
+                    >iSound</div>
                 </router-link>
             </n-gi>
-            <n-gi :span="13">
+            <n-gi :span="7">
                 <!-- test -->
 
             </n-gi>
+            <n-gi :span="2">
+                <div 
+                    class="back-to-home"
+                    :class="{'animate__animated animate__pulse': backToHomeIsHovered}"
+                    :style="{
+                        'text-shadow': backToHomeIsHovered ? '1px 1px 1px rgba(' + this.accentColor + ', 0.8)' : '',
+                        'color': this.colorMode === 'white' ? 'grey' : 'lightgrey',
+                    }"
+                    @mouseover="backToHomeIsHovered = true"
+                    @mouseout="backToHomeIsHovered = false"
+                    @click="this.$router.push('/')"
+                >
+                    音乐馆
+                </div>
+            </n-gi>
+            <n-gi :span="4"></n-gi>
             <n-gi :span="6">
                 <n-grid>
                     <n-gi :span="3" v-if="!this.isLoggedIn"></n-gi>
@@ -132,6 +150,7 @@ export default {
             showLogin: false,
             showRegister: false,
             searchIconIsHovered: false,
+            backToHomeIsHovered: false,
             SearchOutline,
             MailOutline,
             messageNum: ref(0), //每个用户收到的信息数
@@ -242,6 +261,14 @@ export default {
     height: 16px;
     border-radius: 50%;
     line-height: 16px;
+    cursor: pointer;
+}
+.back-to-home {
+    font-size: 30px;
+    font-weight: 400;
+    padding-top: 8%;
+}
+.back-to-home:hover {
     cursor: pointer;
 }
 </style>
