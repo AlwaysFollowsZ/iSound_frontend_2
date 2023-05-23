@@ -5,13 +5,30 @@
                 <router-link to="/">
                     <n-image width="45" src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
                         style="padding-left: 4%" preview-disabled="true" />
-                    <div class="isound-style">iSound</div>
+                    <div class="isound-style"
+                        :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}"
+                    >iSound</div>
                 </router-link>
             </n-gi>
-            <n-gi :span="13">
+            <n-gi :span="7">
                 <!-- test -->
 
             </n-gi>
+            <n-gi :span="2">
+                <div 
+                    class="back-to-home"
+                    :class="{'animate__animated animate__pulse': backToHomeIsHovered}"
+                    :style="{
+                        'text-shadow': backToHomeIsHovered ? '1px 1px 1px rgba(' + this.accentColor + ', 0.8)' : '',
+                        'color': this.colorMode === 'white' ? 'grey' : 'lightgrey',
+                    }"
+                    @mouseover="backToHomeIsHovered = true"
+                    @mouseout="backToHomeIsHovered = false"
+                >
+                    音乐馆
+                </div>
+            </n-gi>
+            <n-gi :span="4"></n-gi>
             <n-gi :span="6">
                 <n-grid>
                     <n-gi :span="3" v-if="!this.isLoggedIn"></n-gi>
@@ -27,8 +44,7 @@
                                 '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字"
-                                @keyup.enter="search" />
+                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" />
                         </div>
                     </n-gi>
                     <n-gi :span="3">
@@ -39,12 +55,9 @@
                         </div>
                     </n-gi>
                     <n-gi :span="3">
-                        <div class="color-icon-container">
-                            <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }"
-                                placement="bottom-start"
-                                trigger="hover"
-                                @update:show="handleUpdateShow"
-                            >
+                        <div class="color-icon-container" style="padding-top: 25%">
+                            <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }" placement="bottom"
+                                trigger="hover" @update:show="handleUpdateShow">
                                 <template #trigger>
                                     <div style="color: lightgrey">
                                         <n-icon size="27px" v-if="this.colorMode === 'white'"
@@ -53,12 +66,7 @@
                                     </div>
                                 </template>
                                 <template #default>
-                                    <div >
-                                        <span class="choose-color-default"
-                                            @click="this.setAccentColor(this.colorMode === 'white' ? '0,0,0' : '255,255,255')"
-                                        >
-                                            默认
-                                        </span>
+                                    <div>
                                         <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
                                             <button class="round-button"
                                                 :style="{ 'background-color': 'rgb(' + c + ')', 'border': '1px solid rgb(' + c + ')' }"
@@ -141,6 +149,7 @@ export default {
             showLogin: false,
             showRegister: false,
             searchIconIsHovered: false,
+            backToHomeIsHovered: false,
             SearchOutline,
             MailOutline,
             messageNum: ref(0), //每个用户收到的信息数
@@ -167,8 +176,9 @@ export default {
                     label: "登出",
                     props: {
                         onClick: () => {
-                            this.setLogState(false)
-                            console.log('logout')
+                            this.setLogState(false);
+                            this.handleLogout();
+                            console.log('logout');
                         }
                     }
                 }
@@ -190,6 +200,16 @@ export default {
         },
         readMessage() {
             this.showModifyUserMessage = true;
+        },
+        handleLogout() {
+            this.$http.post('/api/accounts/logout/').then(response => {
+                console.log(response);
+                if (response.data.code == '0') {
+                    console.log('logout succeed');
+                } else if (response.data.code == '-1') {
+                    console.log('logout failed');
+                }
+            });
         },
         changeColorMode
     }
@@ -221,9 +241,7 @@ export default {
 .search-icon-container:hover {
     cursor: pointer;
 }
-.color-icon-container {
-    padding-top: 20%;
-}
+
 .color-icon-container:hover {
     cursor: pointer;
 }
@@ -244,11 +262,12 @@ export default {
     line-height: 16px;
     cursor: pointer;
 }
-.choose-color-default {
-    text-decoration: underline;
-    margin-right: 3px;
+.back-to-home {
+    font-size: 30px;
+    font-weight: 400;
+    padding-top: 8%;
 }
-.choose-color-default:hover {
+.back-to-home:hover {
     cursor: pointer;
 }
 </style>
