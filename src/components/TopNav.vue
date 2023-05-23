@@ -61,6 +61,11 @@
                                 </template>
                                 <template #default>
                                     <div >
+                                        <span class="choose-color-default"
+                                            @click="this.setAccentColor(this.colorMode === 'white' ? '0,0,0' : '255,255,255')"
+                                        >
+                                            默认
+                                        </span>
                                         <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
                                             <button 
                                                 class="round-button" 
@@ -239,5 +244,12 @@ import { message } from 'ant-design-vue';
     border-radius: 50%;
     line-height: 16px;
     cursor: pointer;
-  }
+}
+.choose-color-default {
+    text-decoration: underline;
+    margin-right: 3px;
+}
+.choose-color-default:hover {
+    cursor: pointer;
+}
 </style>
