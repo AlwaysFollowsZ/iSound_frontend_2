@@ -10,20 +10,21 @@ const colorThief = new ColorThief()
 export const colorMode = computed(() => store.state.colorMode)//从这里获取白天和黑夜模式
 export const globalThemeColor = computed(() => Object.assign([], store.state.currentThemeColor))//全局的主题色
 const originalThemeColor = computed(() => Object.assign([], store.state.originalThemeColor))//原始主题色
+
 export const backgroundColor = computed(() => {
     let colorBaseWhite = 150
-    let colorBaseBlack = 230
+    let colorBaseBlack = 235
     let oppositeColorBase = 255 - colorBaseBlack
     let whiteRate = (255 - colorBaseWhite) / 255
     let blackRate = oppositeColorBase / 255
     let themeColor = globalThemeColor.value
     if (colorMode.value === 'black') {
-        return `rgb(${oppositeColorBase + blackRate * themeColor[0]},${oppositeColorBase + blackRate * themeColor[1]},${oppositeColorBase + blackRate * themeColor[2]})`
+        return [oppositeColorBase + blackRate * themeColor[0], oppositeColorBase + blackRate * themeColor[1], oppositeColorBase + blackRate * themeColor[2]]
     }
     else {
-        return `rgb(${colorBaseWhite + whiteRate * themeColor[0]},${colorBaseWhite + whiteRate * themeColor[1]},${colorBaseWhite + whiteRate * themeColor[2]})`
+        return [colorBaseWhite + whiteRate * themeColor[0], colorBaseWhite + whiteRate * themeColor[1], colorBaseWhite + whiteRate * themeColor[2]]
     }
-})//从这里获取白天/黑夜模式的背景色
+})//从这里获取白天/黑夜模式的背景色.返回数组
 export const antiBackgroundColor = computed(() => {
     return colorMode.value === 'white' ?
         '15,15,20' : '245,245,245'
@@ -61,8 +62,12 @@ export const getBackgroundColorString = (themeColorInput) => {
         if ((typeof themeColorInput == Array) == false) {
             themeColor = themeColorInput.value
         }
-        const themeColorString = `${themeColor[0]},${themeColor[1]},${themeColor[2]}`
+        if (themeColor === undefined) {
+            return []
+        }
+        const themeColorString = themeColor.join(',')//`${themeColor[0]},${themeColor[1]},${themeColor[2]}`
         console.log(themeColor)
+
         return themeColorString
     })
 }
@@ -100,7 +105,7 @@ export const changeColorMode = () => {
 //更改主题色。请传入RGB数组
 export const changeThemeColor = (colorInput = [200, 200, 200]) => {
     let color = fixColor(colorInput)
-    store.commit('changeThemeColor', [ color, colorInput ])//修改后的和原始的颜色都要存储，方便白天黑夜模式切换
+    store.commit('changeThemeColor', [color, colorInput])//修改后的和原始的颜色都要存储，方便白天黑夜模式切换
 }
 //根据传入的图片路径直接更改传入的ref变量"color"
 //注意！请不要放入svg图片
@@ -152,5 +157,49 @@ const fixColor = (colorInput) => {
         }
     }
     return color
+}
+
+
+//由于我们设计背景色为动态变化的，因此使用下面的函数在几个相近色中间随机动态变换
+//输入RGB数组，返回好几个RGB数组
+export const findSimilarColors = (rgbColor, count, threshold = 100) => {
+    const similarColors = [];
+
+    // 计算欧氏距离
+    function euclideanDistance(color1, color2) {
+        const rDiff = color1[0] - color2[0];
+        const gDiff = color1[1] - color2[1];
+        const bDiff = color1[2] - color2[2];
+        return Math.sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
+    }
+
+    // 判断是否与给定颜色相似
+    function isSimilar(color) {
+        const distance = euclideanDistance(rgbColor, color);
+        return distance <= threshold;
+    }
+
+    // 生成相近颜色
+    function generateSimilarColors() {
+        const r = rgbColor[0];
+        const g = rgbColor[1];
+        const b = rgbColor[2];
+
+        while (similarColors.length < count) {
+            const newColor = [
+                Math.floor(Math.random() * 256),
+                Math.floor(Math.random() * 256),
+                Math.floor(Math.random() * 256)
+            ];
+
+            if (isSimilar(newColor)) {
+                similarColors.push(newColor);
+            }
+        }
+    }
+
+    generateSimilarColors();
+
+    return similarColors;
 }
 
