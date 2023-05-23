@@ -90,7 +90,7 @@
                     </n-gi>
                     <n-gi :span="3" v-if="this.isLoggedIn">
                         <div style="padding-top: 25%">
-                            <n-badge dot :offset="[-2.5, 7.5]" :value="messageNum" :max="99">
+                            <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
                                 <n-icon :component="MailOutline" size="27px" @click="readMessage" color="lightgray" />
                             </n-badge>
                         </div>
