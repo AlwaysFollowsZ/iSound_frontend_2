@@ -72,7 +72,7 @@ export default {
             data.append('username', this.username);
             data.append('password1', this.password1);
             data.append('password2', this.password2);
-            this.$http.post('/accounts/register/', data).then(response => {
+            this.$http.post('/api/accounts/register/', data).then(response => {
                 // console.log(response.data);
                 if(response.data.code == '0') {
                     alert('注册成功，请登录！');

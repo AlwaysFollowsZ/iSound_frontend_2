@@ -32,8 +32,7 @@
               <div style="width: 50px; padding-top: 10%" :style="{'text-align':'right'}">收件人</div></td>
             <td style="width: 800px">
               <n-input 
-              :style="{'--n-border-radius': `10px`}"
-              v-model:value="value1" 
+              :style="{'--n-border-radius': `10px`}" 
               type="text" 
               placeholder="请输入收件人" 
               clearable
@@ -54,8 +53,8 @@
               v-model:value="value2"
               type="textarea"
               :autosize="{
-                minRows: 24,
-                maxRows: 24
+                minRows: 20,
+                maxRows: 20
               }" 
               show-count
               placeholder="请输入正文"/>

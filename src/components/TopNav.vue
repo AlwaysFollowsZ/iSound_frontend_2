@@ -27,7 +27,7 @@
                     </n-gi>
                     <n-gi :span="3">                
                         <div style="padding-top: 25%">
-                            <n-badge dot :offset="[-2.5, 7.5]" :value="messageNum" :max="99">
+                            <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
                                 <n-icon :component="MailOutline" size="27px" @click="readMessage" color="lightgray" />
                             </n-badge>
                         </div> 
@@ -79,6 +79,24 @@ import { message } from 'ant-design-vue';
     computed: {
         ...mapState(['isLoggedIn']),
     },
+    created() {
+        this.$http.get('/api/message/of/0/').then((response) => {
+            if (response.data.unread == 0) {
+                this.showMessage = false;
+            }
+            else {
+                this.showMessage = true;
+            }
+        });
+        this.$EventBus.on('setShowMessage', (unread) => {
+            if (unread == 0) {
+                this.showMessage = false;
+            }
+            else {
+                this.showMessage = true;
+            }
+        });
+    },
     data() {
         return {
             showModifyUserMessage: false,
@@ -87,7 +105,7 @@ import { message } from 'ant-design-vue';
             showRegister: false,
             SearchOutline,
             MailOutline,
-            messageNum: ref(0), //每个用户收到的信息数
+            showMessage: ref(true),
             options: [
             {
                 label: "个人主页",
