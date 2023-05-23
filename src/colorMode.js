@@ -162,7 +162,7 @@ const fixColor = (colorInput) => {
 
 //由于我们设计背景色为动态变化的，因此使用下面的函数在几个相近色中间随机动态变换
 //输入RGB数组，返回好几个RGB数组
-export const findSimilarColors=(rgbColor, count, similarity=0.5)=>{
+export const findSimilarColors=(rgbColor, count, similarity) =>{
     const similarColors = [];
 
     // 转换 RGB 到 HSL
@@ -212,7 +212,7 @@ export const findSimilarColors=(rgbColor, count, similarity=0.5)=>{
         let r, g, b;
 
         if (s === 0) {
-            r = g = b = l*255;
+            r = g = b = l * 255;
         } else {
             const hueToRgb = (p, q, t) => {
                 if (t < 0) t += 1;
@@ -225,10 +225,12 @@ export const findSimilarColors=(rgbColor, count, similarity=0.5)=>{
 
             const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
             const p = 2 * l - q;
+
             r = Math.round(hueToRgb(p, q, h + 1 / 3) * 255);
             g = Math.round(hueToRgb(p, q, h) * 255);
             b = Math.round(hueToRgb(p, q, h - 1 / 3) * 255);
         }
+
         return [r, g, b];
     }
 
@@ -243,6 +245,10 @@ export const findSimilarColors=(rgbColor, count, similarity=0.5)=>{
     // 生成相近颜色
     function generateSimilarColors() {
         const hslColor = rgbToHsl(rgbColor);
+        //鉴于饱和度过低时显得很白，因此这时我们调整similarity为1
+        if (hslColor[1] < 0.1) {
+            similarity = 1
+        }
 
         for (let i = 0; i < count; i++) {
             let newHue;
@@ -252,7 +258,7 @@ export const findSimilarColors=(rgbColor, count, similarity=0.5)=>{
             do {
                 newHue = (hslColor[0] + Math.random() * similarity * 360) % 360;
                 newSaturation = Math.max(0, Math.min(100, hslColor[1] + Math.random() * similarity * 100));
-                newLightness = Math.max(0, Math.min(100, hslColor[2] + Math.random() * similarity * 100));
+                newLightness = hslColor[2];
             } while (hslDistance([newHue, newSaturation, newLightness], hslColor) > similarity);
 
             const newColor = hslToRgb([newHue, newSaturation, newLightness]);
