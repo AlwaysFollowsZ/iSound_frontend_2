@@ -27,24 +27,27 @@ export default {
                 let updatedColor
                 let transitionDelta
                 do {
-                    updatedColor = findSimilarColors(color, 100, 0.3)[Math.floor(Math.random() * 100)]
+                    updatedColor = findSimilarColors(color, 100, 0.2)[Math.floor(Math.random() * 100)]
                     //计算几何变化值
                     transitionDelta = Math.sqrt(Math.pow((beforeColor[0] - updatedColor[0]), 2) + Math.pow((beforeColor[1] - updatedColor[1]), 2) + Math.pow((beforeColor[2] - updatedColor[2]), 2))
-                } while (transitionDelta < 5)//随机选取一个相近的颜色,数值越大相似度越高
+                } while (transitionDelta < 10)//随机选取一个相近的颜色,数值越大相似度越高
                 //如果颜色变化过小则重新寻找
                 //更新过渡时间和当前颜色
                 this.currentColor = updatedColor
                 this.transitionTime = transitionDelta / this.updateSpeed
+                if (this.transitionTime < 1) {
+                    this.transitionTime=1
+                }//过渡时间下限约束
                 console.log(this.transitionTime, updatedColor);
                 setTimeout(loopAnimation, this.transitionTime * 1000)
             }
-            loopAnimation()
+            setTimeout(loopAnimation,1000)
         }
     },
     props: {
         updateSpeed: {//背景动画的变化快慢
             type: Number,
-            default:30,
+            default:15,
             validator(value) {
                 return value > 0
             }
@@ -58,8 +61,7 @@ export default {
 <template>
     <div class='page_background bg-pan-bottom' :style="{
         'transition': `height cubic-bezier(0.165, 0.84, 0.44, 1) 1s ,background-color linear ${transitionTime}s`,
-        'background-color': getRGBString(`${currentColor[0]},${currentColor[1]},${currentColor[2]}`)
-        // 'background':`linear-gradient(to top,${getRGBString(currentColor.join(','))},${getRGBString(globalThemeColor.join(','))},${getRGBString(currentColor.join(','))})`
+        'background-color': getRGBString(currentColor.join(','))
     }"></div>
 </template>
 <style scoped>
@@ -68,25 +70,8 @@ export default {
     z-index: -1;
     height: 100vh;
     width: 100vw;
-    /* background-repeat: no-repeat; */
 }
 
-.bg-pan-bottom {
-	/* animation: bg-pan-bottom 5s infinite  forwards linear; */
-}
-
-
-@keyframes bg-pan-bottom {
-  0% {
-    background-position: 0 50vw;
-    background-size:100% 100%;
-    
-  }
-  100% {
-    background-position: 0 0;
-    background-size:100% 100%;
-  }
-}
 
 
 </style>
