@@ -47,9 +47,9 @@
                         </div>  
                     </n-gi>
                     <n-gi :span="3">
-                        <div class="color-icon-container" style="padding-top: 25%">
+                        <div class="color-icon-container">
                             <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }"
-                                placement="bottom"
+                                placement="bottom-start"
                                 trigger="hover"
                                 @update:show="handleUpdateShow"
                             >
@@ -226,6 +226,9 @@ import { message } from 'ant-design-vue';
 }
 .search-icon-container:hover {
     cursor: pointer;
+}
+.color-icon-container {
+    padding-top: 20%;
 }
 .color-icon-container:hover {
     cursor: pointer;

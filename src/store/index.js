@@ -17,7 +17,6 @@ export default new Vuex.Store({
             } else if (state.colorMode === 'white' && state.accentColor === '255,255,255') {
                 state.accentColor = '0,0,0'
             }
-            return 0
         },
         changeThemeColor(state, [fixedRgb, originalRgb]) {//谔谔，不能超过两个参数
             state.currentThemeColor = fixedRgb

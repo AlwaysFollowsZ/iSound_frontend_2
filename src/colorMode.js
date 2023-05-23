@@ -12,7 +12,7 @@ export const globalThemeColor = computed(() => Object.assign([], store.state.cur
 const originalThemeColor = computed(() => Object.assign([], store.state.originalThemeColor))//原始主题色
 export const backgroundColor = computed(() => {
     let colorBaseWhite = 150
-    let colorBaseBlack = 230
+    let colorBaseBlack = 235
     let oppositeColorBase = 255 - colorBaseBlack
     let whiteRate = (255 - colorBaseWhite) / 255
     let blackRate = oppositeColorBase / 255

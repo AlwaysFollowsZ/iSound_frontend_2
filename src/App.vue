@@ -10,19 +10,13 @@ import ListTable from './components/tables/ListTable/ListTable.vue';
 import Player from './components/Player.vue';
 </script>
 <template>
-  <!-- <TopNav></TopNav> -->
-  <!-- <message-item></message-item> -->
-  <!-- <message-send></message-send> -->
   <div :style="{ 'background': backgroundColor }" class='page_background'> </div>
-  <RouterView @play="play" @playAll="playAll" />
-  <!-- <div :style="{'text-align':'center'}"> -->
-  <!-- 请直接传入数字(px)(高度可略)-->
-  <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
-  <list-table :position="'CollectionView'" :currentListId="3"></list-table>
-  <list-table :position="'PublicView'" :viewMode="'user'"></list-table>
-
-<temp></temp>
-  <Player />
+    <RouterView @play="play" @playAll="playAll" />
+    <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->
+    <!-- <list-table :position="'CollectionView'" :currentListId="3"></list-table>
+    <list-table :position="'PublicView'" :viewMode="'user'"></list-table> -->
+    <Player />
+  
 </template>
 
 <style scoped>
@@ -70,9 +64,9 @@ nav a:first-of-type {
 ==============================
 */
 .page_background {
-  /*position: fixed;  这个要是不注释掉整个页面会点不了 */ 
+  position: fixed; /* 这个要是不注释掉整个页面会点不了 */ 
   z-index: -1;
-  /*height: 100vh;    这个要是不注释页面背景色的高度有问题 */
+  height: 100vh;   /* 这个要是不注释页面背景色的高度有问题 */
   width: 100vw;
   transition: height cubic-bezier(0.165, 0.84, 0.44, 1) 1s,
     background-color cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
