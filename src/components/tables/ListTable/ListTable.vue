@@ -6,36 +6,39 @@ export default {
         let key = 0;
         if (this.position === 'CollectionView') {
             this.$http.get(`/api/playlist/detail/${this.currentListId}`).then((response) => {
+
                 this.songData = response.data.music_set.map((music) => ({
-                    key: key++,
-                    id: music.id,
+                    key: key++,//在当前列表的序号
+                    id: music.id,//歌曲总表的序号
                     name: music.name,
                     singer: music.artist,
-                    length: music.duration,
+                    length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
                     isliked: music.is_like,
                     isCollected: music.is_favorite,
                     imgSrc: music.cover,
+                    showCollection: false
                 }));
                 this.isReady = true;
             });
         }
-        else if (this.position === 'PublicView') {//公开页面,假设获取所有歌曲
+        else if (this.position === 'PublicView') {//公开页面,假设是要获取所有歌曲
             this.$http.get(`/api/index/`).then((response) => {
                 this.songData = response.data.music_set.map((music) => ({
                     key: key++,
                     id: music.id,
                     name: music.name,
                     singer: music.artist,
-                    length: music.duration,
+                    length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
                     isliked: music.is_like,
                     isCollected: music.is_favorite,
                     imgSrc: music.cover,
+                    showCollection:false
                 }));
                 this.isReady = true;
             });
         }
         else {//用户的播放记录
-            
+
         }
     },
     data() {
@@ -66,11 +69,12 @@ export default {
         //收藏单首歌曲
         handleCollect(key, listId) {
             if (this.songData[key].CollectedLists.indexOf(listId) < 0) {
-            this.songData[key].CollectedLists.push(listId)
-            this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
+                this.songData[key].CollectedLists.push(listId)//todo:提交到服务器端
+                this.songData[key].isCollected = true//更改歌曲对应的收藏夹列表
             }
             this.cleanChangeReaction()
         },
+        //在收藏夹页面，在本收藏夹重新收藏
         handleRecollect(key) {
             this.handleCollect(key, this.currentListId)
         },
@@ -104,7 +108,7 @@ export default {
             require: true,
             default: 'CollectionView',
             validator: (value) => {
-                return ['CollectionView', 'PublicView','RecordView'].includes(value)
+                return ['CollectionView', 'PublicView', 'RecordView'].includes(value)
             }
         },
         //若在CollectionView,请传入所在的收藏夹ID
@@ -113,7 +117,14 @@ export default {
         },
         //若在PublicView,请传入本歌曲需要显示的参数，数组形式
         publicSpace: {
-            type:Array
+            type: Array
+        },
+        viewMode: {
+            type: String,
+            default: 'user',
+            validator: (value) => {
+                return ['user','admin'].includes(value)
+            }
         }
     }
 
