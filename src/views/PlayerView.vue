@@ -175,6 +175,9 @@ export default defineComponent({
         }
         const obj = {};
         const time = row.match(/\[\d{2}:\d{2}.\d{2,3}\]/);
+        if (time == null) {
+          return;
+        }
         obj.lyrics = row.split("]")[1].trim();
         obj.timeStr = time[0].slice(1, time[0].length - 1);
         obj.time = this.parseTime(obj.timeStr);
@@ -293,7 +296,7 @@ export default defineComponent({
             </n-gi>
             <n-gi>
               <div style="font-size: larger">
-                <n-scrollbar style="max-height: 302.4px" ref="lyricsRef">
+                <n-scrollbar style="max-height: 300px" ref="lyricsRef">
                   <p
                     v-for="(obj, i) in lyricsObjArr"
                     :key="i"
@@ -475,6 +478,7 @@ export default defineComponent({
 <style scoped>
 .player-page {
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .back-button {
   width: 40px;
