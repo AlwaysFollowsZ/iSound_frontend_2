@@ -27,7 +27,7 @@
                                         @change="handleSongPageChange" />
                                 </div>
                             </template>
-                            <span>点击此处上传歌曲封面</span>
+                            <span>点击此处上传歌曲封面，不填则默认</span>
                         </n-popover>
                     </n-gi>
                     <n-gi>
@@ -45,18 +45,18 @@
                         </div>
                         <div>
                             <span>歌名</span>
-                            <n-input type="text" size="small" placeholder="请输入歌名" :value="songName"
+                            <n-input type="text" size="small" placeholder="请输入歌名，不填则默认" :value="songName"
                                 @input="songName = $event" />
                         </div>
                         <div>
                             <span>歌手</span>
-                            <n-input type="text" size="small" placeholder="请输入歌手" :value="songAuthor"
+                            <n-input type="text" size="small" placeholder="请输入歌手，不填则默认" :value="songAuthor"
                                 @input="songAuthor = $event" />
                         </div>
                         <div>
                             <span>标签选择</span>
                             <n-space vertical>
-                                <n-select v-model:value="value" multiple :options="options" />
+                                <n-select v-model:value="value" multiple :options="options" placeholder="请选择歌曲标签" max-tag-count="responsive"/>
                             </n-space>
                         </div>
                         <n-button strong secondary round type="primary" class="upload-button-position"
