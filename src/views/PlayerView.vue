@@ -99,6 +99,8 @@ export default defineComponent({
       music: {},
       lyricsIndex: 0,
       lyricsObjArr: [],
+      hasTranslation: false,
+      showTranslation: true,
       getRGBString,
       backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
     };
@@ -168,6 +170,7 @@ export default defineComponent({
     },
     updateLyrics(lyrics) {
       this.lyricsObjArr = [];
+      this.hasTranslation = false;
       const rows = lyrics.split(/\n/);
       rows.forEach((row) => {
         if (row == "") {
@@ -181,25 +184,32 @@ export default defineComponent({
         obj.lyrics = row.split("]")[1].trim();
         obj.timeStr = time[0].slice(1, time[0].length - 1);
         obj.time = this.parseTime(obj.timeStr);
-        if (obj.lyrics != "") {
+        if (
+          this.lyricsObjArr.length > 0 &&
+          obj.time <= this.lyricsObjArr[this.lyricsObjArr.length - 1].time
+        ) {
+          this.hasTranslation = true;
+          for (let i = 0; i < this.lyricsObjArr.length; i++) {
+            if (obj.time == this.lyricsObjArr[i].time) {
+              this.lyricsObjArr[i].translation =
+                obj.lyrics == "" ? this.lyricsObjArr[i].lyrics : obj.lyrics;
+              break;
+            }
+          }
+        } else if (obj.lyrics != "") {
           this.lyricsObjArr.push(obj);
         }
       });
+      /*for (let i = 0; i < 20; i++) {
+        this.lyricsObjArr.push({ lyrics: "6", timeStr: "00:00.000", time: 0 });
+      }*/
     },
     timeupdate(currentTime) {
       for (let i = 1; i <= this.lyricsObjArr.length; i++) {
-        if (
-          i == this.lyricsObjArr.length ||
-          currentTime < parseInt(this.lyricsObjArr[i].time)
-        ) {
+        if (i == this.lyricsObjArr.length || currentTime < this.lyricsObjArr[i].time) {
           if (this.lyricsIndex != i - 1) {
             this.lyricsIndex = i - 1;
-            const top = this.lyricsIndex > 3 ? 43.2 * (this.lyricsIndex - 3) : 0;
-            this.lyricsRef.scrollTo({
-              left: 0,
-              top: top,
-              behavior: "smooth",
-            });
+            this.scroll();
           }
           break;
         }
@@ -207,13 +217,21 @@ export default defineComponent({
     },
     jumpToLyrics(obj, i) {
       this.lyricsIndex = i;
-      const top = this.lyricsIndex > 3 ? 43.2 * (this.lyricsIndex - 3) : 0;
+      this.scroll();
+      this.$EventBus.emit("seek", obj.time);
+    },
+    scroll(behavior = "smooth") {
+      let top;
+      if (this.hasTranslation && this.showTranslation) {
+        top = this.lyricsIndex > 2 ? 79.8 + 58.75 * (this.lyricsIndex - 4) : 0;
+      } else {
+        top = this.lyricsIndex > 3 ? 43.2 * (this.lyricsIndex - 3) : 0;
+      }
       this.lyricsRef.scrollTo({
         left: 0,
         top: top,
-        behavior: "smooth",
+        behavior: behavior,
       });
-      this.$EventBus.emit("seek", obj.time);
     },
   },
 });
@@ -237,7 +255,7 @@ export default defineComponent({
       </n-gi>
       <n-gi :span="7">
         <div class="music-cover">
-          <n-image class="music-cover-img" :src="music.cover" />
+          <n-image class="music-cover-img" :src="music.cover" width="360" height="360" />
         </div>
         <div class="three-buttons">
           <n-grid>
@@ -289,7 +307,25 @@ export default defineComponent({
         <div class="lyrics-part">
           <n-grid :y-gap="20" :cols="1">
             <n-gi>
-              <div style="font-size: xx-large">{{ music.name }}</div>
+              <div
+                style="
+                  font-size: xx-large;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                {{ music.name }}
+                <n-switch
+                  v-if="hasTranslation"
+                  v-model:value="showTranslation"
+                  size="small"
+                  :round="false"
+                  @click="scroll"
+                >
+                  <template #icon> 译 </template>
+                </n-switch>
+              </div>
             </n-gi>
             <n-gi>
               <div>歌手：{{ music.artist }}</div>
@@ -297,23 +333,33 @@ export default defineComponent({
             <n-gi>
               <div style="font-size: larger">
                 <n-scrollbar style="max-height: 300px" ref="lyricsRef">
-                  <p
+                  <div
                     v-for="(obj, i) in lyricsObjArr"
                     :key="i"
-                    style="margin-bottom: 21.2px"
-                    class="lyrics"
+                    :style="{
+                      marginBottom:
+                        hasTranslation && showTranslation ? '17.9px' : '21.2px',
+                    }"
+                    class="lyrics-wrap"
                     :class="{ current: lyricsIndex === i }"
                   >
-                    {{ obj.lyrics }}
-                    <span class="lyricsTime">
-                      {{ obj.timeStr.slice(0, 5) + "&nbsp;" }}
-                      <Play
-                        class="lyricsJumpLink"
-                        @click="jumpToLyrics(obj, i)"
-                        width="14px"
-                      />
-                    </span>
-                  </p>
+                    <div class="lyrics">
+                      <div class="content">
+                        {{ obj.lyrics }}
+                      </div>
+                      <div class="time">
+                        {{ obj.timeStr.slice(0, 5) + "&nbsp;" }}
+                        <Play
+                          class="jumpLink"
+                          @click="jumpToLyrics(obj, i)"
+                          width="14px"
+                        />
+                      </div>
+                    </div>
+                    <div class="translation" v-show="hasTranslation && showTranslation">
+                      {{ obj.translation }}
+                    </div>
+                  </div>
                 </n-scrollbar>
               </div>
             </n-gi>
@@ -498,8 +544,6 @@ export default defineComponent({
 .music-cover-img {
   /* position: absolute; */
   margin: auto;
-  width: 360px;
-  height: 360px;
   border-radius: 50%;
 }
 .three-buttons {
@@ -574,27 +618,46 @@ export default defineComponent({
 .html {
   scroll-behavior: smooth;
 }
-.lyrics {
+.lyrics-wrap > .lyrics {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.lyrics-wrap > .lyrics > .content {
   color: #000;
   font-size: 14px;
   opacity: 0.5;
 }
 
-.lyrics.current {
+.lyrics-wrap > .translation {
+  color: #000;
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.lyrics-wrap.current > .lyrics > .content {
   font-size: 16px;
   font-weight: 600;
   opacity: 0.8;
 }
-.lyrics:hover {
+
+.lyrics-wrap.current > .translation {
+  color: #000;
+  font-size: 14px;
   opacity: 0.8;
 }
-.lyrics > .lyricsTime {
+.lyrics-wrap:hover > .lyrics > .content {
+  opacity: 0.8;
+}
+
+.lyrics-wrap:hover > .translation {
+  opacity: 0.8;
+}
+.lyrics-wrap > .lyrics > .time {
   display: none;
 }
-.lyrics:hover > .lyricsTime {
+.lyrics-wrap:hover > .lyrics > .time {
   display: flex;
   align-items: center;
   margin-right: 30px;
@@ -603,7 +666,7 @@ export default defineComponent({
   font-weight: lighter;
 }
 
-.lyricsJumpLink:hover {
+.jumpLink:hover {
   cursor: pointer;
 }
 </style>
