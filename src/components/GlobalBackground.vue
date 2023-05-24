@@ -1,12 +1,12 @@
 <script>
 import { ThumbDislike16Filled } from '@vicons/fluent';
-import { backgroundColor, getRGBString, findSimilarColors,globalThemeColor } from '/src/colorMode';
+import { backgroundColor, getRGBString, findSimilarColors, globalThemeColor } from '/src/colorMode';
 import { mapState } from 'vuex'; // 便于直接引用 store 中的 state
 export default {
     computed: {
         ...mapState(['multiColor']),    // 为 true 表示开启渐变效果
-                                        // 引用方式 `this.multiColor` or `multiColor`
-                                        // 在 methods 中添加关于此变量的判断决定是否开启渐变；默认不开启
+        // 引用方式 `this.multiColor` or `multiColor`
+        // 在 methods 中添加关于此变量的判断决定是否开启渐变；默认不开启
     },
     data() {
         watch(backgroundColor, () => {//切换背景色优先
@@ -50,7 +50,7 @@ export default {
     props: {
         updateSpeed: {//背景动画的变化快慢
             type: Number,
-            default:30,
+            default: 30,
             validator(value) {
                 return value > 0
             }
@@ -78,21 +78,20 @@ export default {
 }
 
 .bg-pan-bottom {
-	/* animation: bg-pan-bottom 5s infinite  forwards linear; */
+    /* animation: bg-pan-bottom 5s infinite  forwards linear; */
 }
 
 
 @keyframes bg-pan-bottom {
-  0% {
-    background-position: 0 50vw;
-    background-size:100% 100%;
-    
-  }
-  100% {
-    background-position: 0 0;
-    background-size:100% 100%;
-  }
+    0% {
+        background-position: 0 50vw;
+        background-size: 100% 100%;
+
+    }
+
+    100% {
+        background-position: 0 0;
+        background-size: 100% 100%;
+    }
 }
-
-
 </style>

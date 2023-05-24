@@ -1,11 +1,11 @@
 import Vuex from 'vuex'
- 
+
 export default new Vuex.Store({
     //数据，相当于data
     state: {
         colorMode: 'white',
         currentThemeColor: [200, 200, 200],//修改过的封面主题色
-        originalThemeColor:[200,200,200],//原始的封面主题色
+        originalThemeColor: [200, 200, 200],//原始的封面主题色
         isLoggedIn: false,
         accentColor: '0,0,0',               // 强调色
         multiColor: false,                  // 多彩变换，默认必须是 false
@@ -23,7 +23,7 @@ export default new Vuex.Store({
             console.log(fixedRgb, originalRgb);
             // alert(originalRgb,fixedRgb)
             state.currentThemeColor = fixedRgb
-            state.originalThemeColor=originalRgb
+            state.originalThemeColor = originalRgb
         },
         setLogState(state, b) {
             state.isLoggedIn = b

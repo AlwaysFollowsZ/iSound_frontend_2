@@ -6,7 +6,6 @@ export let Rows = [
         imagePath: '/src/assets/song4.jpg',
         SongCount: 10,
         Name: '守时',
-        imageSize: [100,300],
     },
     {
         Key: 1,
@@ -14,7 +13,6 @@ export let Rows = [
         imagePath: '/src/assets/song2.jpg',
         SongCount: 10,
         Name: '给自己的情书',
-        imageSize: [200,200],
     },
     {
         Key: 2,
@@ -22,7 +20,6 @@ export let Rows = [
         imagePath: '/src/assets/song3.jpg',
         SongCount: 10,
         Name: 'Yesterday Once More',
-        imageSize: [500,100],
     },
     {
         Key: 3,
@@ -30,7 +27,6 @@ export let Rows = [
         imagePath: '/src/assets/song3.jpg',
         SongCount: 10,
         Name: 'test112345678765432123456789',
-        imageSize: [200,450],
     },
     {
         Key: 4,
@@ -38,7 +34,6 @@ export let Rows = [
         imagePath: '/src/assets/song5.png',
         SongCount: 10,
         Name: '只因你太美',
-        imageSize: [200,250],
     },
     {
         Key: 5,
@@ -46,6 +41,5 @@ export let Rows = [
         imagePath: '/src/assets/song5.png',
         SongCount: 10,
         Name: 'hahaha',
-        imageSize: [500,900],
     },
 ]

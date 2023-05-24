@@ -1,18 +1,22 @@
 <template>
   <div ref="containerRef"></div>
-  <a @click="launch"><ChevronUp class="aplayer-launch" /></a>
+  <a @click="launch">
+    <ChevronUp class="aplayer-launch" />
+  </a>
   <div class="footer"></div>
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted, ref } from "vue";
+import { getCurrentInstance, onMounted, ref ,computed} from "vue";
 import "APlayer/dist/APlayer.min.css";
 import APlayer from "APlayer";
 import ColorThief from "colorthief";
 import { ChevronUp } from "@vicons/ionicons5";
+import { globalThemeColor, getBackgroundColorString, getRGBString } from '/src/colorMode.js'
 
 const containerRef = ref();
-const theme = ref("#b7daff");
+const theme = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 0.5) });
+console.log('theme:' + theme.value);
 const footerHeight = ref("130px");
 const { proxy } = getCurrentInstance();
 const colorThief = new ColorThief();
@@ -105,7 +109,8 @@ onMounted(() => {
     } else {
       launched = false;
     }
-    setTheme(e.index);
+    //setTheme(e.index);
+    //theme.value = getRGBString(getBackgroundColorString(globalThemeColor), 0.5);
   });
 
   ap.on("loadstart", () => {
@@ -145,15 +150,23 @@ onMounted(() => {
 
 <style scope>
 .aplayer-fixed {
-  position: fixed !important;
+  height: 0 !important;
+  position: fixed!important;
   width: 400px !important;
-  bottom: 0 !important;
+  overflow: visible;
+  bottom: 0px !important;
   left: calc(100% - 400px) !important;
+  background-color: v-bind("theme") !important;
 }
-
+.aplayer-list{
+  position: absolute !important;
+  bottom:0 !important;
+  background-color: v-bind("theme") !important;
+}
 .aplayer-body {
   max-width: calc(100% - 18px) !important;
   width: calc(100% - 18px) !important;
+  background-color: v-bind("theme") !important;
 }
 
 .aplayer-pic {
@@ -188,7 +201,7 @@ onMounted(() => {
   z-index: 100 !important;
 }
 
-.aplayer-fixed:not(.aplayer-narrow) > .aplayer-body > .aplayer-pic > .aplayer-button {
+.aplayer-fixed:not(.aplayer-narrow)>.aplayer-body>.aplayer-pic>.aplayer-button {
   display: none !important;
 }
 
@@ -278,7 +291,7 @@ onMounted(() => {
   height: 32px !important;
 }
 
-.aplayer-lrc-contents > p {
+.aplayer-lrc-contents>p {
   font-size: 16px !important;
 }
 
