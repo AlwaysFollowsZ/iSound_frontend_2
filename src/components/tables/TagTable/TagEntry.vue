@@ -2,7 +2,7 @@
     <n-button :class="{'animate__animated animate__fadeInLeft': !isLoggedIn}" strong secondary type="primary" size="large" :focusable="false"
     
         :style="{
-            'animation-delay': `${0.5 + index * 0.08}s`,
+            'animation-delay': `${0.5 + index * 0.04}s`,
             '--n-color': `${ colorDisplay }`, 
             '--n-color-hover': `${ colorHover }`,
             '--n-color-pressed': `${ colorHover }`,

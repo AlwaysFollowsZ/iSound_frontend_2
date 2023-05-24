@@ -7,7 +7,8 @@ export default new Vuex.Store({
         currentThemeColor: [200, 200, 200],//修改过的封面主题色
         originalThemeColor:[200,200,200],//原始的封面主题色
         isLoggedIn: false,
-        accentColor: '0,0,0'
+        accentColor: '0,0,0',               // 强调色
+        multiColor: false,                  // 多彩变换，默认必须是 false
     },
     mutations: {
         changeColorMode(state) {//请不要直接调用这个方法，而是调用colorMode.js中的同名方法
@@ -30,5 +31,8 @@ export default new Vuex.Store({
         setAccentColor(state, c) {
             state.accentColor = c
         },
+        setMultiColor(state, b) {
+            state.multiColor = b
+        }
     }
 })

@@ -71,12 +71,26 @@ export default {
     border-radius: 20px;
     margin-top: 2%;
     margin-bottom: 2%;
+    
 }
 .recommend-right-songlists-img {
     height: 100%;
     border-radius: 20px;
+
 }
 .recommend-right-songlists-img:hover {
     cursor: pointer;
 }
+/*.recommend-right-songlists-img-container::before {
+    content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg);
+  background-size: cover;
+    调整模糊程度，单位为像素 
+  opacity: 0.7;  调整遮罩层的透明度，可以根据需要进行调整 
+}*/
 </style>

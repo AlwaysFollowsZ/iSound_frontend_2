@@ -1,7 +1,13 @@
 <script>
 import { ThumbDislike16Filled } from '@vicons/fluent';
 import { backgroundColor, getRGBString, findSimilarColors,globalThemeColor } from '/src/colorMode';
+import { mapState } from 'vuex'; // 便于直接引用 store 中的 state
 export default {
+    computed: {
+        ...mapState(['multiColor']),    // 为 true 表示开启渐变效果
+                                        // 引用方式 `this.multiColor` or `multiColor`
+                                        // 在 methods 中添加关于此变量的判断决定是否开启渐变；默认不开启
+    },
     data() {
         watch(backgroundColor, () => {//切换背景色优先
             this.currentColor = this.themeColor

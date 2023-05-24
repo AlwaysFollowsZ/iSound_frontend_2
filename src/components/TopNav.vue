@@ -35,8 +35,8 @@
                     <n-gi :span="15">
                         <div style="padding-top: 3%; padding-right: 3%; padding-left: 7%;">
                             <n-input :style="{
-                                '--n-color': this.colorMode === 'white' ? 'white' : 'black',
-                                '--n-color-focus': this.colorMode === 'white' ? 'white' : 'black',
+                                '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                                 '--n-border-radius': `10px`,
                                 '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
                                 '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
@@ -57,7 +57,7 @@
                     </n-gi>
                     <n-gi :span="3">
                         <div class="color-icon-container">
-                            <n-tooltip :style="{ 'maxWidth': '400px', 'maxHeight': '200px' }"
+                            <n-tooltip :style="{ 'maxWidth': '270px', 'maxHeight': '200px' }"
                                 placement="bottom-start"
                                 trigger="hover"
                                 @update:show="handleUpdateShow"
@@ -82,12 +82,26 @@
                                                 @click="this.setAccentColor(c)"></button>
                                             <!-- < :style="{'--n-color': }" @click="this.setAccentColor(c); console.log(c)"/> -->
                                         </span>
+                                        <div style="margin-top: 3%">
+                                            <n-grid>
+                                                <n-gi :span="14">开启多彩背景色变换</n-gi>
+                                                <n-gi :span="5"></n-gi>
+                                                <n-gi :span="5">
+                                                    <n-switch 
+                                                        v-model:value="multiColorShouldDisplay"
+                                                        @update:value="handleMultiColorChange"
+                                                        :style="{'--n-rail-color': 'grey'}"
+                                                   />
+                                                </n-gi>
+                                            </n-grid>
+                                        </div>
                                     </div>
 
                                 </template>
                             </n-tooltip>
                         </div>
                     </n-gi>
+                    
                     <n-gi :span="3" v-if="this.isLoggedIn">
                         <div style="padding-top: 25%">
                             <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
@@ -177,6 +191,7 @@ export default {
             showRegister: false,
             searchIconIsHovered: false,
             backToHomeIsHovered: false,
+            multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
             SearchOutline,
             MailOutline,
             showMessage: ref(true),
@@ -212,7 +227,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['setLogState', 'setAccentColor']),
+        ...mapMutations(['setLogState', 'setAccentColor', 'setMultiColor']),
         search() {
             if (this.searchValue.trim().length !== 0) {
                 console.log(`searchValue: ${this.searchValue}`)
@@ -227,7 +242,10 @@ export default {
         readMessage() {
             this.showModifyUserMessage = true;
         },
-        changeColorMode
+        changeColorMode,
+        handleMultiColorChange() {
+            this.setMultiColor(this.multiColorShouldDisplay)
+        }
     }
 };
 </script>
@@ -268,7 +286,6 @@ export default {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-
 }
 
 .round-button {
@@ -281,8 +298,8 @@ export default {
     cursor: pointer;
 }
 .choose-color-default {
-    text-decoration: underline;
-    margin-right: 3px;
+    padding-right: 3px;
+    color: cornflowerblue;
 }
 .choose-color-default:hover {
     cursor: pointer;
