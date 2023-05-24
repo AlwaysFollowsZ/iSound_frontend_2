@@ -56,7 +56,7 @@
 <script>
 import { CloseOutline } from '@vicons/ionicons5'
 export default {
-    name: "LoginView",
+    name: "RegisterView",
     components: {
         CloseOutline,
     },
@@ -94,7 +94,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .register-card-title {
     display: flex;
     justify-content: center;

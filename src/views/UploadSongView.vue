@@ -156,23 +156,22 @@ export default defineComponent({
         submitUpload() {
             this.handleTagList();
             console.log(this.tagString);
-            // let data = new FormData();
-            // data.append('title', this.songName);
-            // data.append('artist', this.songAuthor);
-            // data.append('cover', this.songPageFile);
-            // data.append('source', this.songSrcFile);
-            // data.append('lyrics', this.songLyricFile);
-            // data.append('tags', this.tagString);
-            // this.$http.post('/api/music/upload/', data).then(response => {
-            //     console.log(response);
-            //     if (response.data.code == '0') {
-            //         this.closeUWindow();
-            //         alert('上传歌曲成功!')
-            //     } else if (response.data.code == '-1') {
-            //         alert('上传歌曲失败，请重新上传!');
-            //     }
-            // });
-            
+            let data = new FormData();
+            data.append('title', this.songName);
+            data.append('artist', this.songAuthor);
+            data.append('cover', this.songPageFile);
+            data.append('source', this.songSrcFile);
+            data.append('lyrics', this.songLyricFile);
+            data.append('tags', this.tagString);
+            this.$http.post('/api/music/upload/', data).then(response => {
+                console.log(response);
+                if (response.data.code == '0') {
+                    this.closeUWindow();
+                    alert('上传歌曲成功!')
+                } else if (response.data.code == '-1') {
+                    alert('上传歌曲失败，请重新上传!');
+                }
+            });
         },
         handleTagList() {
             this.tagList = [];

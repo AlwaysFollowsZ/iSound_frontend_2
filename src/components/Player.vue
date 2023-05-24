@@ -133,6 +133,7 @@ onMounted(() => {
 
   proxy.$EventBus.on("seek", (time) => {
     ap.seek(time);
+    ap.play();
   });
 
   onBeforeUnmount(() => {
@@ -165,7 +166,7 @@ onMounted(() => {
   z-index: -100 !important;
 }
 
-.aplayer-narrow + .aplayer-launch {
+.aplayer-narrow + a > .aplayer-launch {
   display: none !important;
 }
 

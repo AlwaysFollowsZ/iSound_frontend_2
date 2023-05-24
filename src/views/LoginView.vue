@@ -38,6 +38,7 @@
                                 <n-button strong secondary type="Warning" @click="switchToRegister">
                                     注册
                                 </n-button>
+                                <span @click="switch2ResetPasswd">忘记密码</span>
                             </n-gi>
                         </n-grid>
                     </n-gi>
@@ -72,7 +73,10 @@ export default{
             this.$emit('closeLoginWindow')
         },
         switchToRegister() {
-            this.$emit('switch')
+            this.$emit('switch2Register')
+        },
+        switch2ResetPasswd() {
+            this.$emit('switch2ResetPasswd')
         },
         changeToLoggedIn() {
             this.$emit('login')
@@ -96,7 +100,7 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
 .login-card-title {
     display: flex;
     justify-content: center;

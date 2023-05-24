@@ -112,8 +112,8 @@ export default {
                     this.userEmail = response.data.email;
                     this.userAvatar = response.data.avatar;
                     this.userIsFollowed = response.data.is_followed;
-                    // this.userFansNum = response.data.fans;
-                    // this.userFollowingNum = response.data.following;
+                    this.userFansNum = response.data.fans;
+                    this.userFollowingNum = response.data.following;
                     console.log(response);
                 });
             },
