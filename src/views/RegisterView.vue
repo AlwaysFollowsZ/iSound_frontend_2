@@ -2,14 +2,14 @@
     <!-- <n-button @click="showLogin = true">登录</n-button> -->
     <n-modal :show="showRegister" class="round-corner">
         <div>
-            <n-card :style="{ 'width': `600px`, '--n-border-radius': `20px` }" :bordered="false" role="dialog"
+            <n-card :style="{ 'width': `600px`, '--n-border-radius': `20px`, '--n-padding-top': '30px' }" :bordered="false" role="dialog"
                 aria-modal="true">
                 <template #header>
                     <div>
                         <n-grid :x-gap="12">
                             <n-gi :span="2"></n-gi>
                             <n-gi :span="20">
-                                <h3 class="register-card-title">欢迎来到 iSound，请先完成注册！</h3>
+                                <h2 class="register-card-title">加入我们：一起建设iSound</h2>
                             </n-gi>
                             <n-gi :span="2">
                                 <div style="padding-top: 30%" @click="closeRWindow">
@@ -25,7 +25,7 @@
                             src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
                     </n-gi>
                     <n-gi>
-                        <span>用户名</span>
+                        <span style="font-size: 18px; s">用户名</span>
                         <n-input type="text" placeholder="请输入用户名" :value="username" @input="username = $event" clearable />
                         <span>密码</span>
                         <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请输入密码" :minlength="8" :value="password1" @input="password1 = $event"/>
@@ -96,9 +96,10 @@ export default {
 
 <style scoped>
 .register-card-title {
-    display: flex;
+    /*display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center;*/
+    font-size: 40px;
     font-weight: bold;
 }
 
