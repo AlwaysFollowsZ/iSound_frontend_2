@@ -125,9 +125,15 @@
             </n-gi>
         </n-grid>
     </div>
-    <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false"
-        @switch="showLogin = false; showRegister = true" @login="toLogIn"></login-view>
-    <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view>
+    <login-view :showLogin="showLogin" 
+        @closeLoginWindow="showLogin = false"
+        @switch2Register="showLogin = false; showRegister = true" 
+        @switch2ResetPasswd="showLogin = false; showResetPasswd = true" 
+        @login="toLogIn"></login-view>
+    <register-view :showRegister="showRegister" 
+        @closeRegisterWindow="showRegister = false"></register-view>
+    <reset-passwd-view :showResetPasswd="showResetPasswd" 
+        @closeResetPasswdWindow="showResetPasswd = false"></reset-passwd-view>
     <modify-user-message-view :showModifyUserMessage="showModifyUserMessage"
         @closeModifyWindow="showModifyUserMessage = false"></modify-user-message-view>
 </template>
@@ -136,6 +142,7 @@
 import { SearchOutline, MailOutline, SunnyOutline, MoonOutline } from '@vicons/ionicons5'
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
+import ResetPasswdView from '../views/ResetPasswdView.vue';
 import { mapState, mapMutations } from 'vuex';
 import ModifyUserMessageView from '../views/ModifyUserMessageView.vue';
 import { changeColorMode } from '/src/colorMode'
@@ -147,6 +154,7 @@ export default {
         SearchOutline,
         LoginView,
         RegisterView,
+        ResetPasswdView,
         MailOutline,
         SunnyOutline,
         MoonOutline,
@@ -189,6 +197,7 @@ export default {
             searchValue: '',
             showLogin: false,
             showRegister: false,
+            showResetPasswd: false,
             searchIconIsHovered: false,
             backToHomeIsHovered: false,
             multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
