@@ -62,7 +62,7 @@ export default {
         //table的大小(宽和高)
         tableSize: {
             type: Array,
-            default: ['1000',]
+            default: ['1000','']
         },
         //使用该组件的位置包括个人主页/收藏夹选择悬浮框和音乐馆主页
         //分别为PersonalView,CollectionView,HomeView
