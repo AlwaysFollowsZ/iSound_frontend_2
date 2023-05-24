@@ -1,10 +1,9 @@
 <template>
     <div class="fan-list-title">
         全部粉丝
-        <a-divider style="height: 1.8px; background-color: #dddddd" />
     </div>
     <div class="loading-animate" v-if="isLoading">
-        <n-progress style="height: 200px; width: 200px" class="animate__animated" type="line"
+        <n-progress style="height: 50px; width: 400px" class="animate__animated" type="line"
             :percentage="loadingPercentage" rail-color="lightgrey" :style="{
                 '--n-fill-color':
                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
@@ -19,9 +18,9 @@
             </template>
         </n-progress>
     </div>
-    <div class="fan-list-border" v-else>
+    <div class="fan-list-border animate__animated animate__slideInDown" style="animation-duration: 0.9s" v-else>
         <div class="fan-container" v-for="(fan, idx) in 
-        fansList.slice(5 * (page - 1), 5 * (page - 1) + ((5 * page > fansList.length) ? (fansList.length % 5) : 5))"
+        fansList.slice(4 * (page - 1), 4 * (page - 1) + ((4 * page > fansList.length) ? (fansList.length % 4) : 4))"
             :key="idx">
             <div class="fan-card">
                 <n-grid x-gap="12">
@@ -29,7 +28,7 @@
                                 :src="fan.avatarImg" /></router-link></n-gi>
                     <n-gi :span="18">
                         <router-link :to="`/home/user/${fan.id}`">
-                            <div class="fan-card-name">
+                            <div class="fan-card-name" :style="{'color': 'rgb(' + this.accentColor + ')'}">
                                 {{ fan.name }}
                             </div>
                         </router-link>
@@ -44,26 +43,96 @@
                         </div>
                     </n-gi>
                     <n-gi span="3">
-                        <n-popconfirm v-if="fan.isFollowed" @positive-click="follow(fan)" positive-text="确认" negative-text="取消">
+                        <n-popconfirm 
+                            v-if="fan.isFollowed" @positive-click="follow(fan)" positive-text="确认" negative-text="取消"
+                            :style="{
+                                '--n-text-color': this.colorMode === 'white' ? 'rgb(57,57,57)' : 'white',
+                                '--n-color': this.colorMode === 'white' ? '#fff' : 'rgb(72,72,72)',
+                                '--n-border-radius': '12px',
+                            }"  
+                            :negative-button-props="{
+                                style:{
+                                    '--n-color': 'transparent',
+                                    '--n-color-hover': 'transparent',
+                                    '--n-color-pressed': 'transparent',
+                                    '--n-color-focus': 'transparent',
+                                    '--n-text-color': '',
+                                    '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
+                                    '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
+                                    '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
+                                    '--n-border': '1px solid rgb(224, 224, 230)',
+                                    '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-radius': '8px',
+                                }
+                            }"
+                            :positive-button-props="{
+                                style:{
+                                    '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-text-color': 'white',
+                                    '--n-text-color-hover': 'white',
+                                    '--n-text-color-pressed': 'white',
+                                    '--n-text-color-focus': 'white',
+                                    '--n-border': '1px solid rgb(224, 224, 230)',
+                                    '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-radius': '8px',
+                                }
+                            }"
+                        
+                        >
                             <template #trigger>
-                                <n-button strong secondary round type="info" style="margin-top: 15px;">已互粉</n-button>
+                                <n-button strong secondary round type="info" style="margin-top: 15px;"
+                                :style="{
+                                    '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
+                                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
+                                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)', 
+                                    '--n-color-focus': 'rgba(' + this.accentColor + ', 0.5)',
+                                    '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
+                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
+                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
+                                    '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
+                                  }"
+                                >
+                                    已互粉
+                                </n-button>
                             </template>
-                            您要确定要取消关注该用户吗？
+                            确定要取消关注该用户吗？
                         </n-popconfirm>
-                        <n-button v-else strong secondary round style="margin-top: 15px;" @click="follow(fan)">回关</n-button>
+                        <n-button v-else strong secondary round style="margin-top: 15px;" @click="follow(fan)"
+                            :style="{
+                                '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
+                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
+                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
+                                '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
+                            }"
+                        >
+                            回关
+                        </n-button>
                     </n-gi>
                 </n-grid>
-                <n-divider dashed />
             </div>
         </div>
         <n-grid>
             <n-gi :span="8"></n-gi>
             <n-gi :span="8">
-                <div style="display: flex; justify-content: center;" v-if="fansList.length > 0">
-                    <n-pagination v-model:page="page" :page-count="Math.ceil(fansList.length / 5)" />
+                <div style="display: flex; justify-content: center; margin-top: 0px;" v-if="fansList.length > 0">
+                    <n-pagination v-model:page="page" :page-count="Math.ceil(fansList.length / 4)" 
+                    :style="{
+                        '--n-item-text-color-hover': 'rgb(' + this.accentColor + ')',
+                        '--n-item-text-color-active': 'rgb(' + this.accentColor + ')',
+                        '--n-item-text-color-pressed': 'rgb(' + this.accentColor + ')',
+                        '--n-item-border-active': '1px solid rgb(' + this.accentColor + ')',
+                        '--n-item-color-disabled': 'transparent',
+                    }"  />
                 </div>
                 <div style="display: flex; justify-content: center; font-size: 20px" v-else>
-                    您还没有粉丝哦~
+                    暂无粉丝
                 </div>
             </n-gi>
             <n-gi :span="8"></n-gi>
@@ -153,6 +222,7 @@ export default {
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
     font-weight: bold;
+    margin-bottom: 20px;
     /* text-align: center; */
 }
 
@@ -167,6 +237,7 @@ export default {
     /* max-width: 400px; */
     /* padding-top: 3%;
     padding-bottom: 3%; */
+    margin-bottom: 35px;
     word-wrap: break-word;
 }
 

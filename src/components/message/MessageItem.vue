@@ -300,7 +300,6 @@
   margin-right: 8%;
   margin-top: 2%;
   margin-bottom: 2%;
-  
 }
 .message-card-header {
  

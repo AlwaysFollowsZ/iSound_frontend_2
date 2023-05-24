@@ -1,13 +1,12 @@
 <template>
     <div>
         <div class="my-song-sheet-title">
-            全部歌单
-            <a-divider style="height: 1.8px; background-color: #dddddd"/>
+            全部收藏夹
         </div>
         <!-- <div style="display: flex; justify-content: center;"> -->
             <div class="song-sheet-container">
-                <n-grid :x-gap="12" :y-gap="6" :col="3">
-                    <n-gi :span="8" v-for="(song, idx) in songSheets" :key="idx">
+                <n-grid :x-gap="12" :y-gap="6" :col="2">
+                    <n-gi :span="12" v-for="(song, idx) in songSheets" :key="idx">
                         <div class="single-card-container">
                             <div class="single-card-img-container">
                                 <img class="single-card-img" :src="song.imgSrc">
@@ -15,9 +14,6 @@
                             <div class="single-card-info-container">
                                 <div class="single-card-info-name">
                                     {{ song.title }}
-                                </div>
-                                <div class="single-card-info-singer">
-                                    {{ song.singer }}
                                 </div>
                             </div>
                         </div>
@@ -77,8 +73,8 @@ export default {
 }
 
 .single-card-img-container {
-    width: 160px;
-    height: 160px;
+    width: 330px;
+    height: 200px;
     border-radius: 10px;
     display: flex;
     justify-content: center;

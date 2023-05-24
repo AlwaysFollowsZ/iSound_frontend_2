@@ -41,7 +41,7 @@ export default {
                 //更新过渡时间和当前颜色
                 this.currentColor = updatedColor
                 this.transitionTime = transitionDelta / this.updateSpeed
-                console.log(this.transitionTime, updatedColor);
+              //  console.log(this.transitionTime, updatedColor);
                 setTimeout(loopAnimation, this.transitionTime * 1000)
             }
             loopAnimation()
