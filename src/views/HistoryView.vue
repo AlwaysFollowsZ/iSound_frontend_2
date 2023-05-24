@@ -67,6 +67,8 @@
                                                     :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
                                                     {{ item.music.name }}
                                                 </div>
+                                            </div>
+                                            <div>
                                                 <div class="song-singer"
                                                     :style="{ 'color': this.colorMode === 'white' ? 'grey' : 'lightgrey' }">
                                                     {{ item.music.artist }}
@@ -240,6 +242,9 @@ export default {
     font-weight: bold;
 }
 
+.song-detail-card :hover {
+    cursor: pointer;
+}
 .song-image {
     height: 100px;
     width: 100px;
@@ -285,6 +290,7 @@ export default {
     align-items: flex-end;
     height: 100%;
 }
+
 /* .tag-container {
     display: flex;
     justify-content: flex-end;

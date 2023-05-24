@@ -13,18 +13,12 @@
 
             </n-gi>
             <n-gi :span="2">
-                <div 
-                    class="back-to-home"
-                    :class="{'animate__animated animate__pulse': backToHomeIsHovered}"
-                    style="animation-duration: 2s"
-                    :style="{
+                <div class="back-to-home" :class="{ 'animate__animated animate__pulse': backToHomeIsHovered }"
+                    style="animation-duration: 2s" :style="{
                         'text-shadow': backToHomeIsHovered ? '1px 1px 1px rgba(' + this.accentColor + ', 0.8)' : '',
                         'color': this.colorMode === 'white' ? 'grey' : 'lightgrey',
-                    }"
-                    @mouseover="backToHomeIsHovered = true"
-                    @mouseout="backToHomeIsHovered = false"
-                    @click="this.$router.push('/')"
-                >
+                    }" @mouseover="backToHomeIsHovered = true" @mouseout="backToHomeIsHovered = false"
+                    @click="this.$router.push('/')">
                     音乐馆
                 </div>
             </n-gi>
@@ -44,8 +38,7 @@
                                 '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字"
-                                @keyup.enter="search" />
+                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" />
                         </div>
                     </n-gi>
                     <n-gi :span="3">
@@ -57,11 +50,8 @@
                     </n-gi>
                     <n-gi :span="3">
                         <div class="color-icon-container">
-                            <n-tooltip :style="{ 'maxWidth': '270px', 'maxHeight': '200px' }"
-                                placement="bottom-start"
-                                trigger="hover"
-                                @update:show="handleUpdateShow"
-                            >
+                            <n-tooltip :style="{ 'maxWidth': '270px', 'maxHeight': '200px' }" placement="bottom-start"
+                                trigger="hover" @update:show="handleUpdateShow">
                                 <template #trigger>
                                     <div style="color: lightgrey">
                                         <n-icon size="27px" v-if="this.colorMode === 'white'"
@@ -70,10 +60,9 @@
                                     </div>
                                 </template>
                                 <template #default>
-                                    <div >
+                                    <div>
                                         <span class="choose-color-default"
-                                            @click="this.setAccentColor(this.colorMode === 'white' ? '0,0,0' : '255,255,255')"
-                                        >
+                                            @click="this.setAccentColor(this.colorMode === 'white' ? '0,0,0' : '255,255,255')">
                                             默认
                                         </span>
                                         <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
@@ -87,11 +76,9 @@
                                                 <n-gi :span="14">开启多彩背景色变换</n-gi>
                                                 <n-gi :span="5"></n-gi>
                                                 <n-gi :span="5">
-                                                    <n-switch 
-                                                        v-model:value="multiColorShouldDisplay"
+                                                    <n-switch v-model:value="multiColorShouldDisplay"
                                                         @update:value="handleMultiColorChange"
-                                                        :style="{'--n-rail-color': 'grey'}"
-                                                   />
+                                                        :style="{ '--n-rail-color': 'grey' }" />
                                                 </n-gi>
                                             </n-grid>
                                         </div>
@@ -101,7 +88,7 @@
                             </n-tooltip>
                         </div>
                     </n-gi>
-                    
+
                     <n-gi :span="3" v-if="this.isLoggedIn">
                         <div style="padding-top: 25%">
                             <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
@@ -125,17 +112,16 @@
             </n-gi>
         </n-grid>
     </div>
-    <login-view :showLogin="showLogin" 
-        @closeLoginWindow="showLogin = false"
-        @switch2Register="showLogin = false; showRegister = true" 
-        @switch2ResetPasswd="showLogin = false; showResetPasswd = true" 
-        @login="toLogIn"></login-view>
-    <register-view :showRegister="showRegister" 
-        @closeRegisterWindow="showRegister = false"></register-view>
-    <reset-passwd-view :showResetPasswd="showResetPasswd" 
+    <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false"
+        @switch2Register="showLogin = false; showRegister = true"
+        @switch2ResetPasswd="showLogin = false; showResetPasswd = true" @login="toLogIn"></login-view>
+    <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view>
+    <reset-passwd-view :showResetPasswd="showResetPasswd"
         @closeResetPasswdWindow="showResetPasswd = false"></reset-passwd-view>
     <modify-user-message-view :showModifyUserMessage="showModifyUserMessage"
         @closeModifyWindow="showModifyUserMessage = false"></modify-user-message-view>
+    <change-passwd-view :showChangePasswd="showChangePasswd"
+        @closeChangePasswdWindow="showChangePasswd = false"></change-passwd-view>
 </template>
   
 <script>
@@ -143,6 +129,7 @@ import { SearchOutline, MailOutline, SunnyOutline, MoonOutline } from '@vicons/i
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import ResetPasswdView from '../views/ResetPasswdView.vue';
+import ChangePasswdView from '../views/ChangePasswdView.vue';
 import { mapState, mapMutations } from 'vuex';
 import ModifyUserMessageView from '../views/ModifyUserMessageView.vue';
 import { changeColorMode } from '/src/colorMode'
@@ -155,6 +142,7 @@ export default {
         LoginView,
         RegisterView,
         ResetPasswdView,
+        ChangePasswdView,
         MailOutline,
         SunnyOutline,
         MoonOutline,
@@ -198,6 +186,7 @@ export default {
             showLogin: false,
             showRegister: false,
             showResetPasswd: false,
+            showChangePasswd: false,
             searchIconIsHovered: false,
             backToHomeIsHovered: false,
             multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
@@ -220,6 +209,15 @@ export default {
                         onClick: () => {
                             this.$router.push('/history')
                             console.log('history')
+                        }
+                    }
+                },
+                {
+                    label: "修改密码",
+                    props: {
+                        onClick: () => {
+                            this.showChangePasswd = true;
+                            console.log('修改密码页面')
                         }
                     }
                 },
@@ -284,9 +282,11 @@ export default {
 .search-icon-container:hover {
     cursor: pointer;
 }
+
 .color-icon-container {
     padding-top: 20%;
 }
+
 .color-icon-container:hover {
     cursor: pointer;
 }
@@ -306,10 +306,12 @@ export default {
     line-height: 16px;
     cursor: pointer;
 }
+
 .choose-color-default {
     padding-right: 3px;
     color: cornflowerblue;
 }
+
 .choose-color-default:hover {
     cursor: pointer;
 }

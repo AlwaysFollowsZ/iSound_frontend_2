@@ -91,7 +91,7 @@ export default{
                     this.closeLWindow();
                 } else if (response.data.code == '-1') {
                     alert('登录失败，请重新登录！');
-                    this.closeLWindow();
+                    // this.closeLWindow();
                 }
             }); 
         }
