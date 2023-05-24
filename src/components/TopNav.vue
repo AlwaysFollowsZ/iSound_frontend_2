@@ -13,14 +13,17 @@
 
             </n-gi>
             <n-gi :span="2">
-                <div class="back-to-home" :class="{ 'animate__animated animate__pulse': backToHomeIsHovered }"
-                    style="animation-duration: 2s" :style="{
+                <!-- <div 
+                    class="back-to-home"
+                    :class="{'animate__animated animate__pulse': backToHomeIsHovered}"
+                    style="animation-duration: 2s"
+                    :style="{
                         'text-shadow': backToHomeIsHovered ? '1px 1px 1px rgba(' + this.accentColor + ', 0.8)' : '',
                         'color': this.colorMode === 'white' ? 'grey' : 'lightgrey',
                     }" @mouseover="backToHomeIsHovered = true" @mouseout="backToHomeIsHovered = false"
                     @click="this.$router.push('/')">
                     音乐馆
-                </div>
+                </div> -->
             </n-gi>
             <n-gi :span="4"></n-gi>
             <n-gi :span="6">

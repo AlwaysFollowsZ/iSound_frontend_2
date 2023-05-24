@@ -17,7 +17,7 @@ import Player from "./components/Player.vue";
   <RouterView />
   <!-- <div :style="{'text-align':'center'}"> -->
   <!-- 请直接传入数字(px)(高度可略)-->
-  <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->
+  <image-table :table-size="[1000,]" :position="'HomeView'"></image-table>
   <!-- <list-table :position="'CollectionView'" :currentListId="3"></list-table>
   <list-table :position="'PublicView'" :viewMode="'user'"></list-table> -->
   <Player />

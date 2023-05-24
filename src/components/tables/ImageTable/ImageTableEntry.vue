@@ -1,16 +1,19 @@
 <script>
 import { defineProps, ref, computed } from 'vue'
 import { NButton, NEllipsis, NInput, NIcon, NIconWrapper, NTooltip, NPopover, NConfigProvider } from 'naive-ui'
-import { MusicNote220Regular } from '@vicons/fluent'
+import { MusicNote220Regular, BookStar20Regular } from '@vicons/fluent'
 import { LibraryMusicOutlined } from '@vicons/material'
 import { getBackgroundColorString, getFontColorString, getThemeColorByImage } from '/src/colorMode'
 // 从父级传入内容类型、图片路径、歌曲数（如有）、名字、图片大小、主题色等信息
 export default {
+    components: {
+        MusicNote220Regular, BookStar20Regular, LibraryMusicOutlined
+    },
     data() {
         const themeColor = ref([])
-        getThemeColorByImage(imagePath, themeColor)
-        const imageSizeAvg=(imageSize[0]+imageSize[1])/2
-        const fontSize = (imageSizeAvg)/ 12
+        getThemeColorByImage(this.imagePath, themeColor)
+        const imageSizeAvg = (this.imageSize[0] + this.imageSize[1]) / 2
+        const fontSize = (imageSizeAvg) / 12
         const fontColorString = getFontColorString(themeColor)
         const themeColorString = getBackgroundColorString(themeColor)
         const isHoverOnBottom = ref(false)
@@ -31,7 +34,7 @@ export default {
             type: String,
             default: 'songList',
             validator(value) {
-                return ['songList', 'Song'].includes(value)
+                return ['songList', 'Song', 'Collection'].includes(value)
             }
         },
         imagePath: {
@@ -67,25 +70,25 @@ export default {
     }">
         <!-- 大盒子的动态属性有背景色和宽高 -->
         <div class="mask_box" :style="{
-            'padding': `${imageSize / 8}px ${imageSize / 6}px ${imageSize / 10}px ${imageSize / 6}px`,
-            'border-radius': `${imageSize / 10}px`,
+            'padding': `${imageSize[1] / 8}px ${imageSize[0] / 6}px ${imageSize[1] / 10}px ${imageSize[0] / 6}px`,
+            'border-radius': `${imageSizeAvg / 10}px`,
             'background-color': isHoverOnMask ? `rgb(${themeColorString},0.8)` : `rgb(${themeColorString},0.5)`,
             'box-shadow': isHoverOnMask ? `0 0 8px 3px rgb(${themeColorString},0.8)` : '',
             'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `3px dashed rgb(${themeColorString},0.7)`
         }" :class="[isHoverOnMask ? 'mask_box-hover' : '',
-isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true"
-            @mouseleave="isHoverOnMask = false" @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false"
-            @click="$emit('clickEntry', Key)">
+isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mouseleave="isHoverOnMask = false"
+            @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Key)">
             <!-- 动态属性为图片路径 -->
             <div class="image" :style="{
                 'background-image': `url(${imagePath})`,
-                'width': `${imageSize}px`,
-                'border-radius': `${imageSize / 15}px`
+                'width': `${imageSize[0]}px`,
+                'height': `${imageSize[1]}px`,
+                'border-radius': `${imageSizeAvg / 15}px`
             }">
                 <!-- 底部显示歌曲数量  动态属性有背景色和宽高-->
                 <div class="image_bottom" @mouseenter="isHoverOnBottom = true" @mouseleave="isHoverOnBottom = false">
                     <n-popover trigger="hover" :style="{
-                        'border-radius': `${imageSize / 20}px`,
+                        'border-radius': `${imageSizeAvg / 20}px`,
                         'font-weight': 700,
                         '--n-text-color': `rgb(${fontColorString})`,
                         '--n-color': `rgb(${themeColorString},0.8)`,
@@ -94,10 +97,15 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true"
                     }">
                         <template #trigger>
                             <n-icon-wrapper :style="{
-                                'margin-right': `${imageSize > 300 ? imageSize / 10 : imageSize / 15}px`
-                            }" :size="imageSize / 8" :border-radius="imageSize / 20" :color="`rgb(${themeColor},0.9)`">
-                                <n-icon :component="Type === 'songList' ? LibraryMusicOutlined : MusicNote220Regular"
-                                    :size="imageSize / 10"></n-icon>
+                                'margin-right': `${imageSizeAvg > 300 ? imageSizeAvg / 10 : imageSizeAvg / 15}px`
+                            }" :size="imageSizeAvg / 8" :border-radius="imageSizeAvg / 20"
+                                :color="`rgb(${themeColor},0.9)`">
+                                <n-icon v-if="Type === 'songList'"
+                                    :size="imageSizeAvg / 10"><library-music-outlined></library-music-outlined></n-icon>
+                                <n-icon v-if="Type === 'Song'"
+                                    :size="imageSizeAvg / 10"><music-note220-regular></music-note220-regular></n-icon>
+                                <n-icon v-if="Type === 'Collection'"
+                                    :size="imageSizeAvg / 10"><book-star20-regular></book-star20-regular></n-icon>
                             </n-icon-wrapper>
                         </template>
                         {{ Type === 'Song' ? '这是一首歌曲' : '这是一个歌单' }}
@@ -106,19 +114,18 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true"
                         <span class="count" v-if="isHoverOnBottom && Type === 'songList'" :style="{
                             'color': `rgb(${fontColorString},0.9)`,
                             'font-size': `${fontSize}px`,
-                            'line-height': `${imageSize / 10}px`,
+                            'line-height': `${imageSizeAvg / 10}px`,
                             'background-color': `rgb(${themeColorString},0.8)`,
-                            'border-radius': `${imageSize / 20}px`,
-                            'padding': `${imageSize / 50}px ${imageSize / 30}px`
+                            'border-radius': `${imageSizeAvg / 20}px`,
+                            'padding': `${imageSize[0] / 50}px ${imageSize[1] / 30}px`
                         }">
                             歌曲数量 : {{ songCount }}
                         </span>
                     </transition>
-
                 </div>
             </div>
             <div class="title_box" :style="{
-                'width': `${imageSize}px`,
+                'width': `${imageSize[0]}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
                     `0 0 ${fontSize / 3}px rgb(${themeColorString})` : ''
@@ -153,9 +160,9 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true"
 
 .image {
     position: relative;
-    aspect-ratio: 1;
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-position: center center;
+    background-size: cover;
 }
 
 .image_bottom {
@@ -222,5 +229,4 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true"
 .count-leave-to {
     opacity: 0;
     transform: translateX(-20px);
-}
-</style>
+}</style>
