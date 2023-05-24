@@ -95,8 +95,7 @@
                                                     {{ item.music.up.username }}
                                                 </span>
                                                 <span class="song-tags" :style="{'color': this.colorMode === 'white' ? 'grey' : 'lightgrey'}">
-                                                    <!-- {{ item.tags }} -->
-                                                    流行乐
+                                                    {{ item.music.tags }}
                                                 </span>
                                             </div>
                                         </n-gi>
@@ -167,7 +166,7 @@ export default {
         let t1 = setInterval(() => {
             this.loadingPercentage += 1
         }, 300)
-        this.$http.get(`api/music/record/`).then((response) => {
+        this.$http.get(`/api/music/record/`).then((response) => {
             this.historyData = response.data.record_set
             this.historyNowCount = this.historyData.length
             if (this.loadingPercentage >= 100) {

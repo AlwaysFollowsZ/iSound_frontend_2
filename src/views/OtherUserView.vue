@@ -72,8 +72,6 @@
 </template>
 <script>
 import TopNav from '../components/TopNav.vue';
-import MySongSheetView from '../components/MySongSheetView.vue';
-import MyUploadSongView from '../components/MyUploadSongView.vue';
 import OtherUserSongSheetView from '../components/OtherUserSongSheetView.vue';
 import OtherUserUploadSongView from '../components/OtherUserUploadedSongView.vue'
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline, ChevronBack } from '@vicons/ionicons5';
@@ -87,8 +85,7 @@ export default {
         ChevronBack,
         FlowerOutline,
         FlashOutline,
-        MySongSheetView,
-        MyUploadSongView,
+        OtherUserSongSheetView,
         OtherUserUploadSongView,
     },
     data() {
@@ -115,8 +112,8 @@ export default {
                     this.userEmail = response.data.email;
                     this.userAvatar = response.data.avatar;
                     this.userIsFollowed = response.data.is_followed;
-                    this.userFansNum = response.data.fans;
-                    this.userFollowingNum = response.data.following;
+                    // this.userFansNum = response.data.fans;
+                    // this.userFollowingNum = response.data.following;
                     console.log(response);
                 });
             },
