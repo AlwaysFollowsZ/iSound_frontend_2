@@ -13,7 +13,7 @@
 
             </n-gi>
             <n-gi :span="2">
-                <div 
+                <!-- <div 
                     class="back-to-home"
                     :class="{'animate__animated animate__pulse': backToHomeIsHovered}"
                     style="animation-duration: 2s"
@@ -26,7 +26,7 @@
                     @click="this.$router.push('/')"
                 >
                     音乐馆
-                </div>
+                </div> -->
             </n-gi>
             <n-gi :span="4"></n-gi>
             <n-gi :span="6">
