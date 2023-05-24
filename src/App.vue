@@ -1,20 +1,20 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
-import Background from './components/GlobalBackground.vue'
-import HelloWorld from './components/HelloWorld.vue';
-import ImageTable from './components/tables/ImageTable/ImageTable.vue';
-import MessageItem from './components/message/MessageItem.vue';
-import MessageSend from './components/message/MessageSend.vue';
-import TopNav from './components/TopNav.vue';
-import ListTable from './components/tables/ListTable/ListTable.vue';
-import Player from './components/Player.vue';
+import { RouterLink, RouterView } from "vue-router";
+import Background from "./components/GlobalBackground.vue";
+import HelloWorld from "./components/HelloWorld.vue";
+import ImageTable from "./components/tables/ImageTable/ImageTable.vue";
+import MessageItem from "./components/message/MessageItem.vue";
+import MessageSend from "./components/message/MessageSend.vue";
+import TopNav from "./components/TopNav.vue";
+import ListTable from "./components/tables/ListTable/ListTable.vue";
+import Player from "./components/Player.vue";
 </script>
 <template>
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-<background></background>
-  <RouterView @play="play" @playAll="playAll" />
+  <!-- <background></background> -->
+  <RouterView />
   <!-- <div :style="{'text-align':'center'}"> -->
   <!-- 请直接传入数字(px)(高度可略)-->
   <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->
@@ -62,7 +62,6 @@ nav a {
 nav a:first-of-type {
   border: 0;
 }
-
 
 @media (min-width: 1024px) {
   header {
