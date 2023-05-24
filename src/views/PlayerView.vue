@@ -2,6 +2,7 @@
 import "animate.css";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import ModifyComplainView from '../views/ModifyComplainView.vue';
 import { defineComponent, ref } from "vue";
 import {
   ChevronBack,
@@ -37,6 +38,7 @@ export default defineComponent({
     Star,
     Warning,
     Play,
+    ModifyComplainView,
   },
   created() {
     this.$EventBus.on("timeupdate", (currentTime) => {
@@ -101,6 +103,7 @@ export default defineComponent({
       lyricsObjArr: [],
       getRGBString,
       backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
+      showModifyComplainView: false,
     };
   },
   methods: {
@@ -119,7 +122,10 @@ export default defineComponent({
     },
     complain() {
       //todo
-      this.iscomplain = !this.iscomplain;
+      if (this.iscomplain == false){
+        this.iscomplain = !this.iscomplain;
+      }
+      this.showModifyComplainView = true;
     },
     cleanComment() {
       this.value = "";
@@ -473,6 +479,8 @@ export default defineComponent({
       <n-gi :span="4"></n-gi>
     </n-grid>
   </div>
+  <modify-complain-view :showModifyComplainView="showModifyComplainView"
+        @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
 </template>
 
 <style scoped>
