@@ -4,7 +4,7 @@
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
-          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}">
+          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}" @click="prompt('hello')">
             来点不一样的歌单
           </div>
         </div>
@@ -115,7 +115,7 @@
     <div class="tagtable-container animate__animated"
       
       >
-      <tag-table :width="1400"/>
+      <tag-table :width="1400" :should-animate="true"/>
     </div>
   </div><div ref="tagRef" class="placeholder" v-else></div>
   

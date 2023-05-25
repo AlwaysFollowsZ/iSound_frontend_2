@@ -63,7 +63,7 @@ const router = createRouter({
       component: () => import('../views/AdminView.vue')
     },
     {
-      path: '/searchresult',
+      path: '/searchresult/:keyword',
       name: 'searchresult',
       component: () => import('../views/SearchResultView.vue')
     },
