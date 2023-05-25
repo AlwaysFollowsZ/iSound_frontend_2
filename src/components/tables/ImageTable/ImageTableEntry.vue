@@ -106,7 +106,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                                     :size="imageSizeAvg / 10"><book-star20-regular></book-star20-regular></n-icon>
                             </n-icon-wrapper>
                         </template>
-                        {{ Type === 'Song' ? '这是一首歌曲' : '这是一个歌单' }}
+                        {{ Type === 'Song' ? '这是一首歌曲' :Type==='songList'? '这是一个歌单':'这是一个收藏夹' }}
                     </n-popover>
                     <transition name="count">
                         <span class="count" v-if="isHoverOnBottom && Type === 'songList'" :style="{

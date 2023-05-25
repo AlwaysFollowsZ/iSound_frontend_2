@@ -16,9 +16,14 @@ export default {
             default: 'transparent'
         },
         //注意，layout中需要包含数据
+        //使用data:'blank'以填充空白
         layout: {
             type: Array,
             default: [
+                {
+                    size: 0.5,
+                    data: 'blank'
+                },
                 {
                     size: 2,
                     content: [{
@@ -76,7 +81,6 @@ export default {
                         }
                     ]
                 }
-
             ]
         },
         TableSize: {
