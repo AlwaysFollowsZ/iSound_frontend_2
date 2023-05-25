@@ -2,6 +2,7 @@
     import { CloseOutline } from '@vicons/ionicons5'
     import { defineComponent } from "vue";
     import { NModal } from "naive-ui";
+    import { message } from 'ant-design-vue';
     export default defineComponent({
         name: 'ModifyComplainView',
         components: {
@@ -16,22 +17,48 @@
                 this.$emit('closeModifyWindow')
             },
             sendComplain() {
-                //todo
+                //todo 和后端对接口，实现真正的发送，变红色的条件需要调整
+                if(this.value == null) {
+                    this.warning("投诉理由不得为空！");
+                }
+                else {
+                    this.success("投诉成功！");
+                    this.closeWindow();
+                    this.value = null;
+                }
             },
             cleanComplain() {
-                this.value=""
+                this.value = null;
             },
         },
         setup() {
             return {
-            value: ref(null)
-            };
+                warning(msg) {
+                    message.warning({
+                        content: msg,
+                        duration: 1,
+                        style: {
+                            "z-index":2,
+                        },
+                    })
+                },
+                success(msg) {
+                    message.success({
+                        content: msg,
+                        duration: 1,
+                        style: {
+                            "z-index":2,
+                        },
+                    });
+                }, 
+                value: ref(null),
+            };    
         }
     })
 </script>
 
 <template>
-    <n-modal :show="showModifyComplainView">
+    <n-modal :show="showModifyComplainView" z-index="1">
         <div>
             <n-card class="complain-hodder" style="--n-border-radius: 20px;">
                 <n-grid>
@@ -61,16 +88,17 @@
                 <n-grid>
                     <n-gi :span="18"></n-gi>
                     <n-gi :span="3" class="clean-button-div">
-                        <n-button class="clean-button" @click="cleanComplain">清空</n-button>
+                        <n-button class="clean-button" @click="cleanComplain" :focusable="false">清空</n-button>
                     </n-gi>
                     <n-gi :span="3" class="send-button-div">
-                        <n-button class="send-button" @click="sendComplain">发送</n-button>
+                        <n-button class="send-button" @click="sendComplain" :focusable="false">发送</n-button>
                     </n-gi>
                 </n-grid>                 
             </n-card>
         </div>
     </n-modal>
 </template>
+
 <style scoped>
 .complain-hodder {
     width: 640px;

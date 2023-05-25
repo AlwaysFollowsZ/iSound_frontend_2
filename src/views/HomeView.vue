@@ -116,7 +116,7 @@
       
       >
       <tag-table :width="1400" :should-animate="true"/>
-    </div>
+    </div> 
   </div><div ref="tagRef" class="placeholder" v-else></div>
   
 </template>

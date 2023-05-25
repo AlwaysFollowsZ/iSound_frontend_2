@@ -16,7 +16,8 @@ import MixedTable from './components/tables/ImageTable/MixedImageTable.vue'
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-  <background></background>
+  <!-- <background></background> -->
+  
   <RouterView />
   <mixed-table></mixed-table>
   <!-- <div :style="{'text-align':'center'}"> -->
