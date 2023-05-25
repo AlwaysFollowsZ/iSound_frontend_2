@@ -15,6 +15,7 @@
                         :color-text="this.colorMode === 'white' ?
                                      (idx % 2 === 0 ? 'rgb(' + this.accentColor + ')' : 'white') : 
                                      (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 1)' : 'rgba(' + this.accentColor + ', 0.9)')"
+                        :should-animate="shouldAnimate"
                     />
                 </div>
             </n-gi>
@@ -36,6 +37,7 @@ export default {
     },
     props: {
         width: Number,
+        shouldAnimate: Boolean,
     },
     created() {
         console.log(this.getRGBString(this.getFontColorString(this.globalThemeColor).value, 0.6))

@@ -6,10 +6,10 @@
                 aria-modal="true">
                 <template #header>
                     <div>
-                        <n-grid :x-gap="12">
+                        <n-grid :x-gap="0">
                             <n-gi :span="2"></n-gi>
                             <n-gi :span="20">
-                                <h2 class="register-card-title">加入我们：一起建设iSound</h2>
+                                <div class="register-card-title">加入我们：一起建设iSound</div>
                             </n-gi>
                             <n-gi :span="2">
                                 <div style="padding-top: 30%" @click="closeRWindow">
@@ -19,17 +19,17 @@
                         </n-grid>
                     </div>
                 </template>
-                <n-grid x-gap="12" :cols="2">
-                    <n-gi>
+                <n-grid x-gap="0">
+                    <n-gi :span="10">
                         <img class="login-image"
                             src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
                     </n-gi>
-                    <n-gi>
-                        <span style="font-size: 18px; s">用户名</span>
+                    <n-gi :span="14">
+                        <span style="font-size: 18px; font-weight: 500">用户名 </span>
                         <n-input type="text" placeholder="请输入用户名" :value="username" @input="username = $event" clearable />
-                        <span>密码</span>
+                        <span style="font-size: 18px; font-weight: 500">密码</span>
                         <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请输入密码" :minlength="8" :value="password1" @input="password1 = $event"/>
-                        <span>再次输入密码</span>
+                        <span style="font-size: 18px; font-weight: 500">确认密码</span>
                         <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请再次输入密码" :minlength="8" :value="password2" @input="password2 = $event"/>
                         <n-grid class="login-button-top" x-gap="6" :cols="2">
                             <n-gi>
@@ -96,10 +96,10 @@ export default {
 
 <style scoped>
 .register-card-title {
-    /*display: flex;
+    display: flex;
     justify-content: center;
-    align-items: center;*/
-    font-size: 40px;
+    align-items: center;
+    font-size: 30px;
     font-weight: bold;
 }
 
