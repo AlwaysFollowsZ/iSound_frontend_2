@@ -1,18 +1,27 @@
 <template>
   <div ref="containerRef"></div>
-  <a @click="launch"><ChevronUp class="aplayer-launch" /></a>
+  <a @click="launch">
+    <ChevronUp class="aplayer-launch" />
+  </a>
   <div class="footer"></div>
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted, ref } from "vue";
+import { getCurrentInstance, onMounted, ref ,computed} from "vue";
 import "APlayer/dist/APlayer.min.css";
 import APlayer from "APlayer";
 import ColorThief from "colorthief";
 import { ChevronUp } from "@vicons/ionicons5";
+import { globalThemeColor, getBackgroundColorString, getRGBString ,changeThemeColorByImage,getFontColorString} from '/src/colorMode.js'
 
 const containerRef = ref();
-const theme = ref("#b7daff");
+const mainColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 0.7) });
+const hoverColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 1) });
+const focusColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 0.1) });
+const borderColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 1) });
+const mainFontColor = computed(() => { return getRGBString(getFontColorString(globalThemeColor),1) });
+const secondaryFontColor = computed(() => { return getRGBString(getFontColorString(globalThemeColor), 0.5) });
+console.log('theme:' + mainColor.value);
 const footerHeight = ref("130px");
 const { proxy } = getCurrentInstance();
 const colorThief = new ColorThief();
@@ -40,8 +49,8 @@ function setTheme(index) {
     const coverUrl = URL.createObjectURL(this.response);
     image.onload = function () {
       const color = colorThief.getColor(image);
-      theme.value = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-      ap.theme(theme.value, index);
+      mainColor.value = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+      ap.theme(mainColor.value, index);
       URL.revokeObjectURL(coverUrl);
     };
     image.src = coverUrl;
@@ -73,7 +82,7 @@ onMounted(() => {
     fixed: true,
     mini: true,
     autoplay: false,
-    theme: theme.value,
+    theme: mainColor.value,
     loop: "all", // 'all' | 'one' | 'none',
     order: "list", // 'list' | 'random'
     preload: "auto", // 'auto' | 'metadata' | 'none'
@@ -105,7 +114,9 @@ onMounted(() => {
     } else {
       launched = false;
     }
-    setTheme(e.index);
+    changeThemeColorByImage(ap.list.audios[e.index].cover);
+    //setTheme(e.index);
+    //theme.value = getRGBString(getBackgroundColorString(globalThemeColor), 0.5);
   });
 
   ap.on("loadstart", () => {
@@ -145,15 +156,36 @@ onMounted(() => {
 
 <style scope>
 .aplayer-fixed {
-  position: fixed !important;
+  height: 0 !important;
+  position: fixed!important;
   width: 400px !important;
-  bottom: 0 !important;
+  overflow: visible;
+  bottom: 0px !important;
   left: calc(100% - 400px) !important;
+  background-color: v-bind("mainColor") !important;
 }
-
+.aplayer-list{
+  color:v-bind("mainFontColor");
+  position: absolute !important;
+  bottom:0 !important;
+  background: v-bind("mainColor") !important;
+}
+.aplayer .aplayer-list ol li:hover{
+  background: v-bind("hoverColor") !important;
+}
+.aplayer .aplayer-list ol li .aplayer-list-author{
+  color:v-bind("secondaryFontColor") !important;
+}
+.aplayer .aplayer-list ol li.aplayer-list-light{
+  background: v-bind("focusColor") !important;
+}
 .aplayer-body {
   max-width: calc(100% - 18px) !important;
   width: calc(100% - 18px) !important;
+  background: v-bind("mainColor") !important;
+}
+.aplayer-info{
+  border:1px solid v-bind("borderColor") !important;
 }
 
 .aplayer-pic {
@@ -188,7 +220,7 @@ onMounted(() => {
   z-index: 100 !important;
 }
 
-.aplayer-fixed:not(.aplayer-narrow) > .aplayer-body > .aplayer-pic > .aplayer-button {
+.aplayer-fixed:not(.aplayer-narrow)>.aplayer-body>.aplayer-pic>.aplayer-button {
   display: none !important;
 }
 
@@ -278,7 +310,7 @@ onMounted(() => {
   height: 32px !important;
 }
 
-.aplayer-lrc-contents > p {
+.aplayer-lrc-contents>p {
   font-size: 16px !important;
 }
 

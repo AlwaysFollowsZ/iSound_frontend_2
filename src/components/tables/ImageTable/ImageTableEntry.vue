@@ -12,7 +12,8 @@ export default {
     data() {
         const themeColor = ref([])
         getThemeColorByImage(this.imagePath, themeColor)
-        const imageSizeAvg = (this.imageSize[0] + this.imageSize[1]) / 2
+        const imageSize = [(this.EntrySize[0] / 1.4) - 50, (this.EntrySize[1] / 1.4) - 100]
+        const imageSizeAvg = (imageSize[0] + imageSize[1]) / 2
         const fontSize = (imageSizeAvg) / 12
         const fontColorString = getFontColorString(themeColor)
         const themeColorString = getBackgroundColorString(themeColor)
@@ -22,7 +23,7 @@ export default {
         const isClickOnMask = ref(false)
         return {
             themeColor, fontSize, fontColorString, themeColorString, isHoverOnBottom, isHoverOnMask, isClickOnMask, isHoverOnTitle,
-            imageSizeAvg
+            imageSizeAvg, imageSize
         }
     },
     props: {
@@ -52,21 +53,18 @@ export default {
             type: String,
             default: 'songName1265434567'
         },
-        imageSize: {
+        EntrySize: {
             type: Array,
             default: [250, 250]
         },
     }
 }
 
-
-
-
 </script>
 <template>
     <div class="outer_box" :style="{
-        'width': `${(imageSize[0] + 50) * 1.4}px`,
-        'height': `${(imageSize[1] + 100) * 1.4}px`
+        'width': `${EntrySize[0]}px`,
+        'height': `${EntrySize[1]}px`
     }">
         <!-- 大盒子的动态属性有背景色和宽高 -->
         <div class="mask_box" :style="{
@@ -74,7 +72,7 @@ export default {
             'border-radius': `${imageSizeAvg / 10}px`,
             'background-color': isHoverOnMask ? `rgb(${themeColorString},0.8)` : `rgb(${themeColorString},0.5)`,
             'box-shadow': isHoverOnMask ? `0 0 8px 3px rgb(${themeColorString},0.8)` : '',
-            'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `3px dashed rgb(${themeColorString},0.7)`
+            'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `0 solid rgb(${themeColorString},0.7)`
         }" :class="[isHoverOnMask ? 'mask_box-hover' : '',
 isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mouseleave="isHoverOnMask = false"
             @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Key)">
@@ -128,7 +126,8 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 'width': `${imageSize[0]}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
-                    `0 0 ${fontSize / 3}px rgb(${themeColorString})` : ''
+                    `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',
+                'padding': `${imageSize[0] / 20}px ${imageSize[0] / 50}px ${imageSize[0] / 30}px ${imageSize[0] / 50}px`,
             }" :class="isHoverOnTitle ? 'title-hover' : ''" @mouseenter="isHoverOnTitle = true"
                 @mouseleave="isHoverOnTitle = false">
                 <n-ellipsis :style="{ 'font-size': `${fontSize}px` }" :tooltip="{
@@ -138,7 +137,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                         'border': `3px solid rgb(${themeColorString})`,
                         'font-weight': '700',
                         'border-radius': '10px',
-                        'padding': '5px 10px',
+                        'padding': `${imageSize[0] / 50}px ${imageSize[1] / 50}px`,
                         '--n-box-shadow': `0 0 5px 5px rgb(${themeColorString},0.3)`
                     },
                 }">
@@ -187,7 +186,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
     width: fit-content;
     height: fit-content;
     display: inline-block;
-    transition: all cubic-bezier(0.165, 0.74, 0.44, 0.78) 1s;
+    transition: all cubic-bezier(0.165, 0.74, 0.44, 0.78) 0.8s;
 }
 
 .mask_box-hover {
@@ -205,7 +204,6 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 .title_box {
     font-weight: 700;
     text-align: center;
-    padding: 15px 10px 5px 10px;
     transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
@@ -215,7 +213,6 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 
 .count {
     width: max-content;
-    padding: 5px 10px;
     position: absolute;
     top: 0;
 }
@@ -229,4 +226,5 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 .count-leave-to {
     opacity: 0;
     transform: translateX(-20px);
-}</style>
+}
+</style>

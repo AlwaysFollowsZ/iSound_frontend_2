@@ -24,7 +24,7 @@
                             src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
                     </n-gi>
                     <n-gi>
-                        <div class="input-detail-container" v-if="!page2Reset">
+                        <div class="input-detail-container">
                             <span>用户名</span>
                             <n-input type="text" placeholder="请输入用户名" :value="username" @input="username = $event"
                                 clearable />
@@ -32,28 +32,8 @@
                             <n-input type="text" placeholder="请输入绑定邮箱" :value="email" @input="email = $event" clearable />
                             <n-grid class="login-button-top" x-gap="6" :cols="2">
                                 <n-gi>
-                                    <n-button strong secondary type="success" @click="checkDetail">
-                                        验证
-                                    </n-button>
-                                </n-gi>
-                                <n-gi>
-                                    <n-button strong secondary type="Warning" @click="closeResetWindow">
-                                        取消
-                                    </n-button>
-                                </n-gi>
-                            </n-grid>
-                        </div>
-                        <div class="reset-passwd-container" v-else>
-                            <span>重设密码</span>
-                            <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请输入重设密码"
-                                :minlength="8" :value="resetPasswd1" @input="resetPasswd1 = $event" />
-                            <span>再次输入密码</span>
-                            <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请再次输入密码"
-                                :minlength="8" :value="resetPasswd2" @input="resetPasswd2 = $event" />
-                            <n-grid class="login-button-top" x-gap="6" :cols="2">
-                                <n-gi>
-                                    <n-button strong secondary type="success" @click="resetPasswd">
-                                        确定
+                                    <n-button strong secondary type="success" @click="handleReset">
+                                        找回
                                     </n-button>
                                 </n-gi>
                                 <n-gi>
@@ -82,11 +62,8 @@ export default {
     },
     data() {
         return {
-            page2Reset: false,
             username: '',
             email: '',
-            resetPasswd1: '',
-            resetPasswd2: '',
         };
     },
     props: {
@@ -94,27 +71,21 @@ export default {
     },
     methods: {
         closeResetWindow() {
-            this.page2Reset = false;
             this.$emit('closeResetPasswdWindow');
         },
-        register() {
+        handleReset() {
             let data = new FormData();
             data.append('username', this.username);
-            data.append('password1', this.password1);
-            data.append('password2', this.password2);
-            this.$http.post('/api/accounts/register/', data).then(response => {
-                // console.log(response.data);
-                if (response.data.code == '0') {
-                    alert('注册成功，请登录！');
-                    this.closeRWindow();
+            data.append('email', this.email);
+            this.$http.post('/api/accounts/password_reset/', data).then(response => {
+                if(response.data.code == '0') {
+                    alert('重置密码已发送至您的邮箱，请注意查收。')
+                    this.closeResetWindow();
                 } else if (response.data.code == '-1') {
-                    alert('注册失败，请重新注册！');
-                    this.closeRWindow();
+                    alert('找回错误，请重新尝试');
+                    this.closeResetWindow();
                 }
-            });
-        },
-        checkDetail() {
-            this.page2Reset = true;
+            }); 
         }
     },
 }

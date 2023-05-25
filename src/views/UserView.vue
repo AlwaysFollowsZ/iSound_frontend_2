@@ -2,25 +2,60 @@
     <div class="user-page-TopNav"><top-nav></top-nav></div>
     <div class="user-page-body">
         <n-grid x-gap="0">
-            <n-gi :span="3"> <!--左右边栏留一部分空袭空隙，使主页主体居中--></n-gi>
-            <n-gi :span="5">
+            <n-gi :span="2"> <!--左右边栏留一部分空袭空隙，使主页主体居中--></n-gi>
+            <n-gi :span="7">
                 <div class="user-info-container">
                     <div class="avatar">
                         <img :src="avatarUrl" alt="avatar" />
                     </div>
                     <div class="user-info-card">
-                        <div class="user-info-title">{{ this.username }}</div>
-                        <div class="user-info-body">
-                            <div>
-                                <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ this.username }}<br />
-                                <newspaper-outline style="width: 20px; margin-top: 3px;" />邮箱：{{ this.email }}<br />
-                                <pricetag-outline style="width: 20px; margin-top: 3px;" />个性签名：{{ this.bio }}<br />
-                            </div>
+                        <div 
+                          class="user-info-title" 
+                          :style="{'color': 'rgb(' + this.accentColor + ')'}"
+                        >
+                            {{ this.username }}
                         </div>
-                        <div><br /><br /><!--用来隔开基本信息和修改个人信息--></div>
-                        <div>
-                            <n-button text class="modify-user-info-button" @click="showModifyUserInfo = true">
-                                <template #icon><n-icon><create-outline /></n-icon></template>修改个人信息
+                        <div class="user-info-body">
+                            
+                                <!-- <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ this.username }}<br /> -->
+                                <!-- <newspaper-outline style="width: 20px; margin-top: 3px;" /> -->
+
+                                    <div class="user-info-body-title" :style="{'color': 'rgb(' + this.accentColor + ')'}">
+                                        邮箱
+                                    </div>
+                                    <div class="user-info-body-content" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                                        {{ this.email }}
+                                    </div>
+                                
+                                    <div class="user-info-body-title" :style="{'color': 'rgb(' + this.accentColor + ')'}">
+                                        个性签名
+                                    </div>
+                                    <div class="user-info-body-content" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                                        {{ this.bio }}
+                                    </div>
+
+                                
+                               
+                                <!-- <pricetag-outline style="width: 20px; margin-top: 3px;" /> -->
+                        </div>
+                        <div><br /><!--用来隔开基本信息和修改个人信息--></div>
+                        <div class="modify-user-info-button">
+                            <n-button 
+                              text 
+                              @click="showModifyUserInfo = true" 
+                              :focusable="false"
+                              :style="{
+                                '--n-color': 'transparent',
+                                '--n-color-hover': 'transparent',
+                                '--n-color-pressed': 'transparent', 
+                                '--n-color-focus': 'transparent',
+                                '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)', 
+                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
+                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
+                                '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
+                              }"
+                            >
+                                <template #icon><n-icon size="25"><create-outline /></n-icon></template>修改个人信息
                             </n-button>
                         </div>
                     </div>
@@ -31,9 +66,19 @@
                 <div class="user-other-info-container">
                     <div class="user-tabs">
                         <div>
-                            <n-tabs size="large" type="line" animated>
-                                <n-tab-pane name="我的歌单" tab="我的歌单">
-                                    <my-song-sheet-view />
+                            <n-tabs size="large" type="line" animated
+                              :style="{
+                                '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
+                                '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
+                                '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
+                              }"
+                            >
+                                <n-tab-pane name="我的收藏夹" tab="我的收藏夹">
+                                    <!-- <my-song-sheet-view /> -->
+                                    <image-table :table-size="[1000,500]"> </image-table>
                                 </n-tab-pane>
                                 <n-tab-pane name="分享歌单" tab="分享歌单">
                                     <shared-song-sheet-view />
@@ -48,18 +93,20 @@
                                     <fan-list-view />
                                 </n-tab-pane>
                                 <template #suffix>
+                                    <div :style="{'color': 'rgb(' + this.accentColor + ')'}">
+                                        粉丝数：{{ this.fansNum }}
+                                        <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd"/>
+                                        <!-- <flash-outline style="width: 20px;"/>  -->
+                                        关注数：{{ this.followingNum }}
+                                    </div>
                                     <!-- <flower-outline style="width: 20px;"/> -->
-                                    粉丝数:{{ this.fansNum }}
-                                    <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd"/>
-                                    <!-- <flash-outline style="width: 20px;"/>  -->
-                                    关注数:{{ this.followingNum }}
                                 </template>
                             </n-tabs>
                         </div>
                     </div>
                 </div>
             </n-gi>
-            <n-gi :span="3"></n-gi>
+            <n-gi :span="2"></n-gi>
         </n-grid>
     </div>
     <modify-user-info-view :showModifyUserInfo="showModifyUserInfo"
@@ -80,8 +127,12 @@ import { ref } from "vue";
 import { NTabs, NTabPane } from "naive-ui";
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
 import { NewspaperOutline, FlowerOutline, FlashOutline} from '@vicons/ionicons5'
-
+import { mapState } from 'vuex';
+import ImageTable from '../components/tables/ImageTable/ImageTable.vue';
 export default {
+    computed: {
+        ...mapState(['colorMode', 'accentColor']),
+    },
     components: {
         ModifyUserInfoView,
         MySongSheetView,
@@ -98,6 +149,7 @@ export default {
         NewspaperOutline,
         FlowerOutline,
         FlashOutline,
+        ImageTable
     },
     data() {
         return {
@@ -163,33 +215,51 @@ export default {
 }
 
 .avatar img {
-    width: 256px;
-    height: 256px;
+    width: 320px;
+    height: 320px;
     border-radius: 50%;
     margin-top: 20px;
 }
 
 .user-info-card {
-    margin-top: 40px;
+    margin-top: 25px;
 }
 
 .user-info-title {
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 30px;
+    font-size: 35px;
     font-weight: bold;
     text-align: center;
+    transition: color 1s;
+}
+
+.user-other-info-container {
+    margin-top: 10px;
 }
 
 .user-info-body {
-    margin-top: 15px;
+    /*margin-top: 15px;*/
+    padding-left: 15px;
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 15px;
-    font-weight: bold;
-    width: 80%;
 }
-
+.user-info-body-title {
+    font-size: 20px; 
+    font-weight: 550; 
+    padding-left: 30px;
+    padding-top: 10px;
+    transition: color 1s;
+}
+.user-info-body-content {
+    font-size: 16px; 
+    font-weight: 400; 
+    margin-left: 30px;
+    transition: color 1s;
+    word-wrap: break-word;
+    max-width: 300px;
+}
 .modify-user-info-button {
     margin-top: 15px;
+    padding-left: 50px;
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 15px;
 }

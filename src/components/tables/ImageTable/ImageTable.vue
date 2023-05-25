@@ -2,7 +2,7 @@
 import { watch, h } from 'vue'
 import { NScrollbar, NButton, NPagination } from 'naive-ui'
 import ImageTableEntry from './ImageTableEntry.vue'
-import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor } from '/src/colorMode'
+import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor,changeThemeColorByImage } from '/src/colorMode'
 import { Rows } from './ImageRowData'
 import { backgroundColor } from '../../../colorMode'
 // 说明：单个table组件。所有元素之间水平对齐。适用于局部布局
@@ -47,7 +47,7 @@ export default {
             const startIndex = (this.pageArgs.currentPage - 1) * this.pageArgs.pageSize
             if (this.position === 'CollectionView') {
                 for (let i = 0; i < rows.length; i++) {
-                    rows[i]['imageSize'] = [150, 150]
+                    rows[i]['EntrySize'] = [150, 150]
                 }
             }
             return rows.slice(startIndex, startIndex + this.pageArgs.pageSize)
@@ -62,7 +62,7 @@ export default {
         //table的大小(宽和高)
         tableSize: {
             type: Array,
-            default: ['1000','']
+            default: [1000,]
         },
         //使用该组件的位置包括个人主页/收藏夹选择悬浮框和音乐馆主页
         //分别为PersonalView,CollectionView,HomeView
@@ -85,7 +85,7 @@ export default {
             type: Function,
             default: (Key) => {
                 alert(Key)
-                changeColorMode()
+                changeThemeColorByImage(Rows[Key].imagePath)
             }
         }
     },
@@ -101,7 +101,7 @@ export default {
         <n-scrollbar v-if="['PersonalView', 'CollectionView'].includes(position)" class="image_table_list">
             <template v-for="data in currentPageData" :key="data.Key">
                 <image-table-entry v-bind="data" style="vertical-align: middle;"
-                    @clickEntry="handleClick"></image-table-entry>
+                    @clickEntry="handleClick" :EntrySize="[300,300]"></image-table-entry>
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
