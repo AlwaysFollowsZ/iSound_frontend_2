@@ -26,7 +26,8 @@ let songData = ref([{
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-  <background></background>
+  <!-- <background></background> -->
+  
   <RouterView />
   <!-- <div :style="{'text-align':'center'}"> -->
   <!-- 请直接传入数字(px)(高度可略)-->
