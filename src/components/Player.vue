@@ -109,7 +109,7 @@ onMounted(() => {
   });
 
   ap.on("loadstart", () => {
-    let author = document.getElementsByClassName("aplayer-author")[0];
+    let author = document.querySelector(".aplayer-author");
     author.innerText = author.innerText.substr(2);
   });
 
@@ -120,8 +120,6 @@ onMounted(() => {
   ap.on("lrchide", () => {
     footerHeight.value = "82px";
   });
-
-  document.getElementsByClassName("aplayer-miniswitcher")[0].click();
 
   proxy.$EventBus.on("play", (musicId) => {
     play(musicId);
@@ -135,6 +133,8 @@ onMounted(() => {
     ap.seek(time);
     ap.play();
   });
+
+  document.querySelector(".aplayer-miniswitcher").click();
 
   onBeforeUnmount(() => {
     ap.destroy();
