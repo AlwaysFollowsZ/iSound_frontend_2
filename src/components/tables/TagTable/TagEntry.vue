@@ -1,5 +1,5 @@
 <template>
-    <n-button :class="{'animate__animated animate__fadeInLeft': !isLoggedIn}" strong secondary type="primary" size="large" :focusable="false"
+    <n-button :class="{'animate__animated animate__fadeInLeft': shouldAnimate && !isLoggedIn}" strong secondary type="primary" size="large" :focusable="false"
     
         :style="{
             'animation-delay': `${0.5 + index * 0.04}s`,
@@ -31,6 +31,7 @@ export default {
         colorDisplay: String,
         colorHover: String,
         colorText: String,
+        shouldAnimate: Boolean,
     },
     data() {
         return {

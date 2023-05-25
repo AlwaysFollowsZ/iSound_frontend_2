@@ -19,7 +19,7 @@ let songData = ref([{
   isLiked: true,
   isCollected: false,
   showCollection: false,
-  imgSrc:''
+  imgSrc: ''
 }])
 </script>
 <template>

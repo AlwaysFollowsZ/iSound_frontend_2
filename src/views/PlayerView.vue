@@ -260,7 +260,7 @@ export default defineComponent({
       </n-gi>
       <n-gi :span="7">
         <div class="music-cover">
-          <n-image class="music-cover-img" :src="music.cover" width="360" height="360" />
+          <n-image class="music-cover-img" :src="music.cover" width="400" height="400" />
         </div>
         <div class="three-buttons">
           <n-grid>
@@ -311,7 +311,7 @@ export default defineComponent({
       <n-gi :span="10">
         <div class="lyrics-part">
           <n-grid :y-gap="20" :cols="1">
-            <n-gi>
+            <n-gi class="music-name">
               <div
                 style="
                   font-size: xx-large;
@@ -530,6 +530,7 @@ export default defineComponent({
 
 <style scoped>
 .player-page {
+	height: 100vh;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -542,7 +543,7 @@ export default defineComponent({
 }
 .music-cover {
   /* position: absolute; */
-  margin-top: 12%;
+  margin-top: 27%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -551,10 +552,10 @@ export default defineComponent({
 .music-cover-img {
   /* position: absolute; */
   margin: auto;
-  border-radius: 50%;
+  border-radius: 10px;
 }
 .three-buttons {
-  margin-top: 4%;
+  margin-top: 8%;
 }
 .button {
   margin: auto;
@@ -563,7 +564,7 @@ export default defineComponent({
   display: flex;
   width: 500px;
   margin: auto;
-  margin-top: 8%;
+  margin-top: 15%;
 }
 :deep(.ant-comment-avatar img) {
   width: 50px;

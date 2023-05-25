@@ -252,7 +252,7 @@ export default {
 .user-info-body-content {
     font-size: 16px; 
     font-weight: 400; 
-    padding-left: 30px;
+    margin-left: 30px;
     transition: color 1s;
     word-wrap: break-word;
     max-width: 300px;
