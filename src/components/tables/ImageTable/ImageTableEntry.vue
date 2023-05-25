@@ -12,7 +12,7 @@ export default {
     data() {
         const themeColor = ref([])
         getThemeColorByImage(this.imagePath, themeColor)
-        const imageSize = [(this.EntrySize[0] / 1.4) - 50, (this.EntrySize[1] / 1.4) - 100]
+        const imageSize = [(this.EntrySize[0] / 1.6), (this.EntrySize[1] / 1.6)]
         const imageSizeAvg = (imageSize[0] + imageSize[1]) / 2
         const fontSize = (imageSizeAvg) / 12
         const fontColorString = getFontColorString(themeColor)
@@ -123,24 +123,29 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 </div>
             </div>
             <div class="title_box" :style="{
-                'width': `${imageSize[0]}px`,
+                'height': `${fontSize * 2}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
                     `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',
                 'padding': `${imageSize[0] / 20}px ${imageSize[0] / 50}px ${imageSize[0] / 30}px ${imageSize[0] / 50}px`,
             }" :class="isHoverOnTitle ? 'title-hover' : ''" @mouseenter="isHoverOnTitle = true"
                 @mouseleave="isHoverOnTitle = false">
-                <n-ellipsis :style="{ 'font-size': `${fontSize}px` }" :tooltip="{
-                    style: {
-                        '--n-text-color': `rgb(${fontColorString})`,
-                        '--n-color': `rgb(${themeColorString},0.8)`,
-                        'border': `3px solid rgb(${themeColorString})`,
-                        'font-weight': '700',
-                        'border-radius': '10px',
-                        'padding': `${imageSize[0] / 50}px ${imageSize[1] / 50}px`,
-                        '--n-box-shadow': `0 0 5px 5px rgb(${themeColorString},0.3)`
-                    },
-                }">
+                <n-ellipsis :style="{
+                    'font-size': `${fontSize}px`,
+                    'vertical-align': 'top',
+                    'height': `${fontSize * 2}px`,
+                    'max-width':`${imageSize[0]}px`
+                }" :tooltip="{
+    style: {
+        '--n-text-color': `rgb(${fontColorString})`,
+        '--n-color': `rgb(${themeColorString},0.8)`,
+        'border': `3px solid rgb(${themeColorString})`,
+        'font-weight': '700',
+        'border-radius': '10px',
+        'padding': `${imageSize[0] / 50}px ${imageSize[1] / 50}px`,
+        '--n-box-shadow': `0 0 5px 5px rgb(${themeColorString},0.3)`,
+    },
+}">
                     <template #tooltip>
                         {{ Type === 'Song' ? '歌曲名称 : ' : '歌单名称 : ' }}{{ Name }}
                     </template>

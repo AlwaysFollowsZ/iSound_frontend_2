@@ -1,38 +1,106 @@
 <script>
-import ImageTableEntry from './ImageTableEntry.vue'
 import MixedImageTableBody from './MixedImageTableBody.vue'
 import { Rows } from './ImageRowData.js'
 import { NButton } from 'naive-ui'
 import { changeColorMode, getRGBString, getBackgroundColorString, globalThemeColor, getFontColorString } from '/src/colorMode'
 
 export default {
+    components: {
+        MixedImageTableBody,
+        NButton
+    },
     props: {
-        BackgroundColorString: {
+        //可以传入'transparent'表示透明
+        tableColorString: {
             type: String,
-            default: getBackgroundColorString(globalThemeColor)
+            default: 'transparent'
         },
+        //注意，layout中需要包含数据
         layout: {
             type: Array,
-            required: true,
-            default: [[1, 2, 1], [1, 3, [1, 1, 1]]]
+            default: [
+                {
+                    size: 2,
+                    content: [{
+                        size: 1,
+                        data: Rows[0]
+                    }, {
+                        size: 2,
+                        data: Rows[1]
+                    }]
+                },
+                {
+                    size: 1,
+                    data: 'blank'
+                },
+                {
+                    size: 5,
+                    content: [
+                        {
+                            size: 4,
+                            data: Rows[3]
+                        },
+                        {
+                            size: 1,
+                            data: Rows[1]
+                        },
+                    ]
+                },
+                {
+                    size: 1,
+                    data: 'blank'
+                },
+                {
+                    size: 3,
+                    content: [
+                        {
+                            size: 2,
+                            data: Rows[3]
+                        },
+                        {
+                            size: 1,
+                            content: [
+                                {
+                                    size: 1,
+                                    data: Rows[4]
+                                },
+                                {
+                                    size: 0.5,
+                                    data: 'blank'
+                                },
+                                {
+                                    size: 1,
+                                    data: Rows[5]
+                                }
+                            ]
+                        }
+                    ]
+                }
+
+            ]
         },
         TableSize: {
             type: Array,
-            default: [1000, 1000]
+            default: [1400, 1300]
         }
     },
     data() {
         const fontColorString = getFontColorString(globalThemeColor)
-        return { fontColorString, Rows, getRGBString, changeColorMode }
+        const BackgroundColorString = getBackgroundColorString(globalThemeColor)
+        return {
+            fontColorString, BackgroundColorString,
+            Rows, getRGBString, changeColorMode
+        }
     },
 }
 </script>
 
 
 <template>
-    <div :style="{
+    <div class='image_table' :style="{
         'width': `${TableSize[0]}px`, 'height': `${TableSize[1]}px`,
-        'background': getRGBString(BackgroundColorString, 0.7)
+        'border-radius': '50px',
+        'background': getRGBString(tableColorString, 0.2)
     }">
         <div class="list_top_nav">
             <n-button class="more_button" :style="{
@@ -55,11 +123,21 @@ export default {
                 更多
             </n-button>
         </div>
-        <mixed-image-table-body :height="TableSize[1]-100" :width="TableSize[0]" :layout="layout"></mixed-image-table-body>
+        <MixedImageTableBody :tableSize="[TableSize[0], TableSize[1] - 150]" :layout="layout" :position="1">
+        </MixedImageTableBody>
     </div>
 </template >
 
+
 <style scoped>
+.image_table {
+    margin: 0 auto;
+    padding: 20px 0px 0 0px;
+    /* display: inline-block; */
+    overflow: hidden;
+    transition: cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
+
 .more_button {
     position: absolute;
     right: 20px;
