@@ -129,14 +129,13 @@
   
 <script>
 import { SearchOutline, MailOutline, SunnyOutline, MoonOutline } from '@vicons/ionicons5'
-import LoginView from '../views/LoginView.vue';
-import RegisterView from '../views/RegisterView.vue';
-import ResetPasswdView from '../views/ResetPasswdView.vue';
-import ChangePasswdView from '../views/ChangePasswdView.vue';
-import { mapState, mapMutations } from 'vuex';
-import ModifyUserMessageView from '../views/ModifyUserMessageView.vue';
+import LoginView from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue'
+import ResetPasswdView from '../views/ResetPasswdView.vue'
+import ChangePasswdView from '../views/ChangePasswdView.vue'
+import { mapState, mapMutations } from 'vuex'
+import ModifyUserMessageView from '../views/ModifyUserMessageView.vue'
 import { changeColorMode } from '/src/colorMode'
-import { message } from 'ant-design-vue';
 
 export default {
     name: 'TopNav',
