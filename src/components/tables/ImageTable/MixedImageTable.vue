@@ -1,10 +1,11 @@
 <script>
 import ImageTableEntry from './ImageTableEntry.vue'
+import MixedImageTableBody from './MixedImageTableBody.vue'
 import { Rows } from './ImageRowData.js'
 import { NButton } from 'naive-ui'
-import { changeColorMode, getRGBString, getBackgroundColorString, globalThemeColor,getFontColorString } from '/src/colorMode'
+import { changeColorMode, getRGBString, getBackgroundColorString, globalThemeColor, getFontColorString } from '/src/colorMode'
+
 export default {
-    name: 'NestedComponent',
     props: {
         BackgroundColorString: {
             type: String,
@@ -13,63 +14,26 @@ export default {
         layout: {
             type: Array,
             required: true,
-            default: [[{}, {}, {}]]
+            default: [[1, 2, 1], [1, 3, [1, 1, 1]]]
         },
-        width: {
-            type: Number,
-            required: true,
-            default: 1000
-        },
-        height: {
-            type: Number,
-            required: true,
-            default: 1000
-        }
-    },
-    components: {
-        BoxComponent: {
-            props: {
-                width: {
-                    type: Number,
-                    required: true
-                },
-                height: {
-                    type: Number,
-                    required: true
-                }
-            },
-            template: '<image-table-entry : EntrySize="[width / row.length, height / layout.length]" v-bind="Rows[0]" />'
-        },
-        NestedComponent: {
-            props: {
-                layout: {
-                    type: Array,
-                    required: true
-                },
-                width: {
-                    type: Number,
-                    required: true
-                },
-                height: {
-                    type: Number,
-                    required: true
-                }
-            },
-            template: '<NestedComponent :layout="layout" :width="width" :height="height" />'
+        TableSize: {
+            type: Array,
+            default: [1000, 1000]
         }
     },
     data() {
         const fontColorString = getFontColorString(globalThemeColor)
-        return { fontColorString,Rows }
+        return { fontColorString, Rows, getRGBString, changeColorMode }
     },
-    methods: {
-        getRGBString,
-        changeColorMode
-    }
-};
+}
 </script>
+
+
 <template>
-    <div :style="{ 'width': `${width}px`, 'height': `${height}px` }">
+    <div :style="{
+        'width': `${TableSize[0]}px`, 'height': `${TableSize[1]}px`,
+        'background': getRGBString(BackgroundColorString, 0.7)
+    }">
         <div class="list_top_nav">
             <n-button class="more_button" :style="{
                 '--n-color': getRGBString(BackgroundColorString, 0.15),
@@ -91,32 +55,11 @@ export default {
                 更多
             </n-button>
         </div>
-        <div v-for="(row, rowIndex) in layout" :key="rowIndex" class="row">
-            <div v-for="(col, colIndex) in row" :key="colIndex" class="col">
-                <template v-if="Array.isArray(col)">
-                    <NestedComponent :layout="col" :width="width / row.length" :height="height / layout.length" />
-                </template>
-                <template v-else>
-                    <!-- <BoxComponent :width="width / row.length" :height="height / layout.length"></BoxComponent> -->
-                    <image-table-entry :EntrySize="[width / row.length, height / layout.length]" v-bind="Rows[0]" />
-                </template>
-            </div>
-        </div>
+        <mixed-image-table-body :height="TableSize[1]-100" :width="TableSize[0]" :layout="layout"></mixed-image-table-body>
     </div>
 </template >
 
-
 <style scoped>
-.row {
-    display: flex;
-}
-
-.col {
-    margin: 10px;
-    flex: 1;
-    border:2px solid red;
-}
-
 .more_button {
     position: absolute;
     right: 20px;

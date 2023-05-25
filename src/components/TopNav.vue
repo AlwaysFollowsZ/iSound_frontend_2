@@ -241,7 +241,8 @@ export default {
         search() {
             if (this.searchValue.trim().length !== 0) {
                 console.log(`searchValue: ${this.searchValue}`)
-                // do search
+                // jump to search page
+                this.$router.push("/searchresult/" + this.searchValue)
                 this.searchValue = ''
             }
         },

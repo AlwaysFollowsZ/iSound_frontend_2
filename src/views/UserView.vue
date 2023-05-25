@@ -77,7 +77,8 @@
                               }"
                             >
                                 <n-tab-pane name="我的收藏夹" tab="我的收藏夹">
-                                    <my-song-sheet-view />
+                                    <!-- <my-song-sheet-view /> -->
+                                    <image-table :table-size="[1000,500]"> </image-table>
                                 </n-tab-pane>
                                 <n-tab-pane name="分享歌单" tab="分享歌单">
                                     <shared-song-sheet-view />
@@ -127,7 +128,7 @@ import { NTabs, NTabPane } from "naive-ui";
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
 import { NewspaperOutline, FlowerOutline, FlashOutline} from '@vicons/ionicons5'
 import { mapState } from 'vuex';
-
+import ImageTable from '../components/tables/ImageTable/ImageTable.vue';
 export default {
     computed: {
         ...mapState(['colorMode', 'accentColor']),
@@ -148,6 +149,7 @@ export default {
         NewspaperOutline,
         FlowerOutline,
         FlashOutline,
+        ImageTable
     },
     data() {
         return {
@@ -250,7 +252,7 @@ export default {
 .user-info-body-content {
     font-size: 16px; 
     font-weight: 400; 
-    padding-left: 30px;
+    margin-left: 30px;
     transition: color 1s;
     word-wrap: break-word;
     max-width: 300px;
