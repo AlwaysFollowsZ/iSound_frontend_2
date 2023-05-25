@@ -27,7 +27,7 @@
                                         @change="handleSongPageChange" />
                                 </div>
                             </template>
-                            <span>点击此处上传歌曲封面，不填则默认</span>
+                            <span>点击此处上传歌曲封面</span>
                         </n-popover>
                     </n-gi>
                     <n-gi>
@@ -45,12 +45,12 @@
                         </div>
                         <div>
                             <span>歌名</span>
-                            <n-input type="text" size="small" placeholder="请输入歌名，不填则默认" :value="songName"
+                            <n-input type="text" size="small" placeholder="请输入歌名" :value="songName"
                                 @input="songName = $event" />
                         </div>
                         <div>
                             <span>歌手</span>
-                            <n-input type="text" size="small" placeholder="请输入歌手，不填则默认" :value="songAuthor"
+                            <n-input type="text" size="small" placeholder="请输入歌手" :value="songAuthor"
                                 @input="songAuthor = $event" />
                         </div>
                         <div>
