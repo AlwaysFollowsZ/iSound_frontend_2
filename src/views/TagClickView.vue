@@ -2,11 +2,12 @@
     <div class="top-nav-container"><top-nav /></div>
     <div class="tag-view-container">
         <div class="tag-table-container">
-            <!-- <tag-table /> -->
+            <tag-table :width="1400" :should-animate="false" />
         </div>
-        <div class="tag-search-results>">
-            <div v-for="item in this.songs">
-                {{ item.name }}
+        <div class="tag-search-results">
+            {{ this.songs.length }}
+            <div v-for="(song, idx) in songs" :key="idx">
+                <img :src="song.cover" class="song-cover" />
             </div>
         </div>
     </div>
@@ -23,20 +24,13 @@ export default {
     data() {
         return {
             songs: [],
-            name: '',
         }
     },
-    create() {
-        this.$watch(
-            () => this.$route.params.tagName,
-            (newTagName) => {
-                this.$http.get('/api/search/', { params: { 'tags': newTagName } }).then((response) => {
-                    this.songs = response.data.music_set;
-                    console.log(response);
-                });
-            },
-            { immediate: true }
-        );
+    created() {
+        const tagName = this.$route.params.tagName;
+        this.$http.get(`/api/search/`, { params:  { 'tags': tagName } }).then((response) => {
+            this.songs = response.data.music_set;
+        });
     }
 }
 </script>
