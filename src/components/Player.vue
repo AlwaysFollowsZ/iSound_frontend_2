@@ -12,11 +12,16 @@ import "APlayer/dist/APlayer.min.css";
 import APlayer from "APlayer";
 import ColorThief from "colorthief";
 import { ChevronUp } from "@vicons/ionicons5";
-import { globalThemeColor, getBackgroundColorString, getRGBString } from '/src/colorMode.js'
+import { globalThemeColor, getBackgroundColorString, getRGBString ,changeThemeColorByImage,getFontColorString} from '/src/colorMode.js'
 
 const containerRef = ref();
-const theme = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 0.5) });
-console.log('theme:' + theme.value);
+const mainColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 0.7) });
+const hoverColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 1) });
+const focusColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 0.1) });
+const borderColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 1) });
+const mainFontColor = computed(() => { return getRGBString(getFontColorString(globalThemeColor),1) });
+const secondaryFontColor = computed(() => { return getRGBString(getFontColorString(globalThemeColor), 0.5) });
+console.log('theme:' + mainColor.value);
 const footerHeight = ref("130px");
 const { proxy } = getCurrentInstance();
 const colorThief = new ColorThief();
@@ -44,8 +49,8 @@ function setTheme(index) {
     const coverUrl = URL.createObjectURL(this.response);
     image.onload = function () {
       const color = colorThief.getColor(image);
-      theme.value = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-      ap.theme(theme.value, index);
+      mainColor.value = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+      ap.theme(mainColor.value, index);
       URL.revokeObjectURL(coverUrl);
     };
     image.src = coverUrl;
@@ -77,7 +82,7 @@ onMounted(() => {
     fixed: true,
     mini: true,
     autoplay: false,
-    theme: theme.value,
+    theme: mainColor.value,
     loop: "all", // 'all' | 'one' | 'none',
     order: "list", // 'list' | 'random'
     preload: "auto", // 'auto' | 'metadata' | 'none'
@@ -109,6 +114,7 @@ onMounted(() => {
     } else {
       launched = false;
     }
+    changeThemeColorByImage(ap.list.audios[e.index].cover);
     //setTheme(e.index);
     //theme.value = getRGBString(getBackgroundColorString(globalThemeColor), 0.5);
   });
@@ -156,17 +162,30 @@ onMounted(() => {
   overflow: visible;
   bottom: 0px !important;
   left: calc(100% - 400px) !important;
-  background-color: v-bind("theme") !important;
+  background-color: v-bind("mainColor") !important;
 }
 .aplayer-list{
+  color:v-bind("mainFontColor");
   position: absolute !important;
   bottom:0 !important;
-  background-color: v-bind("theme") !important;
+  background: v-bind("mainColor") !important;
+}
+.aplayer .aplayer-list ol li:hover{
+  background: v-bind("hoverColor") !important;
+}
+.aplayer .aplayer-list ol li .aplayer-list-author{
+  color:v-bind("secondaryFontColor") !important;
+}
+.aplayer .aplayer-list ol li.aplayer-list-light{
+  background: v-bind("focusColor") !important;
 }
 .aplayer-body {
   max-width: calc(100% - 18px) !important;
   width: calc(100% - 18px) !important;
-  background-color: v-bind("theme") !important;
+  background: v-bind("mainColor") !important;
+}
+.aplayer-info{
+  border:1px solid v-bind("borderColor") !important;
 }
 
 .aplayer-pic {

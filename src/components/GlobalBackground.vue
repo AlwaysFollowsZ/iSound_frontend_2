@@ -33,7 +33,7 @@ export default {
                 let updatedColor
                 let transitionDelta
                 do {
-                    updatedColor = findSimilarColors(color, 100, 0.3)[Math.floor(Math.random() * 100)]
+                    updatedColor = findSimilarColors(color, 100, 0.2)[Math.floor(Math.random() * 100)]
                     //计算几何变化值
                     transitionDelta = Math.sqrt(Math.pow((beforeColor[0] - updatedColor[0]), 2) + Math.pow((beforeColor[1] - updatedColor[1]), 2) + Math.pow((beforeColor[2] - updatedColor[2]), 2))
                 } while (transitionDelta < 5)//随机选取一个相近的颜色,数值越大相似度越高
@@ -50,7 +50,7 @@ export default {
     props: {
         updateSpeed: {//背景动画的变化快慢
             type: Number,
-            default: 30,
+            default: 15,
             validator(value) {
                 return value > 0
             }
