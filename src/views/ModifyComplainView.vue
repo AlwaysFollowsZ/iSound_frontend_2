@@ -2,6 +2,7 @@
     import { CloseOutline } from '@vicons/ionicons5'
     import { defineComponent } from "vue";
     import { NModal } from "naive-ui";
+    import { message } from 'ant-design-vue';
     export default defineComponent({
         name: 'ModifyComplainView',
         components: {
@@ -23,15 +24,28 @@
             },
         },
         setup() {
-            return {
-            value: ref(null)
-            };
+            const success = () => {
+                message.success({
+                    content: () => 'This is a prompt message with custom className and style',
+                    class: 'custom-class',
+                    style: {
+                        "z-index":2,
+                    },
+                });
+                };
+                return {
+                    success,
+                    value: ref(null),
+                };
         }
     })
 </script>
 
 <template>
-    <n-modal :show="showModifyComplainView">
+    <n-message-provider>
+
+
+    <n-modal :show="showModifyComplainView" z-index="1">
         <div>
             <n-card class="complain-hodder" style="--n-border-radius: 20px;">
                 <n-grid>
@@ -64,13 +78,15 @@
                         <n-button class="clean-button" @click="cleanComplain">清空</n-button>
                     </n-gi>
                     <n-gi :span="3" class="send-button-div">
-                        <n-button class="send-button" @click="sendComplain">发送</n-button>
+                        <n-button class="send-button" @click="success" >发送</n-button>
                     </n-gi>
                 </n-grid>                 
             </n-card>
         </div>
     </n-modal>
+    </n-message-provider>
 </template>
+
 <style scoped>
 .complain-hodder {
     width: 640px;
