@@ -126,7 +126,8 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 'width': `${imageSize[0]}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
-                    `0 0 ${fontSize / 3}px rgb(${themeColorString})` : ''
+                    `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',
+                'padding': `${imageSize[0] / 20}px ${imageSize[0] / 50}px ${imageSize[0] / 30}px ${imageSize[0] / 50}px`,
             }" :class="isHoverOnTitle ? 'title-hover' : ''" @mouseenter="isHoverOnTitle = true"
                 @mouseleave="isHoverOnTitle = false">
                 <n-ellipsis :style="{ 'font-size': `${fontSize}px` }" :tooltip="{
@@ -136,7 +137,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                         'border': `3px solid rgb(${themeColorString})`,
                         'font-weight': '700',
                         'border-radius': '10px',
-                        'padding': '5px 10px',
+                        'padding': `${imageSize[0] / 50}px ${imageSize[1] / 50}px`,
                         '--n-box-shadow': `0 0 5px 5px rgb(${themeColorString},0.3)`
                     },
                 }">
@@ -203,7 +204,6 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 .title_box {
     font-weight: 700;
     text-align: center;
-    padding: 15px 10px 5px 10px;
     transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
@@ -213,7 +213,6 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 
 .count {
     width: max-content;
-    padding: 5px 10px;
     position: absolute;
     top: 0;
 }

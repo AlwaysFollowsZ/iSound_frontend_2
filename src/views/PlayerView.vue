@@ -59,7 +59,6 @@ export default defineComponent({
           } else {
             this.updateLyrics("[00:00.000]暂无歌词");
           }
-          changeThemeColorByImage(this.music.cover);
         });
         this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
           this.comments = response.data.comment_set;
