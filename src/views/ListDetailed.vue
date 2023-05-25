@@ -49,8 +49,11 @@
                         <div style="font-size:xx-large; height: 50px">歌单名</div>
                     </n-gi>
                     <n-gi>
-                        <div style="height: 175px">歌单详细信息歌单详细信息歌单详细信息歌单详细信息</div>
+                        <div>标签：</div>
+                        <div>歌曲：</div>
+                        <div>简介：</div>
                     </n-gi>
+                    
                 </n-grid>
                 </div>
             </n-gi>

@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import ModifyComplainView from '../views/ModifyComplainView.vue';
 import { defineComponent, ref } from "vue";
+import { message } from 'ant-design-vue';
 import {
   ChevronBack,
   StarOutline,
@@ -84,6 +85,12 @@ export default defineComponent({
       handleNegativeClick() {
         // alert("取消");
       },
+      success(msg) {
+        message.success({
+          content: msg,
+          duration: 1,
+        });
+      }, 
       dayjs,
       value: ref(null),
       editCommentId: ref(0),
@@ -115,6 +122,12 @@ export default defineComponent({
     },
     like() {
       this.islike = !this.islike;
+      if (this.islike == true){
+        this.success("已添加至我喜欢");
+      }
+      else {
+        this.success("已从我喜欢移除");
+      }
       this.$http.post(`/api/like/${this.music.id}/`).then((response) => {
         console.log(response.data);
       });

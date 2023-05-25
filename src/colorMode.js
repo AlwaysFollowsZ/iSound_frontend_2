@@ -84,7 +84,10 @@ export const getRGBString = (colorInput, opacity = 1, type = 'normal', viewMode 
     }
     //转换成value
     if (viewMode !== 'admin') {
-        return `rgba(${color},${opacity})`
+        if (color === 'transparent')
+            return 'transparent'
+        else
+            return `rgba(${color},${opacity})`
     }
     else {
         if (type === 'font') {
@@ -162,7 +165,7 @@ const fixColor = (colorInput) => {
 
 //由于我们设计背景色为动态变化的，因此使用下面的函数在几个相近色中间随机动态变换
 //输入RGB数组，返回好几个RGB数组
-export const findSimilarColors=(rgbColor, count, similarity=0.5)=>{
+export const findSimilarColors = (rgbColor, count, similarity = 0.5) => {
     const similarColors = [];
 
     // 转换 RGB 到 HSL
@@ -212,7 +215,7 @@ export const findSimilarColors=(rgbColor, count, similarity=0.5)=>{
         let r, g, b;
 
         if (s === 0) {
-            r = g = b = l*255;
+            r = g = b = l * 255;
         } else {
             const hueToRgb = (p, q, t) => {
                 if (t < 0) t += 1;
