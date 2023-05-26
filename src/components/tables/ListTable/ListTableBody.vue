@@ -648,7 +648,7 @@ export default {
             }]
         }" @update:checked-row-keys="handleCheck" class="data-table" :style="{
     // 调节字体、背景、边框颜色
-    '--n-border-color': getRGBString(fontColorString,0.3,'background',viewMode),
+    '--n-border-color': getRGBString(fontColorString, 0.3, 'background', viewMode),
     '--n-loading-color': getRGBString(fontColorString, 0.5, 'font', viewMode),
     '--n-th-text-color': getRGBString(fontColorString, 1, 'font', viewMode),
     '--n-td-text-color': getRGBString(fontColorString, 1, 'font', viewMode),
@@ -739,6 +739,17 @@ export default {
     --n-font-weight: 700;
 }
 
+/* 设置动画样式 */
+:deep(.n-data-table-td) {
+    animation: fadeInUp ;
+    animation-duration: 1.5s;
+}
+
+:deep(.n-data-table-th) {
+    animation: fadeInDown;
+    animation-duration: 1s;
+}
+
 :deep(.n-pagination .n-pagination-item.n-pagination-item--disabled) {
     cursor: default;
 }
@@ -771,5 +782,4 @@ export default {
 :deep(.n-data-table-td .n-checkbox-box__border) {
     --n-border-checked: var(--my-td-border-checked);
     --n-border: none
-}
-</style>
+}</style>
