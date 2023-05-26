@@ -11,7 +11,7 @@
                             '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                             '--n-font-size': '18px',
                             '--n-border-radius': '12px',
-                            '--n-height': '40px',
+                            '--n-height': '50px',
                             '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
                             '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
                             '--n-border': '1px solid rgb(224, 224, 230)',
@@ -24,7 +24,7 @@
             </n-gi>
             <n-gi :span="1">
                 <div style="">
-                    <div style="padding-top: 30px" class="search-icon"
+                    <div style="padding-top: 35px" class="search-icon"
                         :style="{ 'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey' }"
                         @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
                         <n-icon  size="40px" @click="search">
@@ -35,7 +35,7 @@
             </n-gi> 
         </n-grid>      
     </div>
-    <div class="tab-container" :key="this.refresh">
+    <div class="tab-container">
         <n-tabs size="large" type="line" animated
             :style="{
             '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
@@ -47,10 +47,10 @@
             }"
         >   
             <n-tab-pane name="歌曲" tab="歌曲">
-                <list-table  :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
+                <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
             </n-tab-pane>
             <n-tab-pane name="歌单" tab="歌单">
-                <!-- <fan-list-view /> -->
+                <image-table :table-size="[1350,]" :entry-size="[330,240]"> </image-table>
             </n-tab-pane>
         </n-tabs> 
     </div>
@@ -58,6 +58,7 @@
 
 <script>
 import TopNav from '../components/TopNav.vue'
+import ImageTable from '../components/tables/ImageTable/ImageTable.vue'
 import ListTable from "../components/tables/ListTable/ListTable.vue"
 import { SearchOutline } from '@vicons/ionicons5'
 import { mapState } from 'vuex'
@@ -70,6 +71,7 @@ export default {
         TopNav,
         SearchOutline,
         ListTable,
+        ImageTable,
     },
     data() {
         return {
@@ -81,9 +83,33 @@ export default {
         }
     },
     watch: {
-        '$route'() {
-            // this.refresh++
-            window.location.reload()
+        '$route'(to, from) {
+            // this.searhValue = this.$route.params.keyword
+            // this.search()
+            // window.location.reload()
+            if (to.params.keyword !== from.params.keyword) {
+                const keyword = this.$route.params.keyword
+        this.searchValue = keyword
+        this.$http.get(`/api/search/`, {
+            params: { 'title': keyword }
+        }).then((response) => {
+            let i = 0
+            this.songs = response.data.music_set.map(song => ({
+                key: i++,
+                name: song.name,
+                singer: song.artist,
+                id: song.id,
+                length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
+                imgSrc: song.cover,
+                isLiked: song.is_like,
+                isCollected: false,
+                showCollection: false,
+            }))
+            this.songlists = response.data.playlist_set.map(songlist => ({
+                // do something
+            }))
+        })
+            }
         },
     },
     created() {
@@ -112,27 +138,39 @@ export default {
     methods: {
         search() {
             if (this.searchValue.trim().length !== 0) {
-                console.log(`searchValue: ${this.searchValue}`)
-                this.$http.get(`/api/search/`, {
-                    params: { 'title': this.searchValue }
-                }).then((response) => {
-                    let i = 0
-                    this.songs = response.data.music_set.map(song => ({
-                        key: i++,
-                        name: song.name,
-                        singer: song.artist,
-                        id: song.id,
-                        length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
-                        imgSrc: song.cover,
-                        isLiked: song.is_like,
-                        isCollected: false,
-                        showCollection: false,
-                    }))
-                    this.songlists = response.data.playlist_set.map(songlist => ({
-                        // do something
-                    }))
-                })
+                // console.log(`searchValue: ${this.searchValue}`)
+                // jump to search page
+                this.$router.push("/searchresult/" + this.searchValue)
+                // console.log('hhh')
+                // this.$router.replace('/')
+                // this.$router.replace('/searchresult/' + this.searchValue, () => {
+                    
+                // });
+                this.searchValue = ''
+                // window.location.reload()
             }
+            // if (this.searchValue.trim().length !== 0) {
+            //     // console.log(`searchValue: ${this.searchValue}`)
+            //     this.$http.get(`/api/search/`, {
+            //         params: { 'title': this.searchValue }
+            //     }).then((response) => {
+            //         let i = 0
+            //         this.songs = response.data.music_set.map(song => ({
+            //             key: i++,
+            //             name: song.name,
+            //             singer: song.artist,
+            //             id: song.id,
+            //             length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
+            //             imgSrc: song.cover,
+            //             isLiked: song.is_like,
+            //             isCollected: false,
+            //             showCollection: false,
+            //         }))
+            //         this.songlists = response.data.playlist_set.map(songlist => ({
+            //             // do something
+            //         }))
+            //     })
+            // }
         },
     }
 };

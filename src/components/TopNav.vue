@@ -239,10 +239,16 @@ export default {
         ...mapMutations(['setLogState', 'setAccentColor', 'setMultiColor']),
         search() {
             if (this.searchValue.trim().length !== 0) {
-                console.log(`searchValue: ${this.searchValue}`)
+                // console.log(`searchValue: ${this.searchValue}`)
                 // jump to search page
                 this.$router.push("/searchresult/" + this.searchValue)
+                // console.log('hhh')
+                // this.$router.replace('/')
+                // this.$router.replace('/searchresult/' + this.searchValue, () => {
+                    
+                // });
                 this.searchValue = ''
+                // window.location.reload()
             }
         },
         toLogIn() {

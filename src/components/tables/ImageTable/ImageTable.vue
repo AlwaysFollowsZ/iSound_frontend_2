@@ -64,6 +64,11 @@ export default {
             type: Array,
             default: [1000,]
         },
+        // tableEntry 的宽高
+        entrySize: {
+            type: Array,
+            default: [260, 260]
+        },
         //使用该组件的位置包括个人主页/收藏夹选择悬浮框和音乐馆主页
         //分别为PersonalView,CollectionView,HomeView
         position: {
@@ -101,7 +106,7 @@ export default {
         <n-scrollbar v-if="['PersonalView', 'CollectionView'].includes(position)" class="image_table_list">
             <template v-for="data in currentPageData" :key="data.Key">
                 <image-table-entry v-bind="data" style="vertical-align: middle;"
-                    @clickEntry="handleClick" :EntrySize="[300,300]"></image-table-entry>
+                    @clickEntry="handleClick" :EntrySize="entrySize"></image-table-entry>
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
