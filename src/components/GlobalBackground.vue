@@ -76,7 +76,7 @@ export default {
         'background-color': getRGBString(`${currentColor[0]},${currentColor[1]},${currentColor[2]}`)
         // 'background':`linear-gradient(to top,${getRGBString(currentColor.join(','))},${getRGBString(globalThemeColor.join(','))},${getRGBString(currentColor.join(','))})`
     }">
-    <render-background></render-background>
+    <!-- <render-background></render-background> -->
 </div>
     
 

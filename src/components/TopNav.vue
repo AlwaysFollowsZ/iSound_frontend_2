@@ -41,7 +41,7 @@
                                 '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" />
+                            }" type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" />
                         </div>
                     </n-gi>
                     <n-gi :span="3">
