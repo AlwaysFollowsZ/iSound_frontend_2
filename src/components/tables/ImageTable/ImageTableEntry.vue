@@ -12,7 +12,7 @@ export default {
     data() {
         const themeColor = ref([])
         getThemeColorByImage(this.imagePath, themeColor)
-        const imageSize = [(this.EntrySize[0] / 1.4) - 50, (this.EntrySize[1] / 1.4) - 100]
+        const imageSize = [(this.EntrySize[0] / 1.6), (this.EntrySize[1] / 1.6)]
         const imageSizeAvg = (imageSize[0] + imageSize[1]) / 2
         const fontSize = (imageSizeAvg) / 12
         const fontColorString = getFontColorString(themeColor)
@@ -68,11 +68,13 @@ export default {
     }">
         <!-- 大盒子的动态属性有背景色和宽高 -->
         <div class="mask_box" :style="{
-            'padding': `${imageSize[1] / 8}px ${imageSize[0] / 6}px ${imageSize[1] / 10}px ${imageSize[0] / 6}px`,
+            'width': isHoverOnMask?`${imageSize[0]+6}px`: `${imageSize[0]}px`,
+            'height': `fit-content`,
+            // 'padding': `0px 0px ${imageSize[1] / 10}px 0px`,
             'border-radius': `${imageSizeAvg / 10}px`,
-            'background-color': isHoverOnMask ? `rgb(${themeColorString},0.8)` : `rgb(${themeColorString},0.5)`,
+            'background-color': isHoverOnMask ? `rgb(${themeColorString},0.8)` : `rgb(${themeColorString},0.2)`,
             'box-shadow': isHoverOnMask ? `0 0 8px 3px rgb(${themeColorString},0.8)` : '',
-            'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `0 solid rgb(${themeColorString},0.7)`
+            'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `0px solid rgb(${themeColorString})`
         }" :class="[isHoverOnMask ? 'mask_box-hover' : '',
 isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mouseleave="isHoverOnMask = false"
             @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Key)">
@@ -106,7 +108,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                                     :size="imageSizeAvg / 10"><book-star20-regular></book-star20-regular></n-icon>
                             </n-icon-wrapper>
                         </template>
-                        {{ Type === 'Song' ? '这是一首歌曲' : '这是一个歌单' }}
+                        {{ Type === 'Song' ? '这是一首歌曲' :Type==='songList'? '这是一个歌单':'这是一个收藏夹' }}
                     </n-popover>
                     <transition name="count">
                         <span class="count" v-if="isHoverOnBottom && Type === 'songList'" :style="{
@@ -123,24 +125,30 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 </div>
             </div>
             <div class="title_box" :style="{
-                'width': `${imageSize[0]}px`,
+                'height': `${fontSize * 2}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
                     `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',
-                'padding': `${imageSize[0] / 20}px ${imageSize[0] / 50}px ${imageSize[0] / 30}px ${imageSize[0] / 50}px`,
+                // 'padding': `${imageSize[0] / 20}px ${imageSize[0] / 50}px ${imageSize[0] / 30}px ${imageSize[0] / 50}px`,
+                'margin':'5px auto'
             }" :class="isHoverOnTitle ? 'title-hover' : ''" @mouseenter="isHoverOnTitle = true"
                 @mouseleave="isHoverOnTitle = false">
-                <n-ellipsis :style="{ 'font-size': `${fontSize}px` }" :tooltip="{
-                    style: {
-                        '--n-text-color': `rgb(${fontColorString})`,
-                        '--n-color': `rgb(${themeColorString},0.8)`,
-                        'border': `3px solid rgb(${themeColorString})`,
-                        'font-weight': '700',
-                        'border-radius': '10px',
-                        'padding': `${imageSize[0] / 50}px ${imageSize[1] / 50}px`,
-                        '--n-box-shadow': `0 0 5px 5px rgb(${themeColorString},0.3)`
-                    },
-                }">
+                <n-ellipsis :style="{
+                    'font-size': `${fontSize}px`,
+                    'vertical-align': 'top',
+                    'height': `${fontSize * 2}px`,
+                    'max-width':`${imageSize[0]*0.8}px`
+                }" :tooltip="{
+    style: {
+        '--n-text-color': `rgb(${fontColorString})`,
+        '--n-color': `rgb(${themeColorString},0.8)`,
+        'border': `3px solid rgb(${themeColorString})`,
+        'font-weight': '700',
+        'border-radius': '10px',
+        'padding': `${imageSize[0] / 50}px ${imageSize[1] / 50}px`,
+        '--n-box-shadow': `0 0 5px 5px rgb(${themeColorString},0.3)`,
+    },
+}">
                     <template #tooltip>
                         {{ Type === 'Song' ? '歌曲名称 : ' : '歌单名称 : ' }}{{ Name }}
                     </template>
@@ -183,8 +191,6 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
     right: 0;
     bottom: 0;
     margin: auto auto;
-    width: fit-content;
-    height: fit-content;
     display: inline-block;
     transition: all cubic-bezier(0.165, 0.74, 0.44, 0.78) 0.8s;
 }

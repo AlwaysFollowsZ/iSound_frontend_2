@@ -23,10 +23,10 @@ export let Rows = [
     },
     {
         Key: 3,
-        Type: 'songList',
+        Type: 'Collection',
         imagePath: '/src/assets/song3.jpg',
         SongCount: 10,
-        Name: 'test112345678765432123456789',
+        Name: 'test1123456787654321234567dwefgthyjthgrefdwqdwfegrht89',
     },
     {
         Key: 4,

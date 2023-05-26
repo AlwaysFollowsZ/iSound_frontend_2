@@ -16,6 +16,7 @@
                                      (idx % 2 === 0 ? 'rgb(' + this.accentColor + ')' : 'white') : 
                                      (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 1)' : 'rgba(' + this.accentColor + ', 0.9)')"
                         :should-animate="shouldAnimate"
+                        @click="handleClickTag(content)"
                     />
                 </div>
             </n-gi>
@@ -84,6 +85,12 @@ export default {
             ],
         }
     },
+    methods: {
+        handleClickTag(tagName) {
+            this.$router.push("/tags/" + tagName);
+            console.log(`push to search the tag: ${tagName}`);
+        }
+    }
 }
 </script>
 

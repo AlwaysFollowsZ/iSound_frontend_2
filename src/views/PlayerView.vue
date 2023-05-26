@@ -53,6 +53,7 @@ export default defineComponent({
           this.music = response.data.music_set[0];
           this.islike = this.music.is_like;
           this.iscollect = this.music.is_favorite;
+          this.songtags = this.music.tags;
           this.iscomplain = this.music.is_complained;
           if (this.music.lrc != null) {
             this.$http.get(`${this.music.lrc}`).then((response) => {
@@ -110,6 +111,7 @@ export default defineComponent({
       id: 0,
       page: 1,
       comments: [],
+      songtags: [],
       music: {},
       lyricsIndex: 0,
       lyricsObjArr: [],
@@ -141,6 +143,9 @@ export default defineComponent({
     },
     complain() {
       //todo
+      if (this.iscomplain == false) {
+        this.iscomplain = !this.iscomplain;
+      }
       this.showModifyComplainView = true;
     },
     cleanComment() {
@@ -288,9 +293,12 @@ export default defineComponent({
                   color="#ff69b4"
                   @click="like"
                   class="animate__animated animate__heartBeat"
-                  ><Fitness
-                /></n-icon>
-                <n-icon v-else size="30" @click="like"><FitnessOutline /></n-icon>
+                >
+                  <Fitness />
+                </n-icon>
+                <n-icon v-else size="30" @click="like">
+                  <FitnessOutline />
+                </n-icon>
               </span>
             </n-gi>
             <n-gi :span="4" style="margin: auto">
@@ -301,9 +309,12 @@ export default defineComponent({
                   color="#FFD700"
                   @click="collect"
                   class="animate__animated animate__flash"
-                  ><Star
-                /></n-icon>
-                <n-icon v-else size="30" @click="collect"><StarOutline /></n-icon>
+                >
+                  <Star />
+                </n-icon>
+                <n-icon v-else size="30" @click="collect">
+                  <StarOutline />
+                </n-icon>
               </span>
             </n-gi>
             <n-gi :span="4" style="margin: auto">
@@ -314,9 +325,12 @@ export default defineComponent({
                   color="#DC143C"
                   @click="complain"
                   class="animate__animated animate__headShake"
-                  ><Warning
-                /></n-icon>
-                <n-icon v-else size="30" @click="complain"><WarningOutline /></n-icon>
+                >
+                  <Warning />
+                </n-icon>
+                <n-icon v-else size="30" @click="complain">
+                  <WarningOutline />
+                </n-icon>
               </span>
             </n-gi>
             <n-gi :span="6"></n-gi>
@@ -333,6 +347,46 @@ export default defineComponent({
             </n-gi>
             <n-gi>
               <div class="music-artist">歌手：{{ music.artist }}</div>
+            </n-gi>
+            <n-gi>
+              <div class="song-tags">
+                <div class="tag-container">
+                  <span v-for="tag in this.songtags">
+                    <n-tag
+                      :bordered="false"
+                      :style="{
+                        '--n-border-radius': `5px`,
+                        '--n-font-weight-strong': `bold`,
+                        '--n-height': `20px`,
+                        '--n-close-margin': `0 18px 0 18px`,
+                      }"
+                      class="tag-item"
+                    >
+                      {{ tag }}
+                    </n-tag>
+                  </span>
+                </div>
+              </div>
+            </n-gi>
+            <n-gi>
+              <div class="song-tags">
+                <div class="tag-container">
+                  <span v-for="tag in this.songtags">
+                    <n-tag
+                      :bordered="false"
+                      :style="{
+                        '--n-border-radius': `5px`,
+                        '--n-font-weight-strong': `bold`,
+                        '--n-height': `20px`,
+                        '--n-close-margin': `0 18px 0 18px`,
+                      }"
+                      class="tag-item"
+                    >
+                      {{ tag }}
+                    </n-tag>
+                  </span>
+                </div>
+              </div>
             </n-gi>
             <n-gi>
               <div style="font-size: larger">
@@ -389,7 +443,9 @@ export default defineComponent({
         <div>
           <n-collapse>
             <n-collapse-item>
-              <template #arrow><div style="color: white"></div></template>
+              <template #arrow>
+                <div style="color: white"></div>
+              </template>
               <template #header>
                 <span style="margin-right: 3px; margin-top: 2px">
                   <n-grid>
@@ -397,9 +453,9 @@ export default defineComponent({
                       <span style="font-size: 22px"> 全部评论 </span>
                     </n-gi>
                     <n-gi :span="1" style="padding-top: 5px">
-                      <n-icon id="comment-fold" size="27"
-                        ><ChatbubbleEllipsesOutline
-                      /></n-icon>
+                      <n-icon id="comment-fold" size="27">
+                        <ChatbubbleEllipsesOutline />
+                      </n-icon>
                     </n-gi>
                   </n-grid>
                 </span>
@@ -559,6 +615,7 @@ export default defineComponent({
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 .back-button {
   width: 40px;
   height: 40px;
@@ -566,6 +623,7 @@ export default defineComponent({
   left: 20px;
   top: 20px;
 }
+
 .music-cover {
   /* position: absolute; */
   margin-top: 27%;
@@ -574,50 +632,61 @@ export default defineComponent({
   align-items: center;
   overflow: hidden;
 }
+
 .music-cover-img {
   /* position: absolute; */
   margin: auto;
   border-radius: 10px;
 }
+
 .three-buttons {
   margin-top: 8%;
 }
+
 .button {
   margin: auto;
 }
+
 .lyrics-part {
   display: flex;
   width: 500px;
   margin: auto;
   margin-top: 12%;
 }
+
 :deep(.ant-comment-avatar img) {
   width: 50px;
   height: 50px;
 }
+
 :deep(.ant-comment-content-author > span) {
   padding-right: 13px;
 }
+
 :deep(.ant-comment-content-author-time) {
   padding-top: 2px;
   font-size: 14px;
 }
+
 :deep(.n-collapse
     .n-collapse-item
     .n-collapse-item__header
     .n-collapse-item__header-main) {
   display: inline;
 }
+
 :deep(.n-collapse
     .n-collapse-item
     .n-collapse-item__content-wrapper
     .n-collapse-item__content-inner) {
   padding-top: 0;
 }
+
 :deep(.ant-comment-inner) {
   padding-top: 0;
   padding-bottom: 5px;
 }
+
 :deep(.ant-comment-actions) {
   margin-top: 0;
 }
@@ -636,10 +705,12 @@ export default defineComponent({
 .edit-comment {
   margin-top: 24px;
 }
+
 .clean-button {
   position: absolute;
   margin-left: 920px;
 }
+
 .send-button {
   position: absolute;
   margin-right: 100px;
@@ -648,6 +719,7 @@ export default defineComponent({
 .my-comment-button {
   margin-bottom: 50px;
 }
+
 .html {
   scroll-behavior: smooth;
 }
@@ -693,6 +765,7 @@ export default defineComponent({
   font-size: 16px;
   opacity: 0.8;
 }
+
 .lyrics-wrap:hover > .lyrics > .content {
   opacity: 0.8;
 }

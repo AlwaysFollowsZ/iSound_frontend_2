@@ -1,102 +1,172 @@
 <template>
     <top-nav></top-nav>
-    <div class="search-input">
-        <n-grid>
-            <n-gi :span="3"></n-gi>
-            <n-gi :span="14">
-                <div style="padding-top: 7%" @click="console.log(songs.length)">
-                <n-input class="main-input" round type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search()" />
+    <div>
+        <n-grid :x-gap="12">
+            <n-gi :span="7"></n-gi>
+            <n-gi :span="9">
+                <div style="padding-top: 30px; display: flex; justify-content: center">
+                    <n-input type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" 
+                        :style="{
+                            '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                            '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                            '--n-font-size': '18px',
+                            '--n-border-radius': '12px',
+                            '--n-height': '50px',
+                            '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-border': '1px solid rgb(224, 224, 230)',
+                            '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                            '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                        }"
+                    />
                 </div>
             </n-gi>
-            <n-gi :span="2"></n-gi>
             <n-gi :span="1">
-            <div style="color:lightgray; padding-top: 100%">
-                <SearchOutline size="30px" @click="search()" />
-            </div> 
+                <div style="">
+                    <div style="padding-top: 35px" class="search-icon"
+                        :style="{ 'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey' }"
+                        @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
+                        <n-icon  size="40px" @click="search">
+                            <SearchOutline/>
+                        </n-icon>
+                    </div>
+                </div> 
             </n-gi> 
-            <n-gi :span="4"></n-gi>
         </n-grid>      
     </div>
-    <div>
-        <div v-for="(song, idx) in songs" :key="idx">
-            <img :src="song.cover" alt="no img"/>
-            <br/>
-            {{ song.name }}
-            <br/>
-            {{ song.singer }}
-            <br/>
-            {{ song.length }}
-            <br/>
-        </div>
+    <div class="tab-container">
+        <n-tabs size="large" type="line" animated
+            :style="{
+            '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
+            '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
+            '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
+            '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
+            '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
+            '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
+            }"
+        >   
+            <n-tab-pane name="歌曲" tab="歌曲">
+                <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
+            </n-tab-pane>
+            <n-tab-pane name="歌单" tab="歌单">
+                <image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330,240]" v-model:rows="songlists"> </image-table>
+            </n-tab-pane>
+        </n-tabs> 
     </div>
-    <!-- <div class="music-list-header">
-        <a-tabs v-model:activeKey="activeKey" >
-        <a-tab-pane key="1">
-        <template #tab>
-            <span><apple-outlined />歌曲</span>
-        </template>
-            <a-card title="Default size card" style="width: 300px">
-            <template #extra><a href="#">more</a></template>
-            <p>待插入歌曲列表组件</p>
-            <p>card content</p>
-            <p>card content</p>
-            </a-card>
-        </a-tab-pane>
-
-        <a-tab-pane key="2">
-        <template #tab>
-            <span><android-outlined />歌单</span>
-        </template>
-        待插入歌单列表
-        </a-tab-pane>
-    </a-tabs>
-    </div> -->
 </template>
 
 <script>
 import TopNav from '../components/TopNav.vue'
-import { defineComponent } from 'vue';
+import ImageTable from '../components/tables/ImageTable/ImageTable.vue'
+import ListTable from "../components/tables/ListTable/ListTable.vue"
 import { SearchOutline } from '@vicons/ionicons5'
+import { mapState } from 'vuex'
 export default {
     name: 'SearchResultView',
+    computed: {
+        ...mapState(['accentColor', 'colorMode']),
+    },
     components: {
         TopNav,
         SearchOutline,
-        
+        ListTable,
+        ImageTable,
     },
     data() {
         return {
+            refresh: 0,
+            searchIconIsHovered: false,
             songs: [],
             songlists: [],
             searchValue: '',
         }
     },
+    watch: {
+        '$route'(to, from) {
+            if (to.params.keyword !== from.params.keyword) {
+                const keyword = this.$route.params.keyword
+                this.setAndSearchKeyword(keyword)
+            }
+        }
+    },
     created() {
         const keyword = this.$route.params.keyword
-        this.searchValue = keyword
-        this.$http.get(`/api/search/`, {
-            params: { 'title': keyword }
-        }).then((response) => {
-            this.songs = response.data.music_set.map(song => ({
-                name: song.name,
-                singer: song.artist,
-                length: song.duration,
-                cover: song.cover,
-                uploader: song.up,
-                audioURL: song.url,
-                isLike: song.is_like,
-                isFavorate: song.is_favorite,
-            }))
-            this.songlists = response.data.playlist_set.map(songlist => ({
-                // do something
-            }))
-        })
+        this.setAndSearchKeyword(keyword)
     },
     methods: {
+        setAndSearchKeyword(keyword) {
+            let i = 0, j = 0
+            let tmpSong = [], tmpList = []
+            let songIDs = [], listIDs = []
+            this.searchValue = keyword
+            this.$http.get(`/api/search/`, {
+                params: { 'title': keyword }
+            }).then((response) => {
+                this.songs = response.data.music_set.map(song => ({
+                    key: i++,
+                    name: song.name,
+                    singer: song.artist,
+                    id: song.id,
+                    length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
+                    imgSrc: song.cover,
+                    isLiked: song.is_like,
+                    isCollected: false,
+                    showCollection: false,
+                }))
+                this.songlists = response.data.playlist_set.map(songlist => ({
+                    Key: j++,
+                    Type: 'songList',
+                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    songCount: songlist.music_set.length,
+                    Name: songlist.title,
+                }))
+            })
+            for (let i = 0; i < this.songs.length; i++) {
+                songIDs.push(this.songs[i].id)
+            }
+            // === DO NOT MODIFY ===
+            // for (let i = 0; i < this.songlists.length; i++) {
+            //     listIDs.push(this.songlists[i].id)
+            // }
+            this.$http.get(`/api/search/`, {
+                params: { 'tags': keyword } 
+            }).then((response) => {
+                tmpSong = response.data.music_set.map(song => ({
+                    key: i++,
+                    name: song.name,
+                    singer: song.artist,
+                    id: song.id,
+                    length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
+                    imgSrc: song.cover,
+                    isLiked: song.is_like,
+                    isCollected: false,
+                    showCollection: false,
+                }))
+                tmpList = response.data.playlist_set.map(songlist => ({
+                    Key: j++,
+                    Type: 'songList',
+                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    songCount: songlist.music_set.length,
+                    Name: songlist.title,
+                }))
+                for (let i = 0; i < tmpSong.length; i++) {
+                    if (songIDs.indexOf(tmpSong[i].id) === -1) {
+                        this.songs.push(tmpSong[i])
+                        songIDs.push(tmpSong[i].id)
+                    }
+                }
+                // === DO NOT MODIFY ===
+                // for (let i = 0; i < tmpList.length; i++) {
+                //     if (listIDs.indexOf(tmpList[i].id) === -1) {
+                //         this.songlists.push(tmpList[i])
+                //         listIDs.push(tmpList[i].id)
+                //     }
+                // }
+            })
+        },
         search() {
             if (this.searchValue.trim().length !== 0) {
-                console.log(`searchValue: ${this.searchValue}`)
-                // jump to search page
                 this.$router.push("/searchresult/" + this.searchValue)
                 this.searchValue = ''
             }
@@ -106,24 +176,11 @@ export default {
 </script>
 
 <style scoped>
-.search-input {
-    position: fixed;
-    top: 80px;
-    width: 60vw;
-    margin: 0 20vw;
+.search-icon:hover {
+    cursor: pointer;
 }
-.n-input.main-input{
-    transform: scale(1.2, 1.2);
-    position: relative;
-} 
-.music-list-header {
-    position: fixed;
-    top: 200px;
-    left: 10vw;
-    width: 80vw;
-    height: 100vw;
-    background: rgb(235, 237, 240);
-    margin: 0;
-    padding: 0 15px;
+.tab-container {
+    margin-left: 80px;
+    margin-right: 80px;
 }
 </style>

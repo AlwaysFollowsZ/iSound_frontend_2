@@ -27,115 +27,73 @@
                     @click="this.$router.push('/')">
                     音乐馆
                 </div> -->
-      </n-gi>
-      <n-gi :span="4"></n-gi>
-      <n-gi :span="6">
-        <n-grid>
-          <n-gi :span="3" v-if="!this.isLoggedIn"></n-gi>
-          <n-gi :span="15">
-            <div style="padding-top: 3%; padding-right: 3%; padding-left: 7%">
-              <n-input
-                :style="{
-                  '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                  '--n-color-focus':
-                    this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                  '--n-border-radius': `10px`,
-                  '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                  '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                  border: '1px solid rgb(224, 224, 230)',
-                  '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                  '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                  '--n-box-shadow-focus':
-                    '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                }"
-                type="text"
-                v-model:value="searchValue"
-                placeholder="请输入关键字"
-                @keyup.enter="search"
-              />
-            </div>
-          </n-gi>
-          <n-gi :span="3">
-            <div
-              style="padding-top: 25%"
-              class="search-icon-container"
-              :style="{
-                color: this.searchIconIsHovered
-                  ? 'rgba(' + this.accentColor + ', 0.9)'
-                  : 'lightgrey',
-              }"
-              @mouseover="this.searchIconIsHovered = true"
-              @mouseout="this.searchIconIsHovered = false"
-            >
-              <n-icon :component="SearchOutline" size="27px" @click="search" />
-            </div>
-          </n-gi>
-          <n-gi :span="3">
-            <div class="color-icon-container">
-              <n-tooltip
-                :style="{ maxWidth: '270px', maxHeight: '200px' }"
-                placement="bottom-start"
-                trigger="hover"
-                @update:show="handleUpdateShow"
-              >
-                <template #trigger>
-                  <div style="color: lightgrey">
-                    <n-icon
-                      size="27px"
-                      v-if="this.colorMode === 'white'"
-                      @click="changeColorMode"
-                      ><moon-outline
-                    /></n-icon>
-                    <n-icon size="27px" v-else @click="changeColorMode"
-                      ><sunny-outline
-                    /></n-icon>
-                  </div>
-                </template>
-                <template #default>
-                  <div>
-                    <span
-                      class="choose-color-default"
-                      @click="
-                        this.setAccentColor(
-                          this.colorMode === 'white' ? '0,0,0' : '255,255,255'
-                        )
-                      "
-                    >
-                      默认
-                    </span>
-                    <span
-                      style="max-width: 200px"
-                      v-for="(c, idx) in accentColorChoices"
-                      :key="idx"
-                    >
-                      <button
-                        class="round-button"
-                        :style="{
-                          'background-color': 'rgb(' + c + ')',
-                          border: '1px solid rgb(' + c + ')',
-                        }"
-                        @click="this.setAccentColor(c)"
-                      ></button>
-                      <!-- < :style="{'--n-color': }" @click="this.setAccentColor(c); console.log(c)"/> -->
-                    </span>
-                    <div style="margin-top: 3%">
-                      <n-grid>
-                        <n-gi :span="14">开启多彩背景色变换</n-gi>
-                        <n-gi :span="5"></n-gi>
-                        <n-gi :span="5">
-                          <n-switch
-                            v-model:value="multiColorShouldDisplay"
-                            @update:value="handleMultiColorChange"
-                            :style="{ '--n-rail-color': 'grey' }"
-                          />
-                        </n-gi>
-                      </n-grid>
-                    </div>
-                  </div>
-                </template>
-              </n-tooltip>
-            </div>
-          </n-gi>
+            </n-gi>
+            <n-gi :span="4"></n-gi>
+            <n-gi :span="6">
+                <n-grid>
+                    <n-gi :span="3" v-if="!this.isLoggedIn"></n-gi>
+                    <n-gi :span="15">
+                        <div style="padding-top: 3%; padding-right: 3%; padding-left: 7%;">
+                            <n-input :style="{
+                                '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                '--n-border-radius': `10px`,
+                                '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                                'border': '1px solid rgb(224, 224, 230)',
+                                '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                                '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                                '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                            }" type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" />
+                        </div>
+                    </n-gi>
+                    <n-gi :span="3">
+                        <div style="padding-top: 25%" class="search-icon-container"
+                            :style="{ 'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey' }"
+                            @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
+                            <n-icon :component="SearchOutline" size="27px" @click="search" />
+                        </div>
+                    </n-gi>
+                    <n-gi :span="3">
+                        <div class="color-icon-container">
+                            <n-tooltip :style="{ 'maxWidth': '270px', 'maxHeight': '200px' }" placement="bottom-start"
+                                trigger="hover" @update:show="handleUpdateShow">
+                                <template #trigger>
+                                    <div style="color: lightgrey">
+                                        <n-icon size="27px" v-if="this.colorMode === 'white'"
+                                            @click="changeColorMode"><moon-outline /></n-icon>
+                                        <n-icon size="27px" v-else @click="changeColorMode"><sunny-outline /></n-icon>
+                                    </div>
+                                </template>
+                                <template #default>
+                                    <div>
+                                        <span class="choose-color-default"
+                                            @click="this.setAccentColor(this.colorMode === 'white' ? '0,0,0' : '255,255,255')">
+                                            默认
+                                        </span>
+                                        <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
+                                            <button class="round-button"
+                                                :style="{ 'background-color': 'rgb(' + c + ')', 'border': '1px solid rgb(' + c + ')' }"
+                                                @click="this.setAccentColor(c)"></button>
+                                            <!-- < :style="{'--n-color': }" @click="this.setAccentColor(c); console.log(c)"/> -->
+                                        </span>
+                                        <div style="margin-top: 3%">
+                                            <n-grid>
+                                                <n-gi :span="14">开启多彩背景色变换</n-gi>
+                                                <n-gi :span="5"></n-gi>
+                                                <n-gi :span="5">
+                                                    <n-switch v-model:value="multiColorShouldDisplay"
+                                                        @update:value="handleMultiColorChange"
+                                                        :style="{ '--n-rail-color': 'grey' }" />
+                                                </n-gi>
+                                            </n-grid>
+                                        </div>
+                                    </div>
+
+                                </template>
+                            </n-tooltip>
+                        </div>
+                    </n-gi>
 
           <n-gi :span="3" v-if="this.isLoggedIn">
             <div style="padding-top: 25%">
@@ -205,17 +163,141 @@
 </template>
 
 <script>
-import { SearchOutline, MailOutline, SunnyOutline, MoonOutline } from "@vicons/ionicons5";
-import LoginView from "../views/LoginView.vue";
-import RegisterView from "../views/RegisterView.vue";
-import ResetPasswdView from "../views/ResetPasswdView.vue";
-import ChangePasswdView from "../views/ChangePasswdView.vue";
-import { mapState, mapMutations } from "vuex";
-import ModifyUserMessageView from "../views/ModifyUserMessageView.vue";
-import { changeColorMode } from "/src/colorMode";
-import { message } from "ant-design-vue";
+import { SearchOutline, MailOutline, SunnyOutline, MoonOutline } from '@vicons/ionicons5'
+import LoginView from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue'
+import ResetPasswdView from '../views/ResetPasswdView.vue'
+import ChangePasswdView from '../views/ChangePasswdView.vue'
+import { mapState, mapMutations } from 'vuex'
+import ModifyUserMessageView from '../views/ModifyUserMessageView.vue'
+import { changeColorMode } from '/src/colorMode'
 
 export default {
+    name: 'TopNav',
+    components: {
+        SearchOutline,
+        LoginView,
+        RegisterView,
+        ResetPasswdView,
+        ChangePasswdView,
+        MailOutline,
+        SunnyOutline,
+        MoonOutline,
+        ModifyUserMessageView,
+    },
+    computed: {
+        ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
+    },
+    created() {
+        this.$http.get('/api/message/of/0/').then((response) => {
+            if (response.data.unread == 0) {
+                this.showMessage = false;
+            }
+            else {
+                this.showMessage = true;
+            }
+        });
+        this.$EventBus.on('setShowMessage', (unread) => {
+            if (unread == 0) {
+                this.showMessage = false;
+            }
+            else {
+                this.showMessage = true;
+            }
+        });
+    },
+    data() {
+        return {
+            accentColorChoices: [
+                '0,122,255',   // 蓝色
+                '150,62,150',  // 紫色
+                '248,79,158',  // 粉色
+                '224,56,61',  // 红色
+                '246,130,27',  // 橙色
+                '255,200,37',  // 黄色
+                '98,186,70',   // 绿色
+                '152,152,152', // 灰色
+            ],
+            showModifyUserMessage: false,
+            searchValue: '',
+            showLogin: false,
+            showRegister: false,
+            showResetPasswd: false,
+            showChangePasswd: false,
+            searchIconIsHovered: false,
+            backToHomeIsHovered: false,
+            multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
+            SearchOutline,
+            MailOutline,
+            showMessage: ref(true),
+            options: [
+                {
+                    label: "个人主页",
+                    props: {
+                        onClick: () => {
+                            this.$router.push('/home')
+                            console.log('user page')
+                        }
+                    }
+                },
+                {
+                    label: "历史记录",
+                    props: {
+                        onClick: () => {
+                            this.$router.push('/history')
+                            console.log('history')
+                        }
+                    }
+                },
+                {
+                    label: "修改密码",
+                    props: {
+                        onClick: () => {
+                            this.showChangePasswd = true;
+                            console.log('修改密码页面')
+                        }
+                    }
+                },
+                {
+                    label: "登出",
+                    props: {
+                        onClick: () => {
+                            this.setLogState(false)
+                            console.log('logout')
+                        }
+                    }
+                }
+            ],
+        }
+    },
+    methods: {
+        ...mapMutations(['setLogState', 'setAccentColor', 'setMultiColor']),
+        search() {
+            if (this.searchValue.trim().length !== 0) {
+                // console.log(`searchValue: ${this.searchValue}`)
+                // jump to search page
+                this.$router.push("/searchresult/" + this.searchValue)
+                // console.log('hhh')
+                // this.$router.replace('/')
+                // this.$router.replace('/searchresult/' + this.searchValue, () => {
+                    
+                // });
+                this.searchValue = ''
+                // window.location.reload()
+            }
+        },
+        toLogIn() {
+            this.setLogState(true)
+            console.log('hello')
+        },
+        readMessage() {
+            this.showModifyUserMessage = true;
+        },
+        changeColorMode,
+        handleMultiColorChange() {
+            this.setMultiColor(this.multiColorShouldDisplay)
+        }
+    }
   name: "TopNav",
   components: {
     SearchOutline,

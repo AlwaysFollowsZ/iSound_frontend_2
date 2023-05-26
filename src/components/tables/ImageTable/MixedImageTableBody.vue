@@ -1,113 +1,106 @@
+<template>
+    <!-- mmd,number和Number有什么区别 -->
+    <div :style="{
+        'width': `${tableSize[0]}px`,
+        'height': `${tableSize[1]}px`,
+        'display': 'inline-block'
+    }">
+        <template v-for="(row, rowIndex) in layout" :key="rowIndex">
+            <ImageTableEntry v-if="row.data !== undefined && row.data !== 'blank'" :EntrySize="getChildAttr(row)"
+                v-bind="row.data">
+            </ImageTableEntry>
+            <div v-else-if="row.data==='blank'" :style="getBoxStyle(row)"></div>
+            <NestedLayout v-else :layout="row.content" :direction="direction === 1 ? 0 : 1" :tableSize="getChildAttr(row)"
+                :index="index">
+            </NestedLayout>
+        </template>
+    </div>
+</template>
+
 <script>
 import ImageTableEntry from './ImageTableEntry.vue'
 import { Rows } from './ImageRowData.js'
 import { NButton } from 'naive-ui'
 import { changeColorMode, getRGBString, getBackgroundColorString, globalThemeColor, getFontColorString } from '/src/colorMode'
 export default {
-    name: 'NestedComponent',
+    name: 'NestedLayout',
+    data() {
+    },
     props: {
-        BackgroundColorString: {
-            type: String,
-            default: getBackgroundColorString(globalThemeColor)
-        },
+        //layout必须是一个数组，下一级必须只有数字或者字典
         layout: {
             type: Array,
-            required: true,
-            default: [[1, 2, 1], [1, 3, [1, 1, 1]]]
+            default: [
+                {
+                    size: 1,
+                    data: Rows[0]
+                }, { size: 2, data: Rows[1] }, { size: 3, data: Rows[2] }, {
+                    size: 1,
+                    content: [{ size: 4, data: Rows[3] }, { size: 5, data: 'blank' }, { size: 6, data: Rows[5] }]
+                }
+            ]
         },
-        width: {
-            type: Number,
-            required: true,
-            default: 1000
+        BackgroundColorString: {
+            type: String,
+            default: 'transparent'
         },
-        height: {
+        tableSize: {
+            type: Array,
+            default: [1000, 1000]
+        },
+        direction: {
             type: Number,
-            required: true,
-            default: 1000
-        }
+            default: 1,
+        },//延伸方向，0表示横向分布，1表示纵向分布
     },
-    components: {
-        NestedComponent: {
-            props: {
-                layout: {
-                    type: Array,
-                    required: true,
-                },
-                width: {
-                    type: Number,
-                    required: true
-                },
-                height: {
-                    type: Number,
-                    required: true
-                }
-            },
-            template: '<NestedComponent :layout="layout" :width="width" :height="height" />'
-        }
-    },
-    data() {
-        const fontColorString = getFontColorString(globalThemeColor)
-        return { fontColorString, Rows }
-    },
-    methods: {
-        getRGBString,
-        changeColorMode,
-        getLength: (child, parent, totalLength) => {
-            const getSumRatio = (elm) => {//计算组件比率
-                let ratio = 0
-                if (Array.isArray(elm)) {
-                    for (let i = 0; i < elm.length; i++) {
-                        ratio += getSumRatio(elm[i])
-                    }
-                }
-                else {
-                    ratio += elm
-                }
-                return ratio
-            }
-            console.log(totalLength, getSumRatio(child), getSumRatio(parent)); 
-            console.log(getSumRatio(child) / getSumRatio(parent) * totalLength);
-            return getSumRatio(child) / getSumRatio(parent) * totalLength
-        }
 
+    methods: {
+        //这里必须是数字
+        getChildAttr(child) {
+            let height, width;
+            if (this.direction == 0) {//横向排布,高相同
+                height = this.tableSize[1];
+                width = this.tableSize[0] * this.getRatio(child);
+            }
+            else {//纵向排布
+                width = this.tableSize[0];
+                height = this.tableSize[1] * this.getRatio(child);
+            }
+            return [width, height]
+        },
+        getBoxStyle(child) {
+            let height, width;
+            if (this.direction == 0) {//横向排布,高相同
+                height = this.tableSize[1];
+                width = this.tableSize[0] * this.getRatio(child);
+            }
+            else {//纵向排布
+                width = this.tableSize[0];
+                height = this.tableSize[1] * this.getRatio(child);
+            }
+            return {
+                'width': `${width}px`,
+                'height': `${height}px`,
+                'display':'inline-block'
+            }
+        },
+        //获取长/宽比率
+        getRatio(child) {
+            let sum = 0;
+            let c = child.size;
+            for (let i = 0; i < this.layout.length; i++) {
+                sum += this.layout[i].size;
+            }
+            return c / sum;
+        },
     }
 };
 </script>
-<template>
-    <div class="image_table_list" :style="{
-        'width': `${width}px`, 'height': `${height}px`,
-        'background-color': `rgba(${BackgroundColorString},0.25)`,
-        'border': `5px solid rgb(${BackgroundColorString},0.7)`,
-        'border-radius': '50px',
-    }">
-        <div v-for="(row, rowIndex) in layout" :key="rowIndex" class="row">
-            <div v-for="(col, colIndex) in row" :key="colIndex" class="col">
-                <template v-if="Array.isArray(col)">
-                    <NestedComponent :layout="col" :width="getLength(col, layout, width)"
-                        :height="getLength(col, layout, height)" />
-                </template>
-                <template v-else>
-                    <image-table-entry :EntrySize="// [getLength(col, layout, width), getLength(col, layout, height)]
-                    [100,100]" v-bind="Rows[0]" />
-                </template>
-            </div>
-        </div>
-    </div>
-</template >
-
 
 <style scoped>
-.row {
-    display: flex;
+* {
+    padding: 0;
+    margin: 0;
 }
-
-.col {
-    margin: 0px;
-    flex: 1;
-    border: 2px solid red;
-}
-
-.image_table_list {
-    padding: 0 20px;
-}
+/* Add any additional styling as needed */
 </style>

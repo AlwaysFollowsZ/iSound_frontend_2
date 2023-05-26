@@ -10,19 +10,6 @@ import TopNav from "./components/TopNav.vue";
 import ListTable from "./components/tables/ListTable/ListTable.vue";
 import Player from "./components/Player.vue";
 import MixedTable from "./components/tables/ImageTable/MixedImageTable.vue";
-let songData = ref([
-  {
-    key: 0,
-    name: "111",
-    singer: "111",
-    id: 11,
-    length: "2",
-    isLiked: true,
-    isCollected: false,
-    showCollection: false,
-    imgSrc: "",
-  },
-]);
 </script>
 <template>
   <!-- <TopNav></TopNav> -->
@@ -31,6 +18,7 @@ let songData = ref([
   <!-- <background></background> -->
 
   <RouterView />
+  <!-- <mixed-table></mixed-table> -->
   <!-- <div :style="{'text-align':'center'}"> -->
   <!-- 请直接传入数字(px)(高度可略)-->
   <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->
