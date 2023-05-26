@@ -41,7 +41,7 @@
                                 '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
                                 '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                            }" type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" />
+                            }" type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" />
                         </div>
                     </n-gi>
                     <n-gi :span="3">
@@ -239,10 +239,16 @@ export default {
         ...mapMutations(['setLogState', 'setAccentColor', 'setMultiColor']),
         search() {
             if (this.searchValue.trim().length !== 0) {
-                console.log(`searchValue: ${this.searchValue}`)
+                // console.log(`searchValue: ${this.searchValue}`)
                 // jump to search page
                 this.$router.push("/searchresult/" + this.searchValue)
+                // console.log('hhh')
+                // this.$router.replace('/')
+                // this.$router.replace('/searchresult/' + this.searchValue, () => {
+                    
+                // });
                 this.searchValue = ''
+                // window.location.reload()
             }
         },
         toLogIn() {

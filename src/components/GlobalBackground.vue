@@ -1,12 +1,15 @@
 <script>
-import { ThumbDislike16Filled } from '@vicons/fluent';
 import { backgroundColor, getRGBString, findSimilarColors, globalThemeColor } from '/src/colorMode';
 import { mapState } from 'vuex'; // 便于直接引用 store 中的 state
+import RenderBackground from './RenderBackground.vue'
 export default {
     computed: {
         ...mapState(['multiColor']),    // 为 true 表示开启渐变效果
         // 引用方式 `this.multiColor` or `multiColor`
         // 在 methods 中添加关于此变量的判断决定是否开启渐变；默认不开启
+    },
+    components: {
+        RenderBackground
     },
     data() {
         watch(backgroundColor, () => {//切换背景色优先
@@ -28,13 +31,13 @@ export default {
         startAnimation() {
             this.currentColor = [this.themeColor[0], this.themeColor[1], this.themeColor[2]]
             const loopAnimation = () => {
-                if (this.multiColor===true) {
+                if (this.multiColor === true) {
                     const color = this.themeColor//存储主题色
                     const beforeColor = [this.currentColor[0], this.currentColor[1], this.currentColor[2]]//变换之前的背景色
                     let updatedColor
                     let transitionDelta
                     do {
-                        updatedColor = findSimilarColors(color, 100, 0.6)[Math.floor(Math.random() * 100)]
+                        updatedColor = findSimilarColors(color, 10, 0.4)[Math.floor(Math.random() * 10)]
                         //计算几何变化值
                         transitionDelta = Math.sqrt(Math.pow((beforeColor[0] - updatedColor[0]), 2) + Math.pow((beforeColor[1] - updatedColor[1]), 2) + Math.pow((beforeColor[2] - updatedColor[2]), 2))
                     } while (transitionDelta < 5)//随机选取一个相近的颜色,数值越大相似度越高
@@ -45,10 +48,10 @@ export default {
                     //  console.log(this.transitionTime, updatedColor);
                 }
                 else {
-                    this.currentColor=this.themeColor
+                    this.currentColor = this.themeColor
                 }
-                    setTimeout(loopAnimation, this.transitionTime * 1000)
-                
+                setTimeout(loopAnimation, this.transitionTime * 1000)
+
             }
             loopAnimation()
         }
@@ -56,7 +59,7 @@ export default {
     props: {
         updateSpeed: {//背景动画的变化快慢
             type: Number,
-            default:25,
+            default: 25,
             validator(value) {
                 return value > 0
             }
@@ -72,7 +75,12 @@ export default {
         'transition': `height cubic-bezier(0.165, 0.84, 0.44, 1) 1s ,background-color linear ${transitionTime}s`,
         'background-color': getRGBString(`${currentColor[0]},${currentColor[1]},${currentColor[2]}`)
         // 'background':`linear-gradient(to top,${getRGBString(currentColor.join(','))},${getRGBString(globalThemeColor.join(','))},${getRGBString(currentColor.join(','))})`
-    }"></div>
+    }">
+    <!-- <render-background></render-background> -->
+</div>
+    
+
+
 </template>
 <style scoped>
 .page_background {
@@ -81,10 +89,6 @@ export default {
     height: 100vh;
     width: 100vw;
     /* background-repeat: no-repeat; */
-}
-
-.bg-pan-bottom {
-    /* animation: bg-pan-bottom 5s infinite  forwards linear; */
 }
 
 
