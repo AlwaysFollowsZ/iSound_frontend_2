@@ -21,6 +21,7 @@
     "node-pre-gyp": "^0.17.0",
     "Three": "npm:three@^0.152.2",
     "vue": "^3.2.47",
+    "vue-cookies": "^1.8.3",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
   },

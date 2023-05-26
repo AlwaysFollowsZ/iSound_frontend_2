@@ -7,21 +7,39 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted, ref ,computed} from "vue";
+import { getCurrentInstance, onMounted, ref, computed } from "vue";
 import "APlayer/dist/APlayer.min.css";
 import APlayer from "APlayer";
 import ColorThief from "colorthief";
 import { ChevronUp } from "@vicons/ionicons5";
-import { globalThemeColor, getBackgroundColorString, getRGBString ,changeThemeColorByImage,getFontColorString} from '/src/colorMode.js'
+import {
+  globalThemeColor,
+  getBackgroundColorString,
+  getRGBString,
+  changeThemeColorByImage,
+  getFontColorString,
+} from "/src/colorMode.js";
 
 const containerRef = ref();
-const mainColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 0.7) });
-const hoverColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 1) });
-const focusColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 0.1) });
-const borderColor = computed(() => { return getRGBString(getBackgroundColorString(globalThemeColor), 1) });
-const mainFontColor = computed(() => { return getRGBString(getFontColorString(globalThemeColor),1) });
-const secondaryFontColor = computed(() => { return getRGBString(getFontColorString(globalThemeColor), 0.5) });
-console.log('theme:' + mainColor.value);
+const mainColor = computed(() => {
+  return getRGBString(getBackgroundColorString(globalThemeColor), 0.7);
+});
+const hoverColor = computed(() => {
+  return getRGBString(getBackgroundColorString(globalThemeColor), 1);
+});
+const focusColor = computed(() => {
+  return getRGBString(getBackgroundColorString(globalThemeColor), 0.1);
+});
+const borderColor = computed(() => {
+  return getRGBString(getBackgroundColorString(globalThemeColor), 1);
+});
+const mainFontColor = computed(() => {
+  return getRGBString(getFontColorString(globalThemeColor), 1);
+});
+const secondaryFontColor = computed(() => {
+  return getRGBString(getFontColorString(globalThemeColor), 0.5);
+});
+console.log("theme:" + mainColor.value);
 const footerHeight = ref("130px");
 const { proxy } = getCurrentInstance();
 const colorThief = new ColorThief();
@@ -115,12 +133,11 @@ onMounted(() => {
       launched = false;
     }
     changeThemeColorByImage(ap.list.audios[e.index].cover);
-    //setTheme(e.index);
-    //theme.value = getRGBString(getBackgroundColorString(globalThemeColor), 0.5);
+    setTheme(e.index);
   });
 
   ap.on("loadstart", () => {
-    let author = document.getElementsByClassName("aplayer-author")[0];
+    let author = document.querySelector(".aplayer-author");
     author.innerText = author.innerText.substr(2);
   });
 
@@ -131,8 +148,6 @@ onMounted(() => {
   ap.on("lrchide", () => {
     footerHeight.value = "82px";
   });
-
-  document.getElementsByClassName("aplayer-miniswitcher")[0].click();
 
   proxy.$EventBus.on("play", (musicId) => {
     play(musicId);
@@ -147,6 +162,8 @@ onMounted(() => {
     ap.play();
   });
 
+  document.querySelector(".aplayer-miniswitcher").click();
+
   onBeforeUnmount(() => {
     ap.destroy();
     proxy.$EventBus.all.clear();
@@ -157,26 +174,27 @@ onMounted(() => {
 <style scope>
 .aplayer-fixed {
   height: 0 !important;
-  position: fixed!important;
+  position: fixed !important;
   width: 400px !important;
   overflow: visible;
   bottom: 0px !important;
   left: calc(100% - 400px) !important;
   background-color: v-bind("mainColor") !important;
 }
-.aplayer-list{
-  color:v-bind("mainFontColor");
-  position: absolute !important;
-  bottom:0 !important;
+.aplayer-list {
+  color: v-bind("mainFontColor") !important;
+  position: fixed !important;
+  width: 400px !important;
+  bottom: 0 !important;
   background: v-bind("mainColor") !important;
 }
-.aplayer .aplayer-list ol li:hover{
+.aplayer .aplayer-list ol li:hover {
   background: v-bind("hoverColor") !important;
 }
-.aplayer .aplayer-list ol li .aplayer-list-author{
-  color:v-bind("secondaryFontColor") !important;
+.aplayer .aplayer-list ol li .aplayer-list-author {
+  color: v-bind("secondaryFontColor") !important;
 }
-.aplayer .aplayer-list ol li.aplayer-list-light{
+.aplayer .aplayer-list ol li.aplayer-list-light {
   background: v-bind("focusColor") !important;
 }
 .aplayer-body {
@@ -184,8 +202,8 @@ onMounted(() => {
   width: calc(100% - 18px) !important;
   background: v-bind("mainColor") !important;
 }
-.aplayer-info{
-  border:1px solid v-bind("borderColor") !important;
+.aplayer-info {
+  border: 1px solid v-bind("borderColor") !important;
 }
 
 .aplayer-pic {
@@ -220,7 +238,7 @@ onMounted(() => {
   z-index: 100 !important;
 }
 
-.aplayer-fixed:not(.aplayer-narrow)>.aplayer-body>.aplayer-pic>.aplayer-button {
+.aplayer-fixed:not(.aplayer-narrow) > .aplayer-body > .aplayer-pic > .aplayer-button {
   display: none !important;
 }
 
@@ -279,7 +297,7 @@ onMounted(() => {
 
 .aplayer-volume-wrap {
   margin: 0 !important;
-  bottom: 21px !important;
+  bottom: 22px !important;
   left: calc(50% - 112.5px) !important;
 }
 
@@ -310,7 +328,7 @@ onMounted(() => {
   height: 32px !important;
 }
 
-.aplayer-lrc-contents>p {
+.aplayer-lrc-contents > p {
   font-size: 16px !important;
 }
 
