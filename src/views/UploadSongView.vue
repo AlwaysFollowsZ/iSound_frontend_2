@@ -56,7 +56,7 @@
                         <div>
                             <span>标签选择</span>
                             <n-space vertical>
-                                <n-select v-model:value="value" multiple :options="options" />
+                                <n-select v-model:value="value" multiple :options="options" placeholder="请选择歌曲标签" max-tag-count="responsive"/>
                             </n-space>
                         </div>
                         <n-button strong secondary round type="primary" class="upload-button-position"

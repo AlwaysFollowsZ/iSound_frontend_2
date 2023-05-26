@@ -17,7 +17,7 @@ import MixedTable from './components/tables/ImageTable/MixedImageTable.vue'
   <!-- <message-send></message-send> -->
   <background></background>
   <RouterView />
-  <mixed-table></mixed-table>
+  <!-- <mixed-table></mixed-table> -->
   <!-- <div :style="{'text-align':'center'}"> -->
   <!-- 请直接传入数字(px)(高度可略)-->
   <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->

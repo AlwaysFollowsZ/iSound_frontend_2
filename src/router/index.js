@@ -92,6 +92,11 @@ const router = createRouter({
       name: 'HistoryView',
       component:() => import('../views/HistoryView.vue')
     },
+    {
+      path: '/tags/:tagName',
+      name: 'TagClickView',
+      component:() => import('../views/TagClickView.vue')
+    }
   ]
 })
 
