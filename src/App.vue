@@ -34,7 +34,7 @@ let songData = ref([{
   <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->
   <!-- <mixed-table></mixed-table> -->
   <!-- <list-table :position="'CollectionView'" :currentListId="3"></list-table> -->
-  <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songData"></list-table>
+  <!-- <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songData"></list-table> -->
   <Player />
 </template>
 

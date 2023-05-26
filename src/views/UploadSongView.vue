@@ -24,7 +24,8 @@
                                 <div class="upload-song-page">
                                     <img :src="songPageUrl" @click="uploadFile" />
                                     <input type="file" ref="fileInput" style="display: none"
-                                        @change="handleSongPageChange" />
+                                    accept="image/*"    
+                                    @change="handleSongPageChange" />
                                 </div>
                             </template>
                             <span>点击此处上传歌曲封面</span>
