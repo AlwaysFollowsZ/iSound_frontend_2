@@ -351,27 +351,7 @@ export default defineComponent({
             <n-gi>
               <div class="song-tags">
                 <div class="tag-container">
-                  <span v-for="tag in this.songtags">
-                    <n-tag
-                      :bordered="false"
-                      :style="{
-                        '--n-border-radius': `5px`,
-                        '--n-font-weight-strong': `bold`,
-                        '--n-height': `20px`,
-                        '--n-close-margin': `0 18px 0 18px`,
-                      }"
-                      class="tag-item"
-                    >
-                      {{ tag }}
-                    </n-tag>
-                  </span>
-                </div>
-              </div>
-            </n-gi>
-            <n-gi>
-              <div class="song-tags">
-                <div class="tag-container">
-                  <span v-for="tag in this.songtags">
+                  <span v-for="(tag, i) in this.songtags" :key="i">
                     <n-tag
                       :bordered="false"
                       :style="{

@@ -183,7 +183,8 @@ onMounted(() => {
 }
 .aplayer-list {
   color: v-bind("mainFontColor") !important;
-  position: absolute !important;
+  position: fixed !important;
+  width: 400px !important;
   bottom: 0 !important;
   background: v-bind("mainColor") !important;
 }
