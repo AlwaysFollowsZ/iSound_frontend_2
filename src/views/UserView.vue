@@ -9,52 +9,46 @@
                         <img :src="avatarUrl" alt="avatar" />
                     </div>
                     <div class="user-info-card">
-                        <div 
-                          class="user-info-title" 
-                          :style="{'color': 'rgb(' + this.accentColor + ')'}"
-                        >
+                        <div class="user-info-title" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
                             {{ this.username }}
                         </div>
                         <div class="user-info-body">
-                            
-                                <!-- <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ this.username }}<br /> -->
-                                <!-- <newspaper-outline style="width: 20px; margin-top: 3px;" /> -->
 
-                                    <div class="user-info-body-title" :style="{'color': 'rgb(' + this.accentColor + ')'}">
-                                        邮箱
-                                    </div>
-                                    <div class="user-info-body-content" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                                        {{ this.email }}
-                                    </div>
-                                
-                                    <div class="user-info-body-title" :style="{'color': 'rgb(' + this.accentColor + ')'}">
-                                        个性签名
-                                    </div>
-                                    <div class="user-info-body-content" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                                        {{ this.bio }}
-                                    </div>
+                            <!-- <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ this.username }}<br /> -->
+                            <!-- <newspaper-outline style="width: 20px; margin-top: 3px;" /> -->
 
-                                
-                               
-                                <!-- <pricetag-outline style="width: 20px; margin-top: 3px;" /> -->
+                            <div class="user-info-body-title" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
+                                邮箱
+                            </div>
+                            <div class="user-info-body-content"
+                                :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                                {{ this.email }}
+                            </div>
+
+                            <div class="user-info-body-title" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
+                                个性签名
+                            </div>
+                            <div class="user-info-body-content"
+                                :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                                {{ this.bio }}
+                            </div>
+
+
+
+                            <!-- <pricetag-outline style="width: 20px; margin-top: 3px;" /> -->
                         </div>
                         <div><br /><!--用来隔开基本信息和修改个人信息--></div>
                         <div class="modify-user-info-button">
-                            <n-button 
-                              text 
-                              @click="showModifyUserInfo = true" 
-                              :focusable="false"
-                              :style="{
+                            <n-button text @click="showModifyUserInfo = true" :focusable="false" :style="{
                                 '--n-color': 'transparent',
                                 '--n-color-hover': 'transparent',
-                                '--n-color-pressed': 'transparent', 
+                                '--n-color-pressed': 'transparent',
                                 '--n-color-focus': 'transparent',
-                                '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)', 
-                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
-                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
-                                '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
-                              }"
-                            >
+                                '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                            }">
                                 <template #icon><n-icon size="25"><create-outline /></n-icon></template>修改个人信息
                             </n-button>
                         </div>
@@ -66,19 +60,17 @@
                 <div class="user-other-info-container">
                     <div class="user-tabs">
                         <div>
-                            <n-tabs size="large" type="line" animated
-                              :style="{
+                            <n-tabs size="large" type="line" animated :style="{
                                 '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
                                 '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
                                 '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
                                 '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
                                 '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
                                 '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
-                              }"
-                            >
+                            }">
                                 <n-tab-pane name="我的收藏夹" tab="我的收藏夹">
                                     <!-- <my-song-sheet-view /> -->
-                                    <image-table :table-size="[1000,500]"> </image-table>
+                                    <image-table :table-size="[1000, 500]"> </image-table>
                                 </n-tab-pane>
                                 <n-tab-pane name="分享歌单" tab="分享歌单">
                                     <shared-song-sheet-view />
@@ -93,9 +85,9 @@
                                     <fan-list-view />
                                 </n-tab-pane>
                                 <template #suffix>
-                                    <div :style="{'color': 'rgb(' + this.accentColor + ')'}">
+                                    <div :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
                                         粉丝数：{{ this.fansNum }}
-                                        <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd"/>
+                                        <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd" />
                                         <!-- <flash-outline style="width: 20px;"/>  -->
                                         关注数：{{ this.followingNum }}
                                     </div>
@@ -126,7 +118,7 @@ import 'animate.css';
 import { ref } from "vue";
 import { NTabs, NTabPane } from "naive-ui";
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
-import { NewspaperOutline, FlowerOutline, FlashOutline} from '@vicons/ionicons5'
+import { NewspaperOutline, FlowerOutline, FlashOutline } from '@vicons/ionicons5'
 import { mapState } from 'vuex';
 import ImageTable from '../components/tables/ImageTable/ImageTable.vue';
 export default {
@@ -149,7 +141,7 @@ export default {
         NewspaperOutline,
         FlowerOutline,
         FlashOutline,
-        ImageTable
+        ImageTable,
     },
     data() {
         return {
@@ -242,21 +234,24 @@ export default {
     padding-left: 15px;
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
 .user-info-body-title {
-    font-size: 20px; 
-    font-weight: 550; 
+    font-size: 20px;
+    font-weight: 550;
     padding-left: 30px;
     padding-top: 10px;
     transition: color 1s;
 }
+
 .user-info-body-content {
-    font-size: 16px; 
-    font-weight: 400; 
+    font-size: 16px;
+    font-weight: 400;
     margin-left: 30px;
     transition: color 1s;
     word-wrap: break-word;
     max-width: 300px;
 }
+
 .modify-user-info-button {
     margin-top: 15px;
     padding-left: 50px;
