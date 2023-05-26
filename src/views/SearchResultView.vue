@@ -5,13 +5,13 @@
             <n-gi :span="7"></n-gi>
             <n-gi :span="9">
                 <div style="padding-top: 30px; display: flex; justify-content: center">
-                    <n-input type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search" 
+                    <n-input type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" 
                         :style="{
                             '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                             '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                             '--n-font-size': '18px',
                             '--n-border-radius': '12px',
-                            '--n-height': '40px',
+                            '--n-height': '50px',
                             '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
                             '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
                             '--n-border': '1px solid rgb(224, 224, 230)',
@@ -24,7 +24,7 @@
             </n-gi>
             <n-gi :span="1">
                 <div style="">
-                    <div style="padding-top: 30px" class="search-icon"
+                    <div style="padding-top: 35px" class="search-icon"
                         :style="{ 'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey' }"
                         @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
                         <n-icon  size="40px" @click="search">
@@ -35,7 +35,7 @@
             </n-gi> 
         </n-grid>      
     </div>
-    <div class="tab-container" :key="this.refresh">
+    <div class="tab-container">
         <n-tabs size="large" type="line" animated
             :style="{
             '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
@@ -47,10 +47,10 @@
             }"
         >   
             <n-tab-pane name="歌曲" tab="歌曲">
-                <list-table  :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
+                <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
             </n-tab-pane>
             <n-tab-pane name="歌单" tab="歌单">
-                <!-- <fan-list-view /> -->
+                <image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330,240]" v-model:rows="songlists"> </image-table>
             </n-tab-pane>
         </n-tabs> 
     </div>
@@ -58,6 +58,7 @@
 
 <script>
 import TopNav from '../components/TopNav.vue'
+import ImageTable from '../components/tables/ImageTable/ImageTable.vue'
 import ListTable from "../components/tables/ListTable/ListTable.vue"
 import { SearchOutline } from '@vicons/ionicons5'
 import { mapState } from 'vuex'
@@ -70,6 +71,7 @@ export default {
         TopNav,
         SearchOutline,
         ListTable,
+        ImageTable,
     },
     data() {
         return {
@@ -81,57 +83,92 @@ export default {
         }
     },
     watch: {
-        '$route'() {
-            // this.refresh++
-            window.location.reload()
-        },
+        '$route'(to, from) {
+            if (to.params.keyword !== from.params.keyword) {
+                const keyword = this.$route.params.keyword
+                this.setAndSearchKeyword(keyword)
+            }
+        }
     },
     created() {
         const keyword = this.$route.params.keyword
-        this.searchValue = keyword
-        this.$http.get(`/api/search/`, {
-            params: { 'title': keyword }
-        }).then((response) => {
-            let i = 0
-            this.songs = response.data.music_set.map(song => ({
-                key: i++,
-                name: song.name,
-                singer: song.artist,
-                id: song.id,
-                length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
-                imgSrc: song.cover,
-                isLiked: song.is_like,
-                isCollected: false,
-                showCollection: false,
-            }))
-            this.songlists = response.data.playlist_set.map(songlist => ({
-                // do something
-            }))
-        })
+        this.setAndSearchKeyword(keyword)
     },
     methods: {
+        setAndSearchKeyword(keyword) {
+            let i = 0, j = 0
+            let tmpSong = [], tmpList = []
+            let songIDs = [], listIDs = []
+            this.searchValue = keyword
+            this.$http.get(`/api/search/`, {
+                params: { 'title': keyword }
+            }).then((response) => {
+                this.songs = response.data.music_set.map(song => ({
+                    key: i++,
+                    name: song.name,
+                    singer: song.artist,
+                    id: song.id,
+                    length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
+                    imgSrc: song.cover,
+                    isLiked: song.is_like,
+                    isCollected: false,
+                    showCollection: false,
+                }))
+                this.songlists = response.data.playlist_set.map(songlist => ({
+                    Key: j++,
+                    Type: 'songList',
+                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    songCount: songlist.music_set.length,
+                    Name: songlist.title,
+                }))
+            })
+            for (let i = 0; i < this.songs.length; i++) {
+                songIDs.push(this.songs[i].id)
+            }
+            // === DO NOT MODIFY ===
+            // for (let i = 0; i < this.songlists.length; i++) {
+            //     listIDs.push(this.songlists[i].id)
+            // }
+            this.$http.get(`/api/search/`, {
+                params: { 'tags': keyword } 
+            }).then((response) => {
+                tmpSong = response.data.music_set.map(song => ({
+                    key: i++,
+                    name: song.name,
+                    singer: song.artist,
+                    id: song.id,
+                    length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
+                    imgSrc: song.cover,
+                    isLiked: song.is_like,
+                    isCollected: false,
+                    showCollection: false,
+                }))
+                tmpList = response.data.playlist_set.map(songlist => ({
+                    Key: j++,
+                    Type: 'songList',
+                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    songCount: songlist.music_set.length,
+                    Name: songlist.title,
+                }))
+                for (let i = 0; i < tmpSong.length; i++) {
+                    if (songIDs.indexOf(tmpSong[i].id) === -1) {
+                        this.songs.push(tmpSong[i])
+                        songIDs.push(tmpSong[i].id)
+                    }
+                }
+                // === DO NOT MODIFY ===
+                // for (let i = 0; i < tmpList.length; i++) {
+                //     if (listIDs.indexOf(tmpList[i].id) === -1) {
+                //         this.songlists.push(tmpList[i])
+                //         listIDs.push(tmpList[i].id)
+                //     }
+                // }
+            })
+        },
         search() {
             if (this.searchValue.trim().length !== 0) {
-                console.log(`searchValue: ${this.searchValue}`)
-                this.$http.get(`/api/search/`, {
-                    params: { 'title': this.searchValue }
-                }).then((response) => {
-                    let i = 0
-                    this.songs = response.data.music_set.map(song => ({
-                        key: i++,
-                        name: song.name,
-                        singer: song.artist,
-                        id: song.id,
-                        length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
-                        imgSrc: song.cover,
-                        isLiked: song.is_like,
-                        isCollected: false,
-                        showCollection: false,
-                    }))
-                    this.songlists = response.data.playlist_set.map(songlist => ({
-                        // do something
-                    }))
-                })
+                this.$router.push("/searchresult/" + this.searchValue)
+                this.searchValue = ''
             }
         },
     }

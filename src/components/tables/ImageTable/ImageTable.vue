@@ -64,6 +64,11 @@ export default {
             type: Array,
             default: [1000,]
         },
+        // tableEntry 的宽高
+        entrySize: {
+            type: Array,
+            default: [260, 260]
+        },
         //使用该组件的位置包括个人主页/收藏夹选择悬浮框和音乐馆主页
         //分别为PersonalView,CollectionView,HomeView
         position: {

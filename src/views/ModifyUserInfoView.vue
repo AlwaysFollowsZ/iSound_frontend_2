@@ -86,7 +86,7 @@ export default {
     methods: {
         closeMWindow() {
             this.$emit('closeModifyWindow')
-            // location.reload(); // 可以自动刷新一下，但是会抖动一下，观看效果不太好。
+            location.reload(); // 可以自动刷新一下，但是会抖动一下，观看效果不太好。
         },
         uploadFile() {
             this.$refs.fileInput.click()
