@@ -2,7 +2,7 @@
 import { watch, h } from 'vue'
 import { NScrollbar, NButton, NPagination } from 'naive-ui'
 import ImageTableEntry from './ImageTableEntry.vue'
-import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor,changeThemeColorByImage } from '/src/colorMode'
+import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor, changeThemeColorByImage } from '/src/colorMode'
 import { Rows } from './ImageRowData'
 import { backgroundColor } from '../../../colorMode'
 // 说明：单个table组件。所有元素之间水平对齐。适用于局部布局
@@ -100,8 +100,8 @@ export default {
     }">
         <n-scrollbar v-if="['PersonalView', 'CollectionView'].includes(position)" class="image_table_list">
             <template v-for="data in currentPageData" :key="data.Key">
-                <image-table-entry v-bind="data" style="vertical-align: middle;"
-                    @clickEntry="handleClick" :EntrySize="[300,300]"></image-table-entry>
+                <image-table-entry v-bind="data" style="vertical-align: middle;" @clickEntry="handleClick"
+                    :EntrySize="[300, 300]"></image-table-entry>
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
@@ -216,7 +216,8 @@ export default {
 }
 
 .image_table {
-    margin: 0;/*设置为0，由父级设置padding*/
+    margin: 0;
+    /*设置为0，由父级设置padding*/
     padding: 20px 0px 0 0px;
     display: inline-block;
     overflow: hidden;

@@ -549,7 +549,7 @@ export default {
                     isLiked: false,
                     isCollected: false,//公开页面：是否被自己任意一个收藏夹收藏过；个人页面：被打开的收藏夹收藏过
                     CollectedLists: [],//公开页面：收藏本歌曲的收藏夹id；个人页面：无作用
-                    imgSrc: ""
+                    imgSrc: "/src/assets/song4.jpg"
                 }]
         },//歌曲数据
         viewMode: {

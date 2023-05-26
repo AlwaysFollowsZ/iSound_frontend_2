@@ -72,8 +72,8 @@ export default {
             'height': `fit-content`,
             // 'padding': `0px 0px ${imageSize[1] / 10}px 0px`,
             'border-radius': `${imageSizeAvg / 10}px`,
-            'background-color': isHoverOnMask ? `rgb(${themeColorString},0.8)` : `rgb(${themeColorString},0.2)`,
-            'box-shadow': isHoverOnMask ? `0 0 8px 3px rgb(${themeColorString},0.8)` : '',
+            'background-color': isHoverOnMask ? `rgb(${themeColorString},0.5)` : `rgb(${themeColorString},0.2)`,
+            'box-shadow': isHoverOnMask ? `0 0 8px 3px rgb(${themeColorString},0.5)` : '',
             'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `0px solid rgb(${themeColorString})`
         }" :class="[isHoverOnMask ? 'mask_box-hover' : '',
 isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mouseleave="isHoverOnMask = false"
@@ -192,13 +192,13 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
     bottom: 0;
     margin: auto auto;
     display: inline-block;
-    transition: all cubic-bezier(0.165, 0.74, 0.44, 0.78) 0.8s;
+    transition: all cubic-bezier(0.165, 0.74, 0.44, 0.78) 0.5s;
 }
 
 .mask_box-hover {
     cursor: pointer;
     transform: scale(1.02);
-    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s;
 }
 
 .mask_box-click {
