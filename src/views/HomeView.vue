@@ -9,7 +9,9 @@
           </div>
         </div>
         <div class="carousel-container">
-          <n-carousel autoplay :interval="3000" effect="card"
+          <n-carousel 
+          :autoplay="false"
+           :interval="3000" effect="card"
             prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
             next-slide-style="transform: translateX(20%) translateZ(-500px);"
             style="height: 85%"
@@ -440,5 +442,9 @@ export default {
     padding-left: 1%;
     animation-delay: 300ms;
     animation-duration: 1500ms;
+  }
+
+  :deep(.n-carousel .n-carousel--card .n-carousel__slide .n-carousel__slide--current):hover{
+    transform:translateX(-50%) translateZ(0) scale(1.2) !important
   }
 </style>
