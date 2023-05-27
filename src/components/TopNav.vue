@@ -45,8 +45,7 @@
                   border: '1px solid rgb(224, 224, 230)',
                   '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                   '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                  '--n-box-shadow-focus':
-                    '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                  '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                 }"
                 type="text"
                 v-model:value="searchValue"

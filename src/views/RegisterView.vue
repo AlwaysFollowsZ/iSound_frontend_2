@@ -1,13 +1,14 @@
 <template>
     <!-- <n-button @click="showLogin = true">登录</n-button> -->
-    <n-modal :show="showRegister" class="round-corner" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}">
+    <n-modal :show="showRegister" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}">
         <div class="outer-container">
             <div class="title-container">
                 <div style="margin-bottom: 30px;">
                     <n-grid :x-gap="0">
                         <n-gi :span="2"></n-gi>
                         <n-gi :span="20">
-                            <div class="register-card-title" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">加入我们：一起建设iSound</div>
+                            <div class="register-card-title" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">加入我们：携手踏上音乐之旅</div>
+                            <div class="register-card-title" :style="{'color': this.colorMode === 'white' ? 'black' : 'white', 'font-size': '25px'}">创建你的 iSound 账号</div>
                         </n-gi>
                         <n-gi :span="2">
                             <div class="close-icon" style="padding-top: 5px" @click="closeRWindow" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
@@ -18,120 +19,151 @@
                 </div>
             </div>
             <div class="body-container">
-                <n-grid x-gap="0">
-                    <n-gi :span="9">
-                        <img class="login-image"
-                            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-                    </n-gi>
-                    <n-gi :span="15">
-                        <div class="body-item">
-                            <n-grid :x-gap="12">
-                                <n-gi :span="6">
-                                    <div class="body-item-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                                        用户名
-                                    </div>
-                                </n-gi>
-                                <n-gi :span="16">
-                                    <n-input type="text" placeholder="请输入用户名" :value="username" @input="username = $event" clearable 
+                <div class="body-item">
+                    <n-grid>
+                        <n-gi :span="3"></n-gi>
+                        <n-gi :span="18">
+                            <n-input type="text" placeholder="用户名" :value="username" @input="username = $event"
+                                :style="{
+                                    '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                    '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
+                                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-border-hover': 'transparent',
+                                    '--n-border-focus': 'transparent',
+                                    '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                                    '--n-border-radius': '5px',
+                                    '--n-height': '55px',
+                                    '--n-font-size': '18px',
+                                    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                }"
+                            />
+                            <div style="color: grey">用户名将作为你登录网站的账号。</div>
+                        </n-gi>
+                        <n-gi :span="3"></n-gi>
+                    </n-grid>
+                </div>
+                <div class="body-item" :style="{'margin-bottom': '30px', 'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                    <n-grid>
+                        <n-gi :span="3"></n-gi>
+                        <n-gi :span="18">
+                            <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="密码" :minlength="8" :value="password1" @input="password1 = $event"
+                                :style="{
+                                    '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                    '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
+                                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-border-hover': 'transparent',
+                                    '--n-border-focus': 'transparent',
+                                    '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                                    '--n-border-radius': '8px',
+                                    '--n-height': '55px',
+                                    '--n-font-size': '18px',
+                                    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                    '--n-icon-size': '25px',
+                                }"
+                            />
+                        </n-gi>
+                        <n-gi :span="3"></n-gi>
+                    </n-grid>
+                </div>
+                <div class="body-item">
+                    <n-grid >
+                        <n-gi :span="3"></n-gi>
+                        <n-gi :span="18">
+                            <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="确认密码" :minlength="8" :value="password2" @input="password2 = $event"
+                                :style="{
+                                    '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                    '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
+                                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-border-hover': 'transparent',
+                                    '--n-border-focus': 'transparent',
+                                    '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                                    '--n-border-radius': '8px',
+                                    '--n-height': '55px',
+                                    '--n-font-size': '18px',
+                                    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                    '--n-icon-size': '25px',
+                                }"
+                            />
+                        </n-gi>
+                        <n-gi :span="3"></n-gi>
+                    </n-grid>
+                </div>
+                        <div style="margin-top: 35px; margin-bottom: 30px">
+                            <n-grid class="login-button-top">
+                                <n-gi :span="4"></n-gi>
+                                <n-gi :span="4" style="display: flex; justify-content: right">
+                                    <n-button strong secondary type="success" @click="register" :focusable="false"
                                         :style="{
-                                            '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                                            '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
-                                            '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                                            '--n-border-hover': 'transparent',
-                                            '--n-border-focus': 'transparent',
-                                            '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                                            '--n-border-radius': '8px',
+                                            '--n-color': 
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
+                                            '--n-color-hover': 
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                            '--n-color-pressed': 
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                            '--n-text-color': 
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    'white' : 'rgba(' + this.accentColor + ', 1)',
+                                            '--n-text-color-hover': 
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    'white' : 'rgba(' + this.accentColor + ', 1)',
+                                            '--n-text-color-pressed': 
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    'white' : 'rgba(' + this.accentColor + ', 1)',
+                                            '--n-border': '1px solid transparent',
+                                            '--n-border-hover': '1px solid transparent',
+                                            '--n-border-pressed': '1px solid transparent',
+                                            '--n-border-radius': '5px',
+                                            '--n-width': '80px',
+                                            '--n-height': '48px',
+                                            '--n-font-size': '18px',
                                         }"
-                                    />
-                                </n-gi>
-                            </n-grid>
-                        </div>
-                        <div class="body-item" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                            <n-grid :x-gap="12">
-                                <n-gi :span="6">
-                                    <div class="body-item-prompt">
-                                        密码
-                                    </div>
-                                </n-gi>
-                                <n-gi :span="16">
-                                    <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请输入密码" :minlength="8" :value="password1" @input="password1 = $event"
-                                        :style="{
-                                            '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                                            '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
-                                            '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                                            '--n-border-hover': 'transparent',
-                                            '--n-border-focus': 'transparent',
-                                            '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                                            '--n-border-radius': '8px',
-                                        }"
-                                    />
-                                </n-gi>
-                            </n-grid>
-                        </div>
-                        <div class="body-item">
-                            <n-grid :x-gap="12">
-                                <n-gi :span="6">
-                                    <div class="body-item-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                                        确认密码
-                                    </div>
-                                </n-gi>
-                                <n-gi :span="16">
-                                    <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请再次输入密码" :minlength="8" :value="password2" @input="password2 = $event"
-                                        :style="{
-                                            '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                                            '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
-                                            '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                                            '--n-border-hover': 'transparent',
-                                            '--n-border-focus': 'transparent',
-                                            '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                                            '--n-border-radius': '8px',
-                                        }"
-                                    />
-                                </n-gi>
-                            </n-grid>
-                        </div>
-                        <div class="">
-                            <n-grid class="login-button-top" x-gap="6">
-                                <n-gi :span="7"></n-gi>
-                                <n-gi :span="7">
-                                    <n-button strong secondary type="success" @click="register" :style="{'--n-border-radius': '6px'}">
+                                    >
                                         注册
                                     </n-button>
                                 </n-gi>
-                                <n-gi :span="7">
-                                    <n-button strong secondary type="Warning" @click="closeRWindow" :style="{'--n-border-radius': '6px'}">
+                                <n-gi :span="8"></n-gi>
+                                <n-gi :span="4" style="display: flex; justify-content: left">
+                                    <n-button strong secondary type="Warning" @click="closeRWindow"
+                                        :style="{
+                                            '--n-color': 
+                                                'grey',
+                                            '--n-color-hover': 
+                                                '#5d5d60',
+                                            '--n-color-pressed': 
+                                                '#5d5d60',
+                                            '--n-text-color': 
+                                                'white',
+                                            '--n-text-color-hover': 
+                                                'white',
+                                            '--n-text-color-pressed': 
+                                                'white',
+                                            '--n-border': '1px solid transparent',
+                                            '--n-border-hover': '1px solid transparent',
+                                            '--n-border-pressed': '1px solid transparent',
+                                            '--n-border-radius': '5px',
+                                            '--n-width': '80px',
+                                            '--n-height': '48px',
+                                            '--n-font-size': '18px',
+                                        }"
+                                    >
                                         取消
                                     </n-button>
                                 </n-gi>
-                                <n-gi :span="3"></n-gi>
+                                <n-gi :span="4"></n-gi>
                             </n-grid>
                         </div>
-                        <!-- <span style="font-size: 18px; font-weight: 500">用户名 </span>
-                        <n-input type="text" placeholder="请输入用户名" :value="username" @input="username = $event" clearable />
-                        <span style="font-size: 18px; font-weight: 500">密码</span>
-                        <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请输入密码" :minlength="8" :value="password1" @input="password1 = $event"/>
-                        <span style="font-size: 18px; font-weight: 500">确认密码</span>
-                        <n-input v-model="password" type="password" show-password-on="mousedown" placeholder="请再次输入密码" :minlength="8" :value="password2" @input="password2 = $event"/>
-                        <n-grid class="login-button-top" x-gap="6" :cols="2">
-                            <n-gi>
-                                <n-button strong secondary type="success" @click="register">
-                                    注册
-                                </n-button>
-                            </n-gi>
-                            <n-gi>
-                                <n-button strong secondary type="Warning" @click="closeRWindow">
-                                    取消
-                                </n-button>
-                            </n-gi>
-                        </n-grid> -->
-                    </n-gi>
-                </n-grid>
             </div>
-                <div class="login-notice-text" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                    注册账号表示您将承诺遵守网站公约，网站承诺保护您的隐私信息。
+                <div class="login-notice-text" :style="{'color': 'grey'}">
+                    注册账号表示你将承诺遵守网站公约，网站承诺保护你的隐私信息。
                 </div>
         </div>
     </n-modal>
@@ -197,9 +229,13 @@ export default {
 .title-container {
     margin-top: 10px;
     margin-bottom: 10px;
+    width: 600px;
 }
 .body-item {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .body-item-prompt {
     padding-top: 3px;

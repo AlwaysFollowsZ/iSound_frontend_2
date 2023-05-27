@@ -76,7 +76,7 @@ export default {
         'transition': `height cubic-bezier(0.165, 0.84, 0.44, 1) 1s ,background-color linear ${transitionTime}s`,
         'background-color': getRGBString(`${currentColor.join(',')}`)
     }">
-    <render-background :elementColor="getRGBString(getFontColorString(currentColor),1)"></render-background>
+    <!-- <render-background :elementColor="getRGBString(getFontColorString(currentColor),1)"></render-background> -->
 </div>
     
 
