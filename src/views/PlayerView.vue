@@ -2,9 +2,9 @@
 import "animate.css";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import ModifyComplainView from '../views/ModifyComplainView.vue';
+import ModifyComplainView from "../views/ModifyComplainView.vue";
 import { defineComponent, ref } from "vue";
-import { message } from 'ant-design-vue';
+import { message } from "ant-design-vue";
 import {
   ChevronBack,
   StarOutline,
@@ -54,6 +54,7 @@ export default defineComponent({
           this.islike = this.music.is_like;
           this.iscollect = this.music.is_favorite;
           this.songtags = this.music.tags;
+          this.iscomplain = this.music.is_complained;
           if (this.music.lrc != null) {
             this.$http.get(`${this.music.lrc}`).then((response) => {
               this.updateLyrics(response.data);
@@ -72,8 +73,6 @@ export default defineComponent({
   setup() {
     return {
       handlePositiveClick(comment) {
-        // alert("该评论已删除");
-        // console.log(comment.content.length);
         const index = this.comments.findIndex((cmt) => cmt.id === comment.id);
         if (index !== -1) {
           this.comments.splice(index, 1);
@@ -81,6 +80,7 @@ export default defineComponent({
         if ((this.page - 1) * 5 >= this.comments.length) {
           this.page -= 1;
         }
+        this.deleteMyComment(comment);
       },
       handleNegativeClick() {
         // alert("取消");
@@ -90,9 +90,15 @@ export default defineComponent({
           content: msg,
           duration: 1,
         });
-      }, 
+      },
+      warning(msg) {
+        message.warning({
+          content: msg,
+          duration: 1,
+        });
+      },
       dayjs,
-      value: ref(null),
+      value: ref(""),
       editCommentId: ref(0),
       islike: ref(false),
       iscollect: ref(false),
@@ -122,10 +128,9 @@ export default defineComponent({
     },
     like() {
       this.islike = !this.islike;
-      if (this.islike == true){
+      if (this.islike == true) {
         this.success("已添加至我喜欢");
-      }
-      else {
+      } else {
         this.success("已从我喜欢移除");
       }
       this.$http.post(`/api/like/${this.music.id}/`).then((response) => {
@@ -147,29 +152,32 @@ export default defineComponent({
       this.value = "";
     },
     sendComment() {
+      if (this.value == "") {
+        this.warning("评论内容不能为空");
+        return;
+      }
       let formData = new FormData();
       formData.append("content", this.value);
       if (this.editCommentId == 0) {
-        this.$http
-          .post(`/api/comment/on/${this.music.id}/`, formData)
-          .then((response) => {
-            console.log(response.data);
-          });
+        this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
+          this.success("评论成功");
+        });
       } else {
-        this.$http
-          .post(`/api/comment/edit/${this.editCommentId}/`, formData)
-          .then((response) => {
-            console.log(response.data);
-          });
+        this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
+          this.success("编辑成功");
+        });
         this.editCommentId = 0;
       }
+      this.value == "";
     },
     deleteMyComment(comment) {
-      this.$http.delete(`/api/comment/delete/${comment.id}/`).then((response) => {
-        console.log(response.data);
+      this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
+        this.success("删除成功");
       });
     },
     editMyComment(comment) {
+      console.log(this.$cookies.get("userid"));
+      console.log(comment.author_id);
       // alert("yes!");
       this.value = comment.content;
       this.editCommentId = comment.id;
@@ -220,9 +228,6 @@ export default defineComponent({
           this.lyricsObjArr.push(obj);
         }
       });
-      /*for (let i = 0; i < 20; i++) {
-        this.lyricsObjArr.push({ lyrics: "6", timeStr: "00:00.000", time: 0 });
-      }*/
     },
     timeupdate(currentTime) {
       for (let i = 1; i <= this.lyricsObjArr.length; i++) {
@@ -243,9 +248,9 @@ export default defineComponent({
     scroll(behavior = "smooth") {
       let top;
       if (this.hasTranslation && this.showTranslation) {
-        top = this.lyricsIndex > 2 ? 79.8 + 58.75 * (this.lyricsIndex - 4) : 0;
+        top = this.lyricsIndex > 3 ? 77.8 + 57.75 * (this.lyricsIndex - 5) : 0;
       } else {
-        top = this.lyricsIndex > 3 ? 43.2 * (this.lyricsIndex - 3) : 0;
+        top = this.lyricsIndex > 3 ? 57.75 * (this.lyricsIndex - 3) : 0;
       }
       this.lyricsRef.scrollTo({
         left: 0,
@@ -258,9 +263,13 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="player-page" id="top" :style="{
-    'background-color': getRGBString(backgroundColorString, 0.7),
-  }">
+  <div
+    class="player-page"
+    id="top"
+    :style="{
+      'background-color': getRGBString(backgroundColorString, 0.7),
+    }"
+  >
     <n-grid>
       <n-gi :span="4">
         <div>
@@ -278,8 +287,13 @@ export default defineComponent({
             <n-gi :span="6"></n-gi>
             <n-gi :span="4" style="margin: auto">
               <span style="margin-right: 3px; margin-top: 2px">
-                <n-icon v-if="islike" size="30" color="#ff69b4" @click="like"
-                  class="animate__animated animate__heartBeat">
+                <n-icon
+                  v-if="islike"
+                  size="30"
+                  color="#ff69b4"
+                  @click="like"
+                  class="animate__animated animate__heartBeat"
+                >
                   <Fitness />
                 </n-icon>
                 <n-icon v-else size="30" @click="like">
@@ -289,8 +303,13 @@ export default defineComponent({
             </n-gi>
             <n-gi :span="4" style="margin: auto">
               <span style="margin-right: 3px; margin-top: 2px">
-                <n-icon v-if="iscollect" size="30" color="#FFD700" @click="collect"
-                  class="animate__animated animate__flash">
+                <n-icon
+                  v-if="iscollect"
+                  size="30"
+                  color="#FFD700"
+                  @click="collect"
+                  class="animate__animated animate__flash"
+                >
                   <Star />
                 </n-icon>
                 <n-icon v-else size="30" @click="collect">
@@ -300,8 +319,13 @@ export default defineComponent({
             </n-gi>
             <n-gi :span="4" style="margin: auto">
               <span style="margin-right: 3px; margin-top: 2px">
-                <n-icon v-if="iscomplain" size="30" color="#DC143C" @click="complain"
-                  class="animate__animated animate__headShake">
+                <n-icon
+                  v-if="iscomplain"
+                  size="30"
+                  color="#DC143C"
+                  @click="complain"
+                  class="animate__animated animate__headShake"
+                >
                   <Warning />
                 </n-icon>
                 <n-icon v-else size="30" @click="complain">
@@ -315,34 +339,29 @@ export default defineComponent({
       </n-gi>
       <n-gi :span="10">
         <div class="lyrics-part">
-          <n-grid :y-gap="20" :cols="1">
+          <n-grid :y-gap="15" :cols="1">
             <n-gi class="music-name">
-              <div style="
-                  font-size: xx-large;
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                ">
+              <div>
                 {{ music.name }}
-                <n-switch v-if="hasTranslation" v-model:value="showTranslation" size="small" :round="false"
-                  @click="scroll">
-                  <template #icon> 译 </template>
-                </n-switch>
               </div>
             </n-gi>
             <n-gi>
-              <div>歌手：{{ music.artist }}</div>
+              <div class="music-artist">歌手：{{ music.artist }}</div>
             </n-gi>
             <n-gi>
               <div class="song-tags">
                 <div class="tag-container">
-                  <span v-for="tag in this.songtags">
-                    <n-tag :bordered="false" :style="{
-                      '--n-border-radius': `5px`,
-                      '--n-font-weight-strong': `bold`,
-                      '--n-height': `20px`,
-                      '--n-close-margin': `0 18px 0 18px`
-                    }" class="tag-item">
+                  <span v-for="(tag, i) in this.songtags" :key="i">
+                    <n-tag
+                      :bordered="false"
+                      :style="{
+                        '--n-border-radius': `5px`,
+                        '--n-font-weight-strong': `bold`,
+                        '--n-height': `20px`,
+                        '--n-close-margin': `0 18px 0 18px`,
+                      }"
+                      class="tag-item"
+                    >
                       {{ tag }}
                     </n-tag>
                   </span>
@@ -351,25 +370,44 @@ export default defineComponent({
             </n-gi>
             <n-gi>
               <div style="font-size: larger">
-                <n-scrollbar style="max-height: 300px" ref="lyricsRef">
-                  <div v-for="(obj, i) in lyricsObjArr" :key="i" :style="{
-                    marginBottom:
-                      hasTranslation && showTranslation ? '17.9px' : '21.2px',
-                  }" class="lyrics-wrap" :class="{ current: lyricsIndex === i }">
-                    <div class="lyrics">
-                      <div class="content">
-                        {{ obj.lyrics }}
-                      </div>
-                      <div class="time">
+                <n-scrollbar style="max-height: 400px" ref="lyricsRef">
+                  <div
+                    v-for="(obj, i) in lyricsObjArr"
+                    :key="i"
+                    :style="{
+                      marginBottom:
+                        hasTranslation && showTranslation ? '12.5px' : '31.35px',
+                    }"
+                    class="lyrics-wrap"
+                    :class="{ current: lyricsIndex === i }"
+                  >
+                    <n-grid class="lyrics">
+                      <n-gi :span="2" class="time">
                         {{ obj.timeStr.slice(0, 5) + "&nbsp;" }}
-                        <Play class="jumpLink" @click="jumpToLyrics(obj, i)" width="14px" />
-                      </div>
-                    </div>
+                      </n-gi>
+                      <n-gi :span="20" class="content">
+                        {{ obj.lyrics }}
+                      </n-gi>
+                      <n-gi :span="2" class="jumpLink">
+                        <Play @click="jumpToLyrics(obj, i)" width="14px" />
+                      </n-gi>
+                    </n-grid>
                     <div class="translation" v-show="hasTranslation && showTranslation">
                       {{ obj.translation }}
                     </div>
                   </div>
                 </n-scrollbar>
+                <div class="translationSwitch">
+                  <n-switch
+                    v-if="hasTranslation"
+                    v-model:value="showTranslation"
+                    size="small"
+                    :round="false"
+                    @click="scroll"
+                  >
+                    <template #icon> 译 </template>
+                  </n-switch>
+                </div>
               </div>
             </n-gi>
           </n-grid>
@@ -403,16 +441,36 @@ export default defineComponent({
                 </span>
               </template>
               <div>
-                <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
-                  v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
+                <n-input
+                  style="margin-bottom: 15px"
+                  maxlength="200"
+                  show-count
+                  placeholder="我的评论"
+                  type="textarea"
+                  v-model:value="value"
+                  :style="{ '--n-border-radius': `10px` }"
+                  :autosize="{
                     minRows: 6,
                     maxRows: 6,
-                  }" />
+                  }"
+                />
                 <div class="my-comment-button">
-                  <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
+                  <n-button
+                    class="send-button"
+                    strong
+                    secondary
+                    type="tertiary"
+                    @click="sendComment"
+                  >
                     发送
                   </n-button>
-                  <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                  <n-button
+                    class="clean-button"
+                    strong
+                    secondary
+                    type="tertiary"
+                    @click="cleanComment"
+                  >
                     清空
                   </n-button>
                 </div>
@@ -429,19 +487,30 @@ export default defineComponent({
     <n-grid>
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
-        <div v-for="(comment, idx) in comments.slice(
-          5 * (page - 1),
-          5 * (page - 1) + (5 * page > comments.length ? comments.length % 5 : 5)
-        )" :key="idx">
+        <div
+          v-for="(comment, idx) in comments.slice(
+            5 * (page - 1),
+            5 * (page - 1) + (5 * page > comments.length ? comments.length % 5 : 5)
+          )"
+          :key="idx"
+        >
           <a-comment>
             <template #actions>
               <span key="edit-comment">
                 <span style="padding-left: 855px; cursor: auto">
                   <n-popover trigger="hover">
                     <template #trigger>
-                      <n-icon size="18" @click="editMyComment(comment)">
-                        <CreateOutline />
-                      </n-icon>
+                      <n-button
+                        text
+                        circle
+                        focusable="false"
+                        @click="editMyComment(comment)"
+                        :disabled="this.$cookies.get('userid') != comment.up.id"
+                      >
+                        <n-icon size="18">
+                          <CreateOutline />
+                        </n-icon>
+                      </n-button>
                     </template>
                     <span>编辑我的评论</span>
                   </n-popover>
@@ -449,20 +518,32 @@ export default defineComponent({
               </span>
               <span key="delete-comment">
                 <span style="padding-left: 3px; cursor: auto">
-                  <n-popconfirm @positive-click="handlePositiveClick(comment)" @negative-click="handleNegativeClick">
+                  <n-popconfirm
+                    @positive-click="handlePositiveClick(comment)"
+                    @negative-click="handleNegativeClick"
+                  >
                     <template #trigger>
-                      <n-icon size="18" @click="deleteMyComment(comment)">
-                        <TrashOutline />
-                      </n-icon>
+                      <n-button
+                        text
+                        circle
+                        focusable="false"
+                        :disabled="this.$cookies.get('userid') != comment.up.id"
+                      >
+                        <n-icon size="18">
+                          <TrashOutline />
+                        </n-icon>
+                      </n-button>
                     </template>
                     确认删除这条评论吗？
                   </n-popconfirm>
                 </span>
               </span>
             </template>
-            <template #author><a style="font-size: 18px">{{ comment.author }}</a></template>
+            <template #author
+              ><a style="font-size: 18px">{{ comment.up.username }}</a></template
+            >
             <template #avatar>
-              <a-avatar :src="comment.avatar" :size="50" />
+              <a-avatar :src="comment.up.avatar" :size="50" />
             </template>
             <template #content>
               <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
@@ -482,8 +563,14 @@ export default defineComponent({
           <n-grid>
             <n-gi :span="8"></n-gi>
             <n-gi :span="8">
-              <div style="display: flex; justify-content: center" v-if="comments.length > 0">
-                <n-pagination v-model:page="page" :page-count="Math.ceil(comments.length / 5)" />
+              <div
+                style="display: flex; justify-content: center"
+                v-if="comments.length > 0"
+              >
+                <n-pagination
+                  v-model:page="page"
+                  :page-count="Math.ceil(comments.length / 5)"
+                />
               </div>
               <div style="display: flex; justify-content: center; font-size: 20px" v-else>
                 期待你的评论！
@@ -496,8 +583,10 @@ export default defineComponent({
       <n-gi :span="4"></n-gi>
     </n-grid>
   </div>
-  <modify-complain-view :showModifyComplainView="showModifyComplainView"
-    @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
+  <modify-complain-view
+    :showModifyComplainView="showModifyComplainView"
+    @closeModifyWindow="showModifyComplainView = false"
+  ></modify-complain-view>
 </template>
 
 <style scoped>
@@ -542,7 +631,7 @@ export default defineComponent({
   display: flex;
   width: 500px;
   margin: auto;
-  margin-top: 15%;
+  margin-top: 12%;
 }
 
 :deep(.ant-comment-avatar img) {
@@ -559,11 +648,17 @@ export default defineComponent({
   font-size: 14px;
 }
 
-:deep(.n-collapse .n-collapse-item .n-collapse-item__header .n-collapse-item__header-main) {
+:deep(.n-collapse
+    .n-collapse-item
+    .n-collapse-item__header
+    .n-collapse-item__header-main) {
   display: inline;
 }
 
-:deep(.n-collapse .n-collapse-item .n-collapse-item__content-wrapper .n-collapse-item__content-inner) {
+:deep(.n-collapse
+    .n-collapse-item
+    .n-collapse-item__content-wrapper
+    .n-collapse-item__content-inner) {
   padding-top: 0;
 }
 
@@ -609,62 +704,84 @@ export default defineComponent({
   scroll-behavior: smooth;
 }
 
-.lyrics-wrap>.lyrics {
+.lyrics-part {
+  text-align: center;
+}
+.music-name {
+  font-size: 24px;
+  text-align: center;
+}
+
+.music-artist {
+  font-size: 16px;
+  text-align: center;
+}
+.lyrics-wrap > .lyrics {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.lyrics-wrap>.lyrics>.content {
+.lyrics-wrap > .lyrics > .content {
   color: #000;
-  font-size: 14px;
+  font-size: 16px;
   opacity: 0.5;
 }
 
-.lyrics-wrap>.translation {
+.lyrics-wrap > .translation {
   color: #000;
   font-size: 12px;
   opacity: 0.5;
 }
 
-.lyrics-wrap.current>.lyrics>.content {
-  font-size: 16px;
+.lyrics-wrap.current > .lyrics > .content {
+  font-size: 18px;
   font-weight: 600;
   opacity: 0.8;
 }
 
-.lyrics-wrap.current>.translation {
+.lyrics-wrap.current > .translation {
   color: #000;
-  font-size: 14px;
+  font-size: 16px;
   opacity: 0.8;
 }
 
-.lyrics-wrap:hover>.lyrics>.content {
+.lyrics-wrap:hover > .lyrics > .content {
   opacity: 0.8;
 }
 
-.lyrics-wrap:hover>.translation {
+.lyrics-wrap:hover > .translation {
   opacity: 0.8;
 }
-
-.lyrics-wrap>.lyrics>.time {
-  display: none;
+.lyrics-wrap > .lyrics > .time {
+  visibility: hidden;
 }
-
-.lyrics-wrap:hover>.lyrics>.time {
+.lyrics-wrap:hover > .lyrics > .time {
+  visibility: visible;
   display: flex;
-  align-items: center;
-  margin-right: 30px;
+  justify-content: flex-end;
   color: #000;
   font-size: 12px;
   font-weight: lighter;
+}
+
+.lyrics-wrap > .lyrics > .jumpLink {
+  visibility: hidden;
+}
+
+.lyrics-wrap:hover > .lyrics > .jumpLink {
+  visibility: visible;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .jumpLink:hover {
   cursor: pointer;
 }
 
-.tag-item {
-  margin-right: 10px;
+.translationSwitch {
+  padding-right: 15px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

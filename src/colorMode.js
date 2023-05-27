@@ -1,6 +1,5 @@
 import { computed } from 'vue'
 import store from '/src/store'
-
 import ColorThief from 'colorthief'
 
 

@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import { ref } from 'vue'
+import { ref } from "vue";
 import Background from "./components/GlobalBackground.vue";
 import HelloWorld from "./components/HelloWorld.vue";
 import ImageTable from "./components/tables/ImageTable/ImageTable.vue";
@@ -9,13 +9,15 @@ import MessageSend from "./components/message/MessageSend.vue";
 import TopNav from "./components/TopNav.vue";
 import ListTable from "./components/tables/ListTable/ListTable.vue";
 import Player from "./components/Player.vue";
-import MixedTable from './components/tables/ImageTable/MixedImageTable.vue'
+import MixedTable from "./components/tables/ImageTable/MixedImageTable.vue";
 </script>
 <template>
+<background></background>
   <!-- <TopNav></TopNav> -->
   <!-- <message-item></message-item> -->
   <!-- <message-send></message-send> -->
-  <background></background>
+  <!--  -->
+
   <RouterView />
   <!-- <mixed-table></mixed-table> -->
   <!-- <div :style="{'text-align':'center'}"> -->

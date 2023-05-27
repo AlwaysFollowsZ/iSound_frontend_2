@@ -20,7 +20,6 @@ export default new Vuex.Store({
             }
         },
         changeThemeColor(state, [fixedRgb, originalRgb]) {//谔谔，不能超过两个参数
-            console.log(fixedRgb, originalRgb);
             // alert(originalRgb,fixedRgb)
             state.currentThemeColor = fixedRgb
             state.originalThemeColor = originalRgb

@@ -41,6 +41,11 @@ export default {
                 showCollection: false,
             }))
         });
+    },
+    watch: {
+        '$route'() {
+            window.location.reload();
+        }
     }
 }
 </script>

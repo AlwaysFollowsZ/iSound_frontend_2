@@ -1,5 +1,6 @@
 <script>
 import listTableBody from './ListTableBody.vue'
+import {Rows}from '../ImageTable/ImageRowData.js'
 import 'animate.css'
 export default {
     //mounted() {
@@ -109,7 +110,12 @@ export default {
     props: {
         songData: {
             type: Array,
-            default: []
+            default: Rows.map((row) => {
+                return {
+                    name: row.Name,
+                    imgSrc:row.imagePath
+                }
+            })
         },
         position: {
             type: String,
@@ -143,9 +149,9 @@ export default {
 </script>
 <template>
         <list-table-body :currentListId="currentListId" @likeAll="handleLikeAll" @like="handleLike"
-            @collectAll="handleCollectAll" @collect="handleCollect" :songData="songData" :viewMode="viewMode"
+            @collectAll="handleCollectAll" @collect="handleCollect"  :viewMode="viewMode"
             :position="position" @discollectOnPublic="handleDiscollectOnPublic"
-            @discollectOnCollection="handleDiscollectOnCollection" @recollect="handleRecollect" :style="{
+            @discollectOnCollection="handleDiscollectOnCollection" :songData="songData" @recollect="handleRecollect" :style="{
                 'animation':  'fadeInUp' ,
                 'animation-duration': '2s',
             }">
