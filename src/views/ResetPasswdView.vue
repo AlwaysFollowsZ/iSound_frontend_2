@@ -22,7 +22,7 @@
                     <n-grid>
                         <n-gi :span="3"></n-gi>
                         <n-gi :span="18">
-                            <n-input type="text" placeholder="请输入用户名" :value="username" @input="username = $event"
+                            <n-input type="text" placeholder="用户名" :value="username" @input="username = $event"
                                 :style="{
                                     '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                                     '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
@@ -56,7 +56,7 @@
                     <n-grid>
                         <n-gi :span="3"></n-gi>
                         <n-gi :span="18">
-                            <n-input type="text" placeholder="请输入绑定邮箱" :value="email" @input="email = $event"
+                            <n-input type="text" placeholder="邮箱" :value="email" @input="email = $event"
                                 :style="{
                                     '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                                     '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
