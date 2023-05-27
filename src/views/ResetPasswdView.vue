@@ -1,5 +1,5 @@
 <template>
-    <n-modal :show="showResetPasswd" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}">
+    <n-modal :show="showResetPasswd" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false">
         <div class="outer-container">
             <div class="title-container">
                 <div style="margin-bottom: 30px">
@@ -96,55 +96,6 @@
                 登录后，你可以在头像的下拉菜单中修改密码。
             </div>
         </div>
-        
-            <!-- <n-card :style="{ 'width': `600px`, '--n-border-radius': `20px` }" :bordered="false" role="dialog"
-                aria-modal="true">
-                <template #header>
-                    <div>
-                        <n-grid :x-gap="12">
-                            <n-gi :span="2"></n-gi>
-                            <n-gi :span="20">
-                                <h3 class="register-card-title">找回密码</h3>
-                            </n-gi>
-                            <n-gi :span="2">
-                                <div style="padding-top: 30%" @click="closeResetWindow">
-                                    <close-outline />
-                                </div>
-                            </n-gi>
-                        </n-grid>
-                    </div>
-                </template>
-                <n-grid x-gap="12" :cols="2">
-                    <n-gi>
-                        <img class="login-image"
-                            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-                    </n-gi>
-                    <n-gi>
-                        <div class="input-detail-container">
-                            <span>用户名</span>
-                            <n-input type="text" placeholder="请输入用户名" :value="username" @input="username = $event"
-                                clearable />
-                            <span>邮箱</span>
-                            <n-input type="text" placeholder="请输入绑定邮箱" :value="email" @input="email = $event" clearable />
-                            <n-grid class="login-button-top" x-gap="6" :cols="2">
-                                <n-gi>
-                                    <n-button strong secondary type="success" @click="handleReset">
-                                        找回
-                                    </n-button>
-                                </n-gi>
-                                <n-gi>
-                                    <n-button strong secondary type="Warning" @click="closeResetWindow">
-                                        取消
-                                    </n-button>
-                                </n-gi>
-                            </n-grid>
-                        </div>
-                    </n-gi>
-                </n-grid>
-                <div class="login-notice-text">
-                    如果您的账号没有绑定邮箱，就无法进行找回密码操作。
-                </div>
-            </n-card> -->
     </n-modal>
 </template>
 

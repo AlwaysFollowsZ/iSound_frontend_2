@@ -1,6 +1,6 @@
 <template>
     <!-- <n-button @click="showLogin = true">登录</n-button> -->
-    <n-modal :show="showRegister" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}">
+    <n-modal :show="showRegister" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false">
         <div class="outer-container">
             <div class="title-container">
                 <div style="margin-bottom: 30px;">
@@ -25,6 +25,7 @@
                         <n-gi :span="18">
                             <n-input type="text" placeholder="用户名" :value="username" @input="username = $event"
                                 :style="{
+                                    '--n-text-color-disabled': 'black',
                                     '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                                     '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
                                     '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',

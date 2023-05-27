@@ -39,7 +39,7 @@
             </n-grid>
         </div>
     </div>
-    <upload-song-view :goToUploadSong="goToUploadSong" @closeUploadWindow="goToUploadSong = false"></upload-song-view>
+    <upload-song-view :showUploadSong="goToUploadSong" @closeUploadWindow="goToUploadSong = false"></upload-song-view>
 </template>
 <script>
 import UploadSongView from '../views/UploadSongView.vue';
