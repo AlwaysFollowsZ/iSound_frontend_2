@@ -1,5 +1,5 @@
 <script>
-import { backgroundColor, getRGBString, findSimilarColors, globalThemeColor } from '/src/colorMode';
+import { backgroundColor, getRGBString, findSimilarColors, globalThemeColor,getFontColorString } from '/src/colorMode';
 import { mapState } from 'vuex'; // 便于直接引用 store 中的 state
 import RenderBackground from './RenderBackground.vue'
 export default {
@@ -21,7 +21,8 @@ export default {
             currentColor: [], // 当前颜色
             transitionTime: 1,
             getRGBString,
-            globalThemeColor
+            globalThemeColor,
+            getFontColorString
         };
     },
     created() {
@@ -37,7 +38,7 @@ export default {
                     let updatedColor
                     let transitionDelta
                     do {
-                        updatedColor = findSimilarColors(color, 10, 0.4)[Math.floor(Math.random() * 10)]
+                        updatedColor = findSimilarColors(color, 100, 0.3)[Math.floor(Math.random() * 10)]
                         //计算几何变化值
                         transitionDelta = Math.sqrt(Math.pow((beforeColor[0] - updatedColor[0]), 2) + Math.pow((beforeColor[1] - updatedColor[1]), 2) + Math.pow((beforeColor[2] - updatedColor[2]), 2))
                     } while (transitionDelta < 5)//随机选取一个相近的颜色,数值越大相似度越高
@@ -45,7 +46,7 @@ export default {
                     //更新过渡时间和当前颜色
                     this.currentColor = updatedColor
                     this.transitionTime = transitionDelta / this.updateSpeed
-                    //  console.log(this.transitionTime, updatedColor);
+                      console.log('up'+ updatedColor);
                 }
                 else {
                     this.currentColor = this.themeColor
@@ -59,7 +60,7 @@ export default {
     props: {
         updateSpeed: {//背景动画的变化快慢
             type: Number,
-            default: 25,
+            default: 10,
             validator(value) {
                 return value > 0
             }
@@ -71,12 +72,11 @@ export default {
 
 
 <template>
-    <div class='page_background bg-pan-bottom' :style="{
+    <div class='page_background' :style="{
         'transition': `height cubic-bezier(0.165, 0.84, 0.44, 1) 1s ,background-color linear ${transitionTime}s`,
-        'background-color': getRGBString(`${currentColor[0]},${currentColor[1]},${currentColor[2]}`)
-        // 'background':`linear-gradient(to top,${getRGBString(currentColor.join(','))},${getRGBString(globalThemeColor.join(','))},${getRGBString(currentColor.join(','))})`
+        'background-color': getRGBString(`${currentColor.join(',')}`)
     }">
-    <!-- <render-background></render-background> -->
+    <!-- <render-background :elementColor="getRGBString(getFontColorString(currentColor),1)"></render-background> -->
 </div>
     
 
