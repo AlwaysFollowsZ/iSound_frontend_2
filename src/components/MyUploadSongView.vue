@@ -8,7 +8,8 @@
             </n-gi>
             <n-gi :span="1"></n-gi>
             <n-gi :span="19">
-                <n-icon class="upload-icon" @click="goToUploadSong = true" size="40" style="padding-top: 5px">
+                <!-- DO NOT MODIFY -->
+                <n-icon class="upload-icon" @click="jumpToUploadSong" size="40" style="padding-top: 5px">
                     <cloud-upload-outline/>
                 </n-icon>
             </n-gi>
@@ -43,11 +44,15 @@
 </template>
 <script>
 import UploadSongView from '../views/UploadSongView.vue';
-import { CloudUploadOutline } from '@vicons/ionicons5'
+import { CloudUploadOutline } from '@vicons/ionicons5';
+import { mapState } from 'vuex';
 export default {
     components: {
         UploadSongView,
         CloudUploadOutline,
+    },
+    computed: {
+        ...mapState(['accentColor', 'colorMode']),
     },
     data() {
         return {
@@ -105,6 +110,43 @@ export default {
             ]
         }
     },
+    methods: {
+        jumpToUploadSong() {
+            this.goToUploadSong = true;
+            // n-select 样式只能这么修改
+            // 等待 DOM 加载，然后再获取，否则获取不到
+            setTimeout(() => {
+                let selections = document.getElementsByClassName('n-base-selection')
+                
+                // let tags = document.getElementsByClassName('n-tag')
+                // console.log(tags.length)
+                if (selections.length > 0) {
+                    // 含有 '--' 分隔的属性只能这么写
+                    selections[0].style.setProperty('--n-color', 'white')
+                    selections[0].style.setProperty('--n-color-focus', 'white')
+                    selections[0].style.setProperty('--n-color-active', 'white')
+                    selections[0].style.setProperty('--n-border', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-active', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-focus', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-hover', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-radius', '8px')
+                    selections[0].style.setProperty('--n-box-shadow-active', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-box-shadow-focus', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-box-shadow-hover', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-font-size', '16px')
+                    selections[0].style.setProperty('--n-height', '40px')
+                    selections[0].style.setProperty('--n-caret-color', 'black')
+                    selections[0].style.setProperty('--n-placeholder-color', 'grey')
+                    selections[0].style.setProperty('--n-text-color', 'black')
+                    selections[0].style.setProperty('--n-arrow-color', 'black')
+                }
+                // if (tags.length > 0) {
+                //     tags[0].style.setProperty('--n-color', 'red')
+                // }
+            }, 50)
+            
+        }
+    }
 }
 </script>
 <style scoped>
