@@ -1,13 +1,14 @@
 <script>
+import 'animate.css'
 import { defineProps, ref, computed } from 'vue'
 import { NButton, NEllipsis, NInput, NIcon, NIconWrapper, NTooltip, NPopover, NConfigProvider } from 'naive-ui'
-import { MusicNote220Regular, BookStar20Regular } from '@vicons/fluent'
-import { LibraryMusicOutlined } from '@vicons/material'
+import { MusicNote220Regular, BookStar20Regular, ShareCloseTray20Regular, Delete20Regular, ShareIos20Regular } from '@vicons/fluent'
+import { LibraryMusicOutlined, PlaylistRemoveOutlined } from '@vicons/material'
 import { getBackgroundColorString, getFontColorString, getThemeColorByImage } from '/src/colorMode'
 // 从父级传入内容类型、图片路径、歌曲数（如有）、名字、图片大小、主题色等信息
 export default {
     components: {
-        MusicNote220Regular, BookStar20Regular, LibraryMusicOutlined
+        MusicNote220Regular, BookStar20Regular, LibraryMusicOutlined, ShareCloseTray20Regular, Delete20Regular, PlaylistRemoveOutlined, ShareIos20Regular
     },
     data() {
         const themeColor = ref([])
@@ -17,20 +18,28 @@ export default {
         const fontSize = (imageSizeAvg) / 12
         const fontColorString = getFontColorString(themeColor)
         const themeColorString = getBackgroundColorString(themeColor)
-        const isHoverOnBottom = ref(false)
-        const isHoverOnTitle = ref(false)
-        const isHoverOnMask = ref(false)
-        const isClickOnMask = ref(false)
+        let isHoverOnBottom = ref(false)
+        let isHoverOnTitle = ref(false)
+        let isHoverOnMask = ref(false)
+        let isClickOnMask = ref(false)
+        let isHoverOnButton1 = ref(false)
+        let isHoverOnButton2 = ref(false)
         return {
             themeColor, fontSize, fontColorString, themeColorString, isHoverOnBottom, isHoverOnMask, isClickOnMask, isHoverOnTitle,
-            imageSizeAvg, imageSize
+            imageSizeAvg, imageSize, isHoverOnButton1, isHoverOnButton2,
         }
     },
     props: {
+        //只有在个人主页的歌单/歌曲/收藏夹才能修改
+        Edit: {
+            type: Boolean,
+            default: false
+        },
         Key: {
             type: Number,
             required: true
         },
+        //包括歌单、歌曲和收藏夹
         Type: {
             type: String,
             default: 'songList',
@@ -53,9 +62,13 @@ export default {
             type: String,
             default: 'songName1265434567'
         },
+        Singer: {
+            type: String,
+            default: 'Unknown'
+        },
         EntrySize: {
             type: Array,
-            default: [250, 250]
+            default: [300, 300]
         },
     }
 }
@@ -64,17 +77,16 @@ export default {
 <template>
     <div class="outer_box" :style="{
         'width': `${EntrySize[0]}px`,
-        'height': `${EntrySize[1]}px`
+        'height': `${EntrySize[1]}px`,
     }">
         <!-- 大盒子的动态属性有背景色和宽高 -->
         <div class="mask_box" :style="{
-            'width': isHoverOnMask?`${imageSize[0]+6}px`: `${imageSize[0]}px`,
+            'width': `${imageSize[0] + 4}px`,//适应边框大小
             'height': `fit-content`,
-            // 'padding': `0px 0px ${imageSize[1] / 10}px 0px`,
             'border-radius': `${imageSizeAvg / 10}px`,
             'background-color': isHoverOnMask ? `rgb(${themeColorString},0.5)` : `rgb(${themeColorString},0.2)`,
             'box-shadow': isHoverOnMask ? `0 0 8px 3px rgb(${themeColorString},0.5)` : '',
-            'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `0px solid rgb(${themeColorString})`
+            'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `3px solid transparent`
         }" :class="[isHoverOnMask ? 'mask_box-hover' : '',
 isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mouseleave="isHoverOnMask = false"
             @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Key)">
@@ -83,12 +95,36 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 'background-image': `url(${imagePath})`,
                 'width': `${imageSize[0]}px`,
                 'height': `${imageSize[1]}px`,
-                'border-radius': `${imageSizeAvg / 15}px`
+                'border-radius': `${imageSizeAvg / 12}px`
             }">
-                <!-- 底部显示歌曲数量  动态属性有背景色和宽高-->
-                <div class="image_bottom" @mouseenter="isHoverOnBottom = true" @mouseleave="isHoverOnBottom = false">
+                <div class="image_top" v-if="(isHoverOnMask && Edit)" :style="{
+                    'animation': 'fadeIn',
+                    'animation-duration': '0.7s',
+                    'box-shadow': 'n-icon-wrapper',
+                }">
+                    <!-- 只有收藏夹有第二个图标 -->
+                    <n-popover trigger="hover" v-if="Type === 'Collection'" :style="{
+                        'border-radius': `${imageSizeAvg / 12}px`,
+                        'font-weight': 700,
+                        '--n-text-color': `rgb(${fontColorString})`,
+                        '--n-color': `rgb(${themeColorString},0.8)`,
+                        'font-size': `${fontSize / 1.5}px`,
+                        'box-shadow': 'n-icon-wrapper',
+                    }">
+                        <template #trigger>
+                            <n-icon-wrapper :size="imageSizeAvg / 8" :border-radius="imageSizeAvg / 20"
+                                :color="`rgb(${themeColor},0.8)`" :style="{ 'margin': `0 ${imageSizeAvg / 30}px` }">
+                                <n-icon :size="imageSizeAvg / 10">
+                                    <share-ios20-regular v-if="Type === 'Collection'"
+                                        @click.stop="$emit('shareCollection', Key)"></share-ios20-regular>
+                                </n-icon>
+                            </n-icon-wrapper>
+                        </template>
+                        分享为歌单
+                    </n-popover>
+                    <!-- 这是第一个图标 -->
                     <n-popover trigger="hover" :style="{
-                        'border-radius': `${imageSizeAvg / 20}px`,
+                        'border-radius': `${imageSizeAvg / 12}px`,
                         'font-weight': 700,
                         '--n-text-color': `rgb(${fontColorString})`,
                         '--n-color': `rgb(${themeColorString},0.8)`,
@@ -96,22 +132,47 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                         'box-shadow': 'n-icon-wrapper'
                     }">
                         <template #trigger>
+                            <n-icon-wrapper :size="imageSizeAvg / 8" :border-radius="imageSizeAvg / 20"
+                                :color="`rgb(${themeColor},0.8)`" @mouseenter="isHoverOnButton1 = true"
+                                @mouseleave="isHoverOnButton1 = false">
+                                <n-icon :size="imageSizeAvg / 10">
+                                    <share-close-tray20-regular v-if="Type === 'songList'"
+                                        @click.stop="$emit('cancelShare', Key)"></share-close-tray20-regular>
+                                    <delete20-regular v-if="Type === 'Song'"
+                                        @click.stop="$emit('deleteUploadedSong', Key)"></delete20-regular>
+                                    <playlist-remove-outlined v-if="Type === 'Collection'"
+                                        @click.stop="$emit('deleteCollection', Key)"></playlist-remove-outlined>
+                                </n-icon>
+                            </n-icon-wrapper>
+                        </template>
+                        {{ Type === 'Song' ? '删除歌曲' : Type === 'songList' ? '取消分享' : '删除收藏夹' }}
+                    </n-popover>
+                </div>
+                <!-- 底部显示歌曲数量  动态属性有背景色和宽高-->
+                <div class="image_bottom" @mouseenter="isHoverOnBottom = true" @mouseleave="isHoverOnBottom = false">
+                    <n-popover trigger="hover" :style="{
+                        'border-radius': `${imageSizeAvg / 20}px`,
+                        '--n-text-color': `rgb(${fontColorString})`,
+                        '--n-color': `rgb(${themeColorString},0.8)`,
+                        'font-size': `${fontSize / 1.5}px`,
+                        'box-shadow': 'n-icon-wrapper',
+                    }">
+                        <template #trigger>
                             <n-icon-wrapper :style="{
                                 'margin-right': `${imageSizeAvg > 300 ? imageSizeAvg / 10 : imageSizeAvg / 15}px`
                             }" :size="imageSizeAvg / 8" :border-radius="imageSizeAvg / 20"
                                 :color="`rgb(${themeColor},0.9)`">
-                                <n-icon v-if="Type === 'songList'"
-                                    :size="imageSizeAvg / 10"><library-music-outlined></library-music-outlined></n-icon>
-                                <n-icon v-if="Type === 'Song'"
-                                    :size="imageSizeAvg / 10"><music-note220-regular></music-note220-regular></n-icon>
-                                <n-icon v-if="Type === 'Collection'"
-                                    :size="imageSizeAvg / 10"><book-star20-regular></book-star20-regular></n-icon>
+                                <n-icon :size="imageSizeAvg / 10">
+                                    <library-music-outlined v-if="Type === 'songList'"></library-music-outlined>
+                                    <music-note220-regular v-if="Type === 'Song'"></music-note220-regular>
+                                    <book-star20-regular v-if="Type === 'Collection'"></book-star20-regular>
+                                </n-icon>
                             </n-icon-wrapper>
                         </template>
-                        {{ Type === 'Song' ? '这是一首歌曲' :Type==='songList'? '这是一个歌单':'这是一个收藏夹' }}
+                        {{ Type === 'Song' ? '这是一首歌曲' : Type === 'songList' ? '这是一个歌单' : '这是一个收藏夹' }}
                     </n-popover>
                     <transition name="count">
-                        <span class="count" v-if="isHoverOnBottom && Type === 'songList'" :style="{
+                        <span class="count" v-if="isHoverOnBottom && (['songList', 'Collection'].includes(Type))" :style="{
                             'color': `rgb(${fontColorString},0.9)`,
                             'font-size': `${fontSize}px`,
                             'line-height': `${imageSizeAvg / 10}px`,
@@ -125,19 +186,20 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 </div>
             </div>
             <div class="title_box" :style="{
-                'height': `${fontSize * 2}px`,
+                // 'height': `${fontSize * 2}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
                     `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',
                 // 'padding': `${imageSize[0] / 20}px ${imageSize[0] / 50}px ${imageSize[0] / 30}px ${imageSize[0] / 50}px`,
-                'margin':'5px auto'
-            }" :class="isHoverOnTitle ? 'title-hover' : ''" @mouseenter="isHoverOnTitle = true"
-                @mouseleave="isHoverOnTitle = false">
+                'margin': '5px auto'
+            }" :class="isHoverOnTitle ? 'title-hover' : ''">
                 <n-ellipsis :style="{
+                    'display': 'block',
+                    'margin': '0 auto',
                     'font-size': `${fontSize}px`,
                     'vertical-align': 'top',
                     'height': `${fontSize * 2}px`,
-                    'max-width':`${imageSize[0]*0.8}px`
+                    'max-width': `${imageSize[0] * 0.8}px`
                 }" :tooltip="{
     style: {
         '--n-text-color': `rgb(${fontColorString})`,
@@ -152,7 +214,30 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                     <template #tooltip>
                         {{ Type === 'Song' ? '歌曲名称 : ' : '歌单名称 : ' }}{{ Name }}
                     </template>
-                    {{ Name }}
+                    <span @mouseenter="isHoverOnTitle = true" @mouseleave="isHoverOnTitle = false">{{ Name }}</span>
+                </n-ellipsis>
+
+                <n-ellipsis :style="{
+                    'color': `rgba(${fontColorString},0.5)`,
+                    'font-size': `${fontSize / 1.5}px`,
+                    'vertical-align': 'top',
+                    'height': `${fontSize}px`,
+                    'max-width': `${imageSize[0] * 0.6}px`
+                }" :tooltip="{
+    style: {
+        '--n-text-color': `rgb(${fontColorString})`,
+        '--n-color': `rgb(${themeColorString},0.8)`,
+        'border': `3px solid rgb(${themeColorString})`,
+        'border-radius': '10px',
+        'padding': `${imageSize[0] / 50}px ${imageSize[1] / 50}px`,
+        '--n-box-shadow': `0 0 5px 5px rgb(${themeColorString},0.3)`,
+    },
+}">
+                    <template #tooltip>
+
+                        歌手 : {{ Singer }}
+                    </template>
+                    <span @mouseenter="isHoverOnTitle = true" @mouseleave="isHoverOnTitle = false">{{ Singer }}</span>
                 </n-ellipsis>
             </div>
         </div>
@@ -166,13 +251,22 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 }
 
 .image {
+    display: inline-block;
     position: relative;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
 }
 
+.image_top {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: fit-content;
+}
+
 .image_bottom {
+    font-weight: 700;
     position: absolute;
     left: 0;
     bottom: 0;
@@ -185,6 +279,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 }
 
 .mask_box {
+    text-align: center;
     position: absolute;
     left: 0;
     top: 0;
@@ -209,6 +304,12 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 
 .title_box {
     font-weight: 700;
+    text-align: center;
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
+
+.singer_box {
+    font-weight: 300;
     text-align: center;
     transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }

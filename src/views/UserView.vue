@@ -70,13 +70,15 @@
                             }">
                                 <n-tab-pane name="我的收藏夹" tab="我的收藏夹">
                                     <!-- <my-song-sheet-view /> -->
-                                    <image-table :table-size="[1000, 500]"> </image-table>
+                                    <image-table  :position="'Collection'"> </image-table>
                                 </n-tab-pane>
                                 <n-tab-pane name="分享歌单" tab="分享歌单">
-                                    <shared-song-sheet-view />
+                                    <!-- <shared-song-sheet-view /> -->
+                                    <image-table :position="'Songlist'"></image-table>
                                 </n-tab-pane>
                                 <n-tab-pane name="我的歌曲" tab="我的歌曲">
-                                    <my-upload-song-view />
+                                    <!-- <my-upload-song-view /> -->
+                                    <image-table :position="'UploadedSongs'"></image-table>
                                 </n-tab-pane>
                                 <n-tab-pane name="我的关注" tab="我的关注">
                                     <follow-list-view />

@@ -39,7 +39,7 @@
                                 <n-gi :span="18">
                                     <div class="body-item-title">你需要上传歌曲文件</div>
                                     <div class="body-item-file-input">
-                                        <n-button strong secondary type="primary" @click="uploadSongFile"
+                                        <n-button strong secondary type="primary" @click="uploadSongFile" :focus="false"
                                         :style="{
                                             '--n-color': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
@@ -63,7 +63,7 @@
                                             '--n-border-hover': '1px solid transparent',
                                             '--n-border-pressed': '1px solid transparent',
                                             '--n-border-radius': '5px',
-                                            '--n-width': '80px',
+                                            '--n-width': 'fit-content',
                                             '--n-height': '48px',
                                             '--n-font-size': '18px',
                                         }"
@@ -82,7 +82,7 @@
                                 <n-gi :span="18">
                                     <div class="body-item-title">你可以选择上传歌词文件</div>
                                     <div class="body-item-file-input">
-                                        <n-button strong secondary type="primary" @click="uploadLyricFile"
+                                        <n-button strong secondary type="primary" @click="uploadLyricFile" :focus="false"
                                         :style="{
                                             '--n-color': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
@@ -106,7 +106,7 @@
                                             '--n-border-hover': '1px solid transparent',
                                             '--n-border-pressed': '1px solid transparent',
                                             '--n-border-radius': '5px',
-                                            '--n-width': '80px',
+                                            '--n-width': 'fit-content',
                                             '--n-height': '48px',
                                             '--n-font-size': '18px',
                                         }"

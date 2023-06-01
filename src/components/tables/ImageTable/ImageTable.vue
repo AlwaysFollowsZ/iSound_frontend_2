@@ -1,12 +1,17 @@
 <script>
 import { watch, h } from 'vue'
-import { NScrollbar, NButton, NPagination } from 'naive-ui'
+import { NScrollbar, NButton, NIcon, NPagination } from 'naive-ui'
+import { CloudUploadOutline } from "@vicons/ionicons5"
+import { FolderAdd20Regular } from '@vicons/fluent'
 import ImageTableEntry from './ImageTableEntry.vue'
 import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor, changeThemeColorByImage } from '/src/colorMode'
 import { Rows } from './ImageRowData'
 import { backgroundColor } from '../../../colorMode'
 // 说明：单个table组件。所有元素之间水平对齐。适用于局部布局
 export default {
+    components: {
+        CloudUploadOutline, FolderAdd20Regular
+    },
     data() {
         const fontColorString = getFontColorString(globalThemeColor)
         const defaultBGString = getBackgroundColorString(globalThemeColor)
@@ -62,18 +67,22 @@ export default {
         //table的大小(宽和高)
         tableSize: {
             type: Array,
-            default: [1000,]
+            default: []
         },
         // tableEntry 的宽高
         entrySize: {
             type: Array,
-            default: [260, 260]
+            default: [300, 250]
         },
-        //使用该组件的位置包括个人主页/收藏夹选择悬浮框和音乐馆主页
-        //分别为PersonalView,CollectionView,HomeView
+        //使用该组件的位置包括
+        //个人主页：收藏夹(Colletion)，歌单(Songlist)，已上传歌曲(UploadedSongs)
+        //公开页面：主要是在listTable选择收藏夹的页面(CollectionView)
         position: {
             type: String,
-            default: 'PersonalView'
+            default: 'Collection',
+            validator: (value) => {
+                return ['Collection', 'Songlist', 'UploadedSongs', 'CollectionView'].includes(value)
+            }
         },
         //歌曲总数
         count: {
@@ -85,15 +94,57 @@ export default {
             type: JSON.type,
             default: Rows
         },
-        //处理点击事件的方法
-        handleClick: {
+        //处理点击entry事件的方法
+        handleClickEntry: {
             type: Function,
             default: (Key) => {
-                alert(Key)
                 changeThemeColorByImage(Rows[Key].imagePath)
             }
+        },
+        //处理点击删除收藏夹事件的方法
+        handleClickDeleteCollection: {
+            type: Function,
+            default: (Key) => {
+                alert('todo:deleteCollection')
+                //changeThemeColorByImage(Rows[Key].imagePath)
+            }
+        },
+        //处理点击分享收藏夹事件的方法
+        handleClickShareCollection: {
+            type: Function,
+            default: (Key) => {
+                alert('todo:shareCollection')
+                //changeThemeColorByImage(Rows[Key].imagePath)
+            }
+        },
+        //处理点击取消分享歌单事件的方法
+        handleClickCancelShare: {
+            type: Function,
+            default: (Key) => {
+                alert('todo:cancelShare')
+                //changeThemeColorByImage(Rows[Key].imagePath)
+            }
+        },
+        //处理点击删除已上传歌曲事件的方法
+        handleClickDeleteUploadedSongs: {
+            type: Function,
+            default: (Key) => {
+                alert('todo:deleteUploadedSongs')
+                //changeThemeColorByImage(Rows[Key].imagePath)
+            }
         }
+
     },
+    methods: {
+        handleTopClick() {
+            if (this.position === 'Collection') {
+                alert("todo:新建收藏夹")
+            }
+            else if (this.position === 'UploadedSongs') {
+                alert("todo:上传歌曲")
+            }
+        }
+    }
 }
 </script>
 <template>
@@ -103,10 +154,61 @@ export default {
         'width': `${tableSize[0]}px`,
         'height': `${tableSize[1]}px`
     }">
-        <n-scrollbar v-if="['PersonalView', 'CollectionView'].includes(position)" class="image_table_list">
+        <!-- 根据不同的情况判断，在个人主页的“收藏夹”页面会显示“新建”按钮，
+            在个人主页的“上传歌曲”页面会显示“上传”按钮 -->
+        <div class="list_top_nav" v-if="['Collection', 'UploadedSongs'].includes(position)">
+
+
+            <!-- 这是第一个图标 -->
+            <n-popover trigger="hover" :style="{
+                'border-radius': `10px`,
+                'font-weight': 700,
+                '--n-text-color': `rgb(${fontColorString})`,
+                '--n-color': `rgb(${defaultBGString},0.7)`,
+                'font-size': `15px`,
+                'box-shadow': 'n-icon-wrapper'
+            }">
+                <template #trigger>
+                    <n-button class="more_button" :style="{
+                        '--n-color': getRGBString(BackgroundColorString, 0.15),
+                        '--n-color-hover': getRGBString(BackgroundColorString, 0.4),
+                        '--n-color-pressed': getRGBString(BackgroundColorString, 0.6),
+                        '--n-color-focus': getRGBString(BackgroundColorString, 0.1),
+                        '--n-border': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
+                        '--n-border-radius': '10px',
+                        '--n-border-hover': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
+                        '--n-border-pressed': `3px solid ${getRGBString(BackgroundColorString, 0.3)})`,
+                        '--n-border-focus': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
+                        '--n-text-color': getRGBString(fontColorString, 0.6),
+                        '--n-text-color-hover': getRGBString(fontColorString, 0.8),
+                        '--n-text-color-pressed': getRGBString(fontColorString, 1),
+                        '--n-text-color-focus': getRGBString(fontColorString, 0.6),
+                        '--n-ripple-color': getRGBString(fontColorString, 0.5),
+                        '--n-wave-opacity': '1'
+                    }" @click="handleTopClick">
+                    <n-icon :size="25" v-if="position === 'UploadedSongs'">
+                        <cloud-upload-outline></cloud-upload-outline>
+                    </n-icon>
+                    <n-icon :size="25" v-if="position === 'Collection'">
+                        <folder-add20-regular></folder-add20-regular>
+                    </n-icon>
+                </n-button>
+                </template>
+                {{ position === 'Collection' ? '新建收藏夹' :  '上传新的歌曲' }}
+            </n-popover>
+
+
+
+            
+        </div>
+        <!-- 这个组件不会用在首页，因此都采用有pagination的形式 -->
+        <div class="image_table_list">
             <template v-for="data in currentPageData" :key="data.Key">
-                <image-table-entry v-bind="data" style="vertical-align: middle;" @clickEntry="handleClick"
-                    :EntrySize="[300, 300]"></image-table-entry>
+                <image-table-entry v-bind="data" style="vertical-align: middle;" @clickEntry="handleClickEntry"
+                    @deleteCollection="handleClickDeleteCollection" @shareCollection="handleClickShareCollection"
+                    @cancelShare="handleClickCancelShare" @deleteUploadedSong="handleClickDeleteUploadedSongs"
+                    :EntrySize="entrySize"
+                    :Edit="['Collection', 'Songlist', 'UploadedSongs'].includes(position)"></image-table-entry>
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
@@ -161,41 +263,7 @@ export default {
                     </template>
                 </n-pagination>
             </div>
-        </n-scrollbar>
-        <template v-else>
-            <div class="list_top_nav">
-                <n-button class="more_button" :style="{
-                    '--n-color': getRGBString(BackgroundColorString, 0.15),
-                    '--n-color-hover': getRGBString(BackgroundColorString, 0.4),
-                    '--n-color-pressed': getRGBString(BackgroundColorString, 0.6),
-                    '--n-color-focus': getRGBString(BackgroundColorString, 0.1),
-                    '--n-border': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
-                    '--n-border-radius': '10px',
-                    '--n-border-hover': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
-                    '--n-border-pressed': `3px solid ${getRGBString(BackgroundColorString, 0.3)})`,
-                    '--n-border-focus': `3px solid ${getRGBString(BackgroundColorString, 0.5)}`,
-                    '--n-text-color': getRGBString(fontColorString, 0.6),
-                    '--n-text-color-hover': getRGBString(fontColorString, 0.8),
-                    '--n-text-color-pressed': getRGBString(fontColorString, 1),
-                    '--n-text-color-focus': getRGBString(fontColorString, 0.6),
-                    '--n-ripple-color': getRGBString(fontColorString, 0.5),
-                    '--n-wave-opacity': '1'
-                }" @click="changeColorMode">
-                    更多
-                </n-button>
-            </div>
-            <div class="image_table_list" :style="{
-                'background-color': `rgba(${BackgroundColorString},0.25)`,
-                'border': `5px solid rgb(${BackgroundColorString},0.7)`,
-                'border-radius': '50px',
-                'height': `${tableSize[1] - 100}px`
-            }">
-                <template v-for=" data  in  rows " :key="data.name">
-                    <image-table-entry v-bind="data" style="vertical-align: middle;">
-                    </image-table-entry>
-                </template>
-            </div>
-        </template>
+        </div>
     </div>
 </template>
 
@@ -231,12 +299,12 @@ export default {
 
 .list_top_nav {
     position: relative;
-    margin: 10px auto 20px auto;
+    margin: auto auto;
     height: 60px;
 }
 
 .image_table_list {
-    padding: 0 20px;
+    text-align: center;
 }
 
 .pagination_box {
@@ -253,7 +321,7 @@ export default {
     top: 0;
     bottom: 0;
     margin: auto;
-    padding: 30px 30px;
+    padding: 10px;
     font-size: 25px;
     font-weight: 700;
 }
