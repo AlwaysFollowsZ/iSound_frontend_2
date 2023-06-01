@@ -1,5 +1,5 @@
 <template>
-    <div class="upload-song-sheet-container">
+    <!-- <div class="upload-song-sheet-container">
         <n-grid>
             <n-gi :span="4">
                 <span class="upload-song-sheet-title">
@@ -8,19 +8,18 @@
             </n-gi>
             <n-gi :span="1"></n-gi>
             <n-gi :span="19">
-                <!-- DO NOT MODIFY -->
+                DO NOT MODIFY
                 <n-icon class="upload-icon" @click="jumpToUploadSong" size="40" style="padding-top: 5px">
                     <cloud-upload-outline/>
                 </n-icon>
             </n-gi>
         </n-grid>
-        
-    </div>
+    </div> -->
     <div class="already-upload-song-sheet">
         <div class="upload-song-sheet-title">
             已上传的歌曲
         </div>
-        <div class="song-sheet-container">
+        <!-- <div class="song-sheet-container">
             <n-grid :x-gap="10" :y-gap="6" :col="4">
                 <n-gi :span="6" v-for="(song, idx) in songSheets" :key="idx">
                     <div class="single-card-container">
@@ -38,11 +37,13 @@
                     </div>
                 </n-gi>
             </n-grid>
-        </div>
+        </div> -->
+        <image-table :position="'UploadedSongs'" @clickUpload="jumpToUploadSong" :entrySize="[200,200]"></image-table>
     </div>
     <upload-song-view :showUploadSong="goToUploadSong" @closeUploadWindow="goToUploadSong = false"></upload-song-view>
 </template>
 <script>
+import ImageTable from '/src/components/tables/ImageTable/ImageTable.vue';
 import UploadSongView from '../views/UploadSongView.vue';
 import { CloudUploadOutline } from '@vicons/ionicons5';
 import { mapState } from 'vuex';
@@ -50,6 +51,7 @@ export default {
     components: {
         UploadSongView,
         CloudUploadOutline,
+        ImageTable
     },
     computed: {
         ...mapState(['accentColor', 'colorMode']),

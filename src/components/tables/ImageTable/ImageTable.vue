@@ -4,13 +4,14 @@ import { NScrollbar, NButton, NIcon, NPagination } from 'naive-ui'
 import { CloudUploadOutline } from "@vicons/ionicons5"
 import { FolderAdd20Regular } from '@vicons/fluent'
 import ImageTableEntry from './ImageTableEntry.vue'
+import UploadSongView from '/src/views/UploadSongView.vue';
 import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor, changeThemeColorByImage } from '/src/colorMode'
 import { Rows } from './ImageRowData'
 import { backgroundColor } from '../../../colorMode'
 // 说明：单个table组件。所有元素之间水平对齐。适用于局部布局
 export default {
     components: {
-        CloudUploadOutline, FolderAdd20Regular
+        CloudUploadOutline, FolderAdd20Regular, ImageTableEntry, UploadSongView
     },
     data() {
         const fontColorString = getFontColorString(globalThemeColor)
@@ -137,14 +138,18 @@ export default {
     },
     methods: {
         handleTopClick() {
+            //这两个只会在个人主页用到
             if (this.position === 'Collection') {
                 alert("todo:新建收藏夹")
+                //this.$emit('clickCreateCollection')
             }
             else if (this.position === 'UploadedSongs') {
-                alert("todo:上传歌曲")
+                // alert("上传歌曲")
+                this.$emit('clickUpload')
             }
         }
-    }
+    },
+    emits: ['clickUpload'],
 }
 </script>
 <template>
@@ -186,20 +191,20 @@ export default {
                         '--n-ripple-color': getRGBString(fontColorString, 0.5),
                         '--n-wave-opacity': '1'
                     }" @click="handleTopClick">
-                    <n-icon :size="25" v-if="position === 'UploadedSongs'">
-                        <cloud-upload-outline></cloud-upload-outline>
-                    </n-icon>
-                    <n-icon :size="25" v-if="position === 'Collection'">
-                        <folder-add20-regular></folder-add20-regular>
-                    </n-icon>
-                </n-button>
+                        <n-icon :size="25" v-if="position === 'UploadedSongs'">
+                            <cloud-upload-outline></cloud-upload-outline>
+                        </n-icon>
+                        <n-icon :size="25" v-if="position === 'Collection'">
+                            <folder-add20-regular></folder-add20-regular>
+                        </n-icon>
+                    </n-button>
                 </template>
-                {{ position === 'Collection' ? '新建收藏夹' :  '上传新的歌曲' }}
+                {{ position === 'Collection' ? '新建收藏夹' : '上传新的歌曲' }}
             </n-popover>
 
 
 
-            
+
         </div>
         <!-- 这个组件不会用在首页，因此都采用有pagination的形式 -->
         <div class="image_table_list">

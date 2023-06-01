@@ -18,7 +18,7 @@
             </template>
         </n-progress>
     </div>
-    <div class="follow-list-border animate__animated animate__slideInDown" style="animation-duration: 0.9s" v-else>
+    <div class="follow-list-border animate__animated animate__slideInUp" style="animation-duration: 0.9s" v-else>
         <div class="follower-container"
             v-for="(follower, idx) in 
         followerList.slice(4 * (page - 1), 4 * (page - 1) + ((4 * page > followerList.length) ? (followerList.length % 4) : 4))" :key="idx">

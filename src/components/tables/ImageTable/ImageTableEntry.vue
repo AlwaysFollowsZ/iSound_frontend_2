@@ -13,9 +13,6 @@ export default {
     data() {
         const themeColor = ref([])
         getThemeColorByImage(this.imagePath, themeColor)
-        const imageSize = [(this.EntrySize[0] / 1.6), (this.EntrySize[1] / 1.6)]
-        const imageSizeAvg = (imageSize[0] + imageSize[1]) / 2
-        const fontSize = (imageSizeAvg) / 12
         const fontColorString = getFontColorString(themeColor)
         const themeColorString = getBackgroundColorString(themeColor)
         let isHoverOnBottom = ref(false)
@@ -25,9 +22,14 @@ export default {
         let isHoverOnButton1 = ref(false)
         let isHoverOnButton2 = ref(false)
         return {
-            themeColor, fontSize, fontColorString, themeColorString, isHoverOnBottom, isHoverOnMask, isClickOnMask, isHoverOnTitle,
-            imageSizeAvg, imageSize, isHoverOnButton1, isHoverOnButton2,
+            themeColor, fontColorString, themeColorString, isHoverOnBottom, isHoverOnMask, isClickOnMask, isHoverOnTitle,
+            isHoverOnButton1, isHoverOnButton2,
         }
+    },
+    computed: {
+        imageSize() { return [(this.EntrySize[0] / 1.5), (this.EntrySize[1] / 1.5)] },
+        imageSizeAvg() { return (this.imageSize[0] + this.imageSize[1]) / 2 },
+        fontSize() { return (this.imageSizeAvg) / 10 }
     },
     props: {
         //只有在个人主页的歌单/歌曲/收藏夹才能修改
@@ -78,6 +80,7 @@ export default {
     <div class="outer_box" :style="{
         'width': `${EntrySize[0]}px`,
         'height': `${EntrySize[1]}px`,
+        'margin': `${EntrySize[1] / 10}px 0`
     }">
         <!-- 大盒子的动态属性有背景色和宽高 -->
         <div class="mask_box" :style="{
@@ -186,12 +189,12 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 </div>
             </div>
             <div class="title_box" :style="{
-                // 'height': `${fontSize * 2}px`,
+                'height': `${fontSize * 3}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
                     `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',
                 // 'padding': `${imageSize[0] / 20}px ${imageSize[0] / 50}px ${imageSize[0] / 30}px ${imageSize[0] / 50}px`,
-                'margin': '5px auto'
+                'margin': `${imageSizeAvg / 20}px auto`
             }" :class="isHoverOnTitle ? 'title-hover' : ''">
                 <n-ellipsis :style="{
                     'display': 'block',
