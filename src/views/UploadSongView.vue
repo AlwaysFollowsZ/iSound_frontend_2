@@ -37,9 +37,9 @@
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
-                                    <div class="body-item-title">你需要上传歌曲文件</div>
+                                    <div class="body-item-title" @click="testfunc">你需要上传歌曲文件</div>
                                     <div class="body-item-file-input">
-                                        <n-button strong secondary type="primary" @click="uploadSongFile" :focus="false"
+                                        <n-button strong secondary type="primary" @click="uploadSongFile" :focusable="false"
                                         :style="{
                                             '--n-color': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
@@ -50,6 +50,9 @@
                                             '--n-color-pressed': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
                                                     '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                            '--n-color-focus':
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
                                             '--n-text-color': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
                                                     'white' : 'rgba(' + this.accentColor + ', 1)',
@@ -59,12 +62,14 @@
                                             '--n-text-color-pressed': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
                                                     'white' : 'rgba(' + this.accentColor + ', 1)',
+                                            '--n-text-color-focus':
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    'white' : 'rgba(' + this.accentColor + ', 1)',
                                             '--n-border': '1px solid transparent',
                                             '--n-border-hover': '1px solid transparent',
                                             '--n-border-pressed': '1px solid transparent',
-                                            '--n-border-radius': '5px',
-                                            '--n-width': 'fit-content',
-                                            '--n-height': '48px',
+                                            '--n-border-radius': '8px',
+                                            '--n-height': '36px',
                                             '--n-font-size': '18px',
                                         }"
                                         >
@@ -82,7 +87,7 @@
                                 <n-gi :span="18">
                                     <div class="body-item-title">你可以选择上传歌词文件</div>
                                     <div class="body-item-file-input">
-                                        <n-button strong secondary type="primary" @click="uploadLyricFile" :focus="false"
+                                        <n-button strong secondary type="primary" @click="uploadLyricFile" :focusable="false"
                                         :style="{
                                             '--n-color': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
@@ -93,6 +98,9 @@
                                             '--n-color-pressed': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
                                                     '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                            '--n-color-focus':
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
                                             '--n-text-color': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
                                                     'white' : 'rgba(' + this.accentColor + ', 1)',
@@ -102,12 +110,14 @@
                                             '--n-text-color-pressed': 
                                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
                                                     'white' : 'rgba(' + this.accentColor + ', 1)',
+                                            '--n-text-color-focus':
+                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                                    'white' : 'rgba(' + this.accentColor + ', 1)',
                                             '--n-border': '1px solid transparent',
                                             '--n-border-hover': '1px solid transparent',
                                             '--n-border-pressed': '1px solid transparent',
-                                            '--n-border-radius': '5px',
-                                            '--n-width': 'fit-content',
-                                            '--n-height': '48px',
+                                            '--n-border-radius': '8px',
+                                            '--n-height': '36px',
                                             '--n-font-size': '18px',
                                         }"
                                         >
@@ -124,8 +134,23 @@
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div class="body-item-title">歌手</div>
-                                    <n-input type="text" size="small" placeholder="佚名" :value="songAuthor"
-                                        @input="songAuthor = $event" />
+                                    <n-input type="text" size="small" placeholder="佚名" :value="songAuthor" @input="songAuthor = $event" 
+                                    :style="{
+                                        '--n-color': 'white',
+                                        '--n-color-focus': 'white',
+                                        '--n-text-color': 'black',
+                                        '--n-caret-color': 'black',
+                                        '--n-border-hover': 'transparent',
+                                        '--n-border-focus': 'transparent',
+                                        '--n-placeholder-color': 'grey',
+                                        '--n-border-radius': '8px',
+                                        '--n-height': '40px',
+                                        '--n-font-size': '16px',
+                                        '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                        '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                        '--n-icon-size': '25px',
+                                    }"
+                                    />
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
                             </n-grid>
@@ -135,12 +160,79 @@
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div class="body-item-title">分类标签</div>
-                                    <n-select v-model:value="value" multiple :options="options" placeholder="你需要为歌曲添加1～4个分类标签" max-tag-count="responsive"/>
+                                    <n-select v-model:value="value" multiple :options="options" placeholder="你需要为歌曲添加1～4个分类标签" max-tag-count="responsive" />
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
                             </n-grid>
                         </div>
                     </n-gi>
+                </n-grid>
+            </div>
+            <div style="margin-top: 20px; margin-bottom: 25px">
+                <n-grid class="login-button-top">
+                    <n-gi :span="4"></n-gi>
+                    <n-gi :span="4" style="display: flex; justify-content: right">
+                        <n-button strong secondary type="success" @click="submitUpload" :focusable="false"
+                            :style="{
+                                '--n-color': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
+                                '--n-color-hover': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                '--n-color-pressed': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                '--n-text-color': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-hover': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-pressed': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                '--n-border': '1px solid transparent',
+                                '--n-border-hover': '1px solid transparent',
+                                '--n-border-pressed': '1px solid transparent',
+                                '--n-border-radius': '5px',
+                                '--n-width': '64px',
+                                '--n-height': '39px',
+                                '--n-font-size': '18px',
+                            }"
+                        >
+                            上传
+                        </n-button>
+                    </n-gi>
+                    <n-gi :span="8"></n-gi>
+                    <n-gi :span="4" style="display: flex; justify-content: left">
+                        <n-button strong secondary type="Warning" @click="closeUWindow"
+                            :style="{
+                                '--n-color': 
+                                    'grey',
+                                '--n-color-hover': 
+                                    '#5d5d60',
+                                '--n-color-pressed': 
+                                    '#5d5d60',
+                                '--n-text-color': 
+                                    'white',
+                                '--n-text-color-hover': 
+                                    'white',
+                                '--n-text-color-pressed': 
+                                    'white',
+                                '--n-border': '1px solid transparent',
+                                '--n-border-hover': '1px solid transparent',
+                                '--n-border-pressed': '1px solid transparent',
+                                '--n-border-radius': '5px',
+                                '--n-width': '64px',
+                                '--n-height': '39px',
+                                '--n-font-size': '18px',
+                            }"
+                        >
+                            取消
+                        </n-button>
+                    </n-gi>
+                    <n-gi :span="4"></n-gi>
                 </n-grid>
             </div>
         </div> 
@@ -221,7 +313,7 @@
 <script>
 import { CloseOutline, ArrowUpOutline } from '@vicons/ionicons5'
 import { NInput, NModal } from 'naive-ui';
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { mapState } from 'vuex'
 export default {
     name: "UploadSong",
@@ -342,8 +434,64 @@ export default {
                 }
             })
             this.tagString = this.tagList.join(' ');
-        }
-    }
+        },
+        // renderTagChoices() {
+        //     setTimeout(() => {
+        //         let selectMenu = document.getElementsByClassName('n-base-select-menu')
+        //         if (selectMenu.length > 0) {
+        //             selectMenu[0].style.setProperty('--n-color', this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)')
+        //             selectMenu[0].style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
+        //             selectMenu[0].style.setProperty('--n-option-text-color', this.colorMode === 'white' ? 'black' : 'white')
+        //             selectMenu[0].style.setProperty('--n-border-radius', '8px')
+        //             selectMenu[0].style.setProperty('--n-option-check-color', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)')
+        //             selectMenu[0].style.setProperty('--n-option-text-color-active', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)')
+        //             selectMenu[0].style.setProperty('--n-option-text-color-pressed', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)')
+        //                     console.log(selectMenu.length)
+                }
+                // let tags = document.getElementsByClassName('n-base-select-option')
+                // for (let i = 0; i < tags.length; i++) {
+                //     tags[i].addEventListener('click', this.tagClick)
+                //     tags[i].addEventListener('hover', this.setScroll)
+                //     tags[i].style.color = 
+                //         (tags[i].classList.contains('n-base-select-option--selected')) ?
+                //         ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                //             '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
+                // }
+        //     }, 0)
+        // },
+        // setScroll() {
+        //     let scroll = document.getElementsByClassName('n-scrollbar')
+        //         //console.log('s' + scroll.length)
+        //         for (let i = 0; i < scroll.length; i++) {
+        //             scroll[i].props = { 'on-scroll': this.renderTags }
+        //             //scroll[i].addEventListener('scroll', this.renderTags)
+        //         }
+        // },
+        // renderTags() {
+        //     let tags = document.getElementsByClassName('n-base-select-option')
+        //         for (let i = 0; i < tags.length; i++) {
+        //             tags[i].addEventListener('click', this.tagClick)
+        //             tags[i].addEventListener('hover', this.setScroll)
+        //             tags[i].style.color = 
+        //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
+        //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
+        //         }
+        //         console.log('hello')
+        // },
+        // tagClick() {
+        //     let tags = document.getElementsByClassName('n-base-select-option')
+        //     for (let i = 0; i < tags.length; i++) {
+        //             tags[i].style.color = 
+        //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
+        //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
+        //         }
+        // }
+    // }
 };
 </script>
 <style scoped>
@@ -399,5 +547,8 @@ export default {
     /* 设置容器的高度 */
     overflow-y: scroll;
     /* 添加垂直滚动条 */
+}
+.login-button-top {
+    margin-top: 15px;
 }
 </style>
