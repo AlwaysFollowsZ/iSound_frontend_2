@@ -98,7 +98,7 @@
                           '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
                           '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                           '--n-icon-size': '25px'
-                        }" style="margin-top: 10px;">近一周播放</n-button></div>
+                        }" style="margin-top: 10px;">本周播放</n-button></div>
                       </n-timeline-item>
                       <n-timeline-item :style="{
                         'animation-delay': `${0.3 + index * 0.05}s`,
@@ -121,7 +121,7 @@
                           '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
                           '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                           '--n-icon-size': '25px'
-                        }">近一个月播放</n-button></div>
+                        }">本月播放</n-button></div>
                       </n-timeline-item>
                       <n-timeline-item :style="{
                         'animation-delay': `${0.3 + index * 0.05}s`,
@@ -379,7 +379,8 @@ export default {
       const curTime = new Date();
       console.log(curTime);
       const oneMonthAgo = new Date();
-      oneMonthAgo.setDate(oneMonthAgo.getMonth() - 1);
+      oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+      // 这里有一点问题 最近一个月登录 用 getMonth() - 1 会出错
       for (const song of this.historyData) {
         const songDate = new Date(song.date.replace('T', ' ').split('.')[0]);
         if (songDate >= oneMonthAgo && songDate <= curTime) {
@@ -387,7 +388,7 @@ export default {
         }
       }
       this.showHistoryData = this.monthHistoryData;
-      console.log(this.monthHistoryData);
+      console.log(this.monthHistoryData)
     },
     getAllHistory() {
       this.showHistoryData = this.historyData;
