@@ -2,7 +2,7 @@
     <div class="top-nav-container"><top-nav /></div>
     <div class="tag-view-container">
         <div class="tag-table-container">
-            <tag-table :width="1400" :should-animate="false" />
+            <!-- <tag-table :width="1400" :should-animate="false" /> -->
         </div>
         <div class="tag-search-results">
             <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
