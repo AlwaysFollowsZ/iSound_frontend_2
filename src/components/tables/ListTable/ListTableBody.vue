@@ -624,7 +624,7 @@ export default {
             })//更新当前用户的收藏夹数据(会在nmodal中使用)
         }
     },
-    emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection']
+    emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection','removeSong']
 }
 </script>
 

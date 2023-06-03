@@ -52,7 +52,8 @@ export default defineComponent({
         const showModalRef = ref(false);
         const previewImageUrlRef = ref("");
         function handlePreview(file) {
-            // console.log(url)
+            const url = file.file.fullPath
+            alert('hhh')
             previewImageUrlRef.value = url;
             showModalRef.value = true;
         }
@@ -142,7 +143,7 @@ export default defineComponent({
                     <n-gi :span="1"></n-gi>
                     <n-gi :span="22">
                         <span class="modify-title">
-                            <div class="edit-list-title">编辑收藏夹信息</div>
+                            <div class="edit-list-title">编辑收藏夹信息{{ previewImageUrl }}</div>
                         </span>
                     </n-gi>
                     <n-gi :span="1">
@@ -160,7 +161,7 @@ export default defineComponent({
                                 <template #trigger>
                                     <div class="upload-list-cover" @click="uploadFile">
                                         <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
-                                            max="1"  @preview="handlePreview" @change="handlePreview" style="max-width: 200px">
+                                            max="1"  style="max-width: 200px" @change="handlePreview">
                                             <n-icon size="100" depth="5">
                                                 <ImageOutline />
                                             </n-icon>
