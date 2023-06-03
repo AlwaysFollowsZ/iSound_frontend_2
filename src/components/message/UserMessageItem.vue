@@ -41,7 +41,7 @@ import { MailOutline, TrashOutline, MailOpenOutline } from '@vicons/ionicons5'
 <template>
     <div class="message-card-outer">
         <n-scrollbar style="max-height: 400px;" trigger="none" :size="10">
-            <div class="message-card" v-for="message in messages">
+            <div class="message-card" v-for="(message, i) in messages" :key="i">
                 <div>
                     <n-grid>
                         <n-gi :span="4" class="message-card-date">

@@ -70,6 +70,10 @@ export default defineComponent({
       { immediate: true }
     );
   },
+  mounted() {
+    this.lyricsIndex = 0;
+    this.scroll("auto");
+  },
   setup() {
     return {
       handlePositiveClick(comment) {
