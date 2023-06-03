@@ -379,7 +379,8 @@ export default {
       const curTime = new Date();
       console.log(curTime);
       const oneMonthAgo = new Date();
-      oneMonthAgo.setDate(oneMonthAgo.getMonth() - 1);
+      oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+      // 这里有一点问题 最近一个月登录 用 getMonth() - 1 会出错
       for (const song of this.historyData) {
         const songDate = new Date(song.date.replace('T', ' ').split('.')[0]);
         if (songDate >= oneMonthAgo && songDate <= curTime) {
@@ -387,7 +388,7 @@ export default {
         }
       }
       this.showHistoryData = this.monthHistoryData;
-      console.log(this.monthHistoryData);
+      console.log(this.monthHistoryData)
     },
     getAllHistory() {
       this.showHistoryData = this.historyData;

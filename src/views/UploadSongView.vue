@@ -23,7 +23,7 @@
                         <n-popover trigger="hover">
                             <template #trigger>
                                 <div class="upload-song-page">
-                                    <img :src="songPageUrl" @click="uploadFile" />
+                                    <img :src="songPageUrl"  />
                                     <input type="file" ref="fileInput" style="display: none"
                                     accept="image/*"    
                                     @change="handleSongPageChange" />
