@@ -98,7 +98,7 @@
                           '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
                           '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                           '--n-icon-size': '25px'
-                        }" style="margin-top: 10px;">近一周播放</n-button></div>
+                        }" style="margin-top: 10px;">本周播放</n-button></div>
                       </n-timeline-item>
                       <n-timeline-item :style="{
                         'animation-delay': `${0.3 + index * 0.05}s`,
@@ -121,7 +121,7 @@
                           '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
                           '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                           '--n-icon-size': '25px'
-                        }">近一个月播放</n-button></div>
+                        }">本月播放</n-button></div>
                       </n-timeline-item>
                       <n-timeline-item :style="{
                         'animation-delay': `${0.3 + index * 0.05}s`,
