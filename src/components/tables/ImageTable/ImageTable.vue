@@ -5,15 +5,16 @@ import { CloudUploadOutline } from "@vicons/ionicons5"
 import { FolderAdd20Regular } from '@vicons/fluent'
 import ImageTableEntry from './ImageTableEntry.vue'
 import UploadSongView from '/src/views/UploadSongView.vue';
+import CreateNewCollectionView from '/src/views/createNewCollectionView.vue'
 import { getBackgroundColorString, getFontColorString, changeColorMode, globalThemeColor, getRGBString, antiBackgroundColor, changeThemeColorByImage } from '/src/colorMode'
 import { Rows } from './ImageRowData'
-import { backgroundColor } from '../../../colorMode'
 // 说明：单个table组件。所有元素之间水平对齐。适用于局部布局
 export default {
     components: {
-        CloudUploadOutline, FolderAdd20Regular, ImageTableEntry, UploadSongView
+        CloudUploadOutline, FolderAdd20Regular, ImageTableEntry, UploadSongView, CreateNewCollectionView
     },
     data() {
+        let showModal = false//用于控制是否显示模态框
         const fontColorString = getFontColorString(globalThemeColor)
         const defaultBGString = getBackgroundColorString(globalThemeColor)
         //在这里设置需要使用:deep更改的穿透样式，并在:root中定义相应变量
@@ -34,6 +35,7 @@ export default {
         }, { immediate: true })
 
         return {
+            showModal,
             getRGBString,
             antiBackgroundColor,
             pageArgs: { currentPage: 1, pageSize: 10 },
@@ -43,6 +45,7 @@ export default {
             h
         }
     },
+    emits: ['updateCollections'],
     computed: {
         pageCount() {
             return Math.ceil(this.rows.length / this.pageArgs.pageSize)
@@ -93,7 +96,7 @@ export default {
         //数据来源
         rows: {
             type: JSON.type,
-            default: Rows
+            // default: Rows
         },
         //处理点击entry事件的方法
         handleClickEntry: {
@@ -139,8 +142,8 @@ export default {
     methods: {
         handleTopClick() {
             //这两个只会在个人主页用到
-            if (this.position === 'Collection') {
-                alert("todo:新建收藏夹")
+            if (this.position === 'Collection' || this.position === 'CollectionView') {
+                this.showModal = true
                 //this.$emit('clickCreateCollection')
             }
             else if (this.position === 'UploadedSongs') {
@@ -153,6 +156,10 @@ export default {
 }
 </script>
 <template>
+    
+    <!-- 更新所有收藏夹信息是给上一级用的 -->
+    <create-new-collection-view v-if="['Collection','CollectionView'].includes(position)" :show="showModal"
+        @updateCollections="$emit('updateCollections')" @closeCreateWindow="showModal = false"></create-new-collection-view>
     <div class="image_table" :style="{
         'background-color': getRGBString(BackgroundColorString, 0.2),
         'border-radius': '50px',
@@ -161,10 +168,9 @@ export default {
     }">
         <!-- 根据不同的情况判断，在个人主页的“收藏夹”页面会显示“新建”按钮，
             在个人主页的“上传歌曲”页面会显示“上传”按钮 -->
-        <div class="list_top_nav" v-if="['Collection', 'UploadedSongs'].includes(position)">
+        <div class="list_top_nav" v-if="['Collection', 'UploadedSongs', 'CollectionView'].includes(position)">
 
 
-            <!-- 这是第一个图标 -->
             <n-popover trigger="hover" :style="{
                 'border-radius': `10px`,
                 'font-weight': 700,
@@ -194,12 +200,12 @@ export default {
                         <n-icon :size="25" v-if="position === 'UploadedSongs'">
                             <cloud-upload-outline></cloud-upload-outline>
                         </n-icon>
-                        <n-icon :size="25" v-if="position === 'Collection'">
+                        <n-icon :size="25" v-if="position === 'Collection' || position === 'CollectionView'">
                             <folder-add20-regular></folder-add20-regular>
                         </n-icon>
                     </n-button>
                 </template>
-                {{ position === 'Collection' ? '新建收藏夹' : '上传新的歌曲' }}
+                {{ position === 'Collection'||position==='Collectionview' ? '新建收藏夹' : '上传新的歌曲' }}
             </n-popover>
 
 
@@ -207,7 +213,7 @@ export default {
 
         </div>
         <!-- 这个组件不会用在首页，因此都采用有pagination的形式 -->
-        <div class="image_table_list">
+        <div class="image_table_list" v-if="rows.length > 0">
             <template v-for="data in currentPageData" :key="data.Key">
                 <image-table-entry v-bind="data" style="vertical-align: middle;" @clickEntry="handleClickEntry"
                     @deleteCollection="handleClickDeleteCollection" @shareCollection="handleClickShareCollection"
@@ -269,6 +275,10 @@ export default {
                 </n-pagination>
             </div>
         </div>
+        <div v-else :style="{ 'color': getRGBString(fontColorString) }" class="no_content_notice">{{
+            ['Collection', 'CollectionView'].includes(position) ? '暂无已创建的收藏夹...新建一个？' :
+            position === 'Songlist' ? '暂无已分享的歌单...从收藏夹分享一个？'
+                : '暂无已上传的歌曲...上传一首？' }}</div>
     </div>
 </template>
 
@@ -329,6 +339,12 @@ export default {
     padding: 10px;
     font-size: 25px;
     font-weight: 700;
+}
+
+.no_content_notice {
+    padding: 50px;
+    font-weight: 700;
+    font-size: 25px
 }
 
 :deep(.n-pagination .n-pagination-item) {

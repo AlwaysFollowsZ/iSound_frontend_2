@@ -10,6 +10,22 @@ import 'animate.css';
 import { backgroundColor } from '../../../colorMode';
 export default {
     data() {
+        let collectionData = []//当前用户的收藏夹的数据
+        let formData = new FormData()
+        formData.append('shared', false)
+        this.$http.get('/api/playlist/of/0/', formData).then((response) => {
+            let key = 0
+            collectionData = response.data.playlist_set.map((collection) => {
+                return {
+                    Key: key++,
+                    Id: collection.id,
+                    imagePath: collection.cover,
+                    Name: collection.title,
+                    songCount: collection.music_set.length
+                }
+            })
+            console.log('cod' + JSON.stringify(response.data))
+        })//获取当前用户的收藏夹数据(会在nmodal中使用)
         let viewMode = this.viewMode//转换一下
         let headChange = false//模态框标题是否转换
         let showCollection = false//表头的收藏夹是否显示模态框(表项的在每一行定义)
@@ -255,7 +271,7 @@ export default {
                                             'font-size': '12px'
                                         }
                                     },
-                                    [row.isLiked ? '从"我喜欢"移除' : '添加到"我喜欢"'])
+                                    [row.isLiked ? `从"我喜欢"移除${row.isLiked}` : `添加到"我喜欢"${row.isLiked}`])
                             }
                         })
 
@@ -311,6 +327,7 @@ export default {
                         }),
                     //标题模态框
                     h(NModal, {
+                        'z-index': 1,
                         show: this.showCollection,
                         'on-mask-click': () => {
                             this.showCollection = false
@@ -338,8 +355,11 @@ export default {
                             }, this.headChange === true ? '添加成功' : '请选择收藏夹'),
                             //除了多选外，“选择收藏夹”的imageTable不会在收藏夹页面出现
                             h(imageTable, {
-                                tableSize: [1000, 500],
+                                rows: this.collectionData,
+                                tableSize: [1000,],
+                                entrySize: [200, 200],
                                 position: 'CollectionView',
+                                onFlushCollections: this.updateCollections,
                                 handleClick: (listKey) => {
                                     this.isCollectChanged = true
                                     this.headChange = true
@@ -418,6 +438,7 @@ export default {
                             },
                             // 
                         }), h(NModal, {
+                            'z-index': 1,
                             show: row.showCollection,
                             'on-mask-click': () => {
                                 row.showCollection = false
@@ -444,10 +465,13 @@ export default {
                                 }, '请选择收藏夹'),
                                 //“选择收藏夹”的imageTable不会在收藏夹页面出现，也不会在已经收藏的情况下出现
                                 h(imageTable, {
+                                    rows: this.collectionData,
                                     style: {
                                         'display': (position !== 'CollectionView' && row.isCollected === false) ? 'default' : 'none',
                                     },
-                                    tableSize: [1000, 500],
+                                    onFlushCollections: this.updateCollections,
+                                    tableSize: [1000,],
+                                    entrySize: [200, 200],
                                     position: 'CollectionView',//需要显示的是收藏夹页面
                                     handleClick: (listKey) => {
                                         row.isStarFilled = true
@@ -532,7 +556,7 @@ export default {
             },
         ]//表头和表项
         return {
-            HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
+            collectionData, HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
             isSelected, selectedEntries, columns, getRGBString, h, BackgroundColorString, headChange,
             showCollection, isCollectChanged
         }
@@ -557,15 +581,16 @@ export default {
             default: 'user'
         },//是否在管理员界面
         //使用该组件的位置，包括公开页面PublicView和自己的收藏夹页面CollectionView/播放记录页面RecordView
-        //在公开页面和播放记录页面，收藏按钮点击后可以选择需要收藏的收藏夹；而在收藏夹界面，点击后只会弹出“是否取消收藏”。
+        //在公开页面、歌单和播放记录页面，收藏按钮点击后可以选择需要收藏的收藏夹；而在收藏夹界面，点击后只会弹出“是否取消收藏”。
         position: {
             type: String,
             require: true,
             default: 'CollectionView',
             validator: (value) => {
-                return ['CollectionView', 'PublicView', 'RecordView'].includes(value)
+                return ['CollectionView', 'PublicView'].includes(value)
             }
         },
+        //当前所在的歌单或收藏夹的ID
         currentListId: {
             type: Number
         }
@@ -579,6 +604,24 @@ export default {
             else {
                 this.isSelected = true
             }
+        },
+        updateCollections() {
+            alert('update')
+            let formData = new FormData()
+            formData.append('shared', false)
+            this.$http.get('/api/playlist/of/0/', formData).then((response) => {
+                let key = 0
+                collectionData = response.data.playlist_set.map((collection) => {
+                    return {
+                        Key: key++,
+                        Id: collection.id,
+                        imagePath: collection.cover,
+                        Name: collection.title,
+                        songCount: collection.music_set.length
+                    }
+                })
+                console.log('cod' + JSON.stringify(response.data))
+            })//更新当前用户的收藏夹数据(会在nmodal中使用)
         }
     },
     emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection']
@@ -741,7 +784,7 @@ export default {
 
 /* 设置动画样式 */
 :deep(.n-data-table-td) {
-    animation: fadeInUp ;
+    animation: fadeInUp;
     animation-duration: 1.5s;
 }
 
@@ -781,5 +824,13 @@ export default {
 
 :deep(.n-data-table-td .n-checkbox-box__border) {
     --n-border-checked: var(--my-td-border-checked);
-    --n-border: none
-}</style>
+    --n-border: none;
+}
+
+
+
+/* 修复多选框深度 */
+:deep(.n-data-table .n-data-table-th.n-data-table-th--selection) {
+    z-index: 0;
+}
+</style>
