@@ -133,6 +133,32 @@
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
+                                    <div class="body-item-title">歌名</div>
+                                    <n-input type="text" size="small" placeholder="你需要填写歌曲名称" :value="songName" @input="songName = $event" 
+                                    :style="{
+                                        '--n-color': 'white',
+                                        '--n-color-focus': 'white',
+                                        '--n-text-color': 'black',
+                                        '--n-caret-color': 'black',
+                                        '--n-border-hover': 'transparent',
+                                        '--n-border-focus': 'transparent',
+                                        '--n-placeholder-color': 'grey',
+                                        '--n-border-radius': '8px',
+                                        '--n-height': '40px',
+                                        '--n-font-size': '16px',
+                                        '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                        '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                        '--n-icon-size': '25px',
+                                    }"
+                                    />
+                                </n-gi>
+                                <n-gi :span="3"></n-gi>
+                            </n-grid>
+                        </div>
+                        <div class="body-item">
+                            <n-grid>
+                                <n-gi :span="3"></n-gi>
+                                <n-gi :span="18">
                                     <div class="body-item-title">歌手</div>
                                     <n-input type="text" size="small" placeholder="佚名" :value="songAuthor" @input="songAuthor = $event" 
                                     :style="{
@@ -160,7 +186,9 @@
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div class="body-item-title">分类标签</div>
-                                    <n-select v-model:value="value" multiple :options="options" placeholder="你需要为歌曲添加1～4个分类标签" max-tag-count="responsive" />
+                                    <n-select v-model:value="value" multiple :options="options" placeholder="你需要为歌曲添加1～4个分类标签" max-tag-count="responsive" 
+                                    @update:value="handleUpdateValue"
+                                    />
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
                             </n-grid>
@@ -434,6 +462,11 @@ export default {
                 }
             })
             this.tagString = this.tagList.join(' ');
+        },
+        handleUpdateValue(value, option) {
+            if (value.length > 4) {
+                value.splice(0, 1)
+            }
         },
         // renderTagChoices() {
         //     setTimeout(() => {
