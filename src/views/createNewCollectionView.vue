@@ -44,13 +44,20 @@ export default defineComponent({
                 form.append('profile', this.listIntro)
                 form.append('cover', this.songPageFile)
                 form.append('tags', this.tags.join(','))
+                alert(this.songPageFile)
                 this.$http.post('/api/playlist/create/', form).then(() => {
                     this.$emit('flushCollections')//通知上层组件更新收藏夹
                     this.success('新建收藏夹成功');
-                    this.closeWindow();
+                    this.closeWindow()
+                    //清空信息
+                    this.listName = ''
+                    this.listIntro = ''
+                    this.songPageFile = null
+                    this.songPageUrl = ''
+                    this.tags = []
                 })
             }
-            
+
         },
         playAll() {
             //todo
