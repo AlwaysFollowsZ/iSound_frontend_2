@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="shared-song-sheet-title">
-           全部分享歌单
+            全部分享歌单
         </div>
-        <div class="song-sheet-container">
+        <!-- <div class="song-sheet-container">
             <n-grid :x-gap="12" :y-gap="6" :col="2">
                 <n-gi :span="12" v-for="(song, idx) in songSheets" :key="idx">
                     <div class="single-card-container">
@@ -18,15 +18,20 @@
                     </div>
                 </n-gi>
             </n-grid>
-        </div>
+        </div> -->
+        <image-table :position="'Songlist'" :entrySize="[200, 200]"></image-table>
     </div>
 </template>
 <script>
 import 'animate.css';
+import ImageTable from '/src/components/tables/ImageTable/ImageTable.vue';
 export default {
+    components: {
+        ImageTable
+    },
     data() {
         return {
-            
+
             songSheets: [
                 {
                     imgSrc: "/src/assets/song2.jpg",

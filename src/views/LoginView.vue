@@ -1,86 +1,130 @@
 <template>
   <!-- <n-button @click="showLogin = true">登录</n-button> -->
-  <n-modal :show="showLogin">
-    <div>
-      <n-card
-        :style="{ width: `600px`, '--n-border-radius': `20px` }"
-        :bordered="false"
-        role="dialog"
-        aria-modal="true"
-      >
-        <template #header>
-          <div>
-            <n-grid :x-gap="12">
-              <n-gi :span="2"></n-gi>
-              <n-gi :span="20">
-                <h3 class="login-card-title">欢迎回到 iSound，请先完成登录！</h3>
-              </n-gi>
-              <n-gi :span="2">
-                <div style="padding-top: 30%" @click="closeLWindow">
-                  <close-outline />
-                </div>
-              </n-gi>
-            </n-grid>
-          </div>
-        </template>
-        <n-grid x-gap="12" :cols="2">
-          <n-gi>
-            <img
-              class="login-image"
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            />
-          </n-gi>
-          <n-gi>
-            <span>用户名</span>
-            <n-input
-              type="text"
-              placeholder="请输入用户名"
-              :value="username"
-              @input="username = $event"
-              clearable
-            />
-            <span>密码</span>
-            <n-input
-              type="password"
-              show-password-on="mousedown"
-              placeholder="请输入密码"
-              :minlength="8"
-              :value="password"
-              @input="password = $event"
-            />
-            <n-grid class="login-button-top" x-gap="6" :cols="2">
-              <n-gi>
-                <n-button strong secondary type="success" @click="login"> 登录 </n-button>
-              </n-gi>
-              <n-gi>
-                <n-button strong secondary type="Warning" @click="switchToRegister">
-                  注册
-                </n-button>
-                <span @click="switch2ResetPasswd">忘记密码</span>
-              </n-gi>
-            </n-grid>
-          </n-gi>
-        </n-grid>
-        <div class="login-notice-text">
-          注册账号并登录表示用户承诺遵守网站公约，同时网站承诺将保护用户隐私信息。
+  <n-modal :show="showLogin" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false">
+    <div class="outer-container">
+      <div class="title-container">
+        <div style="margin-bottom: 30px">
+          <n-grid>
+            <n-gi :span="2"></n-gi>
+            <n-gi :span="20">
+              <div class="login-card-title" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">开启独一无二的音乐之旅</div>
+              <div class="login-card-title" :style="{'color': this.colorMode === 'white' ? 'black' : 'white', 'font-size': '25px'}">登录你的 iSound 账号</div>
+            </n-gi>
+            <n-gi :span="2">
+              <div class="close-icon" style="padding-top: 5px" @click="closeLWindow" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                <n-icon size="40"><close-outline/></n-icon>
+              </div>
+            </n-gi>
+          </n-grid>
         </div>
-      </n-card>
+      </div>
+      <div class="body-container">
+        <div class="body-item">
+          <n-grid>
+            <n-gi :span="3"></n-gi>
+            <n-gi :span="18">
+              <n-input type="text" placeholder="用户名" :value="username" @input="username = $event" 
+                :style="{
+                  '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                  '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
+                  '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                  '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                  '--n-border-hover': 'transparent',
+                  '--n-border-focus': 'transparent',
+                  '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                  '--n-border-radius': '5px',
+                  '--n-height': '55px',
+                  '--n-font-size': '18px',
+                  '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                  '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                }"
+                @keyup.enter="this.passwdInputShouldShow = true"
+              >
+                <template #suffix>
+                  <n-icon 
+                    class="username-forward-icon" 
+                    size="30" 
+                    @click="this.passwdInputShouldShow = true"
+                    :class="{'animate__animated animate__zoomOut': this.passwdInputShouldShow}"
+                  ><ArrowForwardCircleOutline/></n-icon>
+                </template>
+              </n-input>
+            </n-gi>
+            <n-gi :span="3"></n-gi>
+          </n-grid>
+        </div>
+        <div class="body-item animate__animated animate__fadeInDown" v-if="passwdInputShouldShow" >
+          <n-grid>
+            <n-gi :span="3"></n-gi>
+            <n-gi :span="18">
+              <n-input type="password"  placeholder="密码" :minlength="8" :value="password" @input="password = $event"
+                :style="{
+                  '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                  '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
+                  '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                  '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                  '--n-border-hover': 'transparent',
+                  '--n-border-focus': 'transparent',
+                  '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                  '--n-border-radius': '8px',
+                  '--n-height': '55px',
+                  '--n-font-size': '18px',
+                  '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                  '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                  '--n-icon-size': '25px'
+                }"
+                @keyup.enter="login"
+              >
+                <template #suffix>
+                  <n-icon 
+                    class="username-forward-icon animate__animated animate__zoomIn" 
+                    size="30" 
+                    @click="login"
+                    style="animation-delay: 1s"
+                    :color="(this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'grey' : 'rgb(' + this.accentColor + ')'"
+                  ><ArrowForwardCircleOutline/></n-icon>
+                </template>
+              </n-input>
+            </n-gi>
+            <n-gi :span="3"></n-gi>
+          </n-grid>
+        </div><div style="height: 75px" v-else></div>
+        <div class="login-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+          登录 iSound 账号，体验评论、上传、收藏、分享新功能。
+        </div>
+        <div class="login-sub-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+          未注册账号？<span class="login-link" @click="switchToRegister">前往创建你的 iSound 账号
+          <div style="display: inline-block; vertical-align: top"><n-icon size="20px"><OpenOutline/></n-icon></div></span>
+        </div>
+        <div class="login-sub-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+          忘记密码？<span class="login-link" @click="switch2ResetPasswd">前往重置密码
+          <div style="display: inline-block; vertical-align: top"><n-icon size="20px"><OpenOutline/></n-icon></div></span>
+        </div>
+      </div>
     </div>
   </n-modal>
 </template>
 
 <script>
-import { CloseOutline } from "@vicons/ionicons5";
+import { CloseOutline, ArrowForwardCircleOutline, OpenOutline } from "@vicons/ionicons5"
+import { mapState } from 'vuex'
+import 'animate.css'
 export default {
   name: "LoginView",
   data() {
     return {
       username: "",
       password: "",
+      passwdInputShouldShow: false,
     };
+  },
+  computed: {
+    ...mapState(['accentColor', 'colorMode']),
   },
   components: {
     CloseOutline,
+    ArrowForwardCircleOutline,
+    OpenOutline,
   },
   props: {
     showLogin: Boolean,
@@ -119,10 +163,38 @@ export default {
 </script>
 
 <style scoped>
+.close-icon:hover {
+  cursor: pointer;
+}
+.outer-container {
+  max-width: 640px; 
+  height: 470px;
+  border-radius: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.username-forward-icon:hover {
+  cursor: pointer;
+}
+.title-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 600px;
+}
+.body-item {
+  max-height: 75px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .login-card-title {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 30px;
   font-weight: bold;
 }
 .login-image {
@@ -131,14 +203,25 @@ export default {
 .n-card__content {
   border-radius: 20px;
 }
+.login-prompt {
+  font-size: 16px;
+  text-align: center;
+  padding-top: 20px;
+}
 
-.login-notice-text {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
+.login-sub-prompt {
+  font-size: 14px;
+  text-align: center;
+  padding-top: 20px;
 }
 .login-button-top {
   margin-top: 20px;
+}
+.login-link {
+  color: #0066cc;
+}
+.login-link:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>

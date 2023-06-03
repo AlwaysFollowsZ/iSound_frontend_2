@@ -101,7 +101,7 @@ export default {
             let songIDs = [], listIDs = []
             this.searchValue = keyword
             this.$http.get(`/api/search/`, {
-                params: { 'title': keyword }
+                params: { 'keyword': keyword }
             }).then((response) => {
                 this.songs = response.data.music_set.map(song => ({
                     key: i++,

@@ -49,7 +49,7 @@
                                 '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
                                 '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
                             }">
-                                <template #icon><n-icon size="25"><create-outline /></n-icon></template>修改个人信息
+                                <template #icon><n-icon size="25"><create-outline /></n-icon></template>编辑个人信息
                             </n-button>
                         </div>
                     </div>
@@ -69,8 +69,7 @@
                                 '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
                             }">
                                 <n-tab-pane name="我的收藏夹" tab="我的收藏夹">
-                                    <!-- <my-song-sheet-view /> -->
-                                    <image-table :table-size="[1000, 500]"> </image-table>
+                                    <my-song-sheet-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="分享歌单" tab="分享歌单">
                                     <shared-song-sheet-view />
@@ -101,9 +100,11 @@
             <n-gi :span="2"></n-gi>
         </n-grid>
     </div>
+    
     <modify-user-info-view :showModifyUserInfo="showModifyUserInfo"
-        @closeModifyWindow="showModifyUserInfo = false"></modify-user-info-view>
-    <ModifyUserInfo @update-user-info="updateUserInfo" />
+        @closeModifyWindow="showModifyUserInfo = false; updateInfo()"></modify-user-info-view>
+    
+    <!-- <ModifyUserInfo @update-user-info="updateUserInfo" /> -->
 </template>
   
 <script>
@@ -120,7 +121,6 @@ import { NTabs, NTabPane } from "naive-ui";
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
 import { NewspaperOutline, FlowerOutline, FlashOutline } from '@vicons/ionicons5'
 import { mapState } from 'vuex';
-import ImageTable from '../components/tables/ImageTable/ImageTable.vue';
 export default {
     computed: {
         ...mapState(['colorMode', 'accentColor']),
@@ -141,7 +141,6 @@ export default {
         NewspaperOutline,
         FlowerOutline,
         FlashOutline,
-        ImageTable,
     },
     data() {
         return {
@@ -157,26 +156,41 @@ export default {
         }
     },
     created() {
-        this.$http.get('/api/accounts/detail/0/').then(response => {
-            this.username = response.data.username;
-            this.email = response.data.email;
-            this.recordNum = response.data.record_num;
-            this.bio = response.data.profile;
-            this.avatarFile = response.data.avatar;
-            this.avatarUrl = this.avatarFile;
-            this.fansNum = response.data.fans;
-            this.followingNum = response.data.following;
-        }).catch(error => {
-            console.error(error);
-        });
+        this.updateInfo()
+        // this.$http.get('/api/accounts/detail/0/').then(response => {
+        //     this.username = response.data.username;
+        //     this.email = response.data.email;
+        //     this.recordNum = response.data.record_num;
+        //     this.bio = response.data.profile;
+        //     this.avatarFile = response.data.avatar;
+        //     this.avatarUrl = this.avatarFile;
+        //     this.fansNum = response.data.fans;
+        //     this.followingNum = response.data.following;
+        // }).catch(error => {
+        //     console.error(error);
+        // });
     },
     methods: {
-        updateUserInfo(userInfo) {
-            this.avatarUrl = userInfo.avatarUrl;
-            this.username = userInfo.username;
-            this.email = userInfo.email;
-            this.bio = userInfo.bio;
+        updateInfo() {
+            this.$http.get('/api/accounts/detail/0/').then(response => {
+                this.username = response.data.username;
+                this.email = response.data.email;
+                this.recordNum = response.data.record_num;
+                this.bio = response.data.profile;
+                this.avatarFile = response.data.avatar;
+                this.avatarUrl = this.avatarFile;
+                this.fansNum = response.data.fans;
+                this.followingNum = response.data.following;
+            }).catch(error => {
+                console.error(error);
+            });
         },
+        // updateUserInfo(userInfo) {
+        //     this.avatarUrl = userInfo.avatarUrl;
+        //     this.username = userInfo.username;
+        //     this.email = userInfo.email;
+        //     this.bio = userInfo.bio;
+        // },
     },
 };
 </script>
