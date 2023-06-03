@@ -195,7 +195,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 </div>
             </div>
             <div class="title_box" :style="{
-                'height': `${fontSize * 3}px`,
+                'height': Type==='Song'?`${fontSize * 3}px`:`${fontSize*1.5}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
                     `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',

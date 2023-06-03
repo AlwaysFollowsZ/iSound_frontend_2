@@ -152,14 +152,13 @@ export default {
             }
         }
     },
-    emits: ['clickUpload'],
+    emits: ['clickUpload','flushCollections'],
 }
 </script>
 <template>
-    
     <!-- 更新所有收藏夹信息是给上一级用的 -->
     <create-new-collection-view v-if="['Collection','CollectionView'].includes(position)" :show="showModal"
-        @updateCollections="$emit('updateCollections')" @closeCreateWindow="showModal = false"></create-new-collection-view>
+        @flushCollections="$emit('flushCollections')" @closeCreateWindow="showModal = false"></create-new-collection-view>
     <div class="image_table" :style="{
         'background-color': getRGBString(BackgroundColorString, 0.2),
         'border-radius': '50px',
@@ -205,12 +204,8 @@ export default {
                         </n-icon>
                     </n-button>
                 </template>
-                {{ position === 'Collection'||position==='Collectionview' ? '新建收藏夹' : '上传新的歌曲' }}
+                {{( position === 'Collection'||position==='CollectionView') ? '新建收藏夹' : '上传新的歌曲' }}
             </n-popover>
-
-
-
-
         </div>
         <!-- 这个组件不会用在首页，因此都采用有pagination的形式 -->
         <div class="image_table_list" v-if="rows.length > 0">
