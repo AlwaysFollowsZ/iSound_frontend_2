@@ -1,49 +1,20 @@
 <script>
 import listTableBody from './ListTableBody.vue'
-import {Rows}from '../ImageTable/ImageRowData.js'
+import { Rows } from '../ImageTable/ImageRowData.js'
 import 'animate.css'
 export default {
-    //mounted() {
-        //改为从外部获取数据了
-        // let key = 0;
-        // if (this.position === 'CollectionView') {
-        //     this.$http.get(`/api/playlist/detail/${this.currentListId}`).then((response) => {
-        //         console.log('success', response)
-        //         this.songData = response.data.music_set.map((music) => ({
-        //             key: key++,//在当前列表的序号
-        //             id: music.id,//歌曲总表的序号
-        //             name: music.name,
-        //             singer: music.artist,
-        //             length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
-        //             isliked: music.is_like,
-        //             isCollected: music.is_favorite,
-        //             imgSrc: music.cover,
-        //             showCollection: false
-        //         }));
-        //         this.isReady = true;
-        //     });
-        // }
-        // else if (this.position === 'PublicView') {//公开页面,假设是要获取所有歌曲
-        //     console.log('songData', this.songData);
-        //     this.$http.get(`/api/index/`).then((response) => {
-        //         this.songData = response.data.music_set.map((music) => ({
-        //             key: key++,
-        //             id: music.id,
-        //             name: music.name,
-        //             singer: music.artist,
-        //             length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
-        //             isliked: music.is_like,
-        //             isCollected: music.is_favorite,
-        //             imgSrc: music.cover,
-        //             showCollection: false
-        //         }));
-        //         this.isReady = true;
-        //     });
-        // }
-        // else {//用户的播放记录
 
-        // }
-    //},
+    //         this.songData = response.data.music_set.map((music) => ({
+    //             key: key++,//在当前列表的序号
+    //             id: music.id,//歌曲总表的序号
+    //             name: music.name,
+    //             singer: music.artist,
+    //             length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
+    //             isliked: music.is_like,
+    //             isCollected: music.is_favorite,
+    //             imgSrc: music.cover,
+    //             showCollection: false
+    //}
     data() {
     },
     methods: {
@@ -55,14 +26,16 @@ export default {
         },
         //喜欢单首歌曲
         handleLike(key) {
-            this.songData[key].isLikeChanged = true
+            this.songData[key].isLikeChanged = !this.songData[key].isLikeChanged
             //todo:提交到服务端
+            this.$http.post(`/api/like/${this.songData[key].id}/`);
             this.songData[key].isLiked = !this.songData[key].isLiked
             this.cleanChangeReaction()
         },
         //收藏全部歌曲
         handleCollectAll(keys, listId) {//将选中的歌曲添加到listId中
             for (let i = 0; i < keys.length; i++) {
+                //todo:提交到服务器端
                 this.handleCollect(keys[i], listId)
             }
         },
@@ -110,32 +83,19 @@ export default {
     props: {
         songData: {
             type: Array,
-            default: Rows.map((row) => {
-                return {
-                    name: row.Name,
-                    imgSrc:row.imagePath
-                }
-            })
+            default: []
         },
+        //公开页面、收藏夹页面、歌单页面
         position: {
             type: String,
             require: true,
             default: 'CollectionView',
             validator: (value) => {
-                return ['CollectionView', 'PublicView', 'RecordView'].includes(value)
+                return ['CollectionView', 'PublicView'].includes(value)
             }
         },
 
-        // 暂时不用，直接传data进来
-        // 若在CollectionView,请传入所在的收藏夹ID
-        // currentListId: {
-        //     type: Number,
-        // },
-        // 若在PublicView,请传入本列表需要显示的参数，数组形式
-        // publicSpace: {
-        //     type: Array
-        // },
-        
+
         viewMode: {
             type: String,
             default: 'user',
@@ -148,14 +108,14 @@ export default {
 }
 </script>
 <template>
-        <list-table-body :currentListId="currentListId" @likeAll="handleLikeAll" @like="handleLike"
-            @collectAll="handleCollectAll" @collect="handleCollect"  :viewMode="viewMode"
-            :position="position" @discollectOnPublic="handleDiscollectOnPublic"
-            @discollectOnCollection="handleDiscollectOnCollection" :songData="songData" @recollect="handleRecollect" :style="{
-                'animation':  'zoomIn' ,
-                'animation-duration': '1s',
-            }">
-            </list-table-body>
+    <list-table-body v-if="songData.length!==0" :currentListId="currentListId" @likeAll="handleLikeAll" @like="handleLike"
+        @collectAll="handleCollectAll" @collect="handleCollect" :viewMode="viewMode" :position="position"
+        @discollectOnPublic="handleDiscollectOnPublic" @discollectOnCollection="handleDiscollectOnCollection"
+        :songData="songData" @recollect="handleRecollect" :style="{
+            'animation': 'zoomIn',
+            'animation-duration': '1s',
+        }">
+    </list-table-body>
 </template>
 <style scoped>
 list-table-body {
