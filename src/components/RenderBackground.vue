@@ -749,6 +749,7 @@ export default {
             let Hexagrams = []//管理六芒星
             let Notes = []
 
+            //添加组件
             for (let i = 0; i < 2; i++) {
                 Tetrahedrons.push(new animateTetrahedron())
                 Cubes.push(new animateCube())
@@ -758,7 +759,7 @@ export default {
                 Notes.push(new animateNote(1))
                 Notes.push(new animateNote(0))
             }
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 200; i++) {
                 Stars.push(new animateStar())
             }
             // 渲染循环

@@ -152,14 +152,10 @@ export default {
             @collectAll="handleCollectAll" @collect="handleCollect"  :viewMode="viewMode"
             :position="position" @discollectOnPublic="handleDiscollectOnPublic"
             @discollectOnCollection="handleDiscollectOnCollection" :songData="songData" @recollect="handleRecollect" :style="{
-                'animation':  'fadeInUp' ,
-                'animation-duration': '2s',
+                'animation':  'zoomIn' ,
+                'animation-duration': '1s',
             }">
             </list-table-body>
-
-    <!-- <template v-else>
-        <div class="unready_box"></div>
-    </template> -->
 </template>
 <style scoped>
 list-table-body {

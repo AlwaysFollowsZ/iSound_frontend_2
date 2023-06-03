@@ -191,7 +191,7 @@ onMounted(() => {
 .aplayer .aplayer-list ol li:hover {
   background: v-bind("hoverColor") !important;
 }
-.aplayer .aplayer-list ol li .aplayer-list-author {
+.aplayer .aplayer-list ol li .aplayer-list-author,.aplayer-author {
   color: v-bind("secondaryFontColor") !important;
 }
 .aplayer .aplayer-list ol li.aplayer-list-light {
@@ -230,6 +230,7 @@ onMounted(() => {
   opacity: 0 !important;
   color: white !important;
   z-index: 100 !important;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.7s;
 }
 
 .aplayer-launch:hover {
@@ -243,6 +244,7 @@ onMounted(() => {
 }
 
 .aplayer-title {
+  color: v-bind("mainFontColor") !important;
   position: fixed !important;
   top: 15px !important;
   left: 10px !important;
@@ -301,7 +303,15 @@ onMounted(() => {
   left: calc(50% - 112.5px) !important;
 }
 
+.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path{
+  fill:v-bind("mainFontColor") !important;
+}
+.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path:hover{
+  fill:v-bind("secondaryFontColor") !important;
+}
+
 .aplayer-icon-back {
+  color: v-bind("mainFontColor") !important;
   position: fixed !important;
   left: calc(50% - 84px) !important;
 }

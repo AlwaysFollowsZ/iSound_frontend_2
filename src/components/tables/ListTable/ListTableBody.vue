@@ -746,7 +746,7 @@ export default {
 }
 
 :deep(.n-data-table-th) {
-    animation: fadeInDown;
+    animation: zoomIn;
     animation-duration: 1s;
 }
 

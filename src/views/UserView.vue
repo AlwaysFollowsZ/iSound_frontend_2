@@ -69,8 +69,7 @@
                                 '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
                             }">
                                 <n-tab-pane name="我的收藏夹" tab="我的收藏夹">
-                                    <!-- <my-song-sheet-view /> -->
-                                    <image-table :table-size="[1000, 500]"> </image-table>
+                                    <my-song-sheet-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="分享歌单" tab="分享歌单">
                                     <shared-song-sheet-view />
@@ -122,7 +121,6 @@ import { NTabs, NTabPane } from "naive-ui";
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
 import { NewspaperOutline, FlowerOutline, FlashOutline } from '@vicons/ionicons5'
 import { mapState } from 'vuex';
-import ImageTable from '../components/tables/ImageTable/ImageTable.vue';
 export default {
     computed: {
         ...mapState(['colorMode', 'accentColor']),
@@ -143,7 +141,6 @@ export default {
         NewspaperOutline,
         FlowerOutline,
         FlashOutline,
-        ImageTable,
     },
     data() {
         return {
