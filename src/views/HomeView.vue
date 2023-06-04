@@ -213,7 +213,6 @@ export default {
       this.scrollPromptShouldDisplay = true
     }, 800)
     this.$http.get(`/api/index/`).then((response) => {
-      console.log('len:' + response.data.music_set.length)
       this.all_songs = response.data.music_set.map(song => ({
         id: song.id,
         imgSrc: song.cover,
