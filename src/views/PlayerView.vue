@@ -105,15 +105,17 @@ export default defineComponent({
       },
       dayjs,
       value: ref(""),
-      editCommentId: ref(0),
-      edit2ndCommentId: ref(0),
+      editCommentId: ref(0), // 一级评论的评论id
+      editNewCommentId: ref(1), // 编辑新评论
+      edit2ndCommentId: ref(0), // 二级评论的评论id
+      edit2ndCommentParentId: ref(0), // 二级评论的父评论，即对应的一级评论
       islike: ref(false),
       iscollect: ref(false),
       iscomplain: ref(false),
       lyricsRef: ref(),
-      edit1stComment: ref(false),
-      reply2ndComment: ref(false),
-      edit2ndComment: ref(false),
+      edit1stComment: ref(false), // 修改一级评论
+      reply2ndComment: ref(false), // 回复一级评论，即编辑二级评论
+      edit2ndComment: ref(false), // 修改二级评论
     };
   },
   data() {
@@ -168,15 +170,16 @@ export default defineComponent({
       }
       let formData = new FormData();
       formData.append("content", this.value);
-      if (this.editCommentId == 0) {
+      if (this.editNewCommentId == 1) {
         this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
           this.success("评论成功");
         });
-      } else {
+      } else if (this.editNewCommentId == 0 && this.editCommentId != 0){
         this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
           this.success("编辑成功");
         });
         this.editCommentId = 0;
+        this.editNewCommentId = 1;
       }
       this.value == "";
     },
@@ -193,7 +196,7 @@ export default defineComponent({
       let formData = new FormData();
       formData.append("content", this.value);
       if (this.edit2ndCommentId == 0) {
-        this.$http.post(`/api/comment/on/comment/${this.editCommentId}/`, formData).then(() => {
+        this.$http.post(`/api/comment/on/comment/${this.edit2ndCommentParentId}/`, formData).then(() => {
           this.success("回复评论成功");
         });
       } else {
@@ -201,12 +204,13 @@ export default defineComponent({
           this.success("编辑成功");
         });
         this.edit2ndCommentId = 0;
+        this.edit2ndCommentParentId = 0;
       }
       this.value == "";
     },
     // 编辑回复评论
     editReplyComment(comment) {
-      this.editCommentId = comment.id;
+      this.edit2ndCommentParentId = comment.id;
       if (!this.reply2ndComment) {
         this.reply2ndComment = true;
       } else {
@@ -227,10 +231,11 @@ export default defineComponent({
     },
     // 修改我的评论
     editMyComment(comment) {
-      console.log(this.$cookies.get("userid"));
-      console.log(comment.author_id);
+      // console.log(this.$cookies.get("userid"));
+      // console.log(comment.author_id);
       // alert("yes!");
       this.value = comment.content;
+      this.editNewCommentId = 0;
       this.editCommentId = comment.id;
       if (!this.edit1stComment) {
         this.edit1stComment = true;
@@ -634,7 +639,25 @@ export default defineComponent({
               </a-tooltip>
             </template>
             <div
-              v-if="(this.reply2ndComment && this.editCommentId == comment.id) || (this.edit1stComment && this.editCommentId == comment.id)">
+              v-if="this.edit1stComment && this.editCommentId == comment.id">
+              <div>
+                <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                  v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
+                    minRows: 6,
+                    maxRows: 6,
+                  }" />
+                <div class="my-comment-button">
+                  <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
+                    发送
+                  </n-button>
+                  <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                    清空
+                  </n-button>
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="this.reply2ndComment && this.edit2ndCommentParentId == comment.id">
               <div>
                 <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
                   v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
@@ -718,7 +741,7 @@ export default defineComponent({
                         <n-button class="send-button" strong secondary type="tertiary" @click="send2ndComment">
                           发送
                         </n-button>
-                        <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                        <n-button class="clean-button-2nd" strong secondary type="tertiary" @click="cleanComment">
                           清空
                         </n-button>
                       </div>
@@ -859,6 +882,11 @@ export default defineComponent({
 .clean-button {
   position: absolute;
   margin-left: 920px;
+}
+
+.clean-button-2nd {
+  position: absolute;
+  margin-left: 850px;
 }
 
 .send-button {
