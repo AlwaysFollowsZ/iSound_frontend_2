@@ -96,7 +96,7 @@ export default {
         //数据来源
         rows: {
             type: JSON.type,
-            // default: Rows
+            default: Rows
         },
         //处理点击entry事件的方法
         handleClickEntry: {

@@ -23,7 +23,7 @@
                         <n-popover trigger="hover">
                             <template #trigger>
                                 <div class="upload-song-page">
-                                    <img :src="songPageUrl"  />
+                                    <img :src="songPageUrl" @click="uploadFile" />
                                     <input type="file" ref="fileInput" style="display: none"
                                     accept="image/*"    
                                     @change="handleSongPageChange" />
@@ -422,7 +422,7 @@ export default {
         },
         handleSongPageChange(e) {
             this.songPageFile = e.target.files[0];
-            this.SongPageUrl = URL.createObjectURL(this.songPageFile);
+            this.songPageUrl = URL.createObjectURL(this.songPageFile);
         },
         handleSongSrcFileChange(e) {
             this.songSrcFile = e.target.files[0];
@@ -583,5 +583,8 @@ export default {
 }
 .login-button-top {
     margin-top: 15px;
+}
+.upload-song-page:hover {
+    cursor: pointer;
 }
 </style>
