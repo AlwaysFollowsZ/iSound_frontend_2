@@ -270,10 +270,10 @@ export default defineComponent({
   <div
     class="player-page"
     id="top"
-    :style="{
-      'background-color': getRGBString(backgroundColorString, 0.7),
-    }"
   >
+    <img class="background-img" :src="music.cover" />
+    <div class="background-imgfloat"></div>
+    <div class="content">
     <n-grid>
       <n-gi :span="4">
         <div>
@@ -419,7 +419,7 @@ export default defineComponent({
       </n-gi>
       <n-gi :span="3"></n-gi>
     </n-grid>
-  </div>
+  </div></div>
   <div class="edit-comment">
     <n-grid>
       <n-gi :span="4"></n-gi>
@@ -594,6 +594,31 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.content {
+  position: relative;
+  z-index: 2;
+}
+.background-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(40px) saturate(1);  /* 背景图片模糊效果 */
+  opacity: 0.5;
+  z-index: -1;
+}
+.background-imgfloat {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);  /* 黑色遮罩，透明度为0.5 */
+  z-index: 1;
+}
 .player-page {
   height: 100vh;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
