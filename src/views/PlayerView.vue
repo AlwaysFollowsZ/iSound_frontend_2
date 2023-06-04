@@ -23,7 +23,6 @@ import {
   globalThemeColor,
   getBackgroundColorString,
   getRGBString,
-  getFontColorString,
   changeThemeColorByImage,
 } from "/src/colorMode.js";
 export default defineComponent({
@@ -125,8 +124,6 @@ export default defineComponent({
       getRGBString,
       backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
       showModifyComplainView: false,
-      getFontColorString,
-      globalThemeColor,
     };
   },
   methods: {
@@ -270,13 +267,13 @@ export default defineComponent({
 </script>
 
 <template>
-  
   <div
     class="player-page"
+    id="top"
+    :style="{
+      'background-color': getRGBString(backgroundColorString, 0.7),
+    }"
   >
-    <img class="background-img" :src="music.cover" />
-    <div class="background-imgfloat"></div>
-    <div class="content">
     <n-grid>
       <n-gi :span="4">
         <div>
@@ -388,14 +385,14 @@ export default defineComponent({
                     class="lyrics-wrap"
                     :class="{ current: lyricsIndex === i }"
                   >
-                    <n-grid class="lyrics" >
-                      <n-gi :span="2" class="time" >
+                    <n-grid class="lyrics">
+                      <n-gi :span="2" class="time">
                         {{ obj.timeStr.slice(0, 5) + "&nbsp;" }}
                       </n-gi>
-                      <n-gi :span="20" class="content" >
+                      <n-gi :span="20" class="content">
                         {{ obj.lyrics }}
                       </n-gi>
-                      <n-gi :span="2" class="jumpLink" :style="{'color': getRGBString(getFontColorString(globalThemeColor), 1)}">
+                      <n-gi :span="2" class="jumpLink">
                         <Play @click="jumpToLyrics(obj, i)" width="14px" />
                       </n-gi>
                     </n-grid>
@@ -422,7 +419,6 @@ export default defineComponent({
       </n-gi>
       <n-gi :span="3"></n-gi>
     </n-grid>
-  </div>
   </div>
   <div class="edit-comment">
     <n-grid>
@@ -603,31 +599,7 @@ export default defineComponent({
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
   font-family: Arial, Helvetica, sans-serif;
 }
-.content {
-  position: relative;
-  z-index: 2;
-}
-.background-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(40px) saturate(1);  /* 背景图片模糊效果 */
-  opacity: 0.5;
-  z-index: -1;
-}
-.background-imgfloat {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);  /* 黑色遮罩，透明度为0.5 */
-  z-index: 1;
-}
+
 .back-button {
   width: 40px;
   height: 40px;
