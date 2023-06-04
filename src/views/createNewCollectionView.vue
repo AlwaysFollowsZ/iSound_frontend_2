@@ -1,6 +1,7 @@
 <script>
 import { NButton, NIcon } from 'naive-ui';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
+import { backgroundColor, getRGBString, globalThemeColor, getFontColorString } from '/src/colorMode';
 import { ChevronBack, MusicalNotesOutline, PlayOutline, OpenOutline, CreateOutline, CloseOutline, ImageOutline, WarningOutline } from '@vicons/ionicons5';
 import { message } from 'ant-design-vue';
 import ModifyComplainView from '../views/ModifyComplainView.vue';
@@ -25,6 +26,13 @@ export default defineComponent({
             this.$emit('closeCreateWindow')
             this.showShareListModify = false;
         },
+        uploadFile() {
+            this.$refs.fileInput.click()
+        },
+        handleSongPageChange(e) {
+            this.songPageFile = e.target.files[0];
+            this.songPageUrl = URL.createObjectURL(this.songPageFile);
+        },
         submitEdit() {
             //todo
             if (this.listName == '') {
@@ -32,34 +40,34 @@ export default defineComponent({
             }
             else {
                 let form = new FormData()
-                console.log(this.previewImageUrl)
-                // from.append('title',)
-                // this.$http.post()
-                // this.emit('flushCollections')
-                this.success('新建收藏夹成功');
-                this.closeWindow();
+                form.append('title', this.listName)
+                form.append('profile', this.listIntro)
+                form.append('cover', this.songPageFile)
+                form.append('tags', this.tags.join(' '))
+                this.$http.post('/api/playlist/create/', form).then(() => {
+                    this.$emit('flushCollections')//通知上层组件更新收藏夹
+                    this.success('新建收藏夹成功');
+                    this.closeWindow()
+                    //清空信息
+                    this.listName = ''
+                    this.listIntro = ''
+                    this.songPageFile = null
+                    this.songPageUrl = ''
+                    this.tags = []
+                })
             }
+
         },
-        playAll() {
-            //todo
-        },
-        complainList() {
-            this.showModifyComplainView = true;
-        }
     },
-    emits: ['closeCreateWindow','flushCollections'],
+    emits: ['closeCreateWindow', 'flushCollections'],
     setup() {
-        const showModalRef = ref(false);
-        const previewImageUrlRef = ref("");
-        function handlePreview(file) {
-            // console.log(url)
-            previewImageUrlRef.value = url;
-            showModalRef.value = true;
-        }
+        const fontColorString = computed(() => {
+            return getRGBString(getFontColorString(globalThemeColor), 0.8)
+        })
         return {
-            handlePreview,
-            showModal: showModalRef,
-            previewImageUrl: previewImageUrlRef,
+            fontColorString,
+            songPageFile: undefined,
+            songPagrUrl: '',
             warning(msg) {
                 message.warning({
                     content: msg,
@@ -85,6 +93,7 @@ export default defineComponent({
     },
     data() {
         return {
+            songPageUrl: "/src/assets/upload-logo.png",
             listName: ref('默认收藏夹'),
             listIntro: ref(''),
             songNum: 0,
@@ -158,14 +167,15 @@ export default defineComponent({
                         <n-gi :span="8">
                             <n-popover trigger="hover">
                                 <template #trigger>
-                                    <div class="upload-list-cover" @click="uploadFile">
-                                        <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
-                                            max="1"  @preview="handlePreview" @change="handlePreview" style="max-width: 200px">
-                                            <n-icon size="100" depth="5">
-                                                <ImageOutline />
-                                            </n-icon>
-                                        </n-upload>
-                                        <n-image :src="previewImageUrl" style="width: 200px" />
+                                    <div class="upload-list-cover"
+                                        :style="{ 'border': `2px ${songPageUrl === '/src/assets/upload-logo.png' ? 'dashed' : 'solid'} ${fontColorString}` }"
+                                        @click="uploadFile">
+                                        <input type="file" ref="fileInput" style="display: none" accept="image/*"
+                                            @change="handleSongPageChange" />
+                                        <n-icon v-if="songPageUrl === '/src/assets/upload-logo.png'" size="100" depth="5">
+                                            <ImageOutline />
+                                        </n-icon>
+                                        <img v-else :src="songPageUrl" style="width: 100%;" />
                                     </div>
                                 </template>
                                 <span>点击此处上传收藏夹封面</span>
@@ -272,7 +282,7 @@ export default defineComponent({
 .close-edit-modify {
     margin-right: 0px;
     margin-top: 0px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .edit-list-title {
@@ -281,6 +291,7 @@ export default defineComponent({
 }
 
 .upload-list-cover {
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -290,11 +301,14 @@ export default defineComponent({
     height: 220px;
     width: 220px;
     border-radius: 5%;
+    overflow: hidden;
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
 }
 
-/* .upload-list-cover:hover {
-    cursor: pointer;
-} */
+.upload-list-cover:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 3px 3px;
+}
 
 .edit-list-main {
     margin: 30px 30px;

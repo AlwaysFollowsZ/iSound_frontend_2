@@ -65,7 +65,7 @@ export const getBackgroundColorString = (themeColorInput) => {
             return []
         }
         const themeColorString = themeColor.join(',')//`${themeColor[0]},${themeColor[1]},${themeColor[2]}`
-        console.log(themeColor)
+        // console.log(themeColor)
 
         return themeColorString
     })

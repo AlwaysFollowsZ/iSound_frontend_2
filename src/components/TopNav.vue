@@ -45,7 +45,8 @@
                   border: '1px solid rgb(224, 224, 230)',
                   '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                   '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                  '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                  '--n-box-shadow-focus':
+                    '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                 }"
                 type="text"
                 v-model:value="searchValue"
@@ -230,17 +231,18 @@ export default {
     ...mapState(["isLoggedIn", "accentColor", "colorMode"]),
   },
   mounted() {
-    this.setLogState(this.$cookies.isKey("userid"))
+    this.setLogState(this.$cookies.isKey("userid"));
   },
   created() {
-    
-    this.$http.get("/api/message/of/0/").then((response) => {
-      if (response.data.unread == 0) {
-        this.showMessage = false;
-      } else {
-        this.showMessage = true;
-      }
-    });
+    if (this.$cookies.isKey("userid")) {
+      this.$http.get("/api/message/of/0/").then((response) => {
+        if (response.data.unread == 0) {
+          this.showMessage = false;
+        } else {
+          this.showMessage = true;
+        }
+      });
+    }
     this.$EventBus.on("setShowMessage", (unread) => {
       if (unread == 0) {
         this.showMessage = false;
@@ -272,7 +274,7 @@ export default {
       multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
       SearchOutline,
       MailOutline,
-      showMessage: ref(true),
+      showMessage: false,
       options: [
         {
           label: "个人主页",
@@ -306,7 +308,9 @@ export default {
           props: {
             onClick: () => {
               this.setLogState(false);
-              this.$cookies.remove("userid")
+              this.$http.post("/api/accounts/logout/");
+              this.$cookies.remove("userid");
+              this.$cookies.remove("is_superuser");
             },
           },
         },
@@ -341,7 +345,6 @@ export default {
       this.setMultiColor(this.multiColorShouldDisplay);
     },
   },
-  
 };
 </script>
 

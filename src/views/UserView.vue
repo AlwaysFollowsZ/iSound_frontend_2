@@ -100,10 +100,10 @@
             <n-gi :span="2"></n-gi>
         </n-grid>
     </div>
-    
+
     <modify-user-info-view :showModifyUserInfo="showModifyUserInfo"
         @closeModifyWindow="showModifyUserInfo = false; updateInfo()"></modify-user-info-view>
-    
+
     <!-- <ModifyUserInfo @update-user-info="updateUserInfo" /> -->
 </template>
   

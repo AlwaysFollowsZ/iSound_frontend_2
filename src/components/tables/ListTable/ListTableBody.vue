@@ -15,7 +15,7 @@ export default {
         formData.append('shared', false)
         this.$http.get('/api/playlist/of/0/', formData).then((response) => {
             let key = 0
-            collectionData = response.data.playlist_set.map((collection) => {
+            this.collectionData = response.data.playlist_set.map((collection) => {
                 return {
                     Key: key++,
                     Id: collection.id,
@@ -24,7 +24,6 @@ export default {
                     songCount: collection.music_set.length
                 }
             })
-            console.log('cod' + JSON.stringify(response.data))
         })//获取当前用户的收藏夹数据(会在nmodal中使用)
         let viewMode = this.viewMode//转换一下
         let headChange = false//模态框标题是否转换
@@ -271,7 +270,7 @@ export default {
                                             'font-size': '12px'
                                         }
                                     },
-                                    [row.isLiked ? `从"我喜欢"移除${row.isLiked}` : `添加到"我喜欢"${row.isLiked}`])
+                                    [row.isLiked ? `从"我喜欢"移除` : `添加到"我喜欢"`])
                             }
                         })
 
@@ -335,6 +334,9 @@ export default {
                     }
                         , h('div', {
                             style: {
+                                'background':getRGBString(BackgroundColorString,0.3),
+                                'position': 'relative',
+                                'top': '-50px',
                                 'text-align': 'center',
                                 'border-radius': '50px'
                             }
@@ -446,6 +448,9 @@ export default {
                         }
                             , h('div', {
                                 style: {
+                                    'background': getRGBString(BackgroundColorString, 0.3),
+                                    'position': 'relative',
+                                    'top':'-50px',
                                     'text-align': 'center',
                                     'border-radius': '50px'
                                 }
@@ -606,12 +611,17 @@ export default {
             }
         },
         updateCollections() {
-            alert('update')
             let formData = new FormData()
             formData.append('shared', false)
             this.$http.get('/api/playlist/of/0/', formData).then((response) => {
                 let key = 0
-                collectionData = response.data.playlist_set.map((collection) => {
+                console.log('update:content='+ response.data.playlist_set)
+                if (response.data.playlist_set.length == 0) {
+                    this.collectionData = []
+                    return
+                }
+
+                this.collectionData = response.data.playlist_set.map((collection) => {
                     return {
                         Key: key++,
                         Id: collection.id,
@@ -624,7 +634,7 @@ export default {
             })//更新当前用户的收藏夹数据(会在nmodal中使用)
         }
     },
-    emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection']
+    emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection','removeSong']
 }
 </script>
 
