@@ -152,7 +152,11 @@
       </n-gi>
       <n-gi :span="1">
         <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options">
-          <n-avatar
+          <n-avatar v-if="isLoggedIn"
+            :src="this.avatarFile"
+            size="large"
+          ></n-avatar>
+          <n-avatar v-else
             src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
             size="large"
           ></n-avatar>
@@ -240,6 +244,11 @@ export default {
         this.showMessage = true;
       }
     });
+    this.$http.get('/api/accounts/detail/0/').then(response => {
+      this.avatarFile = response.data.avatar;
+      }).catch(error => {
+        console.error(error);
+    });
     this.$EventBus.on("setShowMessage", (unread) => {
       if (unread == 0) {
         this.showMessage = false;
@@ -275,6 +284,7 @@ export default {
       SearchOutline,
       MailOutline,
       showMessage: ref(true),
+      avatarFile: null,
       options: [
         {
           label: "个人主页",
