@@ -37,9 +37,15 @@ export default {
             type: Boolean,
             default: false
         },
+        //这是用来排序的
         Key: {
             type: Number,
             required: true
+        },
+        //这是唯一标志,所以其实是要传这个
+        Id: {
+            type: Number,
+            default: 666
         },
         //包括歌单、歌曲和收藏夹
         Type: {
@@ -92,7 +98,7 @@ export default {
             'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `3px solid transparent`
         }" :class="[isHoverOnMask ? 'mask_box-hover' : '',
 isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mouseleave="isHoverOnMask = false"
-            @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Key)">
+            @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Id)">
             <!-- 动态属性为图片路径 -->
             <div class="image" :style="{
                 'background-image': `url(${imagePath})`,
@@ -119,7 +125,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                                 :color="`rgb(${themeColor},0.8)`" :style="{ 'margin': `0 ${imageSizeAvg / 30}px` }">
                                 <n-icon :size="imageSizeAvg / 10">
                                     <share-ios20-regular v-if="Type === 'Collection'"
-                                        @click.stop="$emit('shareCollection', Key)"></share-ios20-regular>
+                                        @click.stop="$emit('shareCollection', Id)"></share-ios20-regular>
                                 </n-icon>
                             </n-icon-wrapper>
                         </template>
@@ -140,11 +146,11 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                                 @mouseleave="isHoverOnButton1 = false">
                                 <n-icon :size="imageSizeAvg / 10">
                                     <share-close-tray20-regular v-if="Type === 'songList'"
-                                        @click.stop="$emit('cancelShare', Key)"></share-close-tray20-regular>
+                                        @click.stop="$emit('cancelShare', Id)"></share-close-tray20-regular>
                                     <delete20-regular v-if="Type === 'Song'"
-                                        @click.stop="$emit('deleteUploadedSong', Key)"></delete20-regular>
+                                        @click.stop="$emit('deleteUploadedSong', Id)"></delete20-regular>
                                     <playlist-remove-outlined v-if="Type === 'Collection'"
-                                        @click.stop="$emit('deleteCollection', Key)"></playlist-remove-outlined>
+                                        @click.stop="$emit('deleteCollection', Id)"></playlist-remove-outlined>
                                 </n-icon>
                             </n-icon-wrapper>
                         </template>
@@ -189,7 +195,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 </div>
             </div>
             <div class="title_box" :style="{
-                'height': `${fontSize * 3}px`,
+                'height': Type==='Song'?`${fontSize * 3}px`:`${fontSize*1.5}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
                     `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',
@@ -219,12 +225,12 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                     </template>
                     <span @mouseenter="isHoverOnTitle = true" @mouseleave="isHoverOnTitle = false">{{ Name }}</span>
                 </n-ellipsis>
-
-                <n-ellipsis :style="{
+                <!-- 歌手名称只会在类型为“歌曲”的时候显示 -->
+                <n-ellipsis v-if="Type==='Song'" :style="{
                     'color': `rgba(${fontColorString},0.5)`,
                     'font-size': `${fontSize / 1.5}px`,
                     'vertical-align': 'top',
-                    'height': `${fontSize}px`,
+                    // 'min-height': `${fontSize}px`,
                     'max-width': `${imageSize[0] * 0.6}px`
                 }" :tooltip="{
     style: {
@@ -237,7 +243,6 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
     },
 }">
                     <template #tooltip>
-
                         歌手 : {{ Singer }}
                     </template>
                     <span @mouseenter="isHoverOnTitle = true" @mouseleave="isHoverOnTitle = false">{{ Singer }}</span>

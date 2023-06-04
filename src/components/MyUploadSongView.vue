@@ -118,7 +118,7 @@ export default {
             // n-select 样式只能这么修改
             // 等待 DOM 加载，然后再获取，否则获取不到
             setTimeout(() => {
-                let selections = document.getElementsByClassName('n-base-selection')
+                let selections = document.getElementsByClassName('n-base-selection n-base-selection--multiple')
                 
                 // let tags = document.getElementsByClassName('n-tag')
                 // console.log(tags.length)

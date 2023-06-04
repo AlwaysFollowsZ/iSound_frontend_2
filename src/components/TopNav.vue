@@ -230,6 +230,9 @@ export default {
   computed: {
     ...mapState(["isLoggedIn", "accentColor", "colorMode"]),
   },
+  mounted() {
+    this.setLogState(this.$cookies.isKey("userid"));
+  },
   created() {
     this.$http.get("/api/message/of/0/").then((response) => {
       if (response.data.unread == 0) {
@@ -303,7 +306,7 @@ export default {
           props: {
             onClick: () => {
               this.setLogState(false);
-              console.log("logout");
+              this.$cookies.remove("userid");
             },
           },
         },
@@ -324,124 +327,6 @@ export default {
         // });
         this.searchValue = "";
         // window.location.reload()
-      }
-    },
-    toLogIn() {
-      this.setLogState(true);
-      console.log("hello");
-    },
-    readMessage() {
-      this.showModifyUserMessage = true;
-    },
-    changeColorMode,
-    handleMultiColorChange() {
-      this.setMultiColor(this.multiColorShouldDisplay);
-    },
-  },
-  name: "TopNav",
-  components: {
-    SearchOutline,
-    LoginView,
-    RegisterView,
-    ResetPasswdView,
-    ChangePasswdView,
-    MailOutline,
-    SunnyOutline,
-    MoonOutline,
-    ModifyUserMessageView,
-  },
-  computed: {
-    ...mapState(["isLoggedIn", "accentColor", "colorMode"]),
-  },
-  created() {
-    this.$http.get("/api/message/of/0/").then((response) => {
-      if (response.data.unread == 0) {
-        this.showMessage = false;
-      } else {
-        this.showMessage = true;
-      }
-    });
-    this.$EventBus.on("setShowMessage", (unread) => {
-      if (unread == 0) {
-        this.showMessage = false;
-      } else {
-        this.showMessage = true;
-      }
-    });
-  },
-  data() {
-    return {
-      accentColorChoices: [
-        "0,122,255", // 蓝色
-        "150,62,150", // 紫色
-        "248,79,158", // 粉色
-        "224,56,61", // 红色
-        "246,130,27", // 橙色
-        "255,200,37", // 黄色
-        "98,186,70", // 绿色
-        "152,152,152", // 灰色
-      ],
-      showModifyUserMessage: false,
-      searchValue: "",
-      showLogin: false,
-      showRegister: false,
-      showResetPasswd: false,
-      showChangePasswd: false,
-      searchIconIsHovered: false,
-      backToHomeIsHovered: false,
-      multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
-      SearchOutline,
-      MailOutline,
-      showMessage: ref(true),
-      options: [
-        {
-          label: "个人主页",
-          props: {
-            onClick: () => {
-              this.$router.push("/home");
-              console.log("user page");
-            },
-          },
-        },
-        {
-          label: "历史记录",
-          props: {
-            onClick: () => {
-              this.$router.push("/history");
-              console.log("history");
-            },
-          },
-        },
-        {
-          label: "修改密码",
-          props: {
-            onClick: () => {
-              this.showChangePasswd = true;
-              console.log("修改密码页面");
-            },
-          },
-        },
-        {
-          label: "登出",
-          props: {
-            onClick: () => {
-              this.setLogState(false);
-              console.log("logout");
-              this.$cookies.remove("userid");
-            },
-          },
-        },
-      ],
-    };
-  },
-  methods: {
-    ...mapMutations(["setLogState", "setAccentColor", "setMultiColor"]),
-    search() {
-      if (this.searchValue.trim().length !== 0) {
-        console.log(`searchValue: ${this.searchValue}`);
-        // jump to search page
-        this.$router.push("/searchresult/" + this.searchValue);
-        this.searchValue = "";
       }
     },
     toLogIn() {
