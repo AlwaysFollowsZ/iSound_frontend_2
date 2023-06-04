@@ -11,6 +11,7 @@ import {
   FitnessOutline,
   WarningOutline,
   ChatbubbleEllipsesOutline,
+  ChatboxEllipsesOutline,
   TrashOutline,
   CreateOutline,
   Fitness,
@@ -33,6 +34,7 @@ export default defineComponent({
     FitnessOutline,
     WarningOutline,
     ChatbubbleEllipsesOutline,
+    ChatboxEllipsesOutline,
     TrashOutline,
     CreateOutline,
     Fitness,
@@ -100,10 +102,14 @@ export default defineComponent({
       dayjs,
       value: ref(""),
       editCommentId: ref(0),
+      edit2ndCommentId: ref(0),
       islike: ref(false),
       iscollect: ref(false),
       iscomplain: ref(false),
       lyricsRef: ref(),
+      edit1stComment: ref(false),
+      reply2ndComment: ref(false),
+      edit2ndComment: ref(false),
     };
   },
   data() {
@@ -175,18 +181,65 @@ export default defineComponent({
         this.success("删除成功");
       });
     },
+    send2ndComment() {
+      if (this.value == "") {
+        this.warning("评论内容不能为空");
+        return;
+      }
+      let formData = new FormData();
+      formData.append("content", this.value);
+      if (this.edit2ndCommentId == 0) {
+        this.$http.post(`/api/comment/on/comment/${this.editCommentId}/`, formData).then(() => {
+          this.success("回复评论成功");
+        });
+      } else {
+        this.$http.post(`/api/comment/edit/${this.edit2ndCommentId}/`, formData).then(() => {
+          this.success("编辑成功");
+        });
+        this.edit2ndCommentId = 0;
+      }
+      this.value == "";
+    },
+    // 编辑回复评论
+    editReplyComment(comment) {
+      this.editCommentId = comment.id;
+      if (!this.reply2ndComment) {
+        this.reply2ndComment = true;
+      } else {
+        this.value = "";
+        this.reply2ndComment = false;
+      }
+    },
+    // 修改回复评论
+    editMy2ndComment(comment) {
+      this.edit2ndCommentId = comment.id;
+      this.value = comment.content;
+      if (!this.edit2ndComment) {
+        this.edit2ndComment = true;
+      } else {
+        this.value = "";
+        this.edit2ndComment = false;
+      }
+    },
+    // 修改我的评论
     editMyComment(comment) {
       console.log(this.$cookies.get("userid"));
       console.log(comment.author_id);
       // alert("yes!");
       this.value = comment.content;
       this.editCommentId = comment.id;
-      document.querySelector("#comment-top").scrollIntoView({
-        behavior: "smooth",
-      });
-      if (document.querySelector(".n-input-wrapper") == null) {
-        document.querySelector("#comment-fold").click();
+      if (!this.edit1stComment) {
+        this.edit1stComment = true;
+      } else {
+        this.value = "";
+        this.edit1stComment = false;
       }
+      // document.querySelector("#comment-top").scrollIntoView({
+      //   behavior: "smooth",
+      // });
+      // if (document.querySelector(".n-input-wrapper") == null) {
+      //   document.querySelector("#comment-fold").click();
+      // }
     },
     parseTime(time) {
       const min = parseInt(time.match(/.*:/)[0].slice(0, 2));
@@ -328,6 +381,12 @@ export default defineComponent({
             </n-gi>
             <n-gi>
               <div class="music-artist">歌手：{{ music.artist }}</div>
+              <div>
+                <span style="color: gray;">来源： </span>
+                <router-link :to="`/home/user/${music.up.id}`">
+                  <span class="upload-user" style="color: gray;">{{ music.up.username }}</span>
+                </router-link>
+              </div>
             </n-gi>
             <n-gi>
               <div class="song-tags">
@@ -439,8 +498,22 @@ export default defineComponent({
         )" :key="idx">
           <a-comment>
             <template #actions>
-              <span key="edit-comment">
+              <span key="reply-comment">
                 <span style="padding-left: 855px; cursor: auto">
+                  <n-popover trigger="hover">
+                    <template #trigger>
+                      <n-button text circle focusable="false" @click="editReplyComment(comment)">
+                        <n-icon size="18">
+                          <ChatboxEllipsesOutline />
+                        </n-icon>
+                      </n-button>
+                    </template>
+                    <span>回复评论</span>
+                  </n-popover>
+                </span>
+              </span>
+              <span key="edit-comment">
+                <span style="padding-left: 3px; cursor: auto">
                   <n-popover trigger="hover">
                     <template #trigger>
                       <n-button text circle focusable="false" @click="editMyComment(comment)"
@@ -469,9 +542,15 @@ export default defineComponent({
                 </span>
               </span>
             </template>
-            <template #author><a style="font-size: 18px">{{ comment.up.username }}</a></template>
+            <template #author>
+              <router-link :to="`/home/user/${comment.up.id}`">
+                <div style="font-size: 18px">{{ comment.up.username }}</div>
+              </router-link>
+            </template>
             <template #avatar>
-              <a-avatar :src="comment.up.avatar" :size="50" />
+              <router-link :to="`/home/user/${comment.up.id}`">
+                <a-avatar :src="comment.up.avatar" :size="50" />
+              </router-link>
             </template>
             <template #content>
               <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
@@ -485,15 +564,33 @@ export default defineComponent({
                 </span>
               </a-tooltip>
             </template>
+            <div
+              v-if="(this.reply2ndComment && this.editCommentId == comment.id) || (this.edit1stComment && this.editCommentId == comment.id)">
+              <div>
+                <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                  v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
+                    minRows: 6,
+                    maxRows: 6,
+                  }" />
+                <div class="my-comment-button">
+                  <n-button class="send-button" strong secondary type="tertiary" @click="send2ndComment">
+                    发送
+                  </n-button>
+                  <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                    清空
+                  </n-button>
+                </div>
+              </div>
+            </div>
             <div v-if="comment.comment_set.length > 0">
               <div v-for="(comment_2nd, idx) in comment.comment_set" :key="idx">
                 <a-comment>
                   <template #actions>
                     <span key="edit-comment">
-                      <span style="padding-left: 855px; cursor: auto">
+                      <span style="padding-left: 842px; cursor: auto">
                         <n-popover trigger="hover">
                           <template #trigger>
-                            <n-button text circle focusable="false" @click="editMyComment(comment_2nd)"
+                            <n-button text circle focusable="false" @click="editMy2ndComment(comment_2nd)"
                               :disabled="this.$cookies.get('userid') != comment_2nd.up.id">
                               <n-icon size="18">
                                 <CreateOutline />
@@ -521,9 +618,13 @@ export default defineComponent({
                       </span>
                     </span>
                   </template>
-                  <template #author><a style="font-size: 18px">{{ comment_2nd.up.username }}</a></template>
+                  <template #author>
+                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
+                      <div style="font-size: 18px">{{ comment_2nd.up.username }}</div>
+                    </router-link></template>
                   <template #avatar>
-                    <a-avatar :src="comment_2nd.up.avatar" :size="50" />
+                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
+                      <a-avatar :src="comment_2nd.up.avatar" :size="50" /></router-link>
                   </template>
                   <template #content>
                     <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
@@ -537,6 +638,23 @@ export default defineComponent({
                       </span>
                     </a-tooltip>
                   </template>
+                  <div v-if="this.edit2ndComment && this.edit2ndCommentId == comment_2nd.id">
+                    <div>
+                      <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                        v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
+                          minRows: 6,
+                          maxRows: 6,
+                        }" />
+                      <div class="my-comment-button">
+                        <n-button class="send-button" strong secondary type="tertiary" @click="send2ndComment">
+                          发送
+                        </n-button>
+                        <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                          清空
+                        </n-button>
+                      </div>
+                    </div>
+                  </div>
                 </a-comment>
               </div>
             </div>
