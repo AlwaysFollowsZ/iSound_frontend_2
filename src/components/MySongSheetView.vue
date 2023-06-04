@@ -4,7 +4,7 @@
             全部收藏夹
         </div>
         <!-- <div style="display: flex; justify-content: center;"> -->
-            <!-- <div class="song-sheet-container">
+        <!-- <div class="song-sheet-container">
                 <n-grid :x-gap="12" :y-gap="6" :col="2">
                     <n-gi :span="12" v-for="(song, idx) in songSheets" :key="idx">
                         <div class="single-card-container">
@@ -20,19 +20,22 @@
                     </n-gi>
                 </n-grid>
             </div> -->
-            <!-- <n-pagination v-model:page="page" :page-count="3" />
+        <!-- <n-pagination v-model:page="page" :page-count="3" />
         </div> -->
-        <image-table :position="'Collection'" :entrySize="[200,200]" :rows="collectionData" @flushCollections="updateCollections"></image-table>
+        <div style="text-align:center;"><image-table :position="'Collection'" :entrySize="[200, 200]" :rows="collectionData"
+                @flushCollections="updateCollections"></image-table></div>
+
     </div>
 </template>
 <script>
+import 'animate.css'
 import ImageTable from '/src/components/tables/ImageTable/ImageTable.vue';
 export default {
     components: {
         ImageTable
     },
     data() {
-        let collectionData=[];//收藏夹数据
+        let collectionData = [];//收藏夹数据
         this.updateCollections()//获取收藏夹数据
         return {
             collectionData,
@@ -81,7 +84,8 @@ export default {
                         Id: collection.id,
                         imagePath: collection.cover,
                         Name: collection.title,
-                        songCount: collection.music_set.length
+                        songCount: collection.music_set.length,
+                        Type: 'Collection'
                     }
                 })
                 console.log('cod' + JSON.stringify(response.data))
@@ -92,6 +96,8 @@ export default {
 </script>
 <style scoped>
 .my-song-sheet-title {
+    animation: slideInRight;
+    animation-duration: 1.5s;
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
     font-weight: bold;

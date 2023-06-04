@@ -144,7 +144,6 @@ export default {
     },
     data() {
         return {
-            Collections,
             showModifyUserInfo: false,
             currentView: "songSheet",
             username: '',

@@ -1,10 +1,10 @@
 <script>
 import 'animate.css'
 import { defineProps, ref, computed } from 'vue'
-import { NButton, NEllipsis, NInput, NIcon, NIconWrapper, NTooltip, NPopover, NConfigProvider } from 'naive-ui'
+import { NButton, NEllipsis, NInput, NIcon, NIconWrapper, NTooltip, NPopover, NConfigProvider, NModal } from 'naive-ui'
 import { MusicNote220Regular, BookStar20Regular, ShareCloseTray20Regular, Delete20Regular, ShareIos20Regular } from '@vicons/fluent'
 import { LibraryMusicOutlined, PlaylistRemoveOutlined } from '@vicons/material'
-import { getBackgroundColorString, getFontColorString, getThemeColorByImage } from '/src/colorMode'
+import { getBackgroundColorString, getFontColorString, getThemeColorByImage, getRGBString } from '/src/colorMode'
 // 从父级传入内容类型、图片路径、歌曲数（如有）、名字、图片大小、主题色等信息
 export default {
     components: {
@@ -19,11 +19,29 @@ export default {
         let isHoverOnTitle = ref(false)
         let isHoverOnMask = ref(false)
         let isClickOnMask = ref(false)
-        let isHoverOnButton1 = ref(false)
-        let isHoverOnButton2 = ref(false)
+        let isClickOnButton1=ref(false)
+        let isClickOnButton2=ref(false)
         return {
-            themeColor, fontColorString, themeColorString, isHoverOnBottom, isHoverOnMask, isClickOnMask, isHoverOnTitle,
-            isHoverOnButton1, isHoverOnButton2,
+            themeColor, fontColorString, themeColorString, isHoverOnBottom, isHoverOnMask, isClickOnMask, isHoverOnTitle, getRGBString,
+            isClickOnButton1,isClickOnButton2
+        }
+    },
+    methods: {
+        handleClickOnButton1() {
+            if (this.Type === 'Song') {
+                this.$emit('deleteUploadedSong', this.Key)
+            }
+            else if (this.Type === 'Collection') {
+                this.$emit('deleteCollection', this.Key)
+            }
+            else {
+                this.$emit('cancelShare', this.Key)
+            }
+            this.isClickOnButton1=false
+        },
+        handleClickOnButton2() {
+            this.$emit('shareCollection', Key)
+            this.isClickOnButton2 = false
         }
     },
     computed: {
@@ -98,7 +116,7 @@ export default {
             'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `3px solid transparent`
         }" :class="[isHoverOnMask ? 'mask_box-hover' : '',
 isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mouseleave="isHoverOnMask = false"
-            @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Id)">
+            @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Key)">
             <!-- 动态属性为图片路径 -->
             <div class="image" :style="{
                 'background-image': `url(${imagePath})`,
@@ -106,56 +124,114 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 'height': `${imageSize[1]}px`,
                 'border-radius': `${imageSizeAvg / 12}px`
             }">
-                <div class="image_top" v-if="(isHoverOnMask && Edit)" :style="{
-                    'animation': 'fadeIn',
+                <div class="image_top" :style="{
+                    'opacity': (isHoverOnMask && Edit) ? '1' : '0',
+                    'animation': (isHoverOnMask && Edit) ? 'fadeIn' : 'none',
                     'animation-duration': '0.7s',
                     'box-shadow': 'n-icon-wrapper',
                 }">
                     <!-- 只有收藏夹有第二个图标 -->
-                    <n-popover trigger="hover" v-if="Type === 'Collection'" :style="{
+                    <n-popover trigger="click" v-model:show="isClickOnButton2" v-if="Type === 'Collection'" :style="{
                         'border-radius': `${imageSizeAvg / 12}px`,
                         'font-weight': 700,
                         '--n-text-color': `rgb(${fontColorString})`,
                         '--n-color': `rgb(${themeColorString},0.8)`,
-                        'font-size': `${fontSize / 1.5}px`,
+                        'font-size': `${fontSize * 1.2}px`,
                         'box-shadow': 'n-icon-wrapper',
                     }">
                         <template #trigger>
                             <n-icon-wrapper :size="imageSizeAvg / 8" :border-radius="imageSizeAvg / 20"
-                                :color="`rgb(${themeColor},0.8)`" :style="{ 'margin': `0 ${imageSizeAvg / 30}px` }">
+                                :color="`rgb(${themeColor},0.8)`" :style="{ 'margin': `0 ${imageSizeAvg / 30}px` }"
+                                @click.stop="isClickOnButton2=true">
                                 <n-icon :size="imageSizeAvg / 10">
-                                    <share-ios20-regular v-if="Type === 'Collection'"
-                                        @click.stop="$emit('shareCollection', Id)"></share-ios20-regular>
+                                    <share-ios20-regular v-if="Type === 'Collection'"></share-ios20-regular>
                                 </n-icon>
                             </n-icon-wrapper>
                         </template>
-                        分享为歌单
+                        <div :style="{
+                            'text-align': 'center',
+                            'margin-bottom': '5px',
+                        }">分享为歌单？</div>
+                        <div :style="{
+                            'text-align': 'center',
+                        }">
+                            <n-button @click="handleClickOnButton2" :style="{
+                                'padding': '0 5px',
+                                'font-weight': '700',
+                                '--n-color': getRGBString(themeColorString, 0.15),
+                                '--n-color-hover': getRGBString(themeColorString, 0.4),
+                                '--n-color-pressed': getRGBString(themeColorString, 0.6),
+                                '--n-color-focus': getRGBString(themeColorString, 0.1),
+                                '--n-border': `2px solid ${getRGBString(fontColorString, 0.7)}`,
+                                '--n-border-radius': '10px',
+                                '--n-border-hover': `2px solid ${getRGBString(fontColorString, 0.5)}`,
+                                '--n-border-pressed': `2px solid ${getRGBString(
+                                    fontColorString,
+                                    0.3
+                                )})`,
+                                '--n-border-focus': `2px solid ${getRGBString(fontColorString, 0.7)}`,
+                                '--n-text-color': getRGBString(fontColorString, 0.8),
+                                '--n-text-color-hover': getRGBString(fontColorString, 0.9),
+                                '--n-text-color-pressed': getRGBString(fontColorString, 1),
+                                '--n-text-color-focus': getRGBString(fontColorString, 0.6),
+                                '--n-ripple-color': getRGBString(fontColorString, 0.5),
+                                '--n-wave-opacity': '1',
+                            }">进入歌单编辑页面</n-button>
+                        </div>
                     </n-popover>
-                    <!-- 这是第一个图标 -->
-                    <n-popover trigger="hover" :style="{
+                    <!-- 这是第一个图标  -->
+                    <n-popover trigger="click" v-model:show="isClickOnButton1" :style="{
                         'border-radius': `${imageSizeAvg / 12}px`,
                         'font-weight': 700,
                         '--n-text-color': `rgb(${fontColorString})`,
                         '--n-color': `rgb(${themeColorString},0.8)`,
-                        'font-size': `${fontSize / 1.5}px`,
+                        'font-size': `${fontSize * 1.2}px`,
                         'box-shadow': 'n-icon-wrapper'
                     }">
                         <template #trigger>
                             <n-icon-wrapper :size="imageSizeAvg / 8" :border-radius="imageSizeAvg / 20"
                                 :color="`rgb(${themeColor},0.8)`" @mouseenter="isHoverOnButton1 = true"
-                                @mouseleave="isHoverOnButton1 = false">
+                                @mouseleave="isHoverOnButton1 = false" @click.stop="isClickOnButton1=true">
                                 <n-icon :size="imageSizeAvg / 10">
-                                    <share-close-tray20-regular v-if="Type === 'songList'"
-                                        @click.stop="$emit('cancelShare', Id)"></share-close-tray20-regular>
-                                    <delete20-regular v-if="Type === 'Song'"
-                                        @click.stop="$emit('deleteUploadedSong', Id)"></delete20-regular>
-                                    <playlist-remove-outlined v-if="Type === 'Collection'"
-                                        @click.stop="$emit('deleteCollection', Id)"></playlist-remove-outlined>
+                                    <share-close-tray20-regular v-if="Type === 'songList'"></share-close-tray20-regular>
+                                    <delete20-regular v-if="Type === 'Song'"></delete20-regular>
+                                    <playlist-remove-outlined v-if="Type === 'Collection'"></playlist-remove-outlined>
                                 </n-icon>
                             </n-icon-wrapper>
                         </template>
-                        {{ Type === 'Song' ? '删除歌曲' : Type === 'songList' ? '取消分享' : '删除收藏夹' }}
+                        <div :style="{
+                            'text-align': 'center',
+                            'margin-bottom': '5px',
+                        }">{{ Type === 'Song' ? '删除歌曲' : Type === 'songList' ? '取消分享' :
+    '删除收藏夹' }}?</div>
+                        <div :style="{
+                            'text-align': 'center',
+                        }">
+                            <n-button @click="handleClickOnButton1" :style="{
+                                'padding': '0 10px',
+                                'font-weight': '700',
+                                '--n-color': getRGBString(themeColorString, 0.15),
+                                '--n-color-hover': getRGBString(themeColorString, 0.4),
+                                '--n-color-pressed': getRGBString(themeColorString, 0.6),
+                                '--n-color-focus': getRGBString(themeColorString, 0.1),
+                                '--n-border': `2px solid ${getRGBString(fontColorString, 0.7)}`,
+                                '--n-border-radius': '10px',
+                                '--n-border-hover': `2px solid ${getRGBString(fontColorString, 0.5)}`,
+                                '--n-border-pressed': `2px solid ${getRGBString(
+                                    fontColorString,
+                                    0.3
+                                )})`,
+                                '--n-border-focus': `2px solid ${getRGBString(fontColorString, 0.7)}`,
+                                '--n-text-color': getRGBString(fontColorString, 0.8),
+                                '--n-text-color-hover': getRGBString(fontColorString, 0.9),
+                                '--n-text-color-pressed': getRGBString(fontColorString, 1),
+                                '--n-text-color-focus': getRGBString(fontColorString, 0.6),
+                                '--n-ripple-color': getRGBString(fontColorString, 0.5),
+                                '--n-wave-opacity': '1',
+                            }">{{ Type === 'songList' ? '取消分享' : '删除' }}</n-button>
+                        </div>
                     </n-popover>
+
                 </div>
                 <!-- 底部显示歌曲数量  动态属性有背景色和宽高-->
                 <div class="image_bottom" @mouseenter="isHoverOnBottom = true" @mouseleave="isHoverOnBottom = false">
@@ -163,7 +239,8 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                         'border-radius': `${imageSizeAvg / 20}px`,
                         '--n-text-color': `rgb(${fontColorString})`,
                         '--n-color': `rgb(${themeColorString},0.8)`,
-                        'font-size': `${fontSize / 1.5}px`,
+                        'font-size': `${fontSize}px`,
+                        'font-weight': '700',
                         'box-shadow': 'n-icon-wrapper',
                     }">
                         <template #trigger>
@@ -195,7 +272,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                 </div>
             </div>
             <div class="title_box" :style="{
-                'height': Type==='Song'?`${fontSize * 3}px`:`${fontSize*1.5}px`,
+                'height': Type === 'Song' ? `${fontSize * 3}px` : `${fontSize * 1.5}px`,
                 'color': `rgb(${fontColorString})`,
                 'text-shadow': isHoverOnTitle ?
                     `0 0 ${fontSize / 3}px rgb(${themeColorString})` : '',
@@ -226,7 +303,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                     <span @mouseenter="isHoverOnTitle = true" @mouseleave="isHoverOnTitle = false">{{ Name }}</span>
                 </n-ellipsis>
                 <!-- 歌手名称只会在类型为“歌曲”的时候显示 -->
-                <n-ellipsis v-if="Type==='Song'" :style="{
+                <n-ellipsis v-if="Type === 'Song'" :style="{
                     'color': `rgba(${fontColorString},0.5)`,
                     'font-size': `${fontSize / 1.5}px`,
                     'vertical-align': 'top',
@@ -305,8 +382,9 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
 }
 
 .mask_box-click {
-    transform: scale(0.99);
-    transition: all cubic-bezier(0.3, 0.04, 0.75, 0.432) 0.1s;
+    opacity: 0.85;
+    /* transform: scale(0.99); */
+    /* transition: all cubic-bezier(0.19, 1, 0.22, 1) 0.02s; */
 }
 
 
