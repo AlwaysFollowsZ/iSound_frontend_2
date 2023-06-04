@@ -1,56 +1,61 @@
 <script>
-    import { BellOutlined } from '@ant-design/icons-vue';
-    import { defineComponent } from 'vue';
-    import { SearchOutline } from '@vicons/ionicons5'
-    import AdminTopNav from '../components/AdminTopNav.vue';
-    export default defineComponent({
-        name: 'AdminPageHeader',
-        components: {
-            BellOutlined,
-            SearchOutline,
-            AdminTopNav,
-        },
-        data() {
-            return {
-                searchValue: '',
-            }
-        },
-        methods: {
-            /*gotoMessage() {
+import { BellOutlined } from "@ant-design/icons-vue";
+import { defineComponent } from "vue";
+import { SearchOutline } from "@vicons/ionicons5";
+import AdminTopNav from "../components/AdminTopNav.vue";
+export default defineComponent({
+  name: "AdminPageHeader",
+  components: {
+    BellOutlined,
+    SearchOutline,
+    AdminTopNav,
+  },
+  data() {
+    return {
+      searchValue: "",
+    };
+  },
+  methods: {
+    /*gotoMessage() {
                 this.$router.push({path:'/message'})
             },*/
-            search() {
-                if (this.searchValue.trim().length !== 0) {
-                    console.log(`searchValue: ${this.searchValue}`)
-                    // do search
-                    this.searchValue = ''
-                }
-            },
-        }
-    });
+    search() {
+      if (this.searchValue.trim().length !== 0) {
+        console.log(`searchValue: ${this.searchValue}`);
+        // do search
+        this.searchValue = "";
+      }
+    },
+  },
+});
 </script>
 
-
 <template>
-    <div><admin-top-nav :isSearchPage="true"></admin-top-nav></div>
-    <div class="message-page-search">
-        <n-grid>
-            <n-gi :span="3"></n-gi>
-            <n-gi :span="14">
-                <div style="padding-top: 7%">
-                <n-input round type="text" v-model:value="searchValue" placeholder="请输入关键字" @keyup.enter="search()" />
-                </div>
-            </n-gi>
-            <n-gi :span="2"></n-gi>
-            <n-gi :span="1">
-            <div style="color:lightgray; padding-top: 100%">
-                <SearchOutline size="30px" @click="search()" />
-            </div> 
-            </n-gi> 
-            <n-gi :span="4"></n-gi>
-        </n-grid>      
-    </div>
-    <!-- <div class="music-list-header">
+  <div><admin-top-nav :isSearchPage="true"></admin-top-nav></div>
+  <div class="message-page-search">
+    <n-grid>
+      <n-gi :span="3"></n-gi>
+      <n-gi :span="14">
+        <div style="padding-top: 7%">
+          <n-input
+            round
+            type="text"
+            v-model:value="searchValue"
+            placeholder="请输入关键字"
+            @keyup.enter="search()"
+          />
+        </div>
+      </n-gi>
+      <n-gi :span="2"></n-gi>
+      <n-gi :span="1">
+        <div style="color: lightgray; padding-top: 100%">
+          <SearchOutline size="30px" @click="search()" />
+        </div>
+      </n-gi>
+      <n-gi :span="4"></n-gi>
+    </n-grid>
+  </div>
+  <!-- <div class="music-list-header">
         <a-tabs v-model:activeKey="activeKey" >
         <a-tab-pane key="1">
         <template #tab>
@@ -72,33 +77,30 @@
         </a-tab-pane>
     </a-tabs>
     </div> -->
-    
 </template>
 
 <style scoped>
 .ant-space-item {
-    background-color:aqua;
+  background-color: aqua;
 }
 .search-input {
-   
-    
 }
 
 .message-page-search {
-    padding-top: 2%;
+  padding-top: 2%;
 }
 .music-list-header {
-   /* position: fixed;*/
-    top: 170px;
-    left: 10vw;
-    width: 80vw;
-    height: 100vw;
-    background: rgb(235, 237, 240);
-    margin: 0;
-    padding: 0 15px;
+  /* position: fixed;*/
+  top: 170px;
+  left: 10vw;
+  width: 80vw;
+  height: 100vw;
+  background: rgb(235, 237, 240);
+  margin: 0;
+  padding: 0 15px;
 }
 .n-input {
-    transform: scale(1.2, 1.2);
+  transform: scale(1.2, 1.2);
   /*  position: relative;*/
-} 
+}
 </style>
