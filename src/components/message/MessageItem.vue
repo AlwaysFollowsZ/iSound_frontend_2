@@ -215,8 +215,7 @@ export default defineComponent({
 </template>
 
 <style scoped>
-.message-card-outer {
-}
+
 .message-card {
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -225,8 +224,6 @@ export default defineComponent({
   margin-right: 8%;
   margin-top: 2%;
   margin-bottom: 2%;
-}
-.message-card-header {
 }
 .message-card-header-contents {
   padding-top: 2%;
@@ -253,8 +250,6 @@ export default defineComponent({
 }
 .message-card-content {
   padding-left: 4%;
-}
-.message-card-footer {
 }
 .message-card-footer-read {
   padding-bottom: 10%;

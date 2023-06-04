@@ -18,9 +18,6 @@ export default defineComponent({
         MessageSend,
     },
     methods: {
-        /*back() {
-            this.$router.push({path:'/admin'})
-        },*/
         myMessage() {
             this.$router.push('receive')
         },
@@ -64,25 +61,6 @@ export default defineComponent({
                         </div>
                     </div>
                 </div>
-                <!-- <a-card title="消息中心" :bordered="false">
-                    <a-menu class="left-menu"
-                        mode="vertical"
-                    >
-                        <a-menu-item key="1" @click="myMessage()">
-                        <template #icon>
-                            <MessageOutlined />
-                        </template>
-                        我的消息</a-menu-item>
-                        <a-menu-item key="2" @click="replyMessage()">
-                        <template #icon>
-                            <FileDoneOutlined />
-                        </template>我的回复</a-menu-item>
-                        <a-menu-item key="3" @click="sendMessage()">
-                        <template #icon>
-                            <EditOutlined />
-                        </template>去写信</a-menu-item>
-                    </a-menu>
-                </a-card> -->
             </a-col>
             <a-col :span="20">
                 <div>
