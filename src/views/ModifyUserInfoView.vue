@@ -22,7 +22,7 @@
                     <n-gi :span="10">
                         <div class="avatar">
                             <img :src="avatarUrl" @click="uploadFile" />
-                            <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
+                            <input type="file" ref="fileInput" style="display: none" accept="image/*" @change="handleFileChange" />
                         </div>
                         <div class="avatar-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">点击以更换头像</div>
                     </n-gi>
