@@ -234,13 +234,15 @@ export default {
     this.setLogState(this.$cookies.isKey("userid"));
   },
   created() {
-    this.$http.get("/api/message/of/0/").then((response) => {
-      if (response.data.unread == 0) {
-        this.showMessage = false;
-      } else {
-        this.showMessage = true;
-      }
-    });
+    if (this.$cookies.isKey("userid")) {
+      this.$http.get("/api/message/of/0/").then((response) => {
+        if (response.data.unread == 0) {
+          this.showMessage = false;
+        } else {
+          this.showMessage = true;
+        }
+      });
+    }
     this.$EventBus.on("setShowMessage", (unread) => {
       if (unread == 0) {
         this.showMessage = false;
@@ -272,7 +274,7 @@ export default {
       multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
       SearchOutline,
       MailOutline,
-      showMessage: ref(true),
+      showMessage: false,
       options: [
         {
           label: "个人主页",
@@ -306,6 +308,7 @@ export default {
           props: {
             onClick: () => {
               this.setLogState(false);
+              this.$http.post("/api/accounts/logout/");
               this.$cookies.remove("userid");
             },
           },
