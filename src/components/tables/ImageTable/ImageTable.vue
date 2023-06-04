@@ -151,12 +151,12 @@ export default {
         },
         //使用该组件的位置包括
         //个人主页：收藏夹(Colletion)，歌单(Songlist)，已上传歌曲(UploadedSongs)
-        //公开页面：主要是在listTable选择收藏夹的页面(CollectionView)
+        //公开页面：主要是在listTable选择收藏夹的页面(CollectionView)和搜索结果页面
         position: {
             type: String,
             default: "Collection",
             validator: (value) => {
-                return ["Collection", "Songlist", "UploadedSongs", "CollectionView"].includes(
+                return ["Collection", "Songlist", "UploadedSongs", "CollectionView", "ResultView"].includes(
                     value
                 );
             },
@@ -225,8 +225,8 @@ export default {
         'border-radius': '50px',
         width: `${tableSize[0]}px`,
         height: `${tableSize[1]}px`,
-        'animation':'zoomIn',
-        'animation-duration':'1.5s'
+        // 'animation':'zoomIn',
+        // 'animation-duration':'1.5s'
     }">
         <!-- 根据不同的情况判断，在个人主页的“收藏夹”页面会显示“新建”按钮，
             在个人主页的“上传歌曲”页面会显示“上传”按钮 -->
@@ -355,13 +355,14 @@ export default {
                 </n-pagination>
             </div>
         </div>
-        <div v-else :style="{ color: getRGBString(fontColorString) }" class="no_content_notice">
+        <div v-else :style="{ 'color': getRGBString(fontColorString), 'text-align': 'center' }" class="no_content_notice">
             {{
                 ["Collection", "CollectionView"].includes(position)
                 ? "暂无已创建的收藏夹...新建一个？"
                 : position === "Songlist"
                     ? "暂无已分享的歌单...从收藏夹分享一个？"
-                    : "暂无已上传的歌曲...上传一首？"
+                    : position === "ResultView" ? "暂无搜索结果......."
+                        : "暂无已上传的歌曲...上传一首？"
             }}
         </div>
     </div>
