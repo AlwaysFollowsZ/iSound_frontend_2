@@ -22,7 +22,7 @@
             </div> -->
             <!-- <n-pagination v-model:page="page" :page-count="3" />
         </div> -->
-        <image-table :position="'Collection'" :entrySize="[200,200]"></image-table>
+        <image-table :position="'Collection'" :entrySize="[200,200]" :rows="collectionData" @flushCollections="updateCollections"></image-table>
     </div>
 </template>
 <script>
@@ -32,7 +32,10 @@ export default {
         ImageTable
     },
     data() {
+        let collectionData=[];//收藏夹数据
+        this.updateCollections()//获取收藏夹数据
         return {
+            collectionData,
             songSheets: [
                 {
                     imgSrc: "/src/assets/song1.jpg",
@@ -61,6 +64,30 @@ export default {
             ]
         }
     },
+    methods: {
+        updateCollections() {
+            let formData = new FormData()
+            formData.append('shared', false)
+            this.$http.get('/api/playlist/of/0/', formData).then((response) => {
+                let key = 0
+                console.log('update:content=' + response.data.playlist_set)
+                if (response.data.playlist_set.length == 0) {
+                    this.collectionData = []
+                    return
+                }
+                this.collectionData = response.data.playlist_set.map((collection) => {
+                    return {
+                        Key: key++,
+                        Id: collection.id,
+                        imagePath: collection.cover,
+                        Name: collection.title,
+                        songCount: collection.music_set.length
+                    }
+                })
+                console.log('cod' + JSON.stringify(response.data))
+            })//更新当前用户的收藏夹数据
+        },
+    }
 }
 </script>
 <style scoped>
