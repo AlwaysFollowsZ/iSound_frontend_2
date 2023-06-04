@@ -266,7 +266,7 @@ export default defineComponent({
               <n-button
                 v-if="
                   (this.$cookies.get('userid') == this.playlist.up ||
-                    this.$cookies.get('is_superuser') == true) &&
+                    this.$cookies.get('is_superuser') == 'true') &&
                   this.playlist.shared == true
                 "
                 :focusable="false"

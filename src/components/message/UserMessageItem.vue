@@ -25,7 +25,7 @@ export default defineComponent({
   methods: {
     removeMessage(message) {
       this.messages = this.messages.filter((t) => t !== message);
-      this.$http.delete(`/api/message/delete/${message.id}`);
+      this.$http.delete(`/api/message/delete/${message.id}/`);
       this.unread--;
       this.$EventBus.emit("setShowMessage", this.unread);
     },

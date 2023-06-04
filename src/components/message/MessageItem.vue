@@ -19,12 +19,15 @@ export default defineComponent({
     CloseOutline,
   },
   created() {
-    this.$http.get("/api/message/of/1/").then((response) => {
-      this.messages = response.data.message_set;
-    });
+    if (this.$cookies.isKey("userid") && this.$cookies.get("is_superuser") == "true") {
+      this.$http.get("/api/message/of/1/").then((response) => {
+        this.messages = response.data.message_set;
+      });
+    }
   },
   methods: {
     removeMessage(message) {
+      this.$http.delete(`/api/message/delete/${message.id}/`);
       message["isDeleted"] = true; // 此设置用于消息删除离场动画
       this.refreshPage = false; // 此设置用于消息删除后短暂让页码消失
       setTimeout(() => {
