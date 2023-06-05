@@ -81,7 +81,7 @@ export default {
             type: Array,
             default: [],
         },
-        //公开页面、收藏夹页面、歌单页面
+        //公开页面、收藏夹页面
         position: {
             type: String,
             require: true,

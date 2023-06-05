@@ -48,7 +48,7 @@
             </n-tab-pane>
             <n-tab-pane name="歌单" tab="歌单">
                 <image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330, 240]"
-                    v-model:rows="songlists" :position="'ResultView'"> </image-table>
+                    v-model:rows="songlists" :position="'ResultView'" :handleClickEntry="jumpToSonglist"> </image-table>
             </n-tab-pane>
             <n-tab-pane name="用户" tab="用户">
                 <user-list :list="userlist"></user-list>
@@ -99,6 +99,9 @@ export default {
         this.setAndSearchKeyword(keyword)
     },
     methods: {
+        jumpToSonglist(id) {
+            this.$router.push(`/listdetail/${id}/`)
+        },
         setAndSearchKeyword(keyword) {
             let i = 0, j = 0
             let tmpSong = [], tmpList = []
@@ -121,7 +124,8 @@ export default {
                 this.songlists = response.data.playlist_set.map(songlist => ({
                     Key: j++,
                     Type: 'songList',
-                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    Id: songlist.id,
+                    imagePath: songlist.cover,
                     songCount: songlist.music_set.length,
                     Name: songlist.title,
                 }))
@@ -157,7 +161,7 @@ export default {
                 tmpList = response.data.playlist_set.map(songlist => ({
                     Key: j++,
                     Type: 'songList',
-                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    imagePath: '/src/assets/song1.jpg',
                     songCount: songlist.music_set.length,
                     Name: songlist.title,
                 }))
