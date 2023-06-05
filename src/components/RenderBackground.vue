@@ -1,5 +1,5 @@
 <template>
-    <div ref="canvasContainer"></div>
+    <div v-if="visibility" ref="canvasContainer"></div>
 </template>
 
 <script>
@@ -19,6 +19,10 @@ export default {
         elementColor: {
             type: String,
             default: 'rgb(123,123,221)'
+        },
+        visibility: {
+            type: Boolean,
+            default:true
         }
     },
     methods: {

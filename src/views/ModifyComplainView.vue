@@ -45,7 +45,7 @@ export default defineComponent({
           content: msg,
           duration: 1,
           style: {
-            "z-index": 2,
+            "z-index": 101,
           },
         });
       },
@@ -54,7 +54,7 @@ export default defineComponent({
           content: msg,
           duration: 1,
           style: {
-            "z-index": 2,
+            "z-index": 101,
           },
         });
       },
@@ -65,7 +65,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <n-modal :show="showModifyComplainView" z-index="1">
+  <n-modal :show="showModifyComplainView" z-index="100">
     <div>
       <n-card class="complain-hodder" style="--n-border-radius: 20px">
         <n-grid>

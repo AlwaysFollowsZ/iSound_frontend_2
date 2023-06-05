@@ -50,7 +50,7 @@
             <list-table :key="refresh" :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
         </n-tab-pane>
         <n-tab-pane name="歌单" tab="歌单">
-            <image-table :key="refresh" :table-size="[1350,]" :entry-size="[330,240]" v-model:rows="songlists"> </image-table>
+            <image-table :key="refresh" :position="'SongList'" :table-size="[1350,]" :entry-size="[330,240]" v-model:rows="songlists"> </image-table>
         </n-tab-pane>
         <template #suffix>
           <div class="show-all" @click="showAll">
@@ -127,8 +127,9 @@ export default defineComponent({
           }))
           this.songlists = response.data.playlist_set.map(songlist => ({
             Key: j++,
-            Type: 'songList',
-            imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+            Id: songlist.id,
+            Type: 'SongList',
+            imagePath: songlist.cover,     // === NEED TO BE REPLACED ===
             songCount: songlist.music_set.length,
             Name: songlist.title,
           }))

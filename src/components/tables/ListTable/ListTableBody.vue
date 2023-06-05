@@ -1,8 +1,10 @@
 <script>
-import { h, ref, defineProps, computed } from 'vue'
+import { mapState } from 'vuex'
+import store from '/src/store/index.js'
+import { h, ref, defineProps, computed, watch } from 'vue'
 import { Rows } from '/src/components/tables/ImageTable/ImageRowData'
-import { NDataTable, NButton, NPopover, NEllipsis, NPagination, NConfigProvider, NModal, NIcon } from 'naive-ui'
-import { Heart12Filled, Star12Filled } from '@vicons/fluent';
+import { NDataTable, NButton, NPopconfirm, NPopover, NEllipsis, NPagination, NConfigProvider, NModal, NIcon } from 'naive-ui'
+import { Heart12Filled, Star12Filled, Delete20Regular, DeleteDismiss20Regular } from '@vicons/fluent';
 import { ArrowBack, CheckmarkCircleOutline } from '@vicons/ionicons5';
 import { getFontColorString, getBackgroundColorString, globalThemeColor, changeThemeColorByImage, getRGBString, antiBackgroundColor } from '/src/colorMode'
 import imageTable from '../ImageTable/ImageTable.vue';
@@ -10,6 +12,13 @@ import 'animate.css';
 import { backgroundColor } from '../../../colorMode';
 export default {
     data() {
+        let isLoggedIn = computed(() => {
+            return store.state.isLoggedIn
+        })
+        let isAdmin = computed(() => {
+            return store.state.isAdmin
+        })
+
         let collectionData = []//当前用户的收藏夹的数据
         let formData = new FormData()
         formData.append('shared', false)
@@ -56,11 +65,23 @@ export default {
         const emit = this.$emit
         let isSelected = false//当前是否有歌曲被选择
         let selectedEntries = []//被选择的项（和rowKey同步更新）
-        let columns = [
+        let columns = computed(() => [
             {
-                key: 'image',
+                title(column) {
+                    return h('div',
+                        {
+                            style:
+                            {
+                                'font-size': '18px',
+                                'padding-left': '60px'
+                            }
+                        }, `歌曲`)
+                },
+                titleColSpan: 2,
+                key: 'name',
+                sorter: 'default',
                 width: '75px',
-                render(row) {
+                render: (row) => {
                     return h('div', {
                         style: {
                             'width': '50px',
@@ -80,19 +101,9 @@ export default {
                 }
             },
             {
-                title(column) {
-                    return h('span',
-                        {
-                            style:
-                            {
-                                'font-size': '18px'
-                            }
-                        }, '名称')
-                },
                 key: 'name',
                 resizable: true,
                 maxWidth: '1000px',
-                sorter: 'default',
                 render: (row) => {
                     return h(NEllipsis, {
                         'line-clamp': 1,
@@ -173,7 +184,8 @@ export default {
                         }, row.length)
                 }
             },
-            {
+            //我喜欢只在用户界面出现
+            (isLoggedIn.value && !isAdmin.value) ? {
                 key: 'like',
                 width: '10px',
                 title: (column) => h(NPopover, {
@@ -275,8 +287,9 @@ export default {
                         })
 
                 }
-            },
-            {
+            } : {},
+            //收藏夹也只在用户界面出现
+            (isLoggedIn.value && !isAdmin.value) ? {
                 key: "collect",
                 width: '10px',
                 title: (column) => {
@@ -334,7 +347,7 @@ export default {
                     }
                         , h('div', {
                             style: {
-                                'background':getRGBString(BackgroundColorString,0.3),
+                                'background': getRGBString(BackgroundColorString, 0.3),
                                 'position': 'relative',
                                 'top': '-50px',
                                 'text-align': 'center',
@@ -362,19 +375,20 @@ export default {
                                 entrySize: [200, 200],
                                 position: 'CollectionView',
                                 onFlushCollections: this.updateCollections,
-                                handleClick: (listKey) => {
+                                //注意传出来的是ID
+                                handleClickEntry: (listId) => {
                                     this.isCollectChanged = true
                                     this.headChange = true
-                                    //先设置所有项的isStarFilled和isCollectChanged
+                                    //先设置所有项的isCollectChanged
                                     for (let i = 0; i < this.selectedEntries.length; i++) {
                                         this.songData[i].isCollectChanged = true
-                                        this.songData[i].isStarFilled = true
+                                        this.songData[i].isCollected=true
                                     }
                                     setTimeout(() => {
                                         this.showCollection = false
                                         this.headChange = false
                                         setTimeout(() => {
-                                            emit('collectAll', this.selectedEntries, listKey)
+                                            emit('collectAll', this.selectedEntries, listId)
                                             this.isCollectChanged = false
                                         }, 500)
                                     }, 800)
@@ -394,8 +408,9 @@ export default {
                         {
                             trigger: () => h(NButton, {
                                 onClick: () => {
-                                    if (this.position === 'CollectionView' && row.CollectedLists.indexOf(this.currentListId) < 0) {
-                                        row.isStarFilled = true
+                                    //若列表处于收藏夹页面，则row.isCollected需要变为true
+                                    if (this.position === 'CollectionView' && !row.isCollected) {
+                                        row.isCollected = true
                                         row.isCollectChanged = true
                                         emit('recollect', row.key)
                                     }
@@ -425,7 +440,7 @@ export default {
                                 {
                                     icon: () => h(Star12Filled, {
                                         style: {
-                                            'color': row.isStarFilled === true ? 'rgb(255, 230, 120)' : 'rgb(235,245,235)'
+                                            'color': row.isCollected === true ? 'rgb(255, 230, 120)' : 'rgb(235,245,235)'
                                         }
                                     }),
                                 }),//收藏按钮
@@ -436,7 +451,8 @@ export default {
                                             'font-size': '12px',
                                         }
                                     },
-                                    [row.isCollected ? '从"收藏夹"移除' : '添加到"收藏夹"'])
+                                    [row.isCollected ? (this.position === 'CollectionView' ? '取消收藏' : '添加到新的收藏夹') :
+                                        (this.position === 'CollectionView' ? '重新收藏' : '添加到收藏夹')])
                             },
                             // 
                         }), h(NModal, {
@@ -450,15 +466,15 @@ export default {
                                 style: {
                                     'background': getRGBString(BackgroundColorString, 0.3),
                                     'position': 'relative',
-                                    'top':'-50px',
+                                    'top': '-50px',
                                     'text-align': 'center',
                                     'border-radius': '50px'
                                 }
                             }, [
-                                //“请选择收藏夹”的标题不会在收藏夹页面出现，也不会在已经收藏的情况下出现
+                                //“请选择收藏夹”的标题不会在收藏夹页面出现
                                 h('div', {
                                     style: {
-                                        'display': (position !== 'CollectionView' && row.isCollected === false) ? 'default' : 'none',
+                                        'display': (this.position !== 'CollectionView') ? 'default' : 'none',
                                         'margin': '20px',
                                         'font-size': '25px',
                                         'font-weight': '700',
@@ -466,35 +482,34 @@ export default {
                                         'color': getRGBString(fontColorString.value, 0.8),
                                         'margin-top': '20px',
                                         'border-radius': '50px',
+                                        'animation': row.isCollectChanged === true ? 'bounceIn' : 'none',
+                                        'animation-duration': '1s'
                                     },
-                                }, '请选择收藏夹'),
-                                //“选择收藏夹”的imageTable不会在收藏夹页面出现，也不会在已经收藏的情况下出现
-                                h(imageTable, {
+                                }, this.headChange ? '添加歌曲成功' : '请选择收藏夹'),
+                                //“选择收藏夹”的imageTable不会在收藏夹页面出现
+                                (this.position !== 'CollectionView') ? h(imageTable, {
                                     rows: this.collectionData,
-                                    style: {
-                                        'display': (position !== 'CollectionView' && row.isCollected === false) ? 'default' : 'none',
-                                    },
                                     onFlushCollections: this.updateCollections,
                                     tableSize: [1000,],
                                     entrySize: [200, 200],
                                     position: 'CollectionView',//需要显示的是收藏夹页面
-                                    handleClick: (listKey) => {
-                                        row.isStarFilled = true
+                                    handleClickEntry: (listId) => {
                                         this.headChange = true
                                         row.isCollectChanged = true
+                                        row.isCollected=true
                                         setTimeout(() => {
                                             row.showCollection = false
                                             setTimeout(() => {
-                                                emit('collect', row.key, listKey)
+                                                emit('collect', row.key, listId)
                                                 this.headChange = false
                                             }, 500)
                                         }, 800)
                                     }
-                                }, ''),
-                                //取消收藏的modal
+                                }, '') : '',
+                                //取消收藏的modal.只能在收藏夹页面取消收藏
                                 h('div', {
                                     style: {
-                                        'display': (row.isCollected === true) ? 'block' : 'none',
+                                        'display': (this.position === 'CollectionView') ? 'block' : 'none',
                                         'padding': '0 20px',
                                         'margin': '20px',
                                         'font-size': '25px',
@@ -506,7 +521,7 @@ export default {
                                         'animation': row.isCollectChanged === true ? 'bounceIn' : 'none',
                                         'animation-duration': '1s'
                                     },
-                                }, [this.headChange === true ? '取消收藏成功' : (position === 'CollectionView' ? '是否取消收藏？' : '是否从所有收藏夹中移除歌曲？')]),
+                                }, [this.headChange === true ? `取消收藏成功` : `是否取消收藏?`]),
                                 //取消按钮
                                 [h(NButton, {
                                     color: getRGBString(this.BackgroundColorString, 0.8),
@@ -514,7 +529,7 @@ export default {
                                     ghost: true,
                                     focus: false,
                                     style: {
-                                        'display': (row.isCollected) ? 'default' : 'none',
+                                        'display': (this.position === 'CollectionView') ? 'default' : 'none',
                                         'font-size': '30px',
                                         'margin': '50px 100px 50px 50px'
                                     },
@@ -530,24 +545,20 @@ export default {
                                     ghost: true,
                                     focus: false,
                                     style: {
-                                        'display': (row.isCollected) ? 'default' : 'none',
+                                        'display': (this.position === 'CollectionView') ? 'default' : 'none',
                                         'font-size': '25px',
                                         'margin': '50px 50px 50px 100px'
                                     },
                                     onClick: () => {
                                         this.headChange = true
+                                        row.isCollected = false
                                         row.isCollectChanged = true
-                                        row.isStarFilled = false
+                                        //先通知更新数据
                                         setTimeout(() => {
-
+                                            //现在公共界面不能取消收藏，只能添加到收藏夹
                                             row.showCollection = false
                                             setTimeout(() => {
-                                                if (this.position === 'CollectionView') {
-                                                    emit('discollectOnCollection', row.key)
-                                                }
-                                                else {
-                                                    emit('discollectOnPublic', row.key)
-                                                }
+                                                emit('discollectOnCollection', row.key)
                                                 this.headChange = false
                                             }, 500)
                                         }, 800)
@@ -555,11 +566,128 @@ export default {
                                 }, h(NIcon, h(CheckmarkCircleOutline)))]
                             ]))])
                 }
-            },
+            } : {},
+            //删除歌曲只能在管理员界面出现
+            (isAdmin.value) ? {
+                key: 'delete',
+                width: '10px',
+                title: (column) => h(NPopconfirm, {
+                    positiveText: '确定',
+                    negativeText: '取消',
+                    negativeButtonProps: {
+                        focusable: false,
+                        color: getRGBString(fontColorString.value, 0.7, 'font', viewMode)
+                    },
+                    positiveButtonProps: {
+                        color: 'rgb(204,12,32)'
+                    },
+                    onPositiveClick: () => {
+                        emit('deleteAll', this.selectedEntries)
+                    },
+                    onNegativeClick: () => { },//什么都不做
+                    style: {
+                        'color': getRGBString(fontColorString.value, 1, 'font', viewMode),
+                        '--n-color': getRGBString(HeadBackgroundColorString.value, 0.8, 'background', viewMode)
+                    }
+                },
+                    {
+                        trigger: () => h(NButton, {
+                            focusable: false,
+                            style: {
+                                'display': this.isSelected ? '' : 'none',
+                                '--n-color': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
+                                '--n-color-hover': getRGBString(fontColorString.value, 0.5, 'background', viewMode),
+                                '--n-color-focus': getRGBString(fontColorString.value, 0.4, 'background', viewMode),
+                                '--n-color-pressed': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
+                                '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
+                                '--n-border-focus': `none`,
+                                '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
+                                '--n-border-disabled': `none`,
+                                '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font', viewMode),
+                                'animation': this.isSelected ? 'bounceIn' : 'heartBeat',
+                                'animation-duration': '0.5s'
+                            },
+                        }, {
+                            icon: () => h(Delete20Regular, {
+                                style: {
+                                    'color': 'rgb(204,12,32)'
+                                }
+                            })
+                        }),
+                        default: () => {
+                            return h('span',
+                                {
+                                    style: {
+                                        'font-size': '12px'
+                                    }
+                                },
+                                ['确认删除所选的歌曲?'])
+                        }
+                    })
+                ,
+                style: {
+                    "text-align": "center"
+                },
+                render: (row) => {
+                    return h(NPopconfirm, {
+                        positiveText: '确定',
+                        negativeText: '取消',
+                        negativeButtonProps: {
+                            focusable: false,
+                            color: getRGBString(fontColorString.value, 0.7, 'font', viewMode)
+                        },
+                        positiveButtonProps: {
+                            color: 'rgb(204,12,32)'
+                        },
+                        onPositiveClick: () => {
+                            emit('delete', row.key)
+                        },
+                        onNegativeClick: () => { },//什么都不做
+                        style: {
+                            'color': getRGBString(fontColorString.value, 1, 'font', viewMode),
+                            '--n-color': getRGBString(HeadBackgroundColorString.value, 0.8, 'background', viewMode)
+                        }
+                    },
+                        {
+                            trigger: () => h(NButton, {
+                                focusable: false,
+                                style: {
+                                    '--n-color': getRGBString(DataBackgroundColorString.value, 1, 'background',
+                                        viewMode),
+                                    '--n-color-hover': getRGBString(DataBackgroundColorString.value, 0.6, 'background', viewMode),
+                                    '--n-color-focus': getRGBString(DataBackgroundColorString.value, 1, 'background', viewMode),
+                                    '--n-color-pressed': getRGBString(DataBackgroundColorString.value, 0.3, 'background', viewMode),
+                                    '--n-color-disabled': getRGBString(DataBackgroundColorString.value, 1, 'background', viewMode),
+                                    '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font',
+                                        viewMode)}`,
+                                    '--n-border-focus': `none`,
+                                    '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font',
+                                        viewMode)}`,
+                                    '--n-border-disabled': `none`,
+                                    '--n-ripple-color': getRGBString(fontColorString.value, 0.8, 'font',
+                                        viewMode),
+                                },
+                            }, {
+                                icon: () => h(Delete20Regular, {
+                                    color: 'rgb(204,12,32)'
+                                })
+                            }),
+                            default: () => {
+                                return h('span',
+                                    {
+                                        style: {
+                                            'font-size': '12px'
+                                        }
+                                    },
+                                    ['确认删除歌曲?'])
+                            }
+                        })
+                }
+            } : {},
             {
                 type: 'selection',
             },
-        ]//表头和表项
+        ])//表头和表项
         return {
             collectionData, HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
             isSelected, selectedEntries, columns, getRGBString, h, BackgroundColorString, headChange,
@@ -581,11 +709,7 @@ export default {
                     imgSrc: "/src/assets/song4.jpg"
                 }]
         },//歌曲数据
-        viewMode: {
-            type: String,
-            default: 'user'
-        },//是否在管理员界面
-        //使用该组件的位置，包括公开页面PublicView和自己的收藏夹页面CollectionView/播放记录页面RecordView
+        //使用该组件的位置，包括公开页面PublicView和自己的收藏夹页面CollectionView
         //在公开页面、歌单和播放记录页面，收藏按钮点击后可以选择需要收藏的收藏夹；而在收藏夹界面，点击后只会弹出“是否取消收藏”。
         position: {
             type: String,
@@ -615,7 +739,7 @@ export default {
             formData.append('shared', false)
             this.$http.get('/api/playlist/of/0/', formData).then((response) => {
                 let key = 0
-                console.log('update:content='+ response.data.playlist_set)
+                console.log('update:content=' + response.data.playlist_set)
                 if (response.data.playlist_set.length == 0) {
                     this.collectionData = []
                     return
@@ -632,9 +756,9 @@ export default {
                 })
                 console.log('cod' + JSON.stringify(response.data))
             })//更新当前用户的收藏夹数据(会在nmodal中使用)
-        }
+        },
     },
-    emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection','removeSong']
+    emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection', 'removeSong', 'deleteAll', 'delete']
 }
 </script>
 
@@ -794,12 +918,12 @@ export default {
 
 /* 设置动画样式 */
 :deep(.n-data-table-td) {
-    animation: fadeInUp;
+    animation: fadeIn;
     animation-duration: 1.5s;
 }
 
 :deep(.n-data-table-th) {
-    animation: zoomIn;
+    animation: slideInRight;
     animation-duration: 1s;
 }
 
