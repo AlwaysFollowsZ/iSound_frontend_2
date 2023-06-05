@@ -7,6 +7,7 @@ import ImageTableEntry from "./ImageTableEntry.vue";
 import UploadSongView from "/src/views/UploadSongView.vue";
 import CreateNewCollectionView from "/src/views/createNewCollectionView.vue";
 import { message } from 'ant-design-vue';
+import { mapState } from 'vuex'
 import {
     getBackgroundColorString,
     getFontColorString,
@@ -115,9 +116,11 @@ export default {
             defaultBGString,
             changeColorMode,
             h,
+            BackgroundColorString: getBackgroundColorString(globalThemeColor)
         };
     },
     computed: {
+        ...mapState(['accentColor', 'colorMode']),
         pageCount() {
             return Math.ceil(this.rows.length / this.pageArgs.pageSize);
         },
@@ -134,11 +137,6 @@ export default {
         },
     },
     props: {
-        //可自定义imageTable的背景色。默认和歌曲封面主题色对齐
-        BackgroundColorString: {
-            type: [String, Object],
-            default: getBackgroundColorString(globalThemeColor),
-        },
         //table的大小(宽和高)
         tableSize: {
             type: Array,
@@ -171,13 +169,16 @@ export default {
             type: JSON.type,
             default: Rows
         },
+        //处理点击entry事件的方法,只有这个会返回ID，其他都是key
+        handleClickEntry: {
+            type: Function,
+            default: (Id, Key) => {
+                console.log('Id:' + Id + ' Key:' + Key);
+            }
+        }
     },
     methods: {
         //以下方法都需要从Key转换为Id
-        //处理点击entry事件的方法
-        handleClickEntry(Key) {
-            changeThemeColorByImage(this.rows[Key].imagePath);
-        },
         //处理点击删除收藏夹事件的方法
         handleClickDeleteCollection(Key) {
             this.$http.delete(`api/playlist/delete/${this.rows[Key].Id}/`).then(() => {
@@ -206,6 +207,35 @@ export default {
             //这两个只会在个人主页用到
             if (this.position === "Collection" || this.position === "CollectionView") {
                 this.showModal = true;
+                setTimeout(() => {
+                let selections = document.getElementsByClassName('n-base-selection n-base-selection--multiple')
+                
+                // let tags = document.getElementsByClassName('n-tag')
+                // console.log(tags.length)
+                if (selections.length > 0) {
+                    // 含有 '--' 分隔的属性只能这么写
+                    selections[0].style.setProperty('--n-color', 'white')
+                    selections[0].style.setProperty('--n-color-focus', 'white')
+                    selections[0].style.setProperty('--n-color-active', 'white')
+                    selections[0].style.setProperty('--n-border', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-active', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-focus', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-hover', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-radius', '8px')
+                    selections[0].style.setProperty('--n-box-shadow-active', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-box-shadow-focus', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-box-shadow-hover', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-font-size', '16px')
+                    selections[0].style.setProperty('--n-height', '40px')
+                    selections[0].style.setProperty('--n-caret-color', 'black')
+                    selections[0].style.setProperty('--n-placeholder-color', 'grey')
+                    selections[0].style.setProperty('--n-text-color', 'black')
+                    selections[0].style.setProperty('--n-arrow-color', 'black')
+                }
+                // if (tags.length > 0) {
+                //     tags[0].style.setProperty('--n-color', 'red')
+                // }
+            }, 50)
                 //this.$emit('clickCreateCollection')
             } else if (this.position === "UploadedSongs") {
                 // alert("上传歌曲")
@@ -392,7 +422,7 @@ export default {
 .image_table {
     margin: 0;
     /*设置为0，由父级设置padding*/
-    padding: 20px 0px 0 0px;
+    padding-top: 10px;
     display: inline-block;
     overflow: hidden;
     transition: cubic-bezier(0.165, 0.84, 0.44, 1) 1s;

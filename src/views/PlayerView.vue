@@ -147,6 +147,7 @@ export default defineComponent({
       getRGBString,
       backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
       showModifyComplainView: false,
+      refreshCommentVir: 0,
     };
   },
   methods: {
@@ -196,12 +197,18 @@ export default defineComponent({
         this.editCommentId = 0;
         this.editNewCommentId = 1;
       }
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
       this.value == "";
     },
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
         this.success("删除成功");
       });
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
     },
     send2ndComment() {
       if (this.value == "") {
@@ -225,6 +232,9 @@ export default defineComponent({
         this.edit2ndCommentId = 0;
         this.edit2ndCommentParentId = 0;
       }
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
       this.value == "";
     },
     // 编辑回复评论
@@ -337,6 +347,11 @@ export default defineComponent({
         left: 0,
         top: top,
         behavior: behavior,
+      });
+    },
+    regetComments() {
+      this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
+        this.comments = response.data.comment_set;
       });
     },
   },
@@ -462,6 +477,7 @@ export default defineComponent({
                         class="tag-item"
                       >
                         {{ tag }}
+                        <br />
                       </n-tag>
                     </span>
                   </div>
@@ -588,7 +604,7 @@ export default defineComponent({
     </n-grid>
   </div>
   <a-divider style="height: 1.8px; background-color: #dddddd" />
-  <div class="comments">
+  <div class="comments" :key="this.refreshCommentVir">
     <n-grid>
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
@@ -911,6 +927,7 @@ export default defineComponent({
   position: relative;
   z-index: 2;
 }
+
 .background-img {
   position: absolute;
   top: 0;
@@ -918,10 +935,12 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(40px) saturate(1); /* 背景图片模糊效果 */
+  filter: blur(40px) saturate(1);
+  /* 背景图片模糊效果 */
   opacity: 0.5;
   z-index: -1;
 }
+
 .background-imgfloat {
   content: "";
   position: absolute;
@@ -929,9 +948,11 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* 黑色遮罩，透明度为0.5 */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* 黑色遮罩，透明度为0.5 */
   z-index: 1;
 }
+
 .player-page {
   height: 100vh;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
@@ -1054,6 +1075,7 @@ export default defineComponent({
 .lyrics-part {
   text-align: center;
 }
+
 .music-name {
   font-size: 24px;
   text-align: center;
@@ -1063,6 +1085,7 @@ export default defineComponent({
   font-size: 16px;
   text-align: center;
 }
+
 .lyrics-wrap > .lyrics {
   display: flex;
   justify-content: space-between;
@@ -1100,9 +1123,11 @@ export default defineComponent({
 .lyrics-wrap:hover > .translation {
   opacity: 1;
 }
+
 .lyrics-wrap > .lyrics > .time {
   visibility: hidden;
 }
+
 .lyrics-wrap:hover > .lyrics > .time {
   visibility: visible;
   display: flex;
@@ -1130,5 +1155,9 @@ export default defineComponent({
   padding-right: 15px;
   display: flex;
   justify-content: flex-end;
+}
+
+.tag-item {
+  margin-left: 10px;
 }
 </style>
