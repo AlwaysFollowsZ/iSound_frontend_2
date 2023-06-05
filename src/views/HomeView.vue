@@ -166,44 +166,7 @@ export default {
           jumpLink: "d"
         },
       ],
-      songs: [
-        // {
-        //   imgSrc: "/src/assets/song5.png",
-        //   title: "只因你太美",
-        //   jumpLink: "1",
-        //   singer: "蔡只因"
-        // },
-        // {
-        //   imgSrc: "/src/assets/song2.jpg",
-        //   title: "给自己的情书",
-        //   jumpLink: "2",
-        //   singer: "王菲"
-        // },
-        // {
-        //   imgSrc: "/src/assets/song3.jpg",
-        //   title: "Yesterday Once More",
-        //   jumpLink: "3",
-        //   singer: "Carpenters"
-        // },
-        // {
-        //   imgSrc: "/src/assets/song4.jpg",
-        //   title: "守时",
-        //   jumpLink: "4",
-        //   singer: "王菲"
-        // },
-        // {
-        //   imgSrc: "/src/assets/song5.jpg",
-        //   title: "当爱已成往事",
-        //   jumpLink: "5",
-        //   singer: "张国荣"
-        // },
-        // {
-        //   imgSrc: "/src/assets/song6.jpg",
-        //   title: "山水之间",
-        //   jumpLink: "6",
-        //   singer: "许嵩"
-        // }
-      ],
+      songs: [],
       all_songs: [],
       arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     }
