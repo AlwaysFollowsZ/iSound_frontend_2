@@ -39,8 +39,9 @@ export default {
             }
             this.isClickOnButton1 = false
         },
+        //todo:显示编辑歌单信息框
         handleClickOnButton2() {
-            this.$emit('shareCollection', Key)
+            this.$emit('shareCollection', this.Key)
             this.isClickOnButton2 = false
         }
     },

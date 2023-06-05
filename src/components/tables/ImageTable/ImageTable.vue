@@ -172,7 +172,6 @@ export default {
             type: Function,
             default: (Id, Key) => {
                 console.log('Id:' + Id + ' Key:' + Key);
-
             }
         }
     },
@@ -392,7 +391,7 @@ export default {
 .image_table {
     margin: 0;
     /*设置为0，由父级设置padding*/
-    padding: 20px 0px 0 0px;
+    padding-top: 10px;
     display: inline-block;
     overflow: hidden;
     transition: cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
