@@ -181,6 +181,7 @@ onMounted(() => {
   left: calc(100% - 400px) !important;
   background-color: v-bind("mainColor") !important;
 }
+
 .aplayer-list {
   color: v-bind("mainFontColor") !important;
   position: fixed !important;
@@ -188,20 +189,26 @@ onMounted(() => {
   bottom: 0 !important;
   background: v-bind("mainColor") !important;
 }
+
 .aplayer .aplayer-list ol li:hover {
   background: v-bind("hoverColor") !important;
 }
-.aplayer .aplayer-list ol li .aplayer-list-author,.aplayer-author {
+
+.aplayer .aplayer-list ol li .aplayer-list-author,
+.aplayer-author {
   color: v-bind("secondaryFontColor") !important;
 }
+
 .aplayer .aplayer-list ol li.aplayer-list-light {
   background: v-bind("focusColor") !important;
 }
+
 .aplayer-body {
   max-width: calc(100% - 18px) !important;
   width: calc(100% - 18px) !important;
   background: v-bind("mainColor") !important;
 }
+
 .aplayer-info {
   border: 1px solid v-bind("borderColor") !important;
 }
@@ -216,7 +223,7 @@ onMounted(() => {
   z-index: -100 !important;
 }
 
-.aplayer-narrow + a > .aplayer-launch {
+.aplayer-narrow+a>.aplayer-launch {
   display: none !important;
 }
 
@@ -239,7 +246,7 @@ onMounted(() => {
   z-index: 100 !important;
 }
 
-.aplayer-fixed:not(.aplayer-narrow) > .aplayer-body > .aplayer-pic > .aplayer-button {
+.aplayer-fixed:not(.aplayer-narrow)>.aplayer-body>.aplayer-pic>.aplayer-button {
   display: none !important;
 }
 
@@ -303,11 +310,20 @@ onMounted(() => {
   left: calc(50% - 112.5px) !important;
 }
 
-.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path{
-  fill:v-bind("mainFontColor") !important;
+.aplayer-volume-bar {
+  background: v-bind("secondaryFontColor") !important
 }
-.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path:hover{
-  fill:v-bind("secondaryFontColor") !important;
+
+.aplayer-volume {
+  background: v-bind("mainFontColor") !important
+}
+
+.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path {
+  fill: v-bind("mainFontColor") !important;
+}
+
+.aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path:hover {
+  fill: v-bind("secondaryFontColor") !important;
 }
 
 .aplayer-icon-back {
@@ -338,7 +354,7 @@ onMounted(() => {
   height: 32px !important;
 }
 
-.aplayer-lrc-contents > p {
+.aplayer-lrc-contents>p {
   font-size: 16px !important;
 }
 
