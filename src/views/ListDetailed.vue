@@ -104,21 +104,6 @@ export default defineComponent({
         updateData(playlistId) {
             this.$http.get(`/api/playlist/detail/${playlistId}/`).then((response) => {
                 this.playlist = response.data;
-                let key = 0;
-                //直接在这里更改music_set没有问题吧？
-                this.playlist.music_set = response.data.music_set.map((music) => {
-                    return {
-                        key: key++,
-                        id: music.id,
-                        name: music.name,
-                        singer: music.artist,
-                        length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.floor(music.duration % 60)}`.padStart(2, '0'),
-                        isLiked: music.is_like,
-                        isCollected: true,//这是在收藏夹页面，因此刚刚get到的肯定是true
-                        imgSrc: music.cover,
-                        showCollection: false
-                    }
-                })
                 this.songNum = this.playlist.music_set.length;
                 this.tagsNum = this.playlist.tags.length;
                 this.listName = this.playlist.title;
