@@ -121,6 +121,36 @@ export default defineComponent({
         </div>
         <div class="messgae-card-content">
           <div style="padding-left: 2%; max-width: 560px">
+            <n-grid v-if="message.music != null">
+              <n-gi :span="4">
+                <div style="font-weight: bold">投诉歌曲：</div>
+              </n-gi>
+              <n-gi :span="20">
+                <div
+                  class="music-link"
+                  @click="this.$EventBus.emit('play', message.music.id)"
+                >
+                  {{ message.music.name }} - {{ message.music.artist }}
+                </div>
+              </n-gi>
+            </n-grid>
+            <n-grid v-if="message.playlist != null">
+              <n-gi :span="4">
+                <div style="font-weight: bold">投诉歌单：</div>
+              </n-gi>
+              <n-gi :span="20">
+                <router-link
+                  target="_blank"
+                  :to="{
+                    name: 'listdetail',
+                    params: { playlistId: message.playlist.id },
+                  }"
+                  class="playlist-link"
+                >
+                  {{ message.playlist.title }} - {{ message.playlist.up.username }}
+                </router-link>
+              </n-gi>
+            </n-grid>
             <n-grid>
               <n-gi :span="4">
                 <div style="font-weight: bold">投诉原因：</div>
@@ -215,7 +245,6 @@ export default defineComponent({
 </template>
 
 <style scoped>
-
 .message-card {
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -259,5 +288,8 @@ export default defineComponent({
 }
 .card-pagination {
   padding-top: 3%;
+}
+.music-link:hover {
+  cursor: pointer;
 }
 </style>

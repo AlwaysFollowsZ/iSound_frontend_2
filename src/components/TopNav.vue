@@ -45,7 +45,8 @@
                   border: '1px solid rgb(224, 224, 230)',
                   '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
                   '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                  '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                  '--n-box-shadow-focus':
+                    '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                 }"
                 type="text"
                 v-model:value="searchValue"
@@ -152,18 +153,24 @@
       </n-gi>
       <n-gi :span="1">
         <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options">
-          <n-avatar v-if="isLoggedIn" class="user-avatar" @click="this.$router.push('/home');" @mouseover="renderDropDown"
+          <n-avatar
+            v-if="isLoggedIn"
+            class="user-avatar"
+            @click="this.$router.push('/home')"
+            @mouseover="renderDropDown"
             :src="this.avatarFile"
             size="large"
           ></n-avatar>
-          <n-avatar v-else
+          <n-avatar
+            v-else
             src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-            size="large" 
+            size="large"
           ></n-avatar>
         </n-dropdown>
         <n-tooltip v-else placement="bottom-start" trigger="hover">
           <template #trigger>
-            <n-avatar class="user-avatar"
+            <n-avatar
+              class="user-avatar"
               src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
               size="large"
             ></n-avatar>
@@ -234,21 +241,12 @@ export default {
     ...mapState(["isLoggedIn", "accentColor", "colorMode"]),
   },
   mounted() {
-    this.setLogState(this.$cookies.isKey("userid"))
+    this.setLogState(this.$cookies.isKey("userid"));
   },
-  created() { 
-    this.$http.get("/api/message/of/0/").then((response) => {
-      if (response.data.unread == 0) {
-        this.showMessage = false;
-      } else {
-        this.showMessage = true;
-      }
-    });
-    this.$http.get('/api/accounts/detail/0/').then(response => {
-      this.avatarFile = response.data.avatar;
-      }).catch(error => {
-        console.error(error);
-    });
+  created() {
+    if (this.$cookies.isKey("userid")) {
+      this.fetchData();
+    }
     this.$EventBus.on("setShowMessage", (unread) => {
       if (unread == 0) {
         this.showMessage = false;
@@ -256,9 +254,9 @@ export default {
         this.showMessage = true;
       }
     });
-    this.$EventBus.on('showLoginModal', () => {
-      this.showLogin = true
-    })
+    this.$EventBus.on("showLoginModal", () => {
+      this.showLogin = true;
+    });
   },
   data() {
     return {
@@ -283,7 +281,7 @@ export default {
       multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
       SearchOutline,
       MailOutline,
-      showMessage: ref(true),
+      showMessage: false,
       avatarFile: null,
       options: [
         {
@@ -318,7 +316,9 @@ export default {
           props: {
             onClick: () => {
               this.setLogState(false);
-              this.$cookies.remove("userid")
+              this.$http.post("/api/accounts/logout/");
+              this.$cookies.remove("userid");
+              this.$router.push("/");
             },
           },
         },
@@ -341,8 +341,26 @@ export default {
         // window.location.reload()
       }
     },
+    fetchData() {
+      this.$http.get("/api/message/of/0/").then((response) => {
+        if (response.data.unread == 0) {
+          this.showMessage = false;
+        } else {
+          this.showMessage = true;
+        }
+      });
+      this.$http
+        .get("/api/accounts/detail/0/")
+        .then((response) => {
+          this.avatarFile = response.data.avatar;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     toLogIn() {
       this.setLogState(true);
+      this.fetchData();
       console.log("hello");
     },
     readMessage() {
@@ -354,19 +372,24 @@ export default {
     },
     renderDropDown() {
       setTimeout(() => {
-        let menuarr = document.getElementsByClassName('n-dropdown-menu')
+        let menuarr = document.getElementsByClassName("n-dropdown-menu");
         if (menuarr.length > 0) {
-          let menu = menuarr[0]
-          menu.style.setProperty('--n-color', this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)')
-          menu.style.setProperty('--n-option-text-color', 'rgb(' + this.accentColor + ')')
-          menu.style.transition = 'color 1s'
-          console.log("color: " + this.accentColor)
+          let menu = menuarr[0];
+          menu.style.setProperty(
+            "--n-color",
+            this.colorMode === "white" ? "white" : "rgb(72,72,72)"
+          );
+          menu.style.setProperty(
+            "--n-option-text-color",
+            "rgb(" + this.accentColor + ")"
+          );
+          menu.style.transition = "color 1s";
+          console.log("color: " + this.accentColor);
         }
         // console.log(menu.length)
       }, 120);
     },
   },
-  
 };
 </script>
 

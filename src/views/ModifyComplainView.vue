@@ -45,7 +45,7 @@ export default defineComponent({
           content: msg,
           duration: 1,
           style: {
-            "z-index": 2,
+            "z-index": 101,
           },
         });
       },
@@ -54,7 +54,7 @@ export default defineComponent({
           content: msg,
           duration: 1,
           style: {
-            "z-index": 2,
+            "z-index": 101,
           },
         });
       },

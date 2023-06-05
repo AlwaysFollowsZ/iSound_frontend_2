@@ -79,6 +79,17 @@ export default defineComponent({
     },
     unshareList() {
       this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
+      if (
+        this.$cookies.get("is_superuser") == "true" &&
+        this.$cookies.get("userid") != this.up.id
+      ) {
+        let formData = new FormData();
+        formData.append(
+          "content",
+          `您的歌单${this.playlist.title}涉嫌违规，已被取消分享。`
+        );
+        this.$http.post(`/api/message/to/${this.up.id}/`, formData);
+      }
       this.playlist.shared = false;
       this.success("取消分享成功");
     },
@@ -96,6 +107,22 @@ export default defineComponent({
         this.listName = this.playlist.title;
         this.listIntro = this.playlist.profile;
         this.tags = this.playlist.tags;
+        this.up = this.playlist.up;
+        let key = 0;
+        this.songData = this.playlist.music_set.map((music) => ({
+          key: key++,
+          id: music.id,
+          name: music.name,
+          singer: music.artist,
+          length:
+            `${Math.floor(music.duration / 60)}`.padStart(2, "0") +
+            ":" +
+            `${Math.round(music.duration % 60)}`.padStart(2, "0"),
+          isliked: music.is_like,
+          isCollected: music.is_favorite,
+          imgSrc: music.cover,
+          showCollection: false,
+        }));
       });
     },
     handleCoverChange(e) {
@@ -137,10 +164,12 @@ export default defineComponent({
   data() {
     return {
       playlist: {},
+      up: {},
       listName: "",
       listIntro: "",
       songNum: 0,
       tagsNum: 0,
+      songData: [],
       cover: null,
       showEditListModify: false,
       showShareListModify: false,
@@ -214,11 +243,11 @@ export default defineComponent({
             <n-gi style="height: 50px">
               <n-grid>
                 <n-gi :span="21">
-                  <div style="font-size: xx-large; height: 50px">
+                  <div style="font-size: xxx-large; height: 50px">
                     {{ this.playlist.title }}
                   </div>
                 </n-gi>
-                <n-gi v-if="this.$cookies.get('userid') == this.playlist.up" :span="3">
+                <n-gi v-if="this.$cookies.get('userid') == this.up.id" :span="3">
                   <n-button quaternary :focusable="false" @click="editList">
                     <n-icon><CreateOutline /></n-icon>
                     编辑
@@ -229,9 +258,7 @@ export default defineComponent({
             <n-gi>
               <div>
                 <a
-                  v-if="
-                    this.$cookies.get('userid') == this.playlist.up && this.tagsNum == 0
-                  "
+                  v-if="this.$cookies.get('userid') == this.up.id && this.tagsNum == 0"
                   @click="editList"
                   >添加标签</a
                 >
@@ -239,6 +266,21 @@ export default defineComponent({
                   >#{{ tag }}</n-tag
                 >
               </div>
+            </n-gi>
+            <n-gi>
+              来源：
+              <span
+                class="up-link"
+                @click="
+                  this.$router.push(
+                    this.$cookies.get('userid') == this.up.id
+                      ? '/home'
+                      : `/home/user/${this.up.id}`
+                  )
+                "
+              >
+                {{ this.up.username }}
+              </span>
             </n-gi>
             <n-gi>
               <div>歌曲数：{{ this.songNum }}</div>
@@ -253,7 +295,7 @@ export default defineComponent({
               </n-button>
               <n-button
                 v-if="
-                  this.$cookies.get('userid') == this.playlist.up &&
+                  this.$cookies.get('userid') == this.up.id &&
                   this.playlist.shared == false
                 "
                 :focusable="false"
@@ -265,7 +307,7 @@ export default defineComponent({
               </n-button>
               <n-button
                 v-if="
-                  (this.$cookies.get('userid') == this.playlist.up ||
+                  (this.$cookies.get('userid') == this.up.id ||
                     this.$cookies.get('is_superuser') == 'true') &&
                   this.playlist.shared == true
                 "
@@ -279,7 +321,7 @@ export default defineComponent({
               <n-button
                 v-if="
                   this.$cookies.isKey('userid') &&
-                  this.$cookies.get('userid') != this.playlist.up
+                  this.$cookies.get('userid') != this.up.id
                 "
                 :focusable="false"
                 @click="complainList"
@@ -299,7 +341,7 @@ export default defineComponent({
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
         <a-divider style="height: 1.8px; background-color: #dddddd" />
-        <list-table :view-mode="user" :currentListId="this.playlist.id"></list-table>
+        <list-table view-mode="user" :songData="this.songData"></list-table>
       </n-gi>
       <n-gi :span="4"></n-gi>
     </n-grid>
@@ -564,8 +606,10 @@ export default defineComponent({
   align-content: center;
   justify-content: right;
 }
-
 .share-button {
   margin-right: 20px;
+}
+.up-link:hover {
+  cursor: pointer;
 }
 </style>
