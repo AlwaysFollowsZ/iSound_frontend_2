@@ -353,12 +353,12 @@ export default defineComponent({
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
         <a-divider style="height: 1.8px; background-color: #dddddd" />
-        <!-- <list-table
+        <list-table
           v-if="playlist.music_set.length > 0"
           :view-mode="'user'"
           :position="'PublicView'"
-          v-model:songData="songData"
-        ></list-table> -->
+          v-model:songData="this.songData"
+        ></list-table>
       </n-gi>
       <n-gi :span="4"></n-gi>
     </n-grid>
