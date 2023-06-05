@@ -103,6 +103,21 @@ export default defineComponent({
           duration: 1,
         });
       },
+      railStyle: ({ focused, checked }) => {
+        const style = {};
+        if (checked) {
+          style.background = "#fff";
+          if (focused) {
+            style.boxShadow = "0 0 0 2px #fff";
+          }
+        } else {
+          style.background = "grey";
+          if (focused) {
+            style.boxShadow = "0 0 0 2px grey";
+          }
+        }
+        return style;
+      },
       dayjs,
       value: ref(""),
       editCommentId: ref(0), // 一级评论的评论id
@@ -409,14 +424,16 @@ export default defineComponent({
           <div class="lyrics-part">
             <n-grid :y-gap="15" :cols="1">
               <n-gi class="music-name">
-                <div>
+                <div style="color: #fff">
                   {{ music.name }}
                 </div>
               </n-gi>
               <n-gi>
-                <div class="music-artist">歌手：{{ music.artist }}</div>
-                <div>
-                  <span style="color: gray">来源： </span>
+                <div class="music-artist" style="color: #fff">
+                  歌手：{{ music.artist }}
+                </div>
+                <div style="color: #fff">
+                  <span>来源： </span>
                   <router-link
                     :to="
                       this.$cookies.get('userid') == music.up.id
@@ -424,7 +441,7 @@ export default defineComponent({
                         : `/home/user/${music.up.id}`
                     "
                   >
-                    <span class="upload-user" style="color: gray">{{
+                    <span class="upload-user" style="color: #fff">{{
                       music.up.username
                     }}</span>
                   </router-link>
@@ -471,7 +488,7 @@ export default defineComponent({
                           {{ obj.lyrics }}
                         </n-gi>
                         <n-gi :span="2" class="jumpLink">
-                          <Play @click="jumpToLyrics(obj, i)" width="14px" />
+                          <Play color="#fff" @click="jumpToLyrics(obj, i)" width="14px" />
                         </n-gi>
                       </n-grid>
                       <div class="translation" v-show="hasTranslation && showTranslation">
@@ -481,6 +498,7 @@ export default defineComponent({
                   </n-scrollbar>
                   <div class="translationSwitch">
                     <n-switch
+                      :rail-style="railStyle"
                       v-if="hasTranslation"
                       v-model:value="showTranslation"
                       size="small"
@@ -1052,35 +1070,35 @@ export default defineComponent({
 }
 
 .lyrics-wrap > .lyrics > .content {
-  color: #000;
+  color: #fff;
   font-size: 16px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .lyrics-wrap > .translation {
-  color: #000;
+  color: #fff;
   font-size: 12px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .lyrics-wrap.current > .lyrics > .content {
   font-size: 18px;
   font-weight: 600;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .lyrics-wrap.current > .translation {
-  color: #000;
+  color: #fff;
   font-size: 16px;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .lyrics-wrap:hover > .lyrics > .content {
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .lyrics-wrap:hover > .translation {
-  opacity: 0.8;
+  opacity: 1;
 }
 .lyrics-wrap > .lyrics > .time {
   visibility: hidden;
@@ -1089,7 +1107,7 @@ export default defineComponent({
   visibility: visible;
   display: flex;
   justify-content: flex-end;
-  color: #000;
+  color: #fff;
   font-size: 12px;
   font-weight: lighter;
 }
