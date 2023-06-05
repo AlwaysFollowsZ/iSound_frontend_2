@@ -2,7 +2,7 @@
   <div class="user-page-TopNav"><top-nav></top-nav></div>
   <div>
     <n-grid :x-gap="0">
-      <n-gi :span="4">
+      <n-gi :span="3">
         <div>
           <n-button tertiary circle class="back-button" @click="back">
             <ChevronBack style="width: 36px; position: absolute; left: 0px" />
@@ -14,27 +14,29 @@
           <n-grid :x-gap="0">
             <n-gi :span="10">
               <div class="user-avatar">
-                <n-image class="user-avatar-img" :src="userAvatar" />
+                <img class="user-avatar-img" :src="userAvatar" />
               </div>
             </n-gi>
             <n-gi :span="14">
               <div class="user-info">
                 <n-grid :y-gap="12" :cols="1">
                   <n-gi>
-                    <div class="user-name">{{ this.username }}</div>
+                    <div class="user-name" :style="{'color': 'rgb(' + this.accentColor + ')'}">{{ this.username }}</div>
                   </n-gi>
                   <n-gi>
-                    <div class="user-email">
-                      <newspaper-outline style="width: 20px; margin-top: 5px" />邮箱：{{
-                        this.userEmail
-                      }}
+                    <div class="user-email" :style="{'color': 'rgb(' + this.accentColor + ')'}">
+                      邮箱 
+                    </div>
+                    <div class="info-content" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                      {{ this.userEmail }}
                     </div>
                   </n-gi>
                   <n-gi>
-                    <div class="user-bio">
-                      <pricetag-outline
-                        style="width: 20px; margin-top: 5px"
-                      />个性签名：{{ this.userBio }}
+                    <div class="user-bio" :style="{'color': 'rgb(' + this.accentColor + ')'}">
+                      个性签名 
+                    </div>
+                    <div class="info-content" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                      {{ this.userBio }}
                     </div>
                   </n-gi>
                   <n-gi>
@@ -46,7 +48,17 @@
                         negative-text="取消"
                       >
                         <template #trigger>
-                          <n-button strong secondary round type="primary"
+                          <n-button strong secondary type="primary" :focusable="false"
+                          :style="{
+                            '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
+                            '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
+                            '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)', 
+                            '--n-color-focus': 'rgba(' + this.accentColor + ', 0.5)',
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
+                            '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
+                          }"
                             >已关注</n-button
                           >
                         </template>
@@ -57,8 +69,17 @@
                         @click="follow()"
                         strong
                         secondary
-                        round
-                        type="default"
+                        type="default" :focusable="false"
+                        :style="{
+                          '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
+                          '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
+                          '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)', 
+                          '--n-color-focus': 'rgba(' + this.accentColor + ', 0.5)',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
+                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
+                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
+                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
+                        }"
                         >加关注</n-button
                       >
                     </div>
@@ -69,7 +90,16 @@
           </n-grid>
         </div>
         <div class="user-song-songsheet">
-          <n-tabs type="line" animated>
+          <n-tabs type="line" animated
+          :style="{
+            '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
+            '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
+            '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
+            '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
+            '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
+            '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
+          }"
+          >
             <n-tab-pane name="ta的歌单" tab="ta的歌单">
               <other-user-song-sheet-view />
             </n-tab-pane>
@@ -77,12 +107,14 @@
               <other-user-upload-song-view />
             </n-tab-pane>
             <template #suffix>
-              <flower-outline style="width: 20px" />粉丝数:{{ this.userFansNum }}
+              <div :style="{ color: 'rgb(' + this.accentColor + ')' }">
+              粉丝数：{{ this.userFansNum }}
               <a-divider
                 type="vertical"
                 style="width: 1.5px; background-color: #dddddd"
               />
-              <flash-outline style="width: 20px" /> 关注数:{{ this.userFollowingNum }}
+              关注数：{{ this.userFollowingNum }}
+            </div>
             </template>
           </n-tabs>
         </div>
@@ -95,6 +127,7 @@
 import TopNav from "../components/TopNav.vue";
 import OtherUserSongSheetView from "../components/OtherUserSongSheetView.vue";
 import OtherUserUploadSongView from "../components/OtherUserUploadedSongView.vue";
+import { mapState } from 'vuex'
 import {
   CreateOutline,
   PaperPlaneOutline,
@@ -115,12 +148,15 @@ export default {
     OtherUserSongSheetView,
     OtherUserUploadSongView,
   },
+  computed: {
+    ...mapState(["colorMode", "accentColor"]),
+  },
   data() {
     return {
       userid: "",
       username: "",
       userBio: "",
-      userAvatar: null,
+      userAvatar: null,   // 得改
       userEmail: "",
       userIsFollowed: "",
       userFansNum: "",

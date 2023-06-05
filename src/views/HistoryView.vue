@@ -62,17 +62,22 @@
                       }
                         ">
                         <div><n-button @click="getYesterdayHistory(); this.flushList++" :style="{
-                          '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                          '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
-                          '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                          '--n-color': this.colorMode === 'transparent',
+                          '--n-color-focus': 'transparent',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
+                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
                           '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
                           '--n-border-hover': 'transparent',
                           '--n-border-focus': 'transparent',
                           '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
                           '--n-border-radius': '8px',
                           '--n-height': '55px',
+                          '--n-ripple-color': 'rgb(' + this.accentColor + ')',
                           '--n-font-size': '18px',
-                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
+                          '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                          '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
                           '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                           '--n-icon-size': '25px'
                         }" style="margin-top: 10px;">今日播放</n-button></div>
@@ -85,17 +90,22 @@
                       }
                         ">
                         <div><n-button @click="getTheWeekHistory(); this.flushList++" :style="{
-                          '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                          '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
-                          '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                          '--n-color': this.colorMode === 'transparent',
+                          '--n-color-focus': 'transparent',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
+                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
                           '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
                           '--n-border-hover': 'transparent',
                           '--n-border-focus': 'transparent',
                           '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
                           '--n-border-radius': '8px',
                           '--n-height': '55px',
+                          '--n-ripple-color': 'rgb(' + this.accentColor + ')',
                           '--n-font-size': '18px',
-                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
+                          '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                          '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
                           '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                           '--n-icon-size': '25px'
                         }" style="margin-top: 10px;">本周播放</n-button></div>
@@ -108,17 +118,22 @@
                       }
                         ">
                         <div><n-button @click=" getTheMonthHistory(); this.flushList++" :style="{
-                          '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                          '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
-                          '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                          '--n-color': this.colorMode === 'transparent',
+                          '--n-color-focus': 'transparent',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
+                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
                           '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
                           '--n-border-hover': 'transparent',
                           '--n-border-focus': 'transparent',
                           '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
                           '--n-border-radius': '8px',
                           '--n-height': '55px',
+                          '--n-ripple-color': 'rgb(' + this.accentColor + ')',
                           '--n-font-size': '18px',
-                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
+                          '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                          '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
                           '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                           '--n-icon-size': '25px'
                         }">本月播放</n-button></div>
@@ -131,17 +146,22 @@
                       }
                         ">
                         <div><n-button @click=" getAllHistory(); this.flushList++" :style="{
-                          '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                          '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
-                          '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                          '--n-color': this.colorMode === 'transparent',
+                          '--n-color-focus': 'transparent',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
+                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
                           '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
                           '--n-border-hover': 'transparent',
                           '--n-border-focus': 'transparent',
                           '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
                           '--n-border-radius': '8px',
                           '--n-height': '55px',
+                          '--n-ripple-color': 'rgb(' + this.accentColor + ')',
                           '--n-font-size': '18px',
-                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
+                          '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                          '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
                           '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                           '--n-icon-size': '25px'
                         }">全部播放</n-button></div>
@@ -151,8 +171,8 @@
                 </n-gi>
                 <n-gi :span="16">
                   <div :t="this.flushList">
-                    <n-timeline>
-                      <n-timeline-item v-for="( item, index ) in  showHistoryData " :key="this.flushList" type=""
+                    <n-timeline :key="this.flushList">
+                      <n-timeline-item v-for="( item, index ) in  showHistoryData " :key="index" type=""
                         :content="item.content" :time="item.date.replace('T', ' ').split('.')[0]" line-type="dashed"
                         class="animate__animated animate__fadeInDown" :style="{
                           'animation-delay': `${0.3 + index * 0.05}s`,
