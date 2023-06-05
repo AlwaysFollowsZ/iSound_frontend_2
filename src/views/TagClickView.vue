@@ -35,7 +35,7 @@
                             </div>
                             <div v-else>
                                 <image-table :key="this.$route.params.keyword" :table-size="[1100,]"
-                                    :entry-size="[330, 240]" v-model:rows="songLists"> </image-table>
+                                    :entry-size="[330, 240]" v-model:rows="songLists" :handleClickEntry="jumpToSonglist"> </image-table>
                             </div>
                         </n-tab-pane>
                     </n-tabs>
@@ -99,7 +99,12 @@ export default {
         '$route'() {
             window.location.reload();
         }
-    }
+    },
+    methods: {
+        jumpToSonglist(id) {
+            this.$router.push(`/listdetail/${id}/`)
+        }
+    },
 }
 </script>
 <style scoped>
