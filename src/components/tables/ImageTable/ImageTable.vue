@@ -115,6 +115,7 @@ export default {
             defaultBGString,
             changeColorMode,
             h,
+            BackgroundColorString: getBackgroundColorString(globalThemeColor)
         };
     },
     computed: {
@@ -134,11 +135,6 @@ export default {
         },
     },
     props: {
-        //可自定义imageTable的背景色。默认和歌曲封面主题色对齐
-        BackgroundColorString: {
-            type: [String, Object],
-            default: getBackgroundColorString(globalThemeColor),
-        },
         //table的大小(宽和高)
         tableSize: {
             type: Array,
@@ -171,13 +167,17 @@ export default {
             type: JSON.type,
             default: Rows
         },
+        //处理点击entry事件的方法,只有这个会返回ID，其他都是key
+        handleClickEntry: {
+            type: Function,
+            default: (Id, Key) => {
+                console.log('Id:' + Id + ' Key:' + Key);
+
+            }
+        }
     },
     methods: {
         //以下方法都需要从Key转换为Id
-        //处理点击entry事件的方法
-        handleClickEntry(Key) {
-            changeThemeColorByImage(this.rows[Key].imagePath);
-        },
         //处理点击删除收藏夹事件的方法
         handleClickDeleteCollection(Key) {
             this.$http.delete(`api/playlist/delete/${this.rows[Key].Id}/`).then(() => {

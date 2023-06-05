@@ -23,7 +23,7 @@
         <!-- <n-pagination v-model:page="page" :page-count="3" />
         </div> -->
         <div style="text-align:center;"><image-table :position="'Collection'" :entrySize="[200, 200]" :rows="collectionData"
-                @flushCollections="updateCollections" ></image-table></div>
+                @flushCollections="updateCollections" :handleClickEntry="clickCollection" ></image-table></div>
 
     </div>
 </template>
@@ -68,6 +68,9 @@ export default {
         }
     },
     methods: {
+        clickCollection(Id) {
+            this.$router.push(`/listdetail/${Id}`)
+        },//点击收藏夹。这时候应该跳转到收藏夹详情页面
         updateCollections() {
             let formData = new FormData()
             formData.append('shared', false)
