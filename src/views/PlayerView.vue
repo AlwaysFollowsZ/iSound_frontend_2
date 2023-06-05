@@ -11,6 +11,7 @@ import {
   FitnessOutline,
   WarningOutline,
   ChatbubbleEllipsesOutline,
+  ChatboxEllipsesOutline,
   TrashOutline,
   CreateOutline,
   Fitness,
@@ -33,6 +34,7 @@ export default defineComponent({
     FitnessOutline,
     WarningOutline,
     ChatbubbleEllipsesOutline,
+    ChatboxEllipsesOutline,
     TrashOutline,
     CreateOutline,
     Fitness,
@@ -70,6 +72,10 @@ export default defineComponent({
       { immediate: true }
     );
   },
+  mounted() {
+    this.lyricsIndex = 0;
+    this.scroll("auto");
+  },
   setup() {
     return {
       handlePositiveClick(comment) {
@@ -99,11 +105,17 @@ export default defineComponent({
       },
       dayjs,
       value: ref(""),
-      editCommentId: ref(0),
+      editCommentId: ref(0), // 一级评论的评论id
+      editNewCommentId: ref(1), // 编辑新评论
+      edit2ndCommentId: ref(0), // 二级评论的评论id
+      edit2ndCommentParentId: ref(0), // 二级评论的父评论，即对应的一级评论
       islike: ref(false),
       iscollect: ref(false),
       iscomplain: ref(false),
       lyricsRef: ref(),
+      edit1stComment: ref(false), // 修改一级评论
+      reply2ndComment: ref(false), // 回复一级评论，即编辑二级评论
+      edit2ndComment: ref(false), // 修改二级评论
     };
   },
   data() {
@@ -158,15 +170,16 @@ export default defineComponent({
       }
       let formData = new FormData();
       formData.append("content", this.value);
-      if (this.editCommentId == 0) {
+      if (this.editNewCommentId == 1) {
         this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
           this.success("评论成功");
         });
-      } else {
+      } else if (this.editNewCommentId == 0 && this.editCommentId != 0){
         this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
           this.success("编辑成功");
         });
         this.editCommentId = 0;
+        this.editNewCommentId = 1;
       }
       this.value == "";
     },
@@ -175,18 +188,67 @@ export default defineComponent({
         this.success("删除成功");
       });
     },
+    send2ndComment() {
+      if (this.value == "") {
+        this.warning("评论内容不能为空");
+        return;
+      }
+      let formData = new FormData();
+      formData.append("content", this.value);
+      if (this.edit2ndCommentId == 0) {
+        this.$http.post(`/api/comment/on/comment/${this.edit2ndCommentParentId}/`, formData).then(() => {
+          this.success("回复评论成功");
+        });
+      } else {
+        this.$http.post(`/api/comment/edit/${this.edit2ndCommentId}/`, formData).then(() => {
+          this.success("编辑成功");
+        });
+        this.edit2ndCommentId = 0;
+        this.edit2ndCommentParentId = 0;
+      }
+      this.value == "";
+    },
+    // 编辑回复评论
+    editReplyComment(comment) {
+      this.edit2ndCommentParentId = comment.id;
+      if (!this.reply2ndComment) {
+        this.reply2ndComment = true;
+      } else {
+        this.value = "";
+        this.reply2ndComment = false;
+      }
+    },
+    // 修改回复评论
+    editMy2ndComment(comment) {
+      this.edit2ndCommentId = comment.id;
+      this.value = comment.content;
+      if (!this.edit2ndComment) {
+        this.edit2ndComment = true;
+      } else {
+        this.value = "";
+        this.edit2ndComment = false;
+      }
+    },
+    // 修改我的评论
     editMyComment(comment) {
-      console.log(this.$cookies.get("userid"));
-      console.log(comment.author_id);
+      // console.log(this.$cookies.get("userid"));
+      // console.log(comment.author_id);
       // alert("yes!");
       this.value = comment.content;
+      this.editNewCommentId = 0;
       this.editCommentId = comment.id;
-      document.querySelector("#comment-top").scrollIntoView({
-        behavior: "smooth",
-      });
-      if (document.querySelector(".n-input-wrapper") == null) {
-        document.querySelector("#comment-fold").click();
+      if (!this.edit1stComment) {
+        this.edit1stComment = true;
+      } else {
+        this.value = "";
+        this.edit1stComment = false;
       }
+      // document.querySelector("#comment-top").scrollIntoView({
+      //   behavior: "smooth",
+      // });
+      // if (document.querySelector(".n-input-wrapper") == null) {
+      //   document.querySelector("#comment-fold").click();
+      // }
     },
     parseTime(time) {
       const min = parseInt(time.match(/.*:/)[0].slice(0, 2));
@@ -266,10 +328,10 @@ export default defineComponent({
   <div
     class="player-page"
     id="top"
-    :style="{
-      'background-color': getRGBString(backgroundColorString, 0.7),
-    }"
   >
+    <img class="background-img" :src="music.cover" />
+    <div class="background-imgfloat"></div>
+    <div class="content">
     <n-grid>
       <n-gi :span="4">
         <div>
@@ -347,6 +409,12 @@ export default defineComponent({
             </n-gi>
             <n-gi>
               <div class="music-artist">歌手：{{ music.artist }}</div>
+              <div>
+                <span style="color: gray;">来源： </span>
+                <router-link :to="`/home/user/${music.up.id}`">
+                  <span class="upload-user" style="color: gray;">{{ music.up.username }}</span>
+                </router-link>
+              </div>
             </n-gi>
             <n-gi>
               <div class="song-tags">
@@ -415,7 +483,7 @@ export default defineComponent({
       </n-gi>
       <n-gi :span="3"></n-gi>
     </n-grid>
-  </div>
+  </div></div>
   <div class="edit-comment">
     <n-grid>
       <n-gi :span="4"></n-gi>
@@ -496,17 +564,26 @@ export default defineComponent({
         >
           <a-comment>
             <template #actions>
-              <span key="edit-comment">
+              <span key="reply-comment">
                 <span style="padding-left: 855px; cursor: auto">
                   <n-popover trigger="hover">
                     <template #trigger>
-                      <n-button
-                        text
-                        circle
-                        focusable="false"
-                        @click="editMyComment(comment)"
-                        :disabled="this.$cookies.get('userid') != comment.up.id"
-                      >
+                      <n-button text circle focusable="false" @click="editReplyComment(comment)">
+                        <n-icon size="18">
+                          <ChatboxEllipsesOutline />
+                        </n-icon>
+                      </n-button>
+                    </template>
+                    <span>回复评论</span>
+                  </n-popover>
+                </span>
+              </span>
+              <span key="edit-comment">
+                <span style="padding-left: 3px; cursor: auto">
+                  <n-popover trigger="hover">
+                    <template #trigger>
+                      <n-button text circle focusable="false" @click="editMyComment(comment)"
+                        :disabled="this.$cookies.get('userid') != comment.up.id">
                         <n-icon size="18">
                           <CreateOutline />
                         </n-icon>
@@ -539,11 +616,15 @@ export default defineComponent({
                 </span>
               </span>
             </template>
-            <template #author
-              ><a style="font-size: 18px">{{ comment.up.username }}</a></template
-            >
+            <template #author>
+              <router-link :to="`/home/user/${comment.up.id}`">
+                <div style="font-size: 18px">{{ comment.up.username }}</div>
+              </router-link>
+            </template>
             <template #avatar>
-              <a-avatar :src="comment.up.avatar" :size="50" />
+              <router-link :to="`/home/user/${comment.up.id}`">
+                <a-avatar :src="comment.up.avatar" :size="50" />
+              </router-link>
             </template>
             <template #content>
               <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
@@ -557,6 +638,118 @@ export default defineComponent({
                 </span>
               </a-tooltip>
             </template>
+            <div
+              v-if="this.edit1stComment && this.editCommentId == comment.id">
+              <div>
+                <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                  v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
+                    minRows: 6,
+                    maxRows: 6,
+                  }" />
+                <div class="my-comment-button">
+                  <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
+                    发送
+                  </n-button>
+                  <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                    清空
+                  </n-button>
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="this.reply2ndComment && this.edit2ndCommentParentId == comment.id">
+              <div>
+                <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                  v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
+                    minRows: 6,
+                    maxRows: 6,
+                  }" />
+                <div class="my-comment-button">
+                  <n-button class="send-button" strong secondary type="tertiary" @click="send2ndComment">
+                    发送
+                  </n-button>
+                  <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
+                    清空
+                  </n-button>
+                </div>
+              </div>
+            </div>
+            <div v-if="comment.comment_set.length > 0">
+              <div v-for="(comment_2nd, idx) in comment.comment_set" :key="idx">
+                <a-comment>
+                  <template #actions>
+                    <span key="edit-comment">
+                      <span style="padding-left: 842px; cursor: auto">
+                        <n-popover trigger="hover">
+                          <template #trigger>
+                            <n-button text circle focusable="false" @click="editMy2ndComment(comment_2nd)"
+                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id">
+                              <n-icon size="18">
+                                <CreateOutline />
+                              </n-icon>
+                            </n-button>
+                          </template>
+                          <span>编辑我的评论</span>
+                        </n-popover>
+                      </span>
+                    </span>
+                    <span key="delete-comment">
+                      <span style="padding-left: 3px; cursor: auto">
+                        <n-popconfirm @positive-click="handlePositiveClick(comment_2nd)"
+                          @negative-click="handleNegativeClick">
+                          <template #trigger>
+                            <n-button text circle focusable="false"
+                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id">
+                              <n-icon size="18">
+                                <TrashOutline />
+                              </n-icon>
+                            </n-button>
+                          </template>
+                          确认删除这条评论吗？
+                        </n-popconfirm>
+                      </span>
+                    </span>
+                  </template>
+                  <template #author>
+                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
+                      <div style="font-size: 18px">{{ comment_2nd.up.username }}</div>
+                    </router-link></template>
+                  <template #avatar>
+                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
+                      <a-avatar :src="comment_2nd.up.avatar" :size="50" /></router-link>
+                  </template>
+                  <template #content>
+                    <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
+                      {{ comment_2nd.content }}
+                    </p>
+                  </template>
+                  <template #datetime>
+                    <a-tooltip :title="comment_2nd.date.replace('T', ' ').split('.')[0]">
+                      <span style="margin-bottom: 0; font-size: 10px">
+                        {{ dayjs(comment_2nd.date.replace("T", " ").split(".")[0]).fromNow() }}
+                      </span>
+                    </a-tooltip>
+                  </template>
+                  <div v-if="this.edit2ndComment && this.edit2ndCommentId == comment_2nd.id">
+                    <div>
+                      <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                        v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
+                          minRows: 6,
+                          maxRows: 6,
+                        }" />
+                      <div class="my-comment-button">
+                        <n-button class="send-button" strong secondary type="tertiary" @click="send2ndComment">
+                          发送
+                        </n-button>
+                        <n-button class="clean-button-2nd" strong secondary type="tertiary" @click="cleanComment">
+                          清空
+                        </n-button>
+                      </div>
+                    </div>
+                  </div>
+                </a-comment>
+              </div>
+            </div>
           </a-comment>
         </div>
         <div class="card-pagination">
@@ -590,6 +783,31 @@ export default defineComponent({
 </template>
 
 <style scoped>
+.content {
+  position: relative;
+  z-index: 2;
+}
+.background-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(40px) saturate(1);  /* 背景图片模糊效果 */
+  opacity: 0.5;
+  z-index: -1;
+}
+.background-imgfloat {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);  /* 黑色遮罩，透明度为0.5 */
+  z-index: 1;
+}
 .player-page {
   height: 100vh;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
@@ -689,6 +907,11 @@ export default defineComponent({
 .clean-button {
   position: absolute;
   margin-left: 920px;
+}
+
+.clean-button-2nd {
+  position: absolute;
+  margin-left: 850px;
 }
 
 .send-button {

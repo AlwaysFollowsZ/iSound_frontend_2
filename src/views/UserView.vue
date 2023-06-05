@@ -71,6 +71,9 @@
                                 <n-tab-pane name="我的收藏夹" tab="我的收藏夹">
                                     <my-song-sheet-view />
                                 </n-tab-pane>
+                                <n-tab-pane name="我喜欢" tab="我喜欢">
+                                    <my-favorites />
+                                </n-tab-pane>
                                 <n-tab-pane name="分享歌单" tab="分享歌单">
                                     <shared-song-sheet-view />
                                 </n-tab-pane>
@@ -100,10 +103,10 @@
             <n-gi :span="2"></n-gi>
         </n-grid>
     </div>
-    
+
     <modify-user-info-view :showModifyUserInfo="showModifyUserInfo"
         @closeModifyWindow="showModifyUserInfo = false; updateInfo()"></modify-user-info-view>
-    
+
     <!-- <ModifyUserInfo @update-user-info="updateUserInfo" /> -->
 </template>
   
@@ -115,18 +118,21 @@ import SharedSongSheetView from '../components/SharedSongSheetView.vue';
 import MyUploadSongView from '../components/MyUploadSongView.vue';
 import FollowListView from "../components/FollowListView.vue";
 import FanListView from '../components/FanListView.vue';
+import MyFavorites from '../components/MyFavorites.vue'
 import 'animate.css';
 import { ref } from "vue";
 import { NTabs, NTabPane } from "naive-ui";
 import { CreateOutline, PaperPlaneOutline, PersonCircleSharp, PricetagOutline } from '@vicons/ionicons5';
 import { NewspaperOutline, FlowerOutline, FlashOutline } from '@vicons/ionicons5'
 import { mapState } from 'vuex';
+import MyFavoritesVue from '../components/MyFavorites.vue';
 export default {
     computed: {
         ...mapState(['colorMode', 'accentColor']),
     },
     components: {
         ModifyUserInfoView,
+        MyFavorites,
         MySongSheetView,
         SharedSongSheetView,
         MyUploadSongView,

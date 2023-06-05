@@ -48,11 +48,11 @@
       :class="{'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn}"
     >
       <n-grid  :col="6">
-        <n-gi :span="4"  v-for="(song, idx) in songs" :key="idx">
+        <n-gi :span="4"  v-for="(song, idx) in songs.slice(0, 6)" :key="idx">
           <div>
-            <div class="single-card-container">
+            <div class="single-card-container" @click="jumpToSong(song.id)">
               <div class="single-card-img-container">
-                <img class="single-card-img" :src="song.imgSrc">
+                <img class="single-card-img" draggable="false" :src="song.imgSrc">
               </div>
               <div class="single-card-info-container">
                 <div class="single-card-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
@@ -77,9 +77,9 @@
     <div class="song-entry-outter animate__animated"
       :class="{ 'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn }">
       <n-grid :x-gap="0" :y-gap="0">
-        <n-gi :span="6" v-for="(obj, idx) in arr" :key="idx">
+        <n-gi :span="6" v-for="(song, idx) in songs.slice(6, 18)" :key="idx">
           <div class="song-entry-card-container">
-            <div class="song-entry-container">
+            <div class="song-entry-container"  @click="jumpToSong(song.id)">
               <div style="padding-bottom: 3%; padding-top: 3%; height: 15px">
                 <!-- <hr style="box-shadow: none;  margin: 0; transition: color 1s;" 
                 :style="{'border-color': 'rgba(' + this.accentColor + ',0.7)', 'background-color': 'rgba(' + this.accentColor + ',0.7)'}"
@@ -89,14 +89,14 @@
                 <n-gi :span="4">
                   <div class="song-entry-img-container">
                     <img class="song-entry-img"
-                      src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg">
+                      :src="song.imgSrc" draggable="false">
                   </div>
                 </n-gi>
                 <n-gi :span="2"></n-gi>
                 <n-gi :span="15">
                   <div class="song-entry-info-container">
-                    <div class="song-entry-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">这里还有更多的歌</div>
-                    <div class="song-entry-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">singer</div>
+                    <div class="song-entry-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">{{ song.title}}</div>
+                    <div class="song-entry-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">{{ song.singer }}</div>
                   </div>
                 </n-gi>
               </n-grid>
@@ -167,43 +167,44 @@ export default {
         },
       ],
       songs: [
-        {
-          imgSrc: "/src/assets/song5.png",
-          title: "只因你太美",
-          jumpLink: "1",
-          singer: "蔡只因"
-        },
-        {
-          imgSrc: "/src/assets/song2.jpg",
-          title: "给自己的情书",
-          jumpLink: "2",
-          singer: "王菲"
-        },
-        {
-          imgSrc: "/src/assets/song3.jpg",
-          title: "Yesterday Once More",
-          jumpLink: "3",
-          singer: "Carpenters"
-        },
-        {
-          imgSrc: "/src/assets/song4.jpg",
-          title: "守时",
-          jumpLink: "4",
-          singer: "王菲"
-        },
-        {
-          imgSrc: "/src/assets/song5.jpg",
-          title: "当爱已成往事",
-          jumpLink: "5",
-          singer: "张国荣"
-        },
-        {
-          imgSrc: "/src/assets/song6.jpg",
-          title: "山水之间",
-          jumpLink: "6",
-          singer: "许嵩"
-        }
+        // {
+        //   imgSrc: "/src/assets/song5.png",
+        //   title: "只因你太美",
+        //   jumpLink: "1",
+        //   singer: "蔡只因"
+        // },
+        // {
+        //   imgSrc: "/src/assets/song2.jpg",
+        //   title: "给自己的情书",
+        //   jumpLink: "2",
+        //   singer: "王菲"
+        // },
+        // {
+        //   imgSrc: "/src/assets/song3.jpg",
+        //   title: "Yesterday Once More",
+        //   jumpLink: "3",
+        //   singer: "Carpenters"
+        // },
+        // {
+        //   imgSrc: "/src/assets/song4.jpg",
+        //   title: "守时",
+        //   jumpLink: "4",
+        //   singer: "王菲"
+        // },
+        // {
+        //   imgSrc: "/src/assets/song5.jpg",
+        //   title: "当爱已成往事",
+        //   jumpLink: "5",
+        //   singer: "张国荣"
+        // },
+        // {
+        //   imgSrc: "/src/assets/song6.jpg",
+        //   title: "山水之间",
+        //   jumpLink: "6",
+        //   singer: "许嵩"
+        // }
       ],
+      all_songs: [],
       arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     }
   },
@@ -211,6 +212,15 @@ export default {
     setTimeout(() => {
       this.scrollPromptShouldDisplay = true
     }, 800)
+    this.$http.get(`/api/index/`).then((response) => {
+      this.all_songs = response.data.music_set.map(song => ({
+        id: song.id,
+        imgSrc: song.cover,
+        title: song.name,
+        singer: song.artist,
+      }))
+      this.randomSelectSongs()
+    })
   },
   mounted() {
     window.addEventListener('scroll', this.handleSongEntryScroll)
@@ -224,6 +234,30 @@ export default {
   },
   methods: {
     ...mapMutations(['setAccentColor']),
+    randomSelectSongs() {
+      let randomIndex = []
+      let min = 0, max = this.all_songs.length - 1
+      if (max <= 17) { // 总歌曲数量不够
+        let i = 0
+        while (randomIndex.length < 18) {
+          randomIndex.push(i)
+          this.songs.push(this.all_songs[i])
+          i++
+          if (i === max) {
+            i = 0
+          }
+        }
+      } else {
+        while (randomIndex.length < 18) {
+          let r = Math.floor(Math.random() * (max - min + 1)) + min
+          if (!randomIndex.includes(r)) {
+            randomIndex.push(r)
+            this.songs.push(this.all_songs[r])
+          }
+        }
+      }
+
+    },
     getCorrectAccentColor() {
       if (this.colorMode === 'white') {
         return this.accentColor
@@ -246,9 +280,9 @@ export default {
       // this.$router.push(jumpLink)
       console.log(jumpLink)
     },
-    jumpToSong(jumpLink) {
+    jumpToSong(id) {
       // this.$router.push(jumpLink)
-      console.log(jumpLink)
+      this.$EventBus.emit('play', id)
     },
     handleCardsScroll() {
       if (!this.cardsShouldAnimate) {
@@ -329,6 +363,9 @@ export default {
     padding-bottom: 3%;
     word-wrap: break-word;
   }
+  .single-card-container:hover {
+    cursor: pointer;
+  }
   .single-card-img-container {
     width: 160px; 
     height: 160px; 
@@ -383,6 +420,9 @@ export default {
   }
   .song-entry-card-container {
     padding-left: 19%;
+  }
+  .song-entry-card-container:hover {
+    cursor: pointer;
   }
   .song-entry-container {
     width: 18vw;

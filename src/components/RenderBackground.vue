@@ -174,7 +174,7 @@ export default {
                     Math.cos(this.DirectionAngle) * this.Speed// 向下运动
                 ]
                 //设置形状
-                geometry = new THREE.BoxBufferGeometry(this.Size[0], this.Size[1], this.Size[2]);
+                geometry = new THREE.BoxGeometry(this.Size[0], this.Size[1], this.Size[2]);
                 //设置材质
                 material = new THREE.MeshLambertMaterial({
                     color: elementColor,
@@ -222,7 +222,7 @@ export default {
                         [Math.random() * 10 - 5, Math.random() * 15 + 5, 0] ://在(-5,5),(5,20)的区域生成立方体
                         [Math.random() * 10 - 5, -Math.random() * 15 - 5, 0]//在(-5,5),(-20,-5)的区域生成立方体
                     //更新物体形状及材质
-                    this.geometry = new THREE.BoxBufferGeometry(this.Size[0], this.Size[1], this.Size[2]);
+                    this.geometry = new THREE.BoxGeometry(this.Size[0], this.Size[1], this.Size[2]);
                     this.material = new THREE.MeshLambertMaterial({
                         color: elementColor,
                         transparent: true,
@@ -259,7 +259,7 @@ export default {
                     Math.cos(this.DirectionAngle) * this.Speed// 向下运动
                 ]
                 //设置形状
-                geometry = new THREE.OctahedronBufferGeometry(this.Size)
+                geometry = new THREE.OctahedronGeometry(this.Size)
                 //设置材质
                 material = new THREE.MeshLambertMaterial({
                     color: elementColor,
@@ -662,7 +662,7 @@ export default {
                 Opacity = []//透明度连续变化
                 iterateCount = Math.random() * 200 + 100//随机化不透明度迭代次数
                 Count = 0//遍历Opacity数组
-                geometry = new THREE.CircleBufferGeometry(this.Size, 3)
+                geometry = new THREE.CircleGeometry(this.Size, 3)
                 //设置材质.就白色的吧，其他颜色不是很明显
                 material = new THREE.MeshBasicMaterial({
                     color: 'rgb(240,240,240)',

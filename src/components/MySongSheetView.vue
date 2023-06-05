@@ -4,7 +4,7 @@
             全部收藏夹
         </div>
         <!-- <div style="display: flex; justify-content: center;"> -->
-            <!-- <div class="song-sheet-container">
+        <!-- <div class="song-sheet-container">
                 <n-grid :x-gap="12" :y-gap="6" :col="2">
                     <n-gi :span="12" v-for="(song, idx) in songSheets" :key="idx">
                         <div class="single-card-container">
@@ -20,19 +20,25 @@
                     </n-gi>
                 </n-grid>
             </div> -->
-            <!-- <n-pagination v-model:page="page" :page-count="3" />
+        <!-- <n-pagination v-model:page="page" :page-count="3" />
         </div> -->
-        <image-table :position="'Collection'" :entrySize="[200,200]"></image-table>
+        <div style="text-align:center;"><image-table :position="'Collection'" :entrySize="[200, 200]" :rows="collectionData"
+                @flushCollections="updateCollections" ></image-table></div>
+
     </div>
 </template>
 <script>
+import 'animate.css'
 import ImageTable from '/src/components/tables/ImageTable/ImageTable.vue';
 export default {
     components: {
         ImageTable
     },
     data() {
+        let collectionData = [];//收藏夹数据
+        this.updateCollections()//获取收藏夹数据
         return {
+            collectionData,
             songSheets: [
                 {
                     imgSrc: "/src/assets/song1.jpg",
@@ -61,10 +67,37 @@ export default {
             ]
         }
     },
+    methods: {
+        updateCollections() {
+            let formData = new FormData()
+            formData.append('shared', false)
+            this.$http.get('/api/playlist/of/0/', formData).then((response) => {
+                let key = 0
+                console.log('update:content=' + response.data.playlist_set)
+                if (response.data.playlist_set.length == 0) {
+                    this.collectionData = []
+                    return
+                }
+                this.collectionData = response.data.playlist_set.map((collection) => {
+                    return {
+                        Key: key++,
+                        Id: collection.id,
+                        imagePath: collection.cover,
+                        Name: collection.title,
+                        songCount: collection.music_set.length,
+                        Type: 'Collection'
+                    }
+                })
+                console.log('cod' + JSON.stringify(response.data))
+            })//更新当前用户的收藏夹数据
+        },
+    }
 }
 </script>
 <style scoped>
 .my-song-sheet-title {
+    /* animation: slideInLeft;
+    animation-duration: 0.5s; */
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
     font-weight: bold;

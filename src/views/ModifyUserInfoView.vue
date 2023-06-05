@@ -10,7 +10,7 @@
                         </n-gi>
                         <!-- <n-gi :span="1"></n-gi> -->
                         <n-gi :span="2">
-                            <div class="close-icon" style="padding-top: 5px" @click="submitModify(); closeMWindow()" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                            <div class="close-icon" style="padding-top: 5px" @click="closeMWindow()" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
                                 <n-icon size="40"><close-outline/></n-icon>
                             </div>
                         </n-gi>
@@ -22,7 +22,7 @@
                     <n-gi :span="10">
                         <div class="avatar">
                             <img :src="avatarUrl" @click="uploadFile" />
-                            <input type="file" accept="image/*" ref="fileInput" style="display: none" @change="handleFileChange" />
+                            <input type="file" ref="fileInput" style="display: none" accept="image/*" @change="handleFileChange" />
                         </div>
                         <div class="avatar-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">点击以更换头像</div>
                     </n-gi>
@@ -138,6 +138,73 @@
                             
                         </div>
                     </n-gi>
+                </n-grid>
+            </div>
+            <div style="margin-top: 20px; margin-bottom: 25px">
+                <n-grid class="login-button-top">
+                    <n-gi :span="4"></n-gi>
+                    <n-gi :span="4" style="display: flex; justify-content: right">
+                        <n-button strong secondary type="success" @click="submitModify(); closeMWindow()" :focusable="false"
+                            :style="{
+                                '--n-color': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
+                                '--n-color-hover': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                '--n-color-pressed': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                '--n-text-color': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-hover': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-pressed': 
+                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                '--n-border': '1px solid transparent',
+                                '--n-border-hover': '1px solid transparent',
+                                '--n-border-pressed': '1px solid transparent',
+                                '--n-border-radius': '5px',
+                                '--n-width': '64px',
+                                '--n-height': '39px',
+                                '--n-font-size': '18px',
+                            }"
+                        >
+                            完成
+                        </n-button>
+                    </n-gi>
+                    <n-gi :span="8"></n-gi>
+                    <n-gi :span="4" style="display: flex; justify-content: left">
+                        <n-button strong secondary type="Warning" @click="closeMWindow()"
+                            :style="{
+                                '--n-color': 
+                                    'grey',
+                                '--n-color-hover': 
+                                    '#5d5d60',
+                                '--n-color-pressed': 
+                                    '#5d5d60',
+                                '--n-text-color': 
+                                    'white',
+                                '--n-text-color-hover': 
+                                    'white',
+                                '--n-text-color-pressed': 
+                                    'white',
+                                '--n-border': '1px solid transparent',
+                                '--n-border-hover': '1px solid transparent',
+                                '--n-border-pressed': '1px solid transparent',
+                                '--n-border-radius': '5px',
+                                '--n-width': '64px',
+                                '--n-height': '39px',
+                                '--n-font-size': '18px',
+                            }"
+                        >
+                            取消
+                        </n-button>
+                    </n-gi>
+                    <n-gi :span="4"></n-gi>
                 </n-grid>
             </div>
         </div>

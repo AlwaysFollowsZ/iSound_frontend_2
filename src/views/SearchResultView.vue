@@ -52,6 +52,9 @@
             <n-tab-pane name="歌单" tab="歌单">
                 <image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330,240]" v-model:rows="songlists"> </image-table>
             </n-tab-pane>
+            <n-tab-pane name="用户" tab="用户">
+                <user-list :list="userlist"></user-list>
+            </n-tab-pane>
         </n-tabs> 
     </div>
 </template>
@@ -60,6 +63,7 @@
 import TopNav from '../components/TopNav.vue'
 import ImageTable from '../components/tables/ImageTable/ImageTable.vue'
 import ListTable from "../components/tables/ListTable/ListTable.vue"
+import UserList from "../components/UserList.vue"
 import { SearchOutline } from '@vicons/ionicons5'
 import { mapState } from 'vuex'
 export default {
@@ -72,6 +76,7 @@ export default {
         SearchOutline,
         ListTable,
         ImageTable,
+        UserList,
     },
     data() {
         return {
@@ -79,6 +84,7 @@ export default {
             searchIconIsHovered: false,
             songs: [],
             songlists: [],
+            userlist: [],
             searchValue: '',
         }
     },
@@ -120,6 +126,13 @@ export default {
                     imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
                     songCount: songlist.music_set.length,
                     Name: songlist.title,
+                }))
+                this.userlist = response.data.up_set.map(user => ({
+                    id: user.id,
+                    name: user.username,
+                    bio: user.profile,
+                    avatarImg: user.avatar,
+                    isFollowing: user.is_followed,
                 }))
             })
             for (let i = 0; i < this.songs.length; i++) {
