@@ -126,7 +126,7 @@ export default defineComponent({
                         `${Math.floor(music.duration / 60)}`.padStart(2, "0") +
                         ":" +
                         `${Math.floor(music.duration % 60)}`.padStart(2, "0"),
-                    isliked: music.is_like,
+                    isLiked: music.is_like,
                     isCollected: music.is_favorite,
                     imgSrc: music.cover,
                     showCollection: false,

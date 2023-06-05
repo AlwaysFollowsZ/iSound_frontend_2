@@ -55,7 +55,7 @@ export default {
                 name: song.name,
                 singer: song.artist,
                 id: song.id,
-                length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
+                length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.floor(song.duration % 60)}`.padStart(2, '0'),
                 imgSrc: song.cover,
                 isLiked: song.is_like,
                 isCollected: false,
