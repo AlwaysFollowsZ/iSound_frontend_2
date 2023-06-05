@@ -152,18 +152,18 @@
       </n-gi>
       <n-gi :span="1">
         <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options">
-          <n-avatar v-if="isLoggedIn"
+          <n-avatar v-if="isLoggedIn" class="user-avatar" @click="this.$router.push('/home');" @mouseover="renderDropDown"
             :src="this.avatarFile"
             size="large"
           ></n-avatar>
           <n-avatar v-else
             src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-            size="large"
+            size="large" 
           ></n-avatar>
         </n-dropdown>
         <n-tooltip v-else placement="bottom-start" trigger="hover">
           <template #trigger>
-            <n-avatar
+            <n-avatar class="user-avatar"
               src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
               size="large"
             ></n-avatar>
@@ -352,6 +352,19 @@ export default {
     handleMultiColorChange() {
       this.setMultiColor(this.multiColorShouldDisplay);
     },
+    renderDropDown() {
+      setTimeout(() => {
+        let menuarr = document.getElementsByClassName('n-dropdown-menu')
+        if (menuarr.length > 0) {
+          let menu = menuarr[0]
+          menu.style.setProperty('--n-color', this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)')
+          menu.style.setProperty('--n-option-text-color', 'rgb(' + this.accentColor + ')')
+          menu.style.transition = 'color 1s'
+          console.log("color: " + this.accentColor)
+        }
+        // console.log(menu.length)
+      }, 120);
+    },
   },
   
 };
@@ -423,6 +436,10 @@ export default {
 }
 
 .back-to-home:hover {
+  cursor: pointer;
+}
+
+.user-avatar:hover {
   cursor: pointer;
 }
 </style>
