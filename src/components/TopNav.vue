@@ -281,7 +281,7 @@ export default {
       multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
       SearchOutline,
       MailOutline,
-      showMessage: ref(true),
+      showMessage: false,
       avatarFile: null,
       options: [
         {
@@ -318,6 +318,7 @@ export default {
               this.setLogState(false);
               this.$http.post("/api/accounts/logout/");
               this.$cookies.remove("userid");
+              this.$router.push("/");
             },
           },
         },

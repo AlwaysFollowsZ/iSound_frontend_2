@@ -217,6 +217,7 @@ export default {
           this.$cookies.set("userid", response.data.up.id);
           this.$cookies.set("is_superuser", response.data.up.is_superuser);
           if (response.data.up.is_superuser) {
+            this.$router.push("admin");
           }
           this.changeToLoggedIn();
           this.closeLWindow();
