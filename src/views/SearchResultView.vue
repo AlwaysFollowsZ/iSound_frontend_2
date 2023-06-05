@@ -43,15 +43,29 @@
             '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
         }">
             <n-tab-pane name="歌曲" tab="歌曲">
-                <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
-                    v-model:songData="songs"></list-table>
+                <div v-if="this.songs.length == 0" class="no-result-info">
+                    暂无搜索结果...
+                </div>
+                <div v-else>
+                    <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
+                        v-model:songData="songs"></list-table>
+                </div>
             </n-tab-pane>
             <n-tab-pane name="歌单" tab="歌单">
-                <image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330, 240]"
-                    v-model:rows="songlists" :position="'ResultView'" :handleClickEntry="jumpToSonglist"> </image-table>
+                <div v-if="this.songlists.length == 0" class="no-result-info">
+                    暂无搜索结果...
+                </div>
+                <div v-else><image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330, 240]"
+                        v-model:rows="songlists" :position="'ResultView'" :handleClickEntry="jumpToSonglist"> </image-table>
+                </div>
             </n-tab-pane>
             <n-tab-pane name="用户" tab="用户">
-                <user-list :list="userlist"></user-list>
+                <div v-if="this.userlist.length == 0" class="no-result-info">
+                    暂无搜索结果...
+                </div>
+                <div v-else>
+                    <user-list :list="userlist"></user-list>
+                </div>
             </n-tab-pane>
         </n-tabs>
     </div>
@@ -197,5 +211,15 @@ export default {
 .tab-container {
     margin-left: 80px;
     margin-right: 80px;
+}
+
+.no-result-info {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0.8;
+    /* 不透明度 */
 }
 </style>

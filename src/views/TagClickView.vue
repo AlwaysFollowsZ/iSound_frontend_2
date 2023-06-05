@@ -6,7 +6,8 @@
             <n-gi :span="18">
                 <div class="tag-table-container">
                     <!-- <div class="cover-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">点击此处上传歌曲封面</div> -->
-                    <div class="tag-prompt" :style="{'color': 'rgb(' + this.accentColor + ')'}">分类标签“{{ this.tag }}”的搜索结果</div>
+                    <div class="tag-prompt" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">分类标签“{{ this.tag }}”的搜索结果
+                    </div>
                     <!-- <tag-table :width="1400" :should-animate="false" /> -->
                 </div>
 
@@ -20,12 +21,22 @@
                         '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
                     }">
                         <n-tab-pane name="歌曲" tab="歌曲">
-                            <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
-                                v-model:songData="songs"></list-table>
+                            <div v-if="this.songs.length == 0" class="no-result-info">
+                                暂无搜索结果...
+                            </div>
+                            <div v-else>
+                                <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
+                                    v-model:songData="songs"></list-table>
+                            </div>
                         </n-tab-pane>
                         <n-tab-pane name="歌单" tab="歌单">
-                            <image-table :key="this.$route.params.keyword" :table-size="[1100,]" :entry-size="[330, 240]"
-                                v-model:rows="songLists"> </image-table>
+                            <div v-if="this.songLists.length == 0" class="no-result-info">
+                                暂无搜索结果...
+                            </div>
+                            <div v-else>
+                                <image-table :key="this.$route.params.keyword" :table-size="[1100,]"
+                                    :entry-size="[330, 240]" v-model:rows="songLists" :handleClickEntry="jumpToSonglist"> </image-table>
+                            </div>
                         </n-tab-pane>
                     </n-tabs>
                     <!-- <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table> -->
@@ -76,19 +87,24 @@ export default {
                 showCollection: false,
             }))
             this.songLists = response.data.playlist_set.map(songList => ({
-                    Key: j++,
-                    Type: 'songList',
-                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
-                    songCount: songlist.music_set.length,
-                    Name: songlist.title,
-                }))
+                Key: j++,
+                Type: 'songList',
+                imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                songCount: songlist.music_set.length,
+                Name: songlist.title,
+            }))
         });
     },
     watch: {
         '$route'() {
             window.location.reload();
         }
-    }
+    },
+    methods: {
+        jumpToSonglist(id) {
+            this.$router.push(`/listdetail/${id}/`)
+        }
+    },
 }
 </script>
 <style scoped>
@@ -98,5 +114,15 @@ export default {
     font-weight: bold;
     margin-bottom: 5px;
     transition: color 1s;
+}
+
+.no-result-info {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0.8;
+    /* 不透明度 */
 }
 </style>
