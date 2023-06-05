@@ -5,21 +5,19 @@
             <n-gi :span="7"></n-gi>
             <n-gi :span="9">
                 <div style="padding-top: 30px; display: flex; justify-content: center">
-                    <n-input type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" 
-                        :style="{
-                            '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                            '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                            '--n-font-size': '18px',
-                            '--n-border-radius': '12px',
-                            '--n-height': '50px',
-                            '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                            '--n-border': '1px solid rgb(224, 224, 230)',
-                            '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                            '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                        }"
-                    />
+                    <n-input type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" :style="{
+                        '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                        '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                        '--n-font-size': '18px',
+                        '--n-border-radius': '12px',
+                        '--n-height': '50px',
+                        '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                        '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                        '--n-border': '1px solid rgb(224, 224, 230)',
+                        '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                        '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                        '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                    }" />
                 </div>
             </n-gi>
             <n-gi :span="1">
@@ -27,35 +25,35 @@
                     <div style="padding-top: 35px" class="search-icon"
                         :style="{ 'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey' }"
                         @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
-                        <n-icon  size="40px" @click="search">
-                            <SearchOutline/>
+                        <n-icon size="40px" @click="search">
+                            <SearchOutline />
                         </n-icon>
                     </div>
-                </div> 
-            </n-gi> 
-        </n-grid>      
+                </div>
+            </n-gi>
+        </n-grid>
     </div>
     <div class="tab-container">
-        <n-tabs size="large" type="line" animated
-            :style="{
+        <n-tabs size="large" type="line" animated :style="{
             '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
             '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
             '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
             '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
             '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
             '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
-            }"
-        >   
+        }">
             <n-tab-pane name="歌曲" tab="歌曲">
-                <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
+                <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
+                    v-model:songData="songs"></list-table>
             </n-tab-pane>
             <n-tab-pane name="歌单" tab="歌单">
-                <image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330,240]" v-model:rows="songlists"> </image-table>
+                <image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330, 240]"
+                    v-model:rows="songlists" :position="'ResultView'"> </image-table>
             </n-tab-pane>
             <n-tab-pane name="用户" tab="用户">
                 <user-list :list="userlist"></user-list>
             </n-tab-pane>
-        </n-tabs> 
+        </n-tabs>
     </div>
 </template>
 
@@ -114,10 +112,10 @@ export default {
                     name: song.name,
                     singer: song.artist,
                     id: song.id,
-                    length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
+                    length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.floor(song.duration % 60)}`.padStart(2, '0'),
                     imgSrc: song.cover,
                     isLiked: song.is_like,
-                    isCollected: false,
+                    isCollected: song.is_favorite,
                     showCollection: false,
                 }))
                 this.songlists = response.data.playlist_set.map(songlist => ({
@@ -143,7 +141,7 @@ export default {
             //     listIDs.push(this.songlists[i].id)
             // }
             this.$http.get(`/api/search/`, {
-                params: { 'tags': keyword } 
+                params: { 'tags': keyword }
             }).then((response) => {
                 tmpSong = response.data.music_set.map(song => ({
                     key: i++,
@@ -192,6 +190,7 @@ export default {
 .search-icon:hover {
     cursor: pointer;
 }
+
 .tab-container {
     margin-left: 80px;
     margin-right: 80px;

@@ -19,11 +19,11 @@ export default {
         let isHoverOnTitle = ref(false)
         let isHoverOnMask = ref(false)
         let isClickOnMask = ref(false)
-        let isClickOnButton1=ref(false)
-        let isClickOnButton2=ref(false)
+        let isClickOnButton1 = ref(false)
+        let isClickOnButton2 = ref(false)
         return {
             themeColor, fontColorString, themeColorString, isHoverOnBottom, isHoverOnMask, isClickOnMask, isHoverOnTitle, getRGBString,
-            isClickOnButton1,isClickOnButton2
+            isClickOnButton1, isClickOnButton2
         }
     },
     methods: {
@@ -37,10 +37,11 @@ export default {
             else {
                 this.$emit('cancelShare', this.Key)
             }
-            this.isClickOnButton1=false
+            this.isClickOnButton1 = false
         },
+        //todo:显示编辑歌单信息框
         handleClickOnButton2() {
-            this.$emit('shareCollection', Key)
+            this.$emit('shareCollection', this.Key)
             this.isClickOnButton2 = false
         }
     },
@@ -116,7 +117,8 @@ export default {
             'border': isHoverOnMask ? `3px solid rgb(${themeColorString})` : `3px solid transparent`
         }" :class="[isHoverOnMask ? 'mask_box-hover' : '',
 isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mouseleave="isHoverOnMask = false"
-            @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false" @click="$emit('clickEntry', Key)">
+            @mousedown="isClickOnMask = true" @mouseup="isClickOnMask = false"
+            @click="$emit('clickEntry', Id, Key)/*两个都返回*/">
             <!-- 动态属性为图片路径 -->
             <div class="image" :style="{
                 'background-image': `url(${imagePath})`,
@@ -142,7 +144,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                         <template #trigger>
                             <n-icon-wrapper :size="imageSizeAvg / 8" :border-radius="imageSizeAvg / 20"
                                 :color="`rgb(${themeColor},0.8)`" :style="{ 'margin': `0 ${imageSizeAvg / 30}px` }"
-                                @click.stop="isClickOnButton2=true">
+                                @click.stop="isClickOnButton2 = true">
                                 <n-icon :size="imageSizeAvg / 10">
                                     <share-ios20-regular v-if="Type === 'Collection'"></share-ios20-regular>
                                 </n-icon>
@@ -191,7 +193,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                         <template #trigger>
                             <n-icon-wrapper :size="imageSizeAvg / 8" :border-radius="imageSizeAvg / 20"
                                 :color="`rgb(${themeColor},0.8)`" @mouseenter="isHoverOnButton1 = true"
-                                @mouseleave="isHoverOnButton1 = false" @click.stop="isClickOnButton1=true">
+                                @mouseleave="isHoverOnButton1 = false" @click.stop="isClickOnButton1 = true">
                                 <n-icon :size="imageSizeAvg / 10">
                                     <share-close-tray20-regular v-if="Type === 'songList'"></share-close-tray20-regular>
                                     <delete20-regular v-if="Type === 'Song'"></delete20-regular>
