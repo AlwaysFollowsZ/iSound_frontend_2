@@ -55,9 +55,8 @@
                 <div v-if="this.songlists.length == 0" class="no-result-info">
                     暂无搜索结果...
                 </div>
-                <div v-else>
-                    <image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330, 240]"
-                        v-model:rows="songlists" :position="'ResultView'"> </image-table>
+                <div v-else><image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330, 240]"
+                        v-model:rows="songlists" :position="'ResultView'" :handleClickEntry="jumpToSonglist"> </image-table>
                 </div>
             </n-tab-pane>
             <n-tab-pane name="用户" tab="用户">
@@ -114,6 +113,9 @@ export default {
         this.setAndSearchKeyword(keyword)
     },
     methods: {
+        jumpToSonglist(id) {
+            this.$router.push(`/listdetail/${id}/`)
+        },
         setAndSearchKeyword(keyword) {
             let i = 0, j = 0
             let tmpSong = [], tmpList = []
@@ -136,7 +138,8 @@ export default {
                 this.songlists = response.data.playlist_set.map(songlist => ({
                     Key: j++,
                     Type: 'songList',
-                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    Id: songlist.id,
+                    imagePath: songlist.cover,
                     songCount: songlist.music_set.length,
                     Name: songlist.title,
                 }))
@@ -151,10 +154,9 @@ export default {
             for (let i = 0; i < this.songs.length; i++) {
                 songIDs.push(this.songs[i].id)
             }
-            // === DO NOT MODIFY ===
-            // for (let i = 0; i < this.songlists.length; i++) {
-            //     listIDs.push(this.songlists[i].id)
-            // }
+            for (let i = 0; i < this.songlists.length; i++) {
+                listIDs.push(this.songlists[i].id)
+            }
             this.$http.get(`/api/search/`, {
                 params: { 'tags': keyword }
             }).then((response) => {
@@ -172,7 +174,7 @@ export default {
                 tmpList = response.data.playlist_set.map(songlist => ({
                     Key: j++,
                     Type: 'songList',
-                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    imagePath: songlist.cover,     // === NEED TO BE REPLACED ===
                     songCount: songlist.music_set.length,
                     Name: songlist.title,
                 }))
@@ -183,12 +185,12 @@ export default {
                     }
                 }
                 // === DO NOT MODIFY ===
-                // for (let i = 0; i < tmpList.length; i++) {
-                //     if (listIDs.indexOf(tmpList[i].id) === -1) {
-                //         this.songlists.push(tmpList[i])
-                //         listIDs.push(tmpList[i].id)
-                //     }
-                // }
+                for (let i = 0; i < tmpList.length; i++) {
+                    if (listIDs.indexOf(tmpList[i].id) === -1) {
+                        this.songlists.push(tmpList[i])
+                        listIDs.push(tmpList[i].id)
+                    }
+                }
             })
         },
         search() {
