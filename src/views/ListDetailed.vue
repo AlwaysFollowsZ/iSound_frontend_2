@@ -78,6 +78,9 @@ export default defineComponent({
             this.playlist.shared = true;
             this.success("分享歌单成功");
             this.closeWindow();
+            setTimeout(() => {
+                this.$router.push('/home')
+            }, 1000)
         },
         unshareList() {
             this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
@@ -94,6 +97,9 @@ export default defineComponent({
             }
             this.playlist.shared = false;
             this.success("取消分享成功");
+            setTimeout(() => {
+                this.$router.push('/home')
+            }, 1000)
         },
         playAll() {
             this.$EventBus.emit("playAll", this.playlist.id);
@@ -162,6 +168,13 @@ export default defineComponent({
                 });
             },
         };
+    },
+    mounted() {
+        console.log(JSON.stringify(this.$route.params))
+        if (this.$route.params.shareModal === 'true') {
+            alert('show')
+            this.editList()
+        }
     },
     data() {
         return {
@@ -334,7 +347,7 @@ export default defineComponent({
             <n-gi :span="4"></n-gi>
         </n-grid>
     </div>
-    <n-modal :show="showEditListModify" z-index="1">
+    <n-modal :show="showEditListModify" z-index="1" :block-scroll="false">
         <div>
             <n-card class="edit-list-hodder" style="--n-border-radius: 20px">
                 <n-grid>
@@ -403,7 +416,7 @@ export default defineComponent({
             </n-card>
         </div>
     </n-modal>
-    <n-modal :show="showShareListModify" z-index="1">
+    <n-modal :show="showShareListModify" z-index="1" :block-scroll="false">
         <div>
             <n-card class="share-list-hodder" style="--n-border-radius: 20px">
                 <span class="modify-title">
