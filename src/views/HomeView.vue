@@ -278,7 +278,7 @@ export default {
       this.$EventBus.emit('play', id)
     },
     handleCardsScroll() {
-      if (!this.cardsShouldAnimate) {
+      if (!this.cardsShouldAnimate && !this.isLoggedIn) {
         const componentElement = this.$refs.songCardRef
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
@@ -292,7 +292,7 @@ export default {
       }
     },
     handleSongEntryScroll() {
-      if (!this.songEntryShouldAnimate) {
+      if (!this.songEntryShouldAnimate && !this.isLoggedIn) {
         const componentElement = this.$refs.songEntryRef
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
@@ -303,7 +303,7 @@ export default {
       }
     },
     handleTagScroll() {
-      if (!this.tagShouldAnimate) {
+      if (!this.tagShouldAnimate && !this.isLoggedIn) {
         const componentElement = this.$refs.tagRef
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
