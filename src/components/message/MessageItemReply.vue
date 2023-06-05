@@ -30,6 +30,7 @@ export default defineComponent({
       });
     },
     removeMessage(message) {
+      this.$http.delete(`/api/message/delete/sent/${message.id}/`);
       message["isDeleted"] = true;
       this.refreshPage = false;
       setTimeout(() => {
