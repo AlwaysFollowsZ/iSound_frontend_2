@@ -72,7 +72,7 @@
                                             }">
                                             {{ songFileName }}
                                         </n-button>
-                                        <input type="file" ref="songFileInput" @change="handleSongSrcFileChange"
+                                        <input type="file" accept="audio/*" ref="songFileInput" @change="handleSongSrcFileChange"
                                             style="display: none" />
                                     </div>
                                 </n-gi>
@@ -120,8 +120,8 @@
                                             }">
                                             {{ songLyricName }}
                                         </n-button>
-                                        <input type="file" ref="songLyricInput" @change="handleSongLyricFileChange"
-                                            style="display: none" />
+                                        <input type="file" accept="application/octet-stream" ref="songLyricInput" @change="handleSongLyricFileChange"
+                                            style="display:  none" />
                                     </div>
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
