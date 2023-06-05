@@ -103,6 +103,21 @@ export default defineComponent({
           duration: 1,
         });
       },
+      railStyle: ({ focused, checked }) => {
+        const style = {};
+        if (checked) {
+          style.background = "#fff";
+          if (focused) {
+            style.boxShadow = "0 0 0 2px #fff";
+          }
+        } else {
+          style.background = "grey";
+          if (focused) {
+            style.boxShadow = "0 0 0 2px grey";
+          }
+        }
+        return style;
+      },
       dayjs,
       value: ref(""),
       editCommentId: ref(0), // 一级评论的评论id
@@ -132,6 +147,7 @@ export default defineComponent({
       getRGBString,
       backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
       showModifyComplainView: false,
+      refreshCommentVir: 0,
     };
   },
   methods: {
@@ -181,12 +197,18 @@ export default defineComponent({
         this.editCommentId = 0;
         this.editNewCommentId = 1;
       }
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
       this.value == "";
     },
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
         this.success("删除成功");
       });
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
     },
     send2ndComment() {
       if (this.value == "") {
@@ -210,6 +232,9 @@ export default defineComponent({
         this.edit2ndCommentId = 0;
         this.edit2ndCommentParentId = 0;
       }
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
       this.value == "";
     },
     // 编辑回复评论
@@ -324,6 +349,11 @@ export default defineComponent({
         behavior: behavior,
       });
     },
+    regetComments() {
+      this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
+        this.comments = response.data.comment_set;
+      });
+    },
   },
 });
 </script>
@@ -409,14 +439,16 @@ export default defineComponent({
           <div class="lyrics-part">
             <n-grid :y-gap="15" :cols="1">
               <n-gi class="music-name">
-                <div>
+                <div style="color: #fff">
                   {{ music.name }}
                 </div>
               </n-gi>
               <n-gi>
-                <div class="music-artist">歌手：{{ music.artist }}</div>
-                <div>
-                  <span style="color: gray">来源： </span>
+                <div class="music-artist" style="color: #fff">
+                  歌手：{{ music.artist }}
+                </div>
+                <div style="color: #fff">
+                  <span>来源： </span>
                   <router-link
                     :to="
                       this.$cookies.get('userid') == music.up.id
@@ -424,7 +456,7 @@ export default defineComponent({
                         : `/home/user/${music.up.id}`
                     "
                   >
-                    <span class="upload-user" style="color: gray">{{
+                    <span class="upload-user" style="color: #fff">{{
                       music.up.username
                     }}</span>
                   </router-link>
@@ -445,6 +477,7 @@ export default defineComponent({
                         class="tag-item"
                       >
                         {{ tag }}
+                        <br />
                       </n-tag>
                     </span>
                   </div>
@@ -471,7 +504,7 @@ export default defineComponent({
                           {{ obj.lyrics }}
                         </n-gi>
                         <n-gi :span="2" class="jumpLink">
-                          <Play @click="jumpToLyrics(obj, i)" width="14px" />
+                          <Play color="#fff" @click="jumpToLyrics(obj, i)" width="14px" />
                         </n-gi>
                       </n-grid>
                       <div class="translation" v-show="hasTranslation && showTranslation">
@@ -481,6 +514,7 @@ export default defineComponent({
                   </n-scrollbar>
                   <div class="translationSwitch">
                     <n-switch
+                      :rail-style="railStyle"
                       v-if="hasTranslation"
                       v-model:value="showTranslation"
                       size="small"
@@ -570,7 +604,7 @@ export default defineComponent({
     </n-grid>
   </div>
   <a-divider style="height: 1.8px; background-color: #dddddd" />
-  <div class="comments">
+  <div class="comments" :key="this.refreshCommentVir">
     <n-grid>
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
@@ -893,6 +927,7 @@ export default defineComponent({
   position: relative;
   z-index: 2;
 }
+
 .background-img {
   position: absolute;
   top: 0;
@@ -900,10 +935,12 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(40px) saturate(1); /* 背景图片模糊效果 */
+  filter: blur(40px) saturate(1);
+  /* 背景图片模糊效果 */
   opacity: 0.5;
   z-index: -1;
 }
+
 .background-imgfloat {
   content: "";
   position: absolute;
@@ -911,9 +948,11 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* 黑色遮罩，透明度为0.5 */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* 黑色遮罩，透明度为0.5 */
   z-index: 1;
 }
+
 .player-page {
   height: 100vh;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
@@ -1036,6 +1075,7 @@ export default defineComponent({
 .lyrics-part {
   text-align: center;
 }
+
 .music-name {
   font-size: 24px;
   text-align: center;
@@ -1045,6 +1085,7 @@ export default defineComponent({
   font-size: 16px;
   text-align: center;
 }
+
 .lyrics-wrap > .lyrics {
   display: flex;
   justify-content: space-between;
@@ -1052,44 +1093,46 @@ export default defineComponent({
 }
 
 .lyrics-wrap > .lyrics > .content {
-  color: #000;
+  color: #fff;
   font-size: 16px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .lyrics-wrap > .translation {
-  color: #000;
+  color: #fff;
   font-size: 12px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .lyrics-wrap.current > .lyrics > .content {
   font-size: 18px;
   font-weight: 600;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .lyrics-wrap.current > .translation {
-  color: #000;
+  color: #fff;
   font-size: 16px;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .lyrics-wrap:hover > .lyrics > .content {
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .lyrics-wrap:hover > .translation {
-  opacity: 0.8;
+  opacity: 1;
 }
+
 .lyrics-wrap > .lyrics > .time {
   visibility: hidden;
 }
+
 .lyrics-wrap:hover > .lyrics > .time {
   visibility: visible;
   display: flex;
   justify-content: flex-end;
-  color: #000;
+  color: #fff;
   font-size: 12px;
   font-weight: lighter;
 }
@@ -1112,5 +1155,9 @@ export default defineComponent({
   padding-right: 15px;
   display: flex;
   justify-content: flex-end;
+}
+
+.tag-item {
+  margin-left: 10px;
 }
 </style>

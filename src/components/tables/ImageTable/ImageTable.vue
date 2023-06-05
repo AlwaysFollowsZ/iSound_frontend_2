@@ -7,6 +7,7 @@ import ImageTableEntry from "./ImageTableEntry.vue";
 import UploadSongView from "/src/views/UploadSongView.vue";
 import CreateNewCollectionView from "/src/views/createNewCollectionView.vue";
 import { message } from 'ant-design-vue';
+import { mapState } from 'vuex'
 import {
     getBackgroundColorString,
     getFontColorString,
@@ -119,6 +120,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(['accentColor', 'colorMode']),
         pageCount() {
             return Math.ceil(this.rows.length / this.pageArgs.pageSize);
         },
@@ -205,6 +207,35 @@ export default {
             //这两个只会在个人主页用到
             if (this.position === "Collection" || this.position === "CollectionView") {
                 this.showModal = true;
+                setTimeout(() => {
+                let selections = document.getElementsByClassName('n-base-selection n-base-selection--multiple')
+                
+                // let tags = document.getElementsByClassName('n-tag')
+                // console.log(tags.length)
+                if (selections.length > 0) {
+                    // 含有 '--' 分隔的属性只能这么写
+                    selections[0].style.setProperty('--n-color', 'white')
+                    selections[0].style.setProperty('--n-color-focus', 'white')
+                    selections[0].style.setProperty('--n-color-active', 'white')
+                    selections[0].style.setProperty('--n-border', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-active', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-focus', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-hover', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                    selections[0].style.setProperty('--n-border-radius', '8px')
+                    selections[0].style.setProperty('--n-box-shadow-active', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-box-shadow-focus', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-box-shadow-hover', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                    selections[0].style.setProperty('--n-font-size', '16px')
+                    selections[0].style.setProperty('--n-height', '40px')
+                    selections[0].style.setProperty('--n-caret-color', 'black')
+                    selections[0].style.setProperty('--n-placeholder-color', 'grey')
+                    selections[0].style.setProperty('--n-text-color', 'black')
+                    selections[0].style.setProperty('--n-arrow-color', 'black')
+                }
+                // if (tags.length > 0) {
+                //     tags[0].style.setProperty('--n-color', 'red')
+                // }
+            }, 50)
                 //this.$emit('clickCreateCollection')
             } else if (this.position === "UploadedSongs") {
                 // alert("上传歌曲")

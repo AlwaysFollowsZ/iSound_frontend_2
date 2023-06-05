@@ -140,10 +140,9 @@ export default {
             for (let i = 0; i < this.songs.length; i++) {
                 songIDs.push(this.songs[i].id)
             }
-            // === DO NOT MODIFY ===
-            // for (let i = 0; i < this.songlists.length; i++) {
-            //     listIDs.push(this.songlists[i].id)
-            // }
+            for (let i = 0; i < this.songlists.length; i++) {
+                listIDs.push(this.songlists[i].id)
+            }
             this.$http.get(`/api/search/`, {
                 params: { 'tags': keyword }
             }).then((response) => {
@@ -161,7 +160,7 @@ export default {
                 tmpList = response.data.playlist_set.map(songlist => ({
                     Key: j++,
                     Type: 'songList',
-                    imagePath: '/src/assets/song1.jpg',
+                    imagePath: songlist.cover,     // === NEED TO BE REPLACED ===
                     songCount: songlist.music_set.length,
                     Name: songlist.title,
                 }))
@@ -172,12 +171,12 @@ export default {
                     }
                 }
                 // === DO NOT MODIFY ===
-                // for (let i = 0; i < tmpList.length; i++) {
-                //     if (listIDs.indexOf(tmpList[i].id) === -1) {
-                //         this.songlists.push(tmpList[i])
-                //         listIDs.push(tmpList[i].id)
-                //     }
-                // }
+                for (let i = 0; i < tmpList.length; i++) {
+                    if (listIDs.indexOf(tmpList[i].id) === -1) {
+                        this.songlists.push(tmpList[i])
+                        listIDs.push(tmpList[i].id)
+                    }
+                }
             })
         },
         search() {

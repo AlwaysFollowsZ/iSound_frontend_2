@@ -208,7 +208,7 @@
     :showModifyUserMessage="showModifyUserMessage"
     @closeModifyWindow="showModifyUserMessage = false"
   ></modify-user-message-view>
-  <change-passwd-view
+  <change-passwd-view v-if="isLoggedIn"
     :showChangePasswd="showChangePasswd"
     @closeChangePasswdWindow="showChangePasswd = false"
   ></change-passwd-view>
@@ -242,11 +242,13 @@ export default {
   },
   mounted() {
     this.setLogState(this.$cookies.isKey("userid"));
-  },
-  created() {
-    if (this.$cookies.isKey("userid")) {
+    if (this.isLoggedIn) {
+      // console.log(this.isLoggedIn)
       this.fetchData();
     }
+  },
+  created() {
+    
     this.$EventBus.on("setShowMessage", (unread) => {
       if (unread == 0) {
         this.showMessage = false;
@@ -282,7 +284,7 @@ export default {
       SearchOutline,
       MailOutline,
       showMessage: false,
-      avatarFile: null,
+      avatarFile: null, // 得改！！！
       options: [
         {
           label: "个人主页",

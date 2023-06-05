@@ -17,12 +17,12 @@
             style="height: 85%"
             :show-dots="true"
           >
-            <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }" v-for="(src, idx) in imgs" :key="idx" >
+            <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }" v-for="(songlist, idx) in songlists" :key="idx" >
                 <img
                   class="carousel-img"
-                  :src="src.path"
+                  :src="songlist.path"
                   draggable="false"
-                  @click="jumpToSongList(src.jumpLink)"
+                  @click="jumpToSongList(songlist.id)"
                 >
             </n-carousel-item>
           </n-carousel>
@@ -167,7 +167,9 @@ export default {
         },
       ],
       songs: [],
+      songlists: [],
       all_songs: [],
+      all_songlists: [],
       arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     }
   },
@@ -182,7 +184,13 @@ export default {
         title: song.name,
         singer: song.artist,
       }))
+      this.all_songlists = response.data.playlist_set.map(playlist => ({
+        path: playlist.cover,
+        id: playlist.id,
+        jumpLink: "h",
+      }))
       this.randomSelectSongs()
+      this.randomSelectLists()
     })
   },
   mounted() {
@@ -219,7 +227,29 @@ export default {
           }
         }
       }
-
+    },
+    randomSelectLists() {
+      let randomIndex = []
+      let min = 0, max = this.all_songlists.length - 1
+      if (max <= 6) { // 总歌曲数量不够
+        let i = 0
+        while (randomIndex.length < 6) {
+          randomIndex.push(i)
+          this.songlists.push(this.all_songlists[i])
+          i++
+          if (i === max) {
+            i = 0
+          }
+        }
+      } else {
+        while (randomIndex.length < 6) {
+          let r = Math.floor(Math.random() * (max - min + 1)) + min
+          if (!randomIndex.includes(r)) {
+            randomIndex.push(r)
+            this.songlists.push(this.all_songlists[r])
+          }
+        }
+      }
     },
     getCorrectAccentColor() {
       if (this.colorMode === 'white') {
@@ -239,16 +269,16 @@ export default {
         return '255,255,255'
       }
     },
-    jumpToSongList(jumpLink) {
+    jumpToSongList(id) {
       // this.$router.push(jumpLink)
-      console.log(jumpLink)
+      this.$router.push('/listdetail/' + id)
     },
     jumpToSong(id) {
       // this.$router.push(jumpLink)
       this.$EventBus.emit('play', id)
     },
     handleCardsScroll() {
-      if (!this.cardsShouldAnimate) {
+      if (!this.cardsShouldAnimate && !this.isLoggedIn) {
         const componentElement = this.$refs.songCardRef
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
@@ -262,7 +292,7 @@ export default {
       }
     },
     handleSongEntryScroll() {
-      if (!this.songEntryShouldAnimate) {
+      if (!this.songEntryShouldAnimate && !this.isLoggedIn) {
         const componentElement = this.$refs.songEntryRef
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
@@ -273,7 +303,7 @@ export default {
       }
     },
     handleTagScroll() {
-      if (!this.tagShouldAnimate) {
+      if (!this.tagShouldAnimate && !this.isLoggedIn) {
         const componentElement = this.$refs.tagRef
         const componentOffsetTop = componentElement.offsetTop
         const windowHeight = window.innerHeight;
