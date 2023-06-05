@@ -1,34 +1,69 @@
 <template>
     <div class="top-nav-container"><top-nav /></div>
     <div class="tag-view-container">
-        <div class="tag-table-container">
-            <!-- <tag-table :width="1400" :should-animate="false" /> -->
-        </div>
-        <div class="tag-search-results">
-            <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
-        </div>
+        <n-grid x-gap="12">
+            <n-gi :span="3"></n-gi>
+            <n-gi :span="18">
+                <div class="tag-table-container">
+                    <!-- <div class="cover-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">点击此处上传歌曲封面</div> -->
+                    <div class="tag-prompt" :style="{'color': 'rgb(' + this.accentColor + ')'}">分类标签“{{ this.tag }}”的搜索结果</div>
+                    <!-- <tag-table :width="1400" :should-animate="false" /> -->
+                </div>
+
+                <div class="tag-search-results">
+                    <n-tabs size="large" type="line" animated :style="{
+                        '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
+                        '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                        '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
+                        '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
+                        '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
+                        '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
+                    }">
+                        <n-tab-pane name="歌曲" tab="歌曲">
+                            <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
+                                v-model:songData="songs"></list-table>
+                        </n-tab-pane>
+                        <n-tab-pane name="歌单" tab="歌单">
+                            <image-table :key="this.$route.params.keyword" :table-size="[1100,]" :entry-size="[330, 240]"
+                                v-model:rows="songLists"> </image-table>
+                        </n-tab-pane>
+                    </n-tabs>
+                    <!-- <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table> -->
+                </div>
+            </n-gi>
+            <n-gi :span="3"></n-gi>
+        </n-grid>
     </div>
 </template>
 <script>
 import TopNav from "../components/TopNav.vue";
 import TagTable from '../components/tables/TagTable/TagTable.vue';
+import ImageTable from '../components/tables/ImageTable/ImageTable.vue'
 import ListTable from "../components/tables/ListTable/ListTable.vue"
+import { mapState } from 'vuex'
 export default {
     name: "TagClickView",
+    computed: {
+        ...mapState(['accentColor', 'colorMode']),
+    },
     components: {
         TopNav,
         TagTable,
         ListTable,
+        ImageTable,
     },
     data() {
         return {
+            tag: '',
             songs: [],
+            songLists: [],
         }
     },
     created() {
         const tagName = this.$route.params.tagName;
+        this.tag = tagName;
         this.$http.get(`/api/search/`, { params: { 'tags': tagName } }).then((response) => {
-            let i = 0;
+            let i = 0, j = 0;
             this.songs = response.data.music_set.map(song => ({
                 key: i++,
                 name: song.name,
@@ -40,6 +75,13 @@ export default {
                 isCollected: false,
                 showCollection: false,
             }))
+            this.songLists = response.data.playlist_set.map(songList => ({
+                    Key: j++,
+                    Type: 'songList',
+                    imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                    songCount: songlist.music_set.length,
+                    Name: songlist.title,
+                }))
         });
     },
     watch: {
@@ -49,4 +91,12 @@ export default {
     }
 }
 </script>
-<style scoped></style>
+<style scoped>
+.tag-prompt {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    transition: color 1s;
+}
+</style>

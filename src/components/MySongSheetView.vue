@@ -23,7 +23,7 @@
         <!-- <n-pagination v-model:page="page" :page-count="3" />
         </div> -->
         <div style="text-align:center;"><image-table :position="'Collection'" :entrySize="[200, 200]" :rows="collectionData"
-                @flushCollections="updateCollections"></image-table></div>
+                @flushCollections="updateCollections" ></image-table></div>
 
     </div>
 </template>
@@ -96,8 +96,8 @@ export default {
 </script>
 <style scoped>
 .my-song-sheet-title {
-    animation: slideInRight;
-    animation-duration: 1.5s;
+    /* animation: slideInLeft;
+    animation-duration: 0.5s; */
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
     font-weight: bold;
