@@ -79,7 +79,10 @@ export default defineComponent({
     },
     unshareList() {
       this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
-      if (this.$cookies.get("is_superuser") == "true" && this.up.is_superuser == false) {
+      if (
+        this.$cookies.get("is_superuser") == "true" &&
+        this.$cookies.get("userid") != this.up.id
+      ) {
         let formData = new FormData();
         formData.append(
           "content",
