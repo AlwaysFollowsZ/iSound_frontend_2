@@ -132,6 +132,7 @@ export default defineComponent({
       getRGBString,
       backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
       showModifyComplainView: false,
+      refreshCommentVir: 0,
     };
   },
   methods: {
@@ -181,12 +182,18 @@ export default defineComponent({
         this.editCommentId = 0;
         this.editNewCommentId = 1;
       }
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
       this.value == "";
     },
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
         this.success("删除成功");
       });
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
     },
     send2ndComment() {
       if (this.value == "") {
@@ -210,6 +217,9 @@ export default defineComponent({
         this.edit2ndCommentId = 0;
         this.edit2ndCommentParentId = 0;
       }
+      this.regetComments();
+      this.refreshCommentVir++;
+      console.log(this.refreshCommentVir);
       this.value == "";
     },
     // 编辑回复评论
@@ -324,6 +334,11 @@ export default defineComponent({
         behavior: behavior,
       });
     },
+    regetComments() {
+      this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
+        this.comments = response.data.comment_set;
+      });
+    }
   },
 });
 </script>
@@ -343,25 +358,15 @@ export default defineComponent({
         </n-gi>
         <n-gi :span="7">
           <div class="music-cover">
-            <n-image
-              class="music-cover-img"
-              :src="music.cover"
-              width="400"
-              height="400"
-            />
+            <n-image class="music-cover-img" :src="music.cover" width="400" height="400" />
           </div>
           <div class="three-buttons" v-if="this.$cookies.get('is_superuser') == 'false'">
             <n-grid>
               <n-gi :span="6"></n-gi>
               <n-gi :span="4" style="margin: auto">
                 <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon
-                    v-if="islike"
-                    size="30"
-                    color="#ff69b4"
-                    @click="like"
-                    class="animate__animated animate__heartBeat"
-                  >
+                  <n-icon v-if="islike" size="30" color="#ff69b4" @click="like"
+                    class="animate__animated animate__heartBeat">
                     <Fitness />
                   </n-icon>
                   <n-icon v-else size="30" @click="like">
@@ -371,13 +376,8 @@ export default defineComponent({
               </n-gi>
               <n-gi :span="4" style="margin: auto">
                 <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon
-                    v-if="iscollect"
-                    size="30"
-                    color="#FFD700"
-                    @click="collect"
-                    class="animate__animated animate__flash"
-                  >
+                  <n-icon v-if="iscollect" size="30" color="#FFD700" @click="collect"
+                    class="animate__animated animate__flash">
                     <Star />
                   </n-icon>
                   <n-icon v-else size="30" @click="collect">
@@ -387,13 +387,8 @@ export default defineComponent({
               </n-gi>
               <n-gi :span="4" style="margin: auto">
                 <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon
-                    v-if="iscomplain"
-                    size="30"
-                    color="#DC143C"
-                    @click="complain"
-                    class="animate__animated animate__headShake"
-                  >
+                  <n-icon v-if="iscomplain" size="30" color="#DC143C" @click="complain"
+                    class="animate__animated animate__headShake">
                     <Warning />
                   </n-icon>
                   <n-icon v-else size="30" @click="complain">
@@ -417,13 +412,10 @@ export default defineComponent({
                 <div class="music-artist">歌手：{{ music.artist }}</div>
                 <div>
                   <span style="color: gray">来源： </span>
-                  <router-link
-                    :to="
-                      this.$cookies.get('userid') == music.up.id
-                        ? '/home'
-                        : `/home/user/${music.up.id}`
-                    "
-                  >
+                  <router-link :to="this.$cookies.get('userid') == music.up.id
+                      ? '/home'
+                      : `/home/user/${music.up.id}`
+                    ">
                     <span class="upload-user" style="color: gray">{{
                       music.up.username
                     }}</span>
@@ -434,17 +426,14 @@ export default defineComponent({
                 <div class="song-tags">
                   <div class="tag-container">
                     <span v-for="(tag, i) in this.songtags" :key="i">
-                      <n-tag
-                        :bordered="false"
-                        :style="{
-                          '--n-border-radius': `5px`,
-                          '--n-font-weight-strong': `bold`,
-                          '--n-height': `20px`,
-                          '--n-close-margin': `0 18px 0 18px`,
-                        }"
-                        class="tag-item"
-                      >
+                      <n-tag :bordered="false" :style="{
+                        '--n-border-radius': `5px`,
+                        '--n-font-weight-strong': `bold`,
+                        '--n-height': `20px`,
+                        '--n-close-margin': `0 18px 0 18px`,
+                      }" class="tag-item">
                         {{ tag }}
+                        <br />
                       </n-tag>
                     </span>
                   </div>
@@ -453,16 +442,10 @@ export default defineComponent({
               <n-gi>
                 <div style="font-size: larger">
                   <n-scrollbar style="max-height: 400px" ref="lyricsRef">
-                    <div
-                      v-for="(obj, i) in lyricsObjArr"
-                      :key="i"
-                      :style="{
-                        marginBottom:
-                          hasTranslation && showTranslation ? '12.5px' : '31.35px',
-                      }"
-                      class="lyrics-wrap"
-                      :class="{ current: lyricsIndex === i }"
-                    >
+                    <div v-for="(obj, i) in lyricsObjArr" :key="i" :style="{
+                      marginBottom:
+                        hasTranslation && showTranslation ? '12.5px' : '31.35px',
+                    }" class="lyrics-wrap" :class="{ current: lyricsIndex === i }">
                       <n-grid class="lyrics">
                         <n-gi :span="2" class="time">
                           {{ obj.timeStr.slice(0, 5) + "&nbsp;" }}
@@ -480,13 +463,8 @@ export default defineComponent({
                     </div>
                   </n-scrollbar>
                   <div class="translationSwitch">
-                    <n-switch
-                      v-if="hasTranslation"
-                      v-model:value="showTranslation"
-                      size="small"
-                      :round="false"
-                      @click="scroll"
-                    >
+                    <n-switch v-if="hasTranslation" v-model:value="showTranslation" size="small" :round="false"
+                      @click="scroll">
                       <template #icon> 译 </template>
                     </n-switch>
                   </div>
@@ -515,11 +493,7 @@ export default defineComponent({
                     <n-gi :span="23" id="comment-top">
                       <span style="font-size: 22px"> 全部评论 </span>
                     </n-gi>
-                    <n-gi
-                      :span="1"
-                      style="padding-top: 5px"
-                      v-if="this.$cookies.get('is_superuser') == 'false'"
-                    >
+                    <n-gi :span="1" style="padding-top: 5px" v-if="this.$cookies.get('is_superuser') == 'false'">
                       <n-icon id="comment-fold" size="27">
                         <ChatbubbleEllipsesOutline />
                       </n-icon>
@@ -528,36 +502,16 @@ export default defineComponent({
                 </span>
               </template>
               <div>
-                <n-input
-                  style="margin-bottom: 15px"
-                  maxlength="200"
-                  show-count
-                  placeholder="我的评论"
-                  type="textarea"
-                  v-model:value="value"
-                  :style="{ '--n-border-radius': `10px` }"
-                  :autosize="{
+                <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                  v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
                     minRows: 6,
                     maxRows: 6,
-                  }"
-                />
+                  }" />
                 <div class="my-comment-button">
-                  <n-button
-                    class="send-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="sendComment"
-                  >
+                  <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
                     发送
                   </n-button>
-                  <n-button
-                    class="clean-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="cleanComment"
-                  >
+                  <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
                     清空
                   </n-button>
                 </div>
@@ -570,29 +524,21 @@ export default defineComponent({
     </n-grid>
   </div>
   <a-divider style="height: 1.8px; background-color: #dddddd" />
-  <div class="comments">
+  <div class="comments" :key="this.refreshCommentVir">
     <n-grid>
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
-        <div
-          v-for="(comment, idx) in comments.slice(
-            5 * (page - 1),
-            5 * (page - 1) + (5 * page > comments.length ? comments.length % 5 : 5)
-          )"
-          :key="idx"
-        >
+        <div v-for="(comment, idx) in comments.slice(
+          5 * (page - 1),
+          5 * (page - 1) + (5 * page > comments.length ? comments.length % 5 : 5)
+        )" :key="idx">
           <a-comment>
             <template #actions>
               <span key="reply-comment">
                 <span style="padding-left: 855px; cursor: auto">
                   <n-popover trigger="hover">
                     <template #trigger>
-                      <n-button
-                        text
-                        circle
-                        focusable="false"
-                        @click="editReplyComment(comment)"
-                      >
+                      <n-button text circle focusable="false" @click="editReplyComment(comment)">
                         <n-icon size="18">
                           <ChatboxEllipsesOutline />
                         </n-icon>
@@ -606,13 +552,8 @@ export default defineComponent({
                 <span style="padding-left: 3px; cursor: auto">
                   <n-popover trigger="hover">
                     <template #trigger>
-                      <n-button
-                        text
-                        circle
-                        focusable="false"
-                        @click="editMyComment(comment)"
-                        :disabled="this.$cookies.get('userid') != comment.up.id"
-                      >
+                      <n-button text circle focusable="false" @click="editMyComment(comment)"
+                        :disabled="this.$cookies.get('userid') != comment.up.id">
                         <n-icon size="18">
                           <CreateOutline />
                         </n-icon>
@@ -624,17 +565,9 @@ export default defineComponent({
               </span>
               <span key="delete-comment">
                 <span style="padding-left: 3px; cursor: auto">
-                  <n-popconfirm
-                    @positive-click="handlePositiveClick(comment)"
-                    @negative-click="handleNegativeClick"
-                  >
+                  <n-popconfirm @positive-click="handlePositiveClick(comment)" @negative-click="handleNegativeClick">
                     <template #trigger>
-                      <n-button
-                        text
-                        circle
-                        focusable="false"
-                        :disabled="this.$cookies.get('userid') != comment.up.id"
-                      >
+                      <n-button text circle focusable="false" :disabled="this.$cookies.get('userid') != comment.up.id">
                         <n-icon size="18">
                           <TrashOutline />
                         </n-icon>
@@ -669,36 +602,16 @@ export default defineComponent({
             </template>
             <div v-if="this.edit1stComment && this.editCommentId == comment.id">
               <div>
-                <n-input
-                  style="margin-bottom: 15px"
-                  maxlength="200"
-                  show-count
-                  placeholder="我的评论"
-                  type="textarea"
-                  v-model:value="value"
-                  :style="{ '--n-border-radius': `10px` }"
-                  :autosize="{
+                <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                  v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
                     minRows: 6,
                     maxRows: 6,
-                  }"
-                />
+                  }" />
                 <div class="my-comment-button">
-                  <n-button
-                    class="send-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="sendComment"
-                  >
+                  <n-button class="send-button" strong secondary type="tertiary" @click="sendComment">
                     发送
                   </n-button>
-                  <n-button
-                    class="clean-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="cleanComment"
-                  >
+                  <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
                     清空
                   </n-button>
                 </div>
@@ -706,36 +619,16 @@ export default defineComponent({
             </div>
             <div v-if="this.reply2ndComment && this.edit2ndCommentParentId == comment.id">
               <div>
-                <n-input
-                  style="margin-bottom: 15px"
-                  maxlength="200"
-                  show-count
-                  placeholder="我的评论"
-                  type="textarea"
-                  v-model:value="value"
-                  :style="{ '--n-border-radius': `10px` }"
-                  :autosize="{
+                <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                  v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
                     minRows: 6,
                     maxRows: 6,
-                  }"
-                />
+                  }" />
                 <div class="my-comment-button">
-                  <n-button
-                    class="send-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="send2ndComment"
-                  >
+                  <n-button class="send-button" strong secondary type="tertiary" @click="send2ndComment">
                     发送
                   </n-button>
-                  <n-button
-                    class="clean-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="cleanComment"
-                  >
+                  <n-button class="clean-button" strong secondary type="tertiary" @click="cleanComment">
                     清空
                   </n-button>
                 </div>
@@ -749,13 +642,8 @@ export default defineComponent({
                       <span style="padding-left: 842px; cursor: auto">
                         <n-popover trigger="hover">
                           <template #trigger>
-                            <n-button
-                              text
-                              circle
-                              focusable="false"
-                              @click="editMy2ndComment(comment_2nd)"
-                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
-                            >
+                            <n-button text circle focusable="false" @click="editMy2ndComment(comment_2nd)"
+                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id">
                               <n-icon size="18">
                                 <CreateOutline />
                               </n-icon>
@@ -767,17 +655,11 @@ export default defineComponent({
                     </span>
                     <span key="delete-comment">
                       <span style="padding-left: 3px; cursor: auto">
-                        <n-popconfirm
-                          @positive-click="handlePositiveClick(comment_2nd)"
-                          @negative-click="handleNegativeClick"
-                        >
+                        <n-popconfirm @positive-click="handlePositiveClick(comment_2nd)"
+                          @negative-click="handleNegativeClick">
                           <template #trigger>
-                            <n-button
-                              text
-                              circle
-                              focusable="false"
-                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
-                            >
+                            <n-button text circle focusable="false"
+                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id">
                               <n-icon size="18">
                                 <TrashOutline />
                               </n-icon>
@@ -791,12 +673,10 @@ export default defineComponent({
                   <template #author>
                     <router-link :to="`/home/user/${comment_2nd.up.id}`">
                       <div style="font-size: 18px">{{ comment_2nd.up.username }}</div>
-                    </router-link></template
-                  >
+                    </router-link></template>
                   <template #avatar>
                     <router-link :to="`/home/user/${comment_2nd.up.id}`">
-                      <a-avatar :src="comment_2nd.up.avatar" :size="50"
-                    /></router-link>
+                      <a-avatar :src="comment_2nd.up.avatar" :size="50" /></router-link>
                   </template>
                   <template #content>
                     <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
@@ -814,40 +694,18 @@ export default defineComponent({
                       </span>
                     </a-tooltip>
                   </template>
-                  <div
-                    v-if="this.edit2ndComment && this.edit2ndCommentId == comment_2nd.id"
-                  >
+                  <div v-if="this.edit2ndComment && this.edit2ndCommentId == comment_2nd.id">
                     <div>
-                      <n-input
-                        style="margin-bottom: 15px"
-                        maxlength="200"
-                        show-count
-                        placeholder="我的评论"
-                        type="textarea"
-                        v-model:value="value"
-                        :style="{ '--n-border-radius': `10px` }"
-                        :autosize="{
+                      <n-input style="margin-bottom: 15px" maxlength="200" show-count placeholder="我的评论" type="textarea"
+                        v-model:value="value" :style="{ '--n-border-radius': `10px` }" :autosize="{
                           minRows: 6,
                           maxRows: 6,
-                        }"
-                      />
+                        }" />
                       <div class="my-comment-button">
-                        <n-button
-                          class="send-button"
-                          strong
-                          secondary
-                          type="tertiary"
-                          @click="send2ndComment"
-                        >
+                        <n-button class="send-button" strong secondary type="tertiary" @click="send2ndComment">
                           发送
                         </n-button>
-                        <n-button
-                          class="clean-button-2nd"
-                          strong
-                          secondary
-                          type="tertiary"
-                          @click="cleanComment"
-                        >
+                        <n-button class="clean-button-2nd" strong secondary type="tertiary" @click="cleanComment">
                           清空
                         </n-button>
                       </div>
@@ -862,14 +720,8 @@ export default defineComponent({
           <n-grid>
             <n-gi :span="8"></n-gi>
             <n-gi :span="8">
-              <div
-                style="display: flex; justify-content: center"
-                v-if="comments.length > 0"
-              >
-                <n-pagination
-                  v-model:page="page"
-                  :page-count="Math.ceil(comments.length / 5)"
-                />
+              <div style="display: flex; justify-content: center" v-if="comments.length > 0">
+                <n-pagination v-model:page="page" :page-count="Math.ceil(comments.length / 5)" />
               </div>
               <div style="display: flex; justify-content: center; font-size: 20px" v-else>
                 期待你的评论！
@@ -882,10 +734,8 @@ export default defineComponent({
       <n-gi :span="4"></n-gi>
     </n-grid>
   </div>
-  <modify-complain-view
-    :showModifyComplainView="showModifyComplainView"
-    @closeModifyWindow="showModifyComplainView = false"
-  ></modify-complain-view>
+  <modify-complain-view :showModifyComplainView="showModifyComplainView"
+    @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
 </template>
 
 <style scoped>
@@ -893,6 +743,7 @@ export default defineComponent({
   position: relative;
   z-index: 2;
 }
+
 .background-img {
   position: absolute;
   top: 0;
@@ -900,10 +751,12 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(40px) saturate(1); /* 背景图片模糊效果 */
+  filter: blur(40px) saturate(1);
+  /* 背景图片模糊效果 */
   opacity: 0.5;
   z-index: -1;
 }
+
 .background-imgfloat {
   content: "";
   position: absolute;
@@ -911,9 +764,11 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* 黑色遮罩，透明度为0.5 */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* 黑色遮罩，透明度为0.5 */
   z-index: 1;
 }
+
 .player-page {
   height: 100vh;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
@@ -972,17 +827,11 @@ export default defineComponent({
   font-size: 14px;
 }
 
-:deep(.n-collapse
-    .n-collapse-item
-    .n-collapse-item__header
-    .n-collapse-item__header-main) {
+:deep(.n-collapse .n-collapse-item .n-collapse-item__header .n-collapse-item__header-main) {
   display: inline;
 }
 
-:deep(.n-collapse
-    .n-collapse-item
-    .n-collapse-item__content-wrapper
-    .n-collapse-item__content-inner) {
+:deep(.n-collapse .n-collapse-item .n-collapse-item__content-wrapper .n-collapse-item__content-inner) {
   padding-top: 0;
 }
 
@@ -1036,6 +885,7 @@ export default defineComponent({
 .lyrics-part {
   text-align: center;
 }
+
 .music-name {
   font-size: 24px;
   text-align: center;
@@ -1045,47 +895,50 @@ export default defineComponent({
   font-size: 16px;
   text-align: center;
 }
-.lyrics-wrap > .lyrics {
+
+.lyrics-wrap>.lyrics {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.lyrics-wrap > .lyrics > .content {
+.lyrics-wrap>.lyrics>.content {
   color: #000;
   font-size: 16px;
   opacity: 0.5;
 }
 
-.lyrics-wrap > .translation {
+.lyrics-wrap>.translation {
   color: #000;
   font-size: 12px;
   opacity: 0.5;
 }
 
-.lyrics-wrap.current > .lyrics > .content {
+.lyrics-wrap.current>.lyrics>.content {
   font-size: 18px;
   font-weight: 600;
   opacity: 0.8;
 }
 
-.lyrics-wrap.current > .translation {
+.lyrics-wrap.current>.translation {
   color: #000;
   font-size: 16px;
   opacity: 0.8;
 }
 
-.lyrics-wrap:hover > .lyrics > .content {
+.lyrics-wrap:hover>.lyrics>.content {
   opacity: 0.8;
 }
 
-.lyrics-wrap:hover > .translation {
+.lyrics-wrap:hover>.translation {
   opacity: 0.8;
 }
-.lyrics-wrap > .lyrics > .time {
+
+.lyrics-wrap>.lyrics>.time {
   visibility: hidden;
 }
-.lyrics-wrap:hover > .lyrics > .time {
+
+.lyrics-wrap:hover>.lyrics>.time {
   visibility: visible;
   display: flex;
   justify-content: flex-end;
@@ -1094,11 +947,11 @@ export default defineComponent({
   font-weight: lighter;
 }
 
-.lyrics-wrap > .lyrics > .jumpLink {
+.lyrics-wrap>.lyrics>.jumpLink {
   visibility: hidden;
 }
 
-.lyrics-wrap:hover > .lyrics > .jumpLink {
+.lyrics-wrap:hover>.lyrics>.jumpLink {
   visibility: visible;
   display: flex;
   justify-content: flex-start;
@@ -1112,5 +965,9 @@ export default defineComponent({
   padding-right: 15px;
   display: flex;
   justify-content: flex-end;
+}
+
+.tag-item {
+  margin-left: 10px;
 }
 </style>
