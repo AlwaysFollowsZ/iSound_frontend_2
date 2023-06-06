@@ -36,6 +36,7 @@ export default defineComponent({
       },
       { immediate: true }
     );
+    console.log(this.$cookies.keys());
   },
   methods: {
     back() {
@@ -110,6 +111,7 @@ export default defineComponent({
         this.listIntro = this.playlist.profile;
         this.tags = this.playlist.tags;
         this.up = this.playlist.up;
+        document.title = `${this.up.username}的歌单 - ${this.playlist.title}`;
         let key = 0;
         this.songData = this.playlist.music_set.map((music) => ({
           key: key++,
