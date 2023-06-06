@@ -185,30 +185,32 @@ export default {
                 this.success('删除收藏夹成功')
                 this.$emit('flushCollections')
             })
-            // alert("todo:deleteCollection");
-            //changeThemeColorByImage(Rows[Key].imagePath)
         },
         //处理点击分享收藏夹事件的方法
         handleClickShareCollection(Key) {
             this.$router.push({
-                name: 'listdetailshare',
+                name: 'listdetailshare',//跳转过去必须直接显示
                 params: {
                     playlistId: this.rows[Key].Id,
-                    shareModal:true
+                    shareModal: true
                 }
             })
-            // alert("todo:shareCollection");
-            //changeThemeColorByImage(Rows[Key].imagePath)
         },
         //处理点击取消分享歌单事件的方法
         handleClickCancelShare(Key) {
-            alert("todo:cancelShare");
+            this.$http.post(`/api/playlist/unshare/${this.row[Key].Id}/`).then(() => {
+                this.success('取消分享成功')
+                this.$emit('flushSonglists')
+            })
             //changeThemeColorByImage(Rows[Key].imagePath)
         },
         //处理点击删除已上传歌曲事件的方法
         handleClickDeleteUploadedSongs(Key) {
-            alert("todo:deleteUploadedSongs");
-            //changeThemeColorByImage(Rows[Key].imagePath)
+            this.$http.delete(`api/music/delete/${this.rows[Key].Id}/`).then(() => {
+                this.success('删除歌曲成功')
+                setTimeout(()=>{this.$emit('flushUploadSongs')},200)
+                
+            })
         },
         handleTopClick() {
             //这两个只会在个人主页用到

@@ -204,7 +204,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                         <div :style="{
                             'text-align': 'center',
                             'margin-bottom': '5px',
-                        }">{{ Type === 'Song' ? '删除歌曲' : Type === 'songList' ? '取消分享' :
+                        }">{{ Type === 'Song' ? '删除歌曲' : Type === 'songList' ? '取消分享歌单' :
     '删除收藏夹' }}?</div>
                         <div :style="{
                             'text-align': 'center',

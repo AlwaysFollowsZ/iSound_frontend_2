@@ -734,8 +734,6 @@ export default {
             }
         },
         updateCollections() {
-            let formData = new FormData()
-            formData.append('shared', false)
             this.$http.get('/api/playlist/of/0/', formData).then((response) => {
                 let key = 0
                 console.log('update:content=' + response.data.playlist_set)

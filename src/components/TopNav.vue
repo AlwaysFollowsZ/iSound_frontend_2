@@ -209,7 +209,8 @@
     :showModifyUserMessage="showModifyUserMessage"
     @closeModifyWindow="showModifyUserMessage = false"
   ></modify-user-message-view>
-  <change-passwd-view v-if="isLoggedIn"
+  <change-passwd-view
+    v-if="isLoggedIn"
     :showChangePasswd="showChangePasswd"
     @closeChangePasswdWindow="showChangePasswd = false"
   ></change-passwd-view>

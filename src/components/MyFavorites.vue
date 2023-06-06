@@ -3,8 +3,8 @@
         记录心动瞬间
     </div>
     <div class="loading-animate" v-if="isLoading">
-        <n-progress style="height: 50px; width: 400px" class="animate__animated" type="line"
-            :percentage="loadingPercentage" rail-color="lightgrey" :style="{
+        <n-progress style="height: 50px; width: 400px" class="animate__animated" type="line" :percentage="loadingPercentage"
+            rail-color="lightgrey" :style="{
                 '--n-fill-color':
                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
                         'grey' :
@@ -19,7 +19,14 @@
         </n-progress>
     </div>
     <div class="animate__animated animate__slideInUp" style="animation-duration: 0.9s" v-else>
-        <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
+        <div class="my-favorite-song">
+            <div class="no-result-info" v-if="this.songs.length == 0">
+                你还没有添加歌曲到我喜欢...去寻找喜欢的歌吧
+            </div>
+            <div v-else>
+                <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -58,7 +65,7 @@ export default {
                 length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.floor(song.duration % 60)}`.padStart(2, '0'),
                 imgSrc: song.cover,
                 isLiked: song.is_like,
-                isCollected: false,
+                isCollected: song.is_favorite,
                 showCollection: false,
             }))
             if (this.loadingPercentage >= 100) {
@@ -83,7 +90,7 @@ export default {
         });
     },
     methods: {
-        
+
     },
 }
 </script>
@@ -101,5 +108,15 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.no-result-info {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0.8;
+    /* 不透明度 */
 }
 </style>

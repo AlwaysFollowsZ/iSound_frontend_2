@@ -120,7 +120,7 @@
                                             }">
                                             {{ songLyricName }}
                                         </n-button>
-                                        <input type="file" accept="application/octet-stream" ref="songLyricInput" @change="handleSongLyricFileChange"
+                                        <input type="file"  ref="songLyricInput" @change="handleSongLyricFileChange"
                                             style="display:  none" />
                                     </div>
                                 </n-gi>
@@ -455,7 +455,7 @@ export default {
             this.$http.post('/api/music/upload/', data).then(response => {
                 console.log(response);
                 if (response.data.code == '0') {
-                    this.$emit('flushUploadSongs')
+                    this.$emit('flushUploadSongs')//刷新歌曲
                     this.closeUWindow();
                     alert('上传歌曲成功!')
                 } else if (response.data.code == '-1') {
