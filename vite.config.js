@@ -28,8 +28,8 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      // '/api': 'http://43.138.14.231:8000/'
-      '/api': 'http://43.138.14.231/'
+      '/api': 'http://43.138.14.231:8000/'
+      // '/api': 'http://43.138.14.231/'
     }
   },
 })

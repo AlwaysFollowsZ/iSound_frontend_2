@@ -112,7 +112,7 @@ onMounted(() => {
     storageName: "aplayer-setting",
   });
 
-  proxy.$http.get("/api/index/").then((response) => {
+  proxy.$http.get("/api/music/detail/1/").then((response) => {
     ap.list.add(response.data.music_set);
   });
 
