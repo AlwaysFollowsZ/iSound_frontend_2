@@ -179,8 +179,7 @@ export default defineComponent({
     },
     mounted() {
         if (this.$route.params.shareModal === 'true') {
-            alert('show')
-            this.editList()
+            this.shareList()
         }
     },
     data() {
@@ -348,8 +347,8 @@ export default defineComponent({
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">
                 <a-divider style="height: 1.8px; background-color: #dddddd" />
-                <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'" :position="'PublicView'"
-                    v-model:songData="this.songData"></list-table>
+                <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'" :position="playlist.shared===true?'PublicView':'CollectionView'"
+                    v-model:songData="this.songData" :currentListId="playlist.id"></list-table>
             </n-gi>
             <n-gi :span="4"></n-gi>
         </n-grid>

@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import { ref } from "vue";
+import { ref,computed } from "vue";
 import Background from "./components/GlobalBackground.vue";
 import HelloWorld from "./components/HelloWorld.vue";
 import ImageTable from "./components/tables/ImageTable/ImageTable.vue";
@@ -10,6 +10,10 @@ import TopNav from "./components/TopNav.vue";
 import ListTable from "./components/tables/ListTable/ListTable.vue";
 import Player from "./components/Player.vue";
 import MixedTable from "./components/tables/ImageTable/MixedImageTable.vue";
+import {globalThemeColor,getFontColorString,getRGBString} from'/src/colorMode.js'
+let fontColorString = computed(() => {
+  return getRGBString(getFontColorString(globalThemeColor))
+})
 </script>
 <template>
 <background></background>
@@ -28,7 +32,6 @@ import MixedTable from "./components/tables/ImageTable/MixedImageTable.vue";
   <!-- <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songData"></list-table> -->
   <Player />
 </template>
-
 <style scoped>
 * {
   scroll-behavior: smooth !important;
