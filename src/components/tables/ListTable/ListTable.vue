@@ -30,7 +30,7 @@ export default {
         //收藏单首歌曲
         handleCollect(key, listId) {
             this.$http.post(`/api/favorite/${listId}/${this.songData[key].id}/`).then(() => {
-                this.songData[key].isCollected = true; //更改歌曲对应的收藏夹列表
+                // this.songData[key].isCollected = true; //更改歌曲对应的收藏夹列表
                 this.cleanChangeReaction();
             })
         },
@@ -70,7 +70,7 @@ export default {
                     this.songData[i].isLikeChanged = false;
                     this.songData[i].isCollectChanged = false;
                 }
-            }, 500);
+            }, 200);
         },
 
     },

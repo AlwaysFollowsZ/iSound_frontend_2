@@ -722,9 +722,9 @@
     <modify-complain-view :showModifyComplainView="showModifyComplainView"
         @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
     <div v-show="false"><top-nav></top-nav></div>
-    <n-modal :z-index="1" v-model:show="showCollections">
+    <n-modal :z-index="2" v-model:show="showCollections">
         <div :style="{
-            'background': getRGBString(backgroundColorString, 0.3),
+            'background': getRGBString(backgroundColorString, 0.6),
             'position': 'relative',
             'top': '-50px',
             'text-align': 'center',
