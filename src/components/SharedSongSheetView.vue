@@ -19,8 +19,13 @@
                 </n-gi>
             </n-grid>
         </div> -->
-        <div style="text-align:center"><image-table :position="'Songlist'" :rows="songlistData"
-                :entrySize="[200, 200]"  @flushSonglists="updateSonglists" :handleClickEntry="clickSonglists"></image-table></div>
+        <!-- <div class="no-result-info" v-if="this.songlistData.length == 0">
+            暂无已分享的歌单...从收藏夹分享一个？
+        </div>
+        <div v-else> -->
+        <div style="text-align:center"><image-table :position="'Songlist'" :rows="songlistData" :entrySize="[200, 200]"
+                @flushSonglists="updateSonglists" :handleClickEntry="clickSonglists"></image-table></div>
+        <!-- </div> -->
     </div>
 </template>
 <script>
@@ -132,5 +137,15 @@ export default {
     font-size: small;
     font-weight: 500;
     color: grey;
+}
+
+.no-result-info {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0.8;
+    /* 不透明度 */
 }
 </style>
