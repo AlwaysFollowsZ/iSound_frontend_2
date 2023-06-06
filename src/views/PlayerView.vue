@@ -909,7 +909,7 @@ export default defineComponent({
             music: {},
             lyricsIndex: 0,
             lyricsObjArr: [],
-            collctionData: this.updateCollections(),
+            collectionData: this.updateCollections(),
             showCollections: false,
             isCollectChanged: false,
             headChange: false,
