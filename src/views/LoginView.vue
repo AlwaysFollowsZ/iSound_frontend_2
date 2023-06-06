@@ -1,6 +1,7 @@
 <template>
   <!-- <n-button @click="showLogin = true">登录</n-button> -->
   <n-modal
+    z-index="2"
     :show="showLogin"
     :style="{
       'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)',
@@ -174,6 +175,7 @@
 <script>
 import { CloseOutline, ArrowForwardCircleOutline, OpenOutline } from "@vicons/ionicons5";
 import { mapState } from "vuex";
+import { message } from "ant-design-vue";
 import "animate.css";
 export default {
   name: "LoginView",
@@ -183,6 +185,19 @@ export default {
       password: "",
       passwdInputShouldShow: false,
     };
+  },
+  setup() {
+    return {
+      error(msg) {
+        message.error({
+            content: msg,
+            duration: 2,
+            style: {
+                 "z-index": 101,
+            },
+        });
+      },
+    }
   },
   computed: {
     ...mapState(["accentColor", "colorMode"]),
@@ -225,7 +240,7 @@ export default {
             window.location.reload();
           }
         } else if (response.data.code == "-1") {
-          alert("登录失败，请重新登录！");
+          this.error('用户名或密码错误 请重新登录')
           // this.closeLWindow();
         }
       });

@@ -335,7 +335,7 @@
 </template>
   
 <script>
-import { CloseOutline, ArrowUpOutline } from '@vicons/ionicons5'
+import { CloseOutline, ArrowUpOutline, WatchOutline } from '@vicons/ionicons5'
 import { NInput, NModal, NPopover } from 'naive-ui';
 import { defineComponent, ref, watch } from "vue";
 import { mapState } from 'vuex'
@@ -423,6 +423,28 @@ export default {
             },
         }
     },
+    setup() {
+        return {
+            error(msg) {
+                message.error({
+                    content: msg,
+                    duration: 2,
+                    style: {
+                        "z-index": 101,
+                    },
+                });
+            },
+            warning(msg) {
+                message.warning({
+                    content: msg,
+                    duration: 2,
+                    style: {
+                        "z-index": 101,
+                    },
+                })
+            }
+        }
+    },
     created() {
         this.songPageUrl = '/src/assets/upload-logo.png';
     },
@@ -490,9 +512,9 @@ export default {
                     if (response.data.code == '0') {
                         this.$emit('flushUploadSongs')//刷新歌曲
                         this.closeUWindow();
-                        this.success('上传歌曲成功!')
+                        //this.success('上传歌曲成功!')
                     } else if (response.data.code == '-1') {
-                        this.warning('上传歌曲失败，请重新上传!');
+                        this.error('上传歌曲失败，请重新上传!');
                     }
                 });
             }
@@ -505,15 +527,33 @@ export default {
             this.value.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
-                    this.tagList.push(option.label);
+                    this.tagList.push(option.label);    
                 }
             })
             this.tagString = this.tagList.join(' ');
+            console.log(this.tagString)
         },
         handleUpdateValue(value, option) {
             if (value.length > 3) {
                 value.splice(0, 1)
             }
+            let options=[]
+            this.value.forEach((value) => {      
+                const option = this.options.find((option) => option.value == value);
+                if (option) {
+                    options.push(option);
+                    option.style={'background-color':'red',opacity:0.4,'color':'yellow'}   
+                }
+            })
+            let op=this.options.filter(function(v){return options.indexOf(v)==-1})
+            let i=0,j=0;
+            for(i=0;i<op.length;i++){
+                for(j=0;j<this.options.length;j++){
+                    if(op[i].value==this.options[j].value){
+                        this.options[j].style={'background-color':'white',opacity:1,'color':'black'}
+                    }
+                }
+            }           
         },
         // renderTagChoices() {
         //     setTimeout(() => {
