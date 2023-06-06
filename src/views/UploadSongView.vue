@@ -461,7 +461,7 @@ export default {
                         "z-index": 101,
                     },
                 })
-            }
+            },
         }
     },
     created() {
@@ -707,4 +707,12 @@ export default {
 .upload-song-page:hover {
     cursor: pointer;
 }
+
+/* :global(.ant-select-dropdown){
+        border-radius: 0 0 10px 10px;
+}
+:global(.ant-select-dropdown-menu,.ant-select-dropdown-menu-root,.ant-select-dropdown-menu-vertical){
+    background-color: aquamarine;
+} */
+
 </style>
