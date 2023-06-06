@@ -1078,15 +1078,23 @@ export default defineComponent({
       }
     },
     collect() {
-      //todo
-      this.iscollect = !this.iscollect;
+      if (!this.$cookies.isKey('userid')) {
+        this.$EventBus.emit('showLoginModal')
+      } else {
+        this.iscollect = !this.iscollect;
+      }
+      
     },
     complain() {
       //todo
-      if (this.iscomplain == false) {
+      /*if (this.iscomplain == false) {
         this.iscomplain = !this.iscomplain;
+      }*/
+      if (!this.$cookies.isKey('userid')) {
+        this.$EventBus.emit('showLoginModal')
+      } else {
+        this.showModifyComplainView = true;
       }
-      this.showModifyComplainView = true;
     },
     cleanComment() {
       this.value = "";
@@ -1100,12 +1108,12 @@ export default defineComponent({
       formData.append("content", this.value);
       if (this.editNewCommentId == 1) {
         this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
-          this.success("评论成功");
+          //this.success("评论成功");
           this.regetComments();
         });
       } else if (this.editNewCommentId == 0 && this.editCommentId != 0) {
         this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
-          this.success("编辑成功");
+          //this.success("编辑成功");
           this.regetComments();
         });
         this.editCommentId = 0;
@@ -1113,11 +1121,11 @@ export default defineComponent({
       }
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
-      this.value == "";
+      this.value = "";
     },
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
-        this.success("删除成功");
+        //this.success("删除成功");
         this.regetComments();
       });
       this.refreshCommentVir++;
@@ -1134,14 +1142,14 @@ export default defineComponent({
         this.$http
           .post(`/api/comment/on/comment/${this.edit2ndCommentParentId}/`, formData)
           .then(() => {
-            this.success("回复评论成功");
+            //this.success("回复评论成功");
             this.regetComments();
           });
       } else {
         this.$http
           .post(`/api/comment/edit/${this.edit2ndCommentId}/`, formData)
           .then(() => {
-            this.success("编辑成功");
+           // this.success("编辑成功");
             this.regetComments();
           });
         this.edit2ndCommentId = 0;
@@ -1149,7 +1157,7 @@ export default defineComponent({
       }
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
-      this.value == "";
+      this.value = "";
     },
     // 编辑回复评论
     editReplyComment(comment) {
