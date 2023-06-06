@@ -13,12 +13,11 @@ import { backgroundColor } from '../../../colorMode';
 export default {
     data() {
         let isLoggedIn = computed(() => {
-            return store.state.isLoggedIn
+            return this.$cookies.isKey('userid')
         })
         let isAdmin = computed(() => {
-            return store.state.isAdmin
+            return this.$cookies.get('is_superuser') == 'true'
         })
-
         let collectionData = []//当前用户的收藏夹的数据
         let formData = new FormData()
         formData.append('shared', false)
@@ -382,7 +381,7 @@ export default {
                                     //先设置所有项的isCollectChanged
                                     for (let i = 0; i < this.selectedEntries.length; i++) {
                                         this.songData[i].isCollectChanged = true
-                                        this.songData[i].isCollected=true
+                                        this.songData[i].isCollected = true
                                     }
                                     setTimeout(() => {
                                         this.showCollection = false
@@ -496,7 +495,7 @@ export default {
                                     handleClickEntry: (listId) => {
                                         this.headChange = true
                                         row.isCollectChanged = true
-                                        row.isCollected=true
+                                        row.isCollected = true
                                         setTimeout(() => {
                                             row.showCollection = false
                                             setTimeout(() => {

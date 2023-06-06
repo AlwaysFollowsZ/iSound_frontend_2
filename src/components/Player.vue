@@ -269,8 +269,17 @@ onMounted(() => {
   z-index: 100 !important;
 }
 
-.aplayer-bar-wrap {
+.aplayer-bar {
+  background-color: v-bind("mainColor") !important;
   margin: 0 !important;
+}
+
+.aplayer-loaded {
+  background-color: v-bind("secondaryFontColor") !important;
+}
+
+.aplayer-played {
+  background-color: v-bind("mainFontColor") !important;
 }
 
 .aplayer-time-inner {
@@ -283,12 +292,14 @@ onMounted(() => {
 }
 
 .aplayer-ptime {
+  color: v-bind("mainFontColor") !important;
   position: absolute !important;
   left: 0 !important;
   visibility: visible !important;
 }
 
 .aplayer-dtime {
+  color: v-bind("mainFontColor") !important;
   position: absolute !important;
   right: -3px !important;
   visibility: visible !important;

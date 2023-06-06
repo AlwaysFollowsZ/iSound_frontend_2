@@ -78,8 +78,13 @@ const router = createRouter({
       component: () => import('../views/OtherUserView.vue')
     },
     {
-      path: '/listdetail/:playlistId',
+      path: '/listdetail/:playlistId/',
       name: 'listdetail',
+      component: () => import('../views/ListDetailed.vue')
+    },
+    {
+      path: '/listdetail/:playlistId/:shareModal',
+      name: 'listdetailshare',
       component: () => import('../views/ListDetailed.vue')
     },
     // {

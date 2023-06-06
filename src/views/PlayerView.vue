@@ -477,7 +477,6 @@ export default defineComponent({
                         class="tag-item"
                       >
                         {{ tag }}
-                        <br />
                       </n-tag>
                     </span>
                   </div>

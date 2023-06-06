@@ -19,7 +19,8 @@
                 </n-gi>
             </n-grid>
         </div> -->
-        <image-table :position="'Songlist'" :entrySize="[200, 200]"></image-table>
+        <div style="text-align:center"><image-table :position="'Songlist'" :rows="songlistData"
+                :entrySize="[200, 200]"  @flushSonglists="updateSonglists" :handleClickEntry="clickSonglists"></image-table></div>
     </div>
 </template>
 <script>
@@ -29,9 +30,40 @@ export default {
     components: {
         ImageTable
     },
+    methods: {
+        clickSonglists(Id) {
+            this.$router.push(`/listdetail/${Id}`)
+        },//点击收藏夹。这时候应该跳转到收藏夹详情页面
+        updateSonglists() {
+            this.$http.get('/api/playlist/of/0/',
+                {
+                    params: {
+                        'shared': 'True'
+                    }
+                }).then((response) => {
+                    let key = 0
+                    if (response.data.playlist_set.length == 0) {
+                        this.collectionData = []
+                        return
+                    }
+                    this.songlistData = response.data.playlist_set.map((songlist) => {
+                        return {
+                            Key: key++,
+                            Id: songlist.id,
+                            imagePath: songlist.cover,
+                            Name: songlist.title,
+                            songCount: songlist.music_set.length,
+                            Type: 'songList'
+                        }
+                    })
+                })
+        }
+    },
     data() {
+        let songlistData = [];//收藏夹数据
+        this.updateSonglists()//获取收藏夹数据
         return {
-
+            songlistData,
             songSheets: [
                 {
                     imgSrc: "/src/assets/song2.jpg",
