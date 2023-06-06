@@ -412,6 +412,9 @@ export default {
                                         row.isCollected = true
                                         row.isCollectChanged = true
                                         emit('recollect', row.key)
+                                        setTimeout(() => {
+                                            row.isCollectChanged = false
+                                        },500)
                                     }
                                     else {
                                         row.showCollection = true
@@ -552,13 +555,14 @@ export default {
                                         this.headChange = true
                                         row.isCollected = false
                                         row.isCollectChanged = true
+                                        emit('discollectOnCollection', row.key)
                                         //先通知更新数据
                                         setTimeout(() => {
                                             //现在公共界面不能取消收藏，只能添加到收藏夹
                                             row.showCollection = false
                                             setTimeout(() => {
-                                                emit('discollectOnCollection', row.key)
                                                 this.headChange = false
+                                                row.isCollectChanged=false
                                             }, 500)
                                         }, 800)
                                     }
