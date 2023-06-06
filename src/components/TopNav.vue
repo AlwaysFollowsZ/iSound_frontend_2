@@ -141,6 +141,7 @@
             <div style="padding-top: 25%">
               <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
                 <n-icon
+                  class="mail-icon"
                   :component="MailOutline"
                   size="27px"
                   @click="readMessage"
@@ -464,6 +465,10 @@ export default {
 }
 
 .user-avatar:hover {
+  cursor: pointer;
+}
+
+.mail-icon:hover {
   cursor: pointer;
 }
 </style>
