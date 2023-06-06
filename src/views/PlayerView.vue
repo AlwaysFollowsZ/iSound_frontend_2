@@ -169,9 +169,9 @@
                       :rail-style="railStyle"
                       v-if="hasTranslation"
                       v-model:value="showTranslation"
-                      size="small"
-                      :round="false"
+                      
                       @click="scroll"
+                      :style="{ '--n-rail-color': 'grey' }"
                     >
                       <template #icon> 译 </template>
                     </n-switch>
