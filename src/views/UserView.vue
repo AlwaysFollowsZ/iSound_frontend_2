@@ -6,7 +6,7 @@
             <n-gi :span="7">
                 <div class="user-info-container">
                     <div class="avatar">
-                        <img :src="avatarUrl" alt="avatar" />
+                        <img :src="avatarUrl" alt="avatar" @click="showModifyUserInfo = true"/>
                     </div>
                     <div class="user-info-card">
                         <div class="user-info-title" :style="{ color: 'rgb(' + this.accentColor + ')' }">
@@ -230,7 +230,7 @@ export default {
 }
 
 .avatar img {
-    
+    cursor: pointer;
     width: 320px;
     height: 320px;
     border-radius: 50%;

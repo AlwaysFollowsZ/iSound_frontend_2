@@ -3,17 +3,6 @@ import listTableBody from "./ListTableBody.vue";
 import { Rows } from "../ImageTable/ImageRowData.js";
 import "animate.css";
 export default {
-    //         this.songData = response.data.music_set.map((music) => ({
-    //             key: key++,//在当前列表的序号
-    //             id: music.id,//歌曲总表的序号
-    //             name: music.name,
-    //             singer: music.artist,
-    //             length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
-    //             isliked: music.is_like,
-    //             isCollected: music.is_favorite,
-    //             imgSrc: music.cover,
-    //             showCollection: false
-    //}
     data() { },
     methods: {
         //喜欢全部歌曲
@@ -41,7 +30,7 @@ export default {
         //收藏单首歌曲
         handleCollect(key, listId) {
             this.$http.post(`/api/favorite/${listId}/${this.songData[key].id}/`).then(() => {
-                this.songData[key].isCollected = true; //更改歌曲对应的收藏夹列表
+                // this.songData[key].isCollected = true; //更改歌曲对应的收藏夹列表
                 this.cleanChangeReaction();
             })
         },
@@ -81,7 +70,7 @@ export default {
                     this.songData[i].isLikeChanged = false;
                     this.songData[i].isCollectChanged = false;
                 }
-            }, 500);
+            }, 200);
         },
 
     },
