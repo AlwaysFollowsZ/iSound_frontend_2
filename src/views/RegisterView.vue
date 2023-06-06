@@ -1,6 +1,6 @@
 <template>
     <!-- <n-button @click="showLogin = true">登录</n-button> -->
-    <n-modal :show="showRegister" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false">
+    <n-modal :show="showRegister" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false"  z-index="2">
         <div class="outer-container">
             <div class="title-container">
                 <div style="margin-bottom: 30px;">
@@ -197,8 +197,9 @@
 </template>
 
 <script>
-import { CloseOutline } from '@vicons/ionicons5'
+import { CloseOutline, Magnet } from '@vicons/ionicons5'
 import { mapState } from 'vuex'
+import { message } from "ant-design-vue";
 export default {
     name: "RegisterView",
     components: {
@@ -215,6 +216,18 @@ export default {
             this.$emit('closeRegisterWindow')
         },
         register() {
+            if(this.username == ''){
+                this.warning('用户名不得为空');
+                return;
+            }
+            if(this.password1 == ''){
+                this.warning('密码不得为空');
+                return;
+            }
+            if(this.password2 == ''){
+                this.warning('请确认密码');
+                return;
+            }
             let data = new FormData();
             data.append('username', this.username);
             data.append('email', this.email);
@@ -223,14 +236,21 @@ export default {
             this.$http.post('/api/accounts/register/', data).then(response => {
                 // console.log(response.data);
                 if(response.data.code == '0') {
-                    alert('注册成功，请登录！');
                     this.closeRWindow();
-                } else if (response.data.code == '-1'){
-                    alert('注册失败，请重新注册！');
-                    this.closeRWindow();
+                } 
+                else if (response.data.code == '-1'){
+                    const message = response.data.message;
+                    if ('username' in response.data.message) {
+                        this.error(message.username[0].replaceAll('。', ' '));
+                    }
+                    else if ('password2' in response.data.message) {
+                        this.error(message.password2[0].replaceAll('。', ' '));
+                    }
+                    //this.closeRWindow();
                 }
             });
         },
+
     },
     data() {
         return {
@@ -240,6 +260,28 @@ export default {
             email: '',
         };
     },
+    setup() {
+        return {
+            error(msg) {
+                message.error({
+                    content: msg,
+                    duration: 2,
+                    style: {
+                        "z-index": 101,
+                    },
+                });
+            },
+            warning(msg) {
+                message.warning({
+                    content: msg,
+                    duration: 2,
+                    style: {
+                        "z-index": 101,
+                    },
+                })
+            }
+        }
+    }
 }
 </script>
 

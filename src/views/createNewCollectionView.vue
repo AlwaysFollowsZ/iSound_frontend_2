@@ -7,7 +7,6 @@ import { message } from 'ant-design-vue';
 import { mapState } from 'vuex'
 import ModifyComplainView from '../views/ModifyComplainView.vue';
 export default defineComponent({
-    name: 'ListDetailed',
     computed: {
         ...mapState(['accentColor', 'colorMode']),
     },
@@ -152,7 +151,7 @@ export default defineComponent({
 )
 </script>
 <template>
-    <n-modal :show="show" z-index="2" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false">
+    <n-modal :show="show" :z-index="2" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false">
         <div class="outer-container">
             <div class="title-container">
                 <div style="margin-bottom: 30px">

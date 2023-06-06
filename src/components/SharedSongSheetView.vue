@@ -3,24 +3,13 @@
         <div class="shared-song-sheet-title">
             全部分享歌单
         </div>
-        <!-- <div class="song-sheet-container">
-            <n-grid :x-gap="12" :y-gap="6" :col="2">
-                <n-gi :span="12" v-for="(song, idx) in songSheets" :key="idx">
-                    <div class="single-card-container">
-                        <div class="single-card-img-container">
-                            <img class="single-card-img" :src="song.imgSrc">
-                        </div>
-                        <div class="single-card-info-container">
-                            <div class="single-card-info-name">
-                                {{ song.title }}
-                            </div>
-                        </div>
-                    </div>
-                </n-gi>
-            </n-grid>
-        </div> -->
+        <!-- <div class="no-result-info" v-if="this.songlistData.length == 0">
+            暂无已分享的歌单...从收藏夹分享一个？
+        </div>
+        <div v-else> -->
         <div style="text-align:center"><image-table :position="'Songlist'" :rows="songlistData" :entrySize="[200, 200]"
                 @flushSonglists="updateSonglists" :handleClickEntry="clickSonglists"></image-table></div>
+        <!-- </div> -->
     </div>
 </template>
 <script>
@@ -132,5 +121,15 @@ export default {
     font-size: small;
     font-weight: 500;
     color: grey;
+}
+
+.no-result-info {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0.8;
+    /* 不透明度 */
 }
 </style>
