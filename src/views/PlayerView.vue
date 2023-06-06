@@ -774,7 +774,7 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div v-if="comment.comment_set.length > 0">
+            <!-- <div v-if="comment.comment_set.length > 0"> -->
               <div v-for="(comment_2nd, idx) in comment.comment_set" :key="idx">
                 <a-comment>
                   <template #actions>
@@ -888,7 +888,7 @@ export default defineComponent({
                   </div>
                 </a-comment>
               </div>
-            </div>
+            <!-- </div> -->
           </a-comment>
         </div>
         <div class="card-pagination">
