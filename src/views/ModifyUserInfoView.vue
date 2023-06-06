@@ -1,6 +1,5 @@
 <template>
   <n-modal
-    z-index="2"
     :show="showModifyUserInfo"
     :style="{
       'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)',
@@ -273,35 +272,37 @@
 <script>
 import { CloseOutline } from "@vicons/ionicons5";
 import { mapState } from "vuex";
+import { NPopover } from "naive-ui";
+import { globalThemeColor, getFontColorString, getRGBString } from '/src/colorMode.js'
 import { message } from "ant-design-vue";
 export default {
-  name: "ModifyUserInfo",
-  data() {
-    return {
-      username: "",
-      email: "",
-      recordNum: "",
-      bio: "",
-      avatarFile: null,
-      avatarUrl: "",
-    };
-  },
-  computed: {
-    ...mapState(["accentColor", "colorMode"]),
-  },
-  // created() {
-  //   this.fetchData();
-  // },
-  mounted() {
-    this.fetchData();
-  },
-  components: {
-    CloseOutline,
-  },
-  props: {
-    showModifyUserInfo: Boolean,
-  },
-  setup() {
+    name: "ModifyUserInfo",
+    data() {
+        return {
+            username: "",
+            email: "",
+            recordNum: "",
+            bio: "",
+            avatarFile: null,
+            avatarUrl: "",
+        };
+    },
+    computed: {
+        ...mapState(["accentColor", "colorMode"]),
+    },
+    // created() {
+    //   this.fetchData();
+    // },
+    mounted() {
+        this.fetchData();
+    },
+    components: {
+        CloseOutline, NPopover
+    },
+    props: {
+        showModifyUserInfo: Boolean,
+    },
+    setup() {
         return {
             
             error(msg) {
@@ -328,39 +329,39 @@ export default {
         }
     },
   methods: {
-    fetchData() {
-      this.$http
-        .get("/api/accounts/detail/0/")
-        .then((response) => {
-          this.username = response.data.username;
-          this.email = response.data.email;
-          this.recordNum = response.data.record_num;
-          this.bio = response.data.profile;
-          this.avatarFile = response.data.avatar;
-          this.avatarUrl = response.data.avatar;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    closeMWindow() {
-      this.$emit("closeModifyWindow");
-      // location.reload(); // 可以自动刷新一下，但是会抖动一下，观看效果不太好。
-    },
-    uploadFile() {
-      this.$refs.fileInput.click();
-    },
-    handleFileChange(e) {
-      this.avatarFile = e.target.files[0];
-      // 更新 avatarUrl 属性，即时更换图片
-      this.avatarUrl = URL.createObjectURL(this.avatarFile);
-      // let formData = new FormData();
-      // formData.append('avatar', file);
+        fetchData() {
+            this.$http
+                .get("/api/accounts/detail/0/")
+                .then((response) => {
+                    this.username = response.data.username;
+                    this.email = response.data.email;
+                    this.recordNum = response.data.record_num;
+                    this.bio = response.data.profile;
+                    this.avatarFile = response.data.avatar;
+                    this.avatarUrl = response.data.avatar;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
+        closeMWindow() {
+            this.$emit("closeModifyWindow");
+            // location.reload(); // 可以自动刷新一下，但是会抖动一下，观看效果不太好。
+        },
+        uploadFile() {
+            this.$refs.fileInput.click();
+        },
+        handleFileChange(e) {
+            this.avatarFile = e.target.files[0];
+            // 更新 avatarUrl 属性，即时更换图片
+            this.avatarUrl = URL.createObjectURL(this.avatarFile);
+            // let formData = new FormData();
+            // formData.append('avatar', file);
 
-      // 发送文件到后端
-      // this.uploadFormData(formData);
-    },
-    submitModify() {
+            // 发送文件到后端
+            // this.uploadFormData(formData);
+        },
+        submitModify() {
       if(this.username == ''){
         this.warning('用户名不得为空');
         return;
@@ -369,110 +370,121 @@ export default {
         this.warning('邮箱不得为空');
         return;
       }
-      let data = new FormData();
-      data.append("username", this.username);
-      data.append("email", this.email);
-      data.append("record_num", this.recordNum);
-      data.append("profile", this.bio);
-      data.append("avatar", this.avatarFile);
-      this.$http.post("/api/accounts/update/", data).then((response) => {
-        if (response.data.code === "0") {
-          this.$EventBus.emit("updateInfo");
-          this.closeMWindow();
-          // alert('修改成功!')
-        } else if (response.data.code === "-1") {
-          const message = response.data.message;
+            let data = new FormData();
+            data.append("username", this.username);
+            data.append("email", this.email);
+            data.append("record_num", this.recordNum);
+            data.append("profile", this.bio);
+            data.append("avatar", this.avatarFile);
+            this.$http.post("/api/accounts/update/", data).then((response) => {
+                if (response.data.code === "0") {
+                    this.$EventBus.emit("updateInfo");
+                    this.closeMWindow();
+                    // alert('修改成功!')
+                } else if (response.data.code === "-1") {
+                    const message = response.data.message;
           if ('username' in response.data.message) {
             this.error(message.username[0].replaceAll('。', ' '));
-          }
+                    }
           else if ('email' in response.data.message) {
             this.error(message.email[0].replaceAll('。', ' '));
           }
-        }
-      });
+                }
+            });
+        },
     },
-  },
 };
 </script>
 <style scoped>
 .close-icon:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 .helloaaa.ant-message-notice-content{
   border-radius:20px !important;
 }
+
 .outer-container {
-  width: 800px;
-  border-radius: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 25px;
-  padding-right: 25px;
+    width: 800px;
+    border-radius: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 25px;
+    padding-right: 25px;
 }
+
 .title-container {
-  margin-top: 10px;
-  margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
+
 .body-item {
-  max-width: 500px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    max-width: 500px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 .body-item-title {
-  color: grey;
+    color: grey;
 }
+
 .modify-card-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 30px;
-  font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
 }
+
 .modify-title {
-  font-size: larger;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
 .avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 30px;
-  padding-top: 40px;
-}
-
-.avatar:hover {
-  cursor: pointer;
-}
-.avatar-prompt {
-  margin-top: 10px;
-  padding-left: 30px;
-  text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 30px;
+    padding-top: 40px;
 }
 
 .avatar img {
-  width: 256px;
-  height: 256px;
-  border-radius: 50%;
+    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+}
+
+.avatar img:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0 10px red;
+    transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
+}
+
+.avatar-prompt {
+    text-align: center;
+}
+
+.avatar img {
+    width: 256px;
+    height: 256px;
+    border-radius: 50%;
 }
 
 .modify-notice-text {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
 }
 
 .modify-button-position {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .modify-button-top {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 </style>
