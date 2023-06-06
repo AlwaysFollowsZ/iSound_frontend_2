@@ -53,6 +53,7 @@ export default defineComponent({
         const musicId = this.$route.params.musicId;
         this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
           this.music = response.data.music_set[0];
+          document.title = `${this.music.name} - ${this.music.artist}`;
           this.islike = this.music.is_like;
           this.iscollect = this.music.is_favorite;
           this.songtags = this.music.tags;
@@ -189,15 +190,16 @@ export default defineComponent({
       if (this.editNewCommentId == 1) {
         this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
           this.success("评论成功");
+          this.regetComments();
         });
       } else if (this.editNewCommentId == 0 && this.editCommentId != 0) {
         this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
           this.success("编辑成功");
+          this.regetComments();
         });
         this.editCommentId = 0;
         this.editNewCommentId = 1;
       }
-      this.regetComments();
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
       this.value == "";
@@ -205,8 +207,8 @@ export default defineComponent({
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
         this.success("删除成功");
+        this.regetComments();
       });
-      this.regetComments();
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
     },
@@ -222,17 +224,18 @@ export default defineComponent({
           .post(`/api/comment/on/comment/${this.edit2ndCommentParentId}/`, formData)
           .then(() => {
             this.success("回复评论成功");
+            this.regetComments();
           });
       } else {
         this.$http
           .post(`/api/comment/edit/${this.edit2ndCommentId}/`, formData)
           .then(() => {
             this.success("编辑成功");
+            this.regetComments();
           });
         this.edit2ndCommentId = 0;
         this.edit2ndCommentParentId = 0;
       }
-      this.regetComments();
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
       this.value == "";
@@ -350,6 +353,7 @@ export default defineComponent({
       });
     },
     regetComments() {
+      const musicId = this.$route.params.musicId;
       this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
         this.comments = response.data.comment_set;
       });
@@ -477,7 +481,6 @@ export default defineComponent({
                         class="tag-item"
                       >
                         {{ tag }}
-                        <br />
                       </n-tag>
                     </span>
                   </div>
@@ -549,11 +552,7 @@ export default defineComponent({
                     <n-gi :span="23" id="comment-top">
                       <span style="font-size: 22px"> 全部评论 </span>
                     </n-gi>
-                    <n-gi
-                      :span="1"
-                      style="padding-top: 5px"
-                      v-if="this.$cookies.get('is_superuser') == 'false'"
-                    >
+                    <n-gi :span="1" style="padding-top: 5px">
                       <n-icon id="comment-fold" size="27">
                         <ChatbubbleEllipsesOutline />
                       </n-icon>
@@ -624,7 +623,7 @@ export default defineComponent({
                       <n-button
                         text
                         circle
-                        focusable="false"
+                        :focusable="false"
                         @click="editReplyComment(comment)"
                       >
                         <n-icon size="18">
@@ -643,7 +642,7 @@ export default defineComponent({
                       <n-button
                         text
                         circle
-                        focusable="false"
+                        :focusable="false"
                         @click="editMyComment(comment)"
                         :disabled="this.$cookies.get('userid') != comment.up.id"
                       >
@@ -666,7 +665,7 @@ export default defineComponent({
                       <n-button
                         text
                         circle
-                        focusable="false"
+                        :focusable="false"
                         :disabled="this.$cookies.get('userid') != comment.up.id"
                       >
                         <n-icon size="18">
@@ -786,7 +785,7 @@ export default defineComponent({
                             <n-button
                               text
                               circle
-                              focusable="false"
+                              :focusable="false"
                               @click="editMy2ndComment(comment_2nd)"
                               :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
                             >
@@ -809,7 +808,7 @@ export default defineComponent({
                             <n-button
                               text
                               circle
-                              focusable="false"
+                              :focusable="false"
                               :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
                             >
                               <n-icon size="18">

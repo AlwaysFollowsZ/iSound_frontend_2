@@ -1,10 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
-import UserView from '../views/UserView.vue'
-import { ImproveRelevance } from '@vicons/carbon'
-import { ImportContactsFilled } from '@vicons/material'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import LoginView from '../views/LoginView.vue';
+import RegisterView from '../views/RegisterView.vue';
+import UserView from '../views/UserView.vue';
+import { ImproveRelevance } from '@vicons/carbon';
+import { ImportContactsFilled } from '@vicons/material';
+import cookies from 'vue-cookies';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +13,11 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      meta: {
+        isLogin: false,
+        isSuperuser: false,
+      },
+      component: HomeView,
     },
     {
       path: '/about',
@@ -20,27 +25,43 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: () => import('../views/AboutView.vue'),
     },
     {
       path: '/login',
       name: 'LoginView',
-      component: LoginView
+      meta: {
+        isLogin: false,
+        isSuperuser: false,
+      },
+      component: LoginView,
     },
     {
       path: '/register',
       name: 'RegisterView',
-      component: RegisterView
+      meta: {
+        isLogin: false,
+        isSuperuser: false,
+      },
+      component: RegisterView,
     },
     {
       path: '/home',
       name: 'UserView',
-      component: UserView
+      meta: {
+        isLogin: true,
+        isSuperuser: false,
+      },
+      component: UserView,
     },
     {
       path: '/message',
       name: 'message',
       redirect:'/message/receive',
+      meta: {
+        isLogin: true,
+        isSuperuser: true,
+      },
       component: () => import('../views/MessageView.vue'),
       children: [
         {
@@ -60,32 +81,52 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      component: () => import('../views/AdminView.vue')
+      meta: {
+        isLogin: true,
+        isSuperuser: true,
+      },
+      component: () => import('../views/AdminView.vue'),
     },
     {
       path: '/searchresult/:keyword',
       name: 'searchresult',
-      component: () => import('../views/SearchResultView.vue')
+      meta: {
+        isLogin: false,
+        isSuperuser: false,
+      },
+      component: () => import('../views/SearchResultView.vue'),
     },
     {
       path: '/player/:musicId',
       name: 'player',
-      component: () => import('../views/PlayerView.vue')
+      meta: {
+        isLogin: false,
+        isSuperuser: false,
+      },
+      component: () => import('../views/PlayerView.vue'),
     },
     {
       path: '/home/user/:userId',
       name: 'OtherUserView',
-      component: () => import('../views/OtherUserView.vue')
+      meta: {
+        isLogin: false,
+        isSuperuser: false,
+      },
+      component: () => import('../views/OtherUserView.vue'),
     },
     {
       path: '/listdetail/:playlistId/',
       name: 'listdetail',
-      component: () => import('../views/ListDetailed.vue')
+      meta: {
+        isLogin: false,
+        isSuperuser: false,
+      },
+      component: () => import('../views/ListDetailed.vue'),
     },
     {
       path: '/listdetail/:playlistId/:shareModal',
       name: 'listdetailshare',
-      component: () => import('../views/ListDetailed.vue')
+      component: () => import('../views/ListDetailed.vue'),
     },
     // {
     //   path: '/usermessage',
@@ -95,14 +136,30 @@ const router = createRouter({
     {
       path: '/history',
       name: 'HistoryView',
-      component:() => import('../views/HistoryView.vue')
+      meta: {
+        isLogin: true,
+        isSuperuser: false,
+      },
+      component:() => import('../views/HistoryView.vue'),
     },
     {
       path: '/tags/:tagName',
       name: 'TagClickView',
-      component:() => import('../views/TagClickView.vue')
+      component:() => import('../views/TagClickView.vue'),
     }
   ]
 })
 
-export default router
+router.beforeEach((to, from, next) => {
+  if (to.meta.isLogin && !cookies.isKey('userid')) {
+    next({path: '/'});
+  }
+  else if (to.meta.isSuperuser && cookies.get('is_superuser') == 'false') {
+    next({path: '/'});
+  }
+  else {
+    next();
+  }
+});
+
+export default router;
