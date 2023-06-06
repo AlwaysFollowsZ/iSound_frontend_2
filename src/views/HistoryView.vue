@@ -254,7 +254,7 @@
           :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
           你还没有听歌记录
         </div>
-        <div style="
+        <!-- <div style="
             padding-left: 8%;
             font-size: 30px;
             font-weight: bold;
@@ -265,7 +265,7 @@
           class="animate__animated animate__slideInLeft">
           为你推荐
         </div>
-        <div><recommend-for-you /></div>
+        <div><recommend-for-you /></div> -->
       </div>
     </div>
   </div>
@@ -471,9 +471,12 @@ export default {
 
 .no-history-container {
   width: 100%;
-  font-size: 25px;
-  font-weight: 400;
   text-align: center;
+  font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 40px;
+  opacity: 0.8;
 }
 
 .song-tags {

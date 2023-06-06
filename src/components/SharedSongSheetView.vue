@@ -3,22 +3,6 @@
         <div class="shared-song-sheet-title">
             全部分享歌单
         </div>
-        <!-- <div class="song-sheet-container">
-            <n-grid :x-gap="12" :y-gap="6" :col="2">
-                <n-gi :span="12" v-for="(song, idx) in songSheets" :key="idx">
-                    <div class="single-card-container">
-                        <div class="single-card-img-container">
-                            <img class="single-card-img" :src="song.imgSrc">
-                        </div>
-                        <div class="single-card-info-container">
-                            <div class="single-card-info-name">
-                                {{ song.title }}
-                            </div>
-                        </div>
-                    </div>
-                </n-gi>
-            </n-grid>
-        </div> -->
         <!-- <div class="no-result-info" v-if="this.songlistData.length == 0">
             暂无已分享的歌单...从收藏夹分享一个？
         </div>
