@@ -39,9 +39,11 @@
             </n-grid>
         </div> -->
         <div style="text-align:center"><image-table :rows="songData" :handleClickEntry="playSong"
-                :position="'UploadedSongs'" @clickUpload="jumpToUploadSong" :entrySize="[200, 200]"></image-table></div>
+                @flushUploadSongs="updateSongs" :position="'UploadedSongs'" @clickUpload="jumpToUploadSong"
+                :entrySize="[200, 200]"></image-table></div>
     </div>
-    <upload-song-view @flushUploadSongs="updateSongs" :showUploadSong="goToUploadSong" @closeUploadWindow="goToUploadSong = false"></upload-song-view>
+    <upload-song-view @flushUploadSongs="updateSongs" :showUploadSong="goToUploadSong"
+        @closeUploadWindow="goToUploadSong = false"></upload-song-view>
 </template>
 <script>
 import ImageTable from '/src/components/tables/ImageTable/ImageTable.vue';
@@ -126,14 +128,13 @@ export default {
         updateSongs() {
             this.$http.get('/api/music/of/0/').then((response) => {
                 let key = 0
-                console.log(response.data.music_set);
                 if (response.data.music_set.length == 0) {
                     this.songData = []
                     return
                 }
                 this.songData = response.data.music_set.map((song) => {
                     return {
-                        Singer:song.artist,
+                        Singer: song.artist,
                         Key: key++,
                         Id: song.id,
                         imagePath: song.cover,

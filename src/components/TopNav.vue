@@ -208,7 +208,8 @@
     :showModifyUserMessage="showModifyUserMessage"
     @closeModifyWindow="showModifyUserMessage = false"
   ></modify-user-message-view>
-  <change-passwd-view v-if="isLoggedIn"
+  <change-passwd-view
+    v-if="isLoggedIn"
     :showChangePasswd="showChangePasswd"
     @closeChangePasswdWindow="showChangePasswd = false"
   ></change-passwd-view>
@@ -248,7 +249,6 @@ export default {
     }
   },
   created() {
-    
     this.$EventBus.on("setShowMessage", (unread) => {
       if (unread == 0) {
         this.showMessage = false;
