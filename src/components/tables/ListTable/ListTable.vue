@@ -3,17 +3,6 @@ import listTableBody from "./ListTableBody.vue";
 import { Rows } from "../ImageTable/ImageRowData.js";
 import "animate.css";
 export default {
-    //         this.songData = response.data.music_set.map((music) => ({
-    //             key: key++,//在当前列表的序号
-    //             id: music.id,//歌曲总表的序号
-    //             name: music.name,
-    //             singer: music.artist,
-    //             length: `${Math.floor(music.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(music.duration % 60)}`.padStart(2, '0'),
-    //             isliked: music.is_like,
-    //             isCollected: music.is_favorite,
-    //             imgSrc: music.cover,
-    //             showCollection: false
-    //}
     data() { },
     methods: {
         //喜欢全部歌曲
