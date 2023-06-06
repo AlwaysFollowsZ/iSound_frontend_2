@@ -130,9 +130,13 @@ import {
 import { NewspaperOutline, FlowerOutline, FlashOutline } from "@vicons/ionicons5";
 import { mapState } from "vuex";
 import MyFavoritesVue from "../components/MyFavorites.vue";
+import { getBackgroundColorString, globalThemeColor, getRGBString } from '/src/colorMode.js'
 export default {
     computed: {
         ...mapState(["colorMode", "accentColor"]),
+        BackgroundColorString() {
+            return getRGBString(getBackgroundColorString(globalThemeColor))
+        }
     },
     components: {
         ModifyUserInfoView,
@@ -177,7 +181,7 @@ export default {
                 .get("/api/accounts/detail/0/")
                 .then((response) => {
                     this.username = response.data.username;
-          document.title = `${this.username}的个人主页`;
+                    document.title = `${this.username}的个人主页`;
                     this.email = response.data.email;
                     this.recordNum = response.data.record_num;
                     this.bio = response.data.profile;
@@ -226,13 +230,17 @@ export default {
 }
 
 .avatar img {
+    
     width: 320px;
     height: 320px;
     border-radius: 50%;
     margin-top: 20px;
+    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s;
 }
-.avatar img:hover{
-    
+
+.avatar img:hover {
+    box-shadow: 0 0 0px 15px v-bind("BackgroundColorString");
+    transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.5s;
 }
 
 .user-info-card {

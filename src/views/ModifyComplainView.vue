@@ -32,7 +32,6 @@ export default defineComponent({
           data.append("playlist", this.$route.params.playlistId);
         }
         this.$http.post("/api/message/to/1/", data).then(() => {
-          //this.success("投诉成功！");
           this.closeWindow();
           this.value = null;
         });
