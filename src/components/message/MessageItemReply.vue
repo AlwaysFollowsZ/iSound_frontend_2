@@ -19,9 +19,7 @@ export default defineComponent({
     CloseOutline,
   },
   created() {
-    if (this.$cookies.isKey("userid")) {
-      this.fetchData();
-    }
+    this.fetchData();
   },
   methods: {
     fetchData() {

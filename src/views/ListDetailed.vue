@@ -1,7 +1,7 @@
 <script>
 import { NButton, NIcon } from "naive-ui";
 import { defineComponent, ref } from "vue";
-import ListTable from "/src/components/tables/ListTable/ListTable.Vue";
+//import ListTable from "/src/components/tables/ListTable/ListTable.Vue";
 import {
   ChevronBack,
   MusicalNotesOutline,
@@ -26,7 +26,7 @@ export default defineComponent({
     ImageOutline,
     WarningOutline,
     ModifyComplainView,
-    ListTable,
+    //ListTable,
   },
   created() {
     this.$watch(
@@ -353,12 +353,12 @@ export default defineComponent({
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
         <a-divider style="height: 1.8px; background-color: #dddddd" />
-        <list-table
+        <!-- <list-table
           v-if="playlist.music_set.length > 0"
           :view-mode="'user'"
           :position="'PublicView'"
           v-model:songData="this.songData"
-        ></list-table>
+        ></list-table> -->
       </n-gi>
       <n-gi :span="4"></n-gi>
     </n-grid>

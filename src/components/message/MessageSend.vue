@@ -19,7 +19,6 @@ export default defineComponent({
       this.username = username;
       console.log(this.username);
     });
-    this.username = "asdff";
   },
   methods: {
     cleanContent() {

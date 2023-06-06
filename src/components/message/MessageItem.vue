@@ -19,11 +19,9 @@ export default defineComponent({
     CloseOutline,
   },
   created() {
-    if (this.$cookies.isKey("userid") && this.$cookies.get("is_superuser") == "true") {
-      this.$http.get("/api/message/of/1/").then((response) => {
-        this.messages = response.data.message_set;
-      });
-    }
+    this.$http.get("/api/message/of/1/").then((response) => {
+      this.messages = response.data.message_set;
+    });
   },
   methods: {
     removeMessage(message) {
