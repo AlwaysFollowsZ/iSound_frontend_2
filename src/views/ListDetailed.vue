@@ -1,7 +1,7 @@
 <script>
 import { NButton, NIcon } from "naive-ui";
 import { defineComponent, ref } from "vue";
-//import ListTable from "/src/components/tables/ListTable/ListTable.Vue";
+// import ListTable from "/src/components/tables/ListTable/ListTable.Vue";
 import {
   ChevronBack,
   MusicalNotesOutline,
@@ -15,220 +15,220 @@ import {
 import { message } from "ant-design-vue";
 import ModifyComplainView from "../views/ModifyComplainView.vue";
 export default defineComponent({
-    name: "ListDetailed",
-    components: {
-        ChevronBack,
-        MusicalNotesOutline,
-        PlayOutline,
-        OpenOutline,
-        CreateOutline,
-        CloseOutline,
-        ImageOutline,
-        WarningOutline,
-        ModifyComplainView,
-        ListTable
+  name: "ListDetailed",
+  components: {
+    ChevronBack,
+    MusicalNotesOutline,
+    PlayOutline,
+    OpenOutline,
+    CreateOutline,
+    CloseOutline,
+    ImageOutline,
+    WarningOutline,
+    ModifyComplainView,
+    // ListTable,
+  },
+  created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.updateData(this.$route.params.playlistId);
+      },
+      { immediate: true }
+    );
+  },
+  methods: {
+    back() {
+      this.$router.go(-1);
     },
-    created() {
-        this.$watch(
-            () => this.$route.params,
-            () => {
-                this.updateData(this.$route.params.playlistId);
-            },
-            { immediate: true }
+    editList() {
+      this.showEditListModify = true;
+    },
+    closeWindow() {
+      this.showEditListModify = false;
+      this.showShareListModify = false;
+      this.cover = null;
+    },
+    submitEdit() {
+      //todo
+      if (this.listName == "") {
+        this.warning("歌单名不得为空");
+      } else {
+        let formData = new FormData();
+        formData.append("title", this.listName);
+        formData.append("profile", this.listIntro);
+        formData.append("tags", this.tags.join(" "));
+        if (this.cover != null) {
+          formData.append("cover", this.cover);
+        }
+        this.$http
+          .post(`/api/playlist/edit/${this.playlist.id}/`, formData)
+          .then((response) => {
+            this.updateData(this.playlist.id);
+          });
+        this.success("修改歌单信息成功");
+        this.closeWindow();
+      }
+    },
+    shareList() {
+      this.showShareListModify = true;
+    },
+    confirmShare() {
+      this.$http.post(`/api/playlist/share/${this.playlist.id}/`);
+      this.playlist.shared = true;
+      this.success("分享歌单成功");
+      this.closeWindow();
+      setTimeout(() => {
+        this.$router.push("/home");
+      }, 1000);
+    },
+    unshareList() {
+      this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
+      if (
+        this.$cookies.get("is_superuser") == "true" &&
+        this.$cookies.get("userid") != this.up.id
+      ) {
+        let formData = new FormData();
+        formData.append(
+          "content",
+          `您的歌单${this.playlist.title}涉嫌违规，已被取消分享。`
         );
+        this.$http.post(`/api/message/to/${this.up.id}/`, formData);
+      }
+      this.playlist.shared = false;
+      this.success("取消分享成功");
+      setTimeout(() => {
+        this.$router.push("/home");
+      }, 1000);
     },
-    methods: {
-        back() {
-            this.$router.go(-1);
-        },
-        editList() {
-            this.showEditListModify = true;
-        },
-        closeWindow() {
-            this.showEditListModify = false;
-            this.showShareListModify = false;
-            this.cover = null;
-        },
-        submitEdit() {
-            //todo
-            if (this.listName == "") {
-                this.warning("歌单名不得为空");
-            } else {
-                let formData = new FormData();
-                formData.append("title", this.listName);
-                formData.append("profile", this.listIntro);
-                formData.append("tags", this.tags.join(" "));
-                if (this.cover != null) {
-                    formData.append("cover", this.cover);
-                }
-                this.$http
-                    .post(`/api/playlist/edit/${this.playlist.id}/`, formData)
-                    .then((response) => {
-                        this.updateData(this.playlist.id);
-                    });
-                this.success("修改歌单信息成功");
-                this.closeWindow();
-            }
-        },
-        shareList() {
-            this.showShareListModify = true;
-        },
-        confirmShare() {
-            this.$http.post(`/api/playlist/share/${this.playlist.id}/`);
-            this.playlist.shared = true;
-            this.success("分享歌单成功");
-            this.closeWindow();
-            setTimeout(() => {
-                this.$router.push('/home')
-            }, 1000)
-        },
-        unshareList() {
-            this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
-            if (
-                this.$cookies.get("is_superuser") == "true" &&
-                this.$cookies.get("userid") != this.up.id
-            ) {
-                let formData = new FormData();
-                formData.append(
-                    "content",
-                    `您的歌单${this.playlist.title}涉嫌违规，已被取消分享。`
-                );
-                this.$http.post(`/api/message/to/${this.up.id}/`, formData);
-            }
-            this.playlist.shared = false;
-            this.success("取消分享成功");
-            setTimeout(() => {
-                this.$router.push('/home')
-            }, 1000)
-        },
-        playAll() {
-            this.$EventBus.emit("playAll", this.playlist.id);
-        },
-        complainList() {
-            this.showModifyComplainView = true;
-        },
-        updateData(playlistId) {
-            this.$http.get(`/api/playlist/detail/${playlistId}/`).then((response) => {
-                this.playlist = response.data;
-                this.songNum = this.playlist.music_set.length;
-                this.tagsNum = this.playlist.tags.length;
-                this.listName = this.playlist.title;
-                this.listIntro = this.playlist.profile;
-                this.tags = this.playlist.tags;
-                this.up = this.playlist.up;
-                document.title = `${this.up.username}的歌单 - ${this.playlist.title}`;
-                let key = 0;
-                this.songData = this.playlist.music_set.map((music) => ({
-                    key: key++,
-                    id: music.id,
-                    name: music.name,
-                    singer: music.artist,
-                    length:
-                        `${Math.floor(music.duration / 60)}`.padStart(2, "0") +
-                        ":" +
-                        `${Math.floor(music.duration % 60)}`.padStart(2, "0"),
-                    isLiked: music.is_like,
-                    isCollected: music.is_favorite,
-                    imgSrc: music.cover,
-                    showCollection: false,
-                }));
-            });
-        },
-        handleCoverChange(e) {
-            this.cover = e.file.file;
-        },
+    playAll() {
+      this.$EventBus.emit("playAll", this.playlist.id);
     },
-    setup() {
-        const showModalRef = ref(false);
-        const previewImageUrlRef = ref("");
-        function handlePreview(file) {
-            const { url } = file;
-            previewImageUrlRef.value = url;
-            showModalRef.value = true;
-        }
-        return {
-            handlePreview,
-            showModal: showModalRef,
-            previewImageUrl: previewImageUrlRef,
-            warning(msg) {
-                message.warning({
-                    content: msg,
-                    duration: 1,
-                    style: {
-                        "z-index": 2,
-                    },
-                });
-            },
-            success(msg) {
-                message.success({
-                    content: msg,
-                    duration: 1,
-                    style: {
-                        "z-index": 2,
-                    },
-                });
-            },
-        };
+    complainList() {
+      this.showModifyComplainView = true;
     },
-    mounted() {
-        if (this.$route.params.shareModal === 'true') {
-            alert('show')
-            this.editList()
-        }
+    updateData(playlistId) {
+      this.$http.get(`/api/playlist/detail/${playlistId}/`).then((response) => {
+        this.playlist = response.data;
+        this.songNum = this.playlist.music_set.length;
+        this.tagsNum = this.playlist.tags.length;
+        this.listName = this.playlist.title;
+        this.listIntro = this.playlist.profile;
+        this.tags = this.playlist.tags;
+        this.up = this.playlist.up;
+        document.title = `${this.up.username}的歌单 - ${this.playlist.title}`;
+        let key = 0;
+        this.songData = this.playlist.music_set.map((music) => ({
+          key: key++,
+          id: music.id,
+          name: music.name,
+          singer: music.artist,
+          length:
+            `${Math.floor(music.duration / 60)}`.padStart(2, "0") +
+            ":" +
+            `${Math.floor(music.duration % 60)}`.padStart(2, "0"),
+          isLiked: music.is_like,
+          isCollected: music.is_favorite,
+          imgSrc: music.cover,
+          showCollection: false,
+        }));
+      });
     },
-    data() {
-        return {
-            playlist: {},
-            up: {},
-            listName: "",
-            listIntro: "",
-            songNum: 0,
-            tagsNum: 0,
-            songData: [],
-            cover: null,
-            showEditListModify: false,
-            showShareListModify: false,
-            showModifyComplainView: false,
-            MusicalNotesOutline,
-            tags: [], // 存储所选内容的数组
-            options: [
-                { label: "华语", value: "华语" },
-                { label: "流行", value: "流行" },
-                { label: "民谣", value: "民谣" },
-                { label: "轻音乐", value: "轻音乐" },
-                { label: "电子", value: "电子" },
-                { label: "摇滚", value: "摇滚" },
-                { label: "日韩", value: "日韩" },
-                { label: "粤语", value: "粤语" },
-                { label: "舞曲", value: "舞曲" },
-                { label: "说唱", value: "说唱" },
-                { label: "爵士", value: "爵士" },
-                { label: "乡村", value: "乡村" },
-                { label: "古典", value: "古典" },
-                { label: "民族", value: "民族" },
-                { label: "金属", value: "金属" },
-                { label: "古风", value: "古风" },
-                { label: "游戏", value: "游戏" },
-                { label: "清晨", value: "清晨" },
-                { label: "夜晚", value: "夜晚" },
-                { label: "学习", value: "学习" },
-                { label: "工作", value: "工作" },
-                { label: "午休", value: "午休" },
-                { label: "散步", value: "散步" },
-                { label: "下午茶", value: "下午茶" },
-                { label: "旅行", value: "旅行" },
-                { label: "运动", value: "运动" },
-                { label: "怀旧", value: "怀旧" },
-                { label: "伤感", value: "伤感" },
-                { label: "放松", value: "放松" },
-                { label: "浪漫", value: "浪漫" },
-                { label: "安静", value: "安静" },
-                { label: "思念", value: "思念" },
-            ],
-            tagList: [],
-            tagString: "", // 为了传给后端tag而设置的。
-        };
+    handleCoverChange(e) {
+      this.cover = e.file.file;
     },
+  },
+  setup() {
+    const showModalRef = ref(false);
+    const previewImageUrlRef = ref("");
+    function handlePreview(file) {
+      const { url } = file;
+      previewImageUrlRef.value = url;
+      showModalRef.value = true;
+    }
+    return {
+      handlePreview,
+      showModal: showModalRef,
+      previewImageUrl: previewImageUrlRef,
+      warning(msg) {
+        message.warning({
+          content: msg,
+          duration: 1,
+          style: {
+            "z-index": 2,
+          },
+        });
+      },
+      success(msg) {
+        message.success({
+          content: msg,
+          duration: 1,
+          style: {
+            "z-index": 2,
+          },
+        });
+      },
+    };
+  },
+  mounted() {
+    if (this.$route.params.shareModal === "true") {
+      alert("show");
+      this.editList();
+    }
+  },
+  data() {
+    return {
+      playlist: {},
+      up: {},
+      listName: "",
+      listIntro: "",
+      songNum: 0,
+      tagsNum: 0,
+      songData: [],
+      cover: null,
+      showEditListModify: false,
+      showShareListModify: false,
+      showModifyComplainView: false,
+      MusicalNotesOutline,
+      tags: [], // 存储所选内容的数组
+      options: [
+        { label: "华语", value: "华语" },
+        { label: "流行", value: "流行" },
+        { label: "民谣", value: "民谣" },
+        { label: "轻音乐", value: "轻音乐" },
+        { label: "电子", value: "电子" },
+        { label: "摇滚", value: "摇滚" },
+        { label: "日韩", value: "日韩" },
+        { label: "粤语", value: "粤语" },
+        { label: "舞曲", value: "舞曲" },
+        { label: "说唱", value: "说唱" },
+        { label: "爵士", value: "爵士" },
+        { label: "乡村", value: "乡村" },
+        { label: "古典", value: "古典" },
+        { label: "民族", value: "民族" },
+        { label: "金属", value: "金属" },
+        { label: "古风", value: "古风" },
+        { label: "游戏", value: "游戏" },
+        { label: "清晨", value: "清晨" },
+        { label: "夜晚", value: "夜晚" },
+        { label: "学习", value: "学习" },
+        { label: "工作", value: "工作" },
+        { label: "午休", value: "午休" },
+        { label: "散步", value: "散步" },
+        { label: "下午茶", value: "下午茶" },
+        { label: "旅行", value: "旅行" },
+        { label: "运动", value: "运动" },
+        { label: "怀旧", value: "怀旧" },
+        { label: "伤感", value: "伤感" },
+        { label: "放松", value: "放松" },
+        { label: "浪漫", value: "浪漫" },
+        { label: "安静", value: "安静" },
+        { label: "思念", value: "思念" },
+      ],
+      tagList: [],
+      tagString: "", // 为了传给后端tag而设置的。
+    };
+  },
 });
 </script>
 <template>
