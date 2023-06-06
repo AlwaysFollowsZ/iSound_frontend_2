@@ -7,7 +7,7 @@
             width="45"
             src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
             style="padding-left: 4%"
-            preview-disabled="true"
+            :preview-disabled="true"
           />
           <div class="isound-style">iSound</div>
         </router-link>

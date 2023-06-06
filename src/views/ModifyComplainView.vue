@@ -28,7 +28,6 @@ export default defineComponent({
           data.append("playlist", this.$route.params.playlistId);
         }
         this.$http.post("/api/message/to/1/", data).then(() => {
-          this.success("投诉成功！");
           this.closeWindow();
           this.value = null;
         });
@@ -65,7 +64,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <n-modal :show="showModifyComplainView" z-index="2">
+  <n-modal :show="showModifyComplainView" :z-index="2">
     <div>
       <n-card class="complain-hodder" style="--n-border-radius: 20px">
         <n-grid>

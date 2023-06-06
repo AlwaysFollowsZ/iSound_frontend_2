@@ -111,7 +111,7 @@ export default {
             showModal,
             getRGBString,
             antiBackgroundColor,
-            pageArgs: { currentPage: 1, pageSize: 10 },
+            pageArgs: { currentPage: 1, pageSize: 6 },
             fontColorString,
             defaultBGString,
             changeColorMode,
@@ -325,15 +325,15 @@ export default {
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
-                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker :default-page-size="1"
+                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker
                     :page-sizes="[
                         {
                             label: '6条/页',
                             value: 6,
                         },
                         {
-                            label: '10条/页',
-                            value: 10,
+                            label: '12条/页',
+                            value: 12,
                         },
                         {
                             label: '20条/页',
@@ -343,7 +343,8 @@ export default {
                             label: '50条/页',
                             value: 50,
                         },
-                    ]" :suffix="() =>
+                    ]" 
+                    :suffix="() =>
     h(
         'span',
         {
@@ -444,7 +445,7 @@ export default {
 }
 
 .image_table_list {
-    text-align: center;
+    text-align:center;
     animation: fadeIn;
     animation-duration: 1.2s;
 }

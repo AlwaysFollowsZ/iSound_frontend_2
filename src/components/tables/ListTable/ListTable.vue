@@ -40,17 +40,25 @@ export default {
         },
         //收藏单首歌曲
         handleCollect(key, listId) {
-            this.$http.post(`/api/favorite/${listId}/${this.songData[key].id}/`)
-            this.songData[key].isCollected = true; //更改歌曲对应的收藏夹列表
-            this.cleanChangeReaction();
+            this.$http.post(`/api/favorite/${listId}/${this.songData[key].id}/`).then(() => {
+                this.songData[key].isCollected = true; //更改歌曲对应的收藏夹列表
+                this.cleanChangeReaction();
+            })
         },
-        handleDeleteAll(keys) {
-            alert('deleteAll!' + keys)
+        handleDeleteAll(keys) {//只在adminView有
+            for (let i = 0; i < keys.length; i++) {
+                this.songData[keys[i]].isDeleted = true
+                this.$http.delete(`/api/music/delete/${this.songData[keys[i]].id}/`)
+            }
+            this.$emit('flushData')//只在adminView有用
             this.cleanChangeReaction()
         },
         handleDelete(key) {
-            alert('delete!' + key)
-            this.cleanChangeReaction()
+            this.songData[key].isDeleted = true//只在adminView有用
+            this.$http.delete(`/api/music/delete/${this.songData[key].id}/`).then(() => {
+                this.$emit('flushData')//只在adminView有用
+                this.cleanChangeReaction()
+            })
         },
         //在收藏夹页面，在本收藏夹重新收藏
         handleRecollect(key) {
@@ -60,10 +68,11 @@ export default {
         //注意，在收藏夹中，星星的颜色应该和歌曲是否存在于该收藏夹有关
         handleDiscollectOnCollection(key) {
             //todo:提交到服务端
-            this.$http.post(`/api/unfavorite/${this.currentListId}/${this.songData[key].id}/`)
-            this.songData[key].isCollected = false;
-            //更新"是否收藏"选项
-            this.cleanChangeReaction();
+            this.$http.post(`/api/unfavorite/${this.currentListId}/${this.songData[key].id}/`).then(() => {
+                this.songData[key].isCollected = false;
+                //更新"是否收藏"选项
+                this.cleanChangeReaction();
+            })
         },
         cleanChangeReaction() {
             this.$emit("update:songData", this.songData);
@@ -112,7 +121,7 @@ export default {
     <list-table-body v-if="songData.length !== 0" :currentListId="currentListId" @likeAll="handleLikeAll" @like="handleLike"
         @collectAll="handleCollectAll" @collect="handleCollect" :viewMode="viewMode" :position="position"
         @discollectOnCollection="handleDiscollectOnCollection" :songData="songData" @recollect="handleRecollect"
-        @delete="handleDelete" @deleteAll="handleDeleteAll"  :style="{
+        @delete="handleDelete" @deleteAll="handleDeleteAll" :style="{
             // animation: 'fadeInLeft',
             // 'animation-duration': '1.5s',
         }">
