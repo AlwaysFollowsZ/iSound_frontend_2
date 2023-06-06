@@ -58,6 +58,7 @@ export default defineComponent({
                 const musicId = this.$route.params.musicId;
                 this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
                     this.music = response.data.music_set[0];
+                    document.title = `${this.music.name} - ${this.music.artist}`;
                     this.islike = this.music.is_like;
                     this.iscollect = this.music.is_favorite;
                     this.songtags = this.music.tags;
@@ -147,15 +148,15 @@ export default defineComponent({
             music: {},
             lyricsIndex: 0,
             lyricsObjArr: [],
+            hasTranslation: false,
+            showTranslation: true,
+            getRGBString,
             collctionData: this.updateCollections(),
             showCollections: false,
             isCollectChanged: false,
             headChange: false,
-            hasTranslation: false,
-            showTranslation: true,
-            getRGBString,
-            backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
             fontColorString: getFontColorString(globalThemeColor),
+            backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
             showModifyComplainView: false,
             refreshCommentVir: 0,
         };
@@ -177,7 +178,7 @@ export default defineComponent({
         },
         collect() {
             //todo
-            this.showCollections = true
+            this.iscollect = !this.iscollect;
         },
         complain() {
             //todo
@@ -199,15 +200,17 @@ export default defineComponent({
             if (this.editNewCommentId == 1) {
                 this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
                     this.success("评论成功");
+                    this.regetComments();
                 });
             } else if (this.editNewCommentId == 0 && this.editCommentId != 0) {
                 this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
                     this.success("编辑成功");
+                    this.regetComments();
                 });
                 this.editCommentId = 0;
                 this.editNewCommentId = 1;
             }
-            this.regetComments();
+
             this.refreshCommentVir++;
             console.log(this.refreshCommentVir);
             this.value == "";
@@ -215,8 +218,8 @@ export default defineComponent({
         deleteMyComment(comment) {
             this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
                 this.success("删除成功");
+                this.regetComments();
             });
-            this.regetComments();
             this.refreshCommentVir++;
             console.log(this.refreshCommentVir);
         },
@@ -232,12 +235,14 @@ export default defineComponent({
                     .post(`/api/comment/on/comment/${this.edit2ndCommentParentId}/`, formData)
                     .then(() => {
                         this.success("回复评论成功");
+                        this.regetComments();
                     });
             } else {
                 this.$http
                     .post(`/api/comment/edit/${this.edit2ndCommentId}/`, formData)
                     .then(() => {
                         this.success("编辑成功");
+                        this.regetComments();
                     });
                 this.edit2ndCommentId = 0;
                 this.edit2ndCommentParentId = 0;
@@ -360,6 +365,7 @@ export default defineComponent({
             });
         },
         regetComments() {
+            const musicId = this.$route.params.musicId;
             this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
                 this.comments = response.data.comment_set;
             });
@@ -421,7 +427,7 @@ export default defineComponent({
                         <n-grid>
                             <n-gi :span="6"></n-gi>
                             <n-gi :span="4" style="margin: auto">
-                                <span style="margin-right: 3px; margin-top: 2px;cursor: pointer;">
+                                <span style="margin-right: 3px; margin-top: 2px">
                                     <n-icon v-if="islike" size="30" color="#ff69b4" @click="like"
                                         class="animate__animated animate__heartBeat">
                                         <Fitness />
@@ -432,7 +438,7 @@ export default defineComponent({
                                 </span>
                             </n-gi>
                             <n-gi :span="4" style="margin: auto">
-                                <span style="margin-right: 3px; margin-top: 2px;cursor: pointer;">
+                                <span style="margin-right: 3px; margin-top: 2px">
                                     <n-icon v-if="iscollect" size="30" color="#FFD700" @click="collect"
                                         class="animate__animated animate__flash">
                                         <Star />
@@ -443,7 +449,7 @@ export default defineComponent({
                                 </span>
                             </n-gi>
                             <n-gi :span="4" style="margin: auto">
-                                <span style="margin-right: 3px; margin-top: 2px;cursor: pointer;">
+                                <span style="margin-right: 3px; margin-top: 2px">
                                     <n-icon v-if="iscomplain" size="30" color="#DC143C" @click="complain"
                                         class="animate__animated animate__headShake">
                                         <Warning />
@@ -469,7 +475,7 @@ export default defineComponent({
                                 <div class="music-artist" style="color: #fff">
                                     歌手：{{ music.artist }}
                                 </div>
-                                <div v-if="music.up !== undefined" style="color: #fff">
+                                <div style="color: #fff">
                                     <span>来源： </span>
                                     <router-link :to="this.$cookies.get('userid') == music.up.id
                                         ? '/home'
@@ -549,10 +555,10 @@ export default defineComponent({
                                 <span style="margin-right: 3px; margin-top: 2px">
                                     <n-grid>
                                         <n-gi :span="23" id="comment-top">
-                                            <span style="font-size: 22px"> 全部评论{{ showCollections }} </span>
+                                            <span style="font-size: 22px"> 全部评论 </span>
                                         </n-gi>
                                         <n-gi :span="1" style="padding-top: 5px"
-                                            v-if="this.$cookies.get('is_superuser') == 'False'">
+                                            v-if="this.$cookies.get('is_superuser') == 'false'">
                                             <n-icon id="comment-fold" size="27">
                                                 <ChatbubbleEllipsesOutline />
                                             </n-icon>
@@ -598,7 +604,7 @@ export default defineComponent({
                                 <span style="padding-left: 855px; cursor: auto">
                                     <n-popover trigger="hover">
                                         <template #trigger>
-                                            <n-button text circle focusable="false" @click="editReplyComment(comment)">
+                                            <n-button text circle :focusable="false" @click="editReplyComment(comment)">
                                                 <n-icon size="18">
                                                     <ChatboxEllipsesOutline />
                                                 </n-icon>
@@ -612,7 +618,7 @@ export default defineComponent({
                                 <span style="padding-left: 3px; cursor: auto">
                                     <n-popover trigger="hover">
                                         <template #trigger>
-                                            <n-button text circle focusable="false" @click="editMyComment(comment)"
+                                            <n-button text circle :focusable="false" @click="editMyComment(comment)"
                                                 :disabled="this.$cookies.get('userid') != comment.up.id">
                                                 <n-icon size="18">
                                                     <CreateOutline />
@@ -628,7 +634,7 @@ export default defineComponent({
                                     <n-popconfirm @positive-click="handlePositiveClick(comment)"
                                         @negative-click="handleNegativeClick">
                                         <template #trigger>
-                                            <n-button text circle focusable="false"
+                                            <n-button text circle :focusable="false"
                                                 :disabled="this.$cookies.get('userid') != comment.up.id">
                                                 <n-icon size="18">
                                                     <TrashOutline />
@@ -706,7 +712,7 @@ export default defineComponent({
                                             <span style="padding-left: 842px; cursor: auto">
                                                 <n-popover trigger="hover">
                                                     <template #trigger>
-                                                        <n-button text circle focusable="false"
+                                                        <n-button text circle :focusable="false"
                                                             @click="editMy2ndComment(comment_2nd)"
                                                             :disabled="this.$cookies.get('userid') != comment_2nd.up.id">
                                                             <n-icon size="18">
@@ -723,7 +729,7 @@ export default defineComponent({
                                                 <n-popconfirm @positive-click="handlePositiveClick(comment_2nd)"
                                                     @negative-click="handleNegativeClick">
                                                     <template #trigger>
-                                                        <n-button text circle focusable="false"
+                                                        <n-button text circle :focusable="false"
                                                             :disabled="this.$cookies.get('userid') != comment_2nd.up.id">
                                                             <n-icon size="18">
                                                                 <TrashOutline />
@@ -804,7 +810,6 @@ export default defineComponent({
     </div>
     <modify-complain-view :showModifyComplainView="showModifyComplainView"
         @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
-
     <n-modal :z-index="10" v-model:show="showCollections">
         <div :style="{
             'background': getRGBString(backgroundColorString, 0.5),

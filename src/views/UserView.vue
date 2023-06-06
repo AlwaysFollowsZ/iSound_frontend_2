@@ -177,6 +177,7 @@ export default {
                 .get("/api/accounts/detail/0/")
                 .then((response) => {
                     this.username = response.data.username;
+          document.title = `${this.username}的个人主页`;
                     this.email = response.data.email;
                     this.recordNum = response.data.record_num;
                     this.bio = response.data.profile;
