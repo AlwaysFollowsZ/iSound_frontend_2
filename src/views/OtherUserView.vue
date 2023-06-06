@@ -188,12 +188,17 @@ export default {
       this.$router.go(-1);
     },
     follow() {
-      this.userIsFollowed = !this.userIsFollowed;
-      if (this.userIsFollowed) {
-        this.followUser();
+      if (!this.$cookies.isKey('userid')) {
+        this.$EventBus.emit('showLoginModal')
       } else {
-        this.unFollowUser();
+        this.userIsFollowed = !this.userIsFollowed;
+        if (this.userIsFollowed) {
+          this.followUser();
+        } else {
+          this.unFollowUser();
+        }
       }
+      
     },
     followUser() {
       this.$http.post(`/api/follow/${this.userid}/`).then((response) => {
