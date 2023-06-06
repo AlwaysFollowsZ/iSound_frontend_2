@@ -38,7 +38,7 @@
                 </n-gi>
             </n-grid>
         </div> -->
-        <div style="text-align:center"><image-table :rows="songData" :handleClickEntry="playSong"
+        <div style="text-align:center;position: relative;"><image-table :rows="songData" :handleClickEntry="playSong"
                 @flushUploadSongs="updateSongs" :position="'UploadedSongs'" @clickUpload="jumpToUploadSong"
                 :entrySize="[200, 200]"></image-table></div>
     </div>
@@ -121,6 +121,7 @@ export default {
     methods: {
         playSong(Id) {
             this.$EventBus.emit('play', Id)
+            this.$router.push(`/player/${Id}`)
         },
         clickSong(Id) {
             this.$router.push(`/listdetail/${Id}`)
@@ -183,6 +184,10 @@ export default {
 }
 </script>
 <style scoped>
+.already-upload-song-list {
+    position: relative;
+}
+
 .upload-song-sheet-title {
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
