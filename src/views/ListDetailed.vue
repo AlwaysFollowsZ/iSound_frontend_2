@@ -381,6 +381,7 @@ export default defineComponent({
           :view-mode="'user'"
           :position="playlist.shared === true ? 'PublicView' : 'CollectionView'"
           v-model:songData="this.songData"
+          :currentListId="playlist.id"
         ></list-table>
       </n-gi>
       <n-gi :span="4"></n-gi>

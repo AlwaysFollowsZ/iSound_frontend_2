@@ -123,7 +123,7 @@
                 <div class="music-artist" style="color: #fff">
                   歌手：{{ music.artist }}
                 </div>
-                <div v-if="this.up !== undefined" style="color: #fff">
+                <div style="color: #fff">
                   <span>来源： </span>
                   <router-link
                     :to="
@@ -194,7 +194,7 @@
                       v-model:value="showTranslation"
                       size="small"
                       :round="false"
-                      @click="scroll('auto')"
+                      @click="scroll"
                     >
                       <template #icon> 译 </template>
                     </n-switch>
@@ -956,46 +956,10 @@
     @closeModifyWindow="showModifyComplainView = false"
   ></modify-complain-view>
   <div v-show="false"><top-nav></top-nav></div>
-  <n-modal :z-index="2" v-model:show="showCollections">
-    <div
-      :style="{
-        background: getRGBString(backgroundColorString, 0.6),
-        position: 'relative',
-        top: '-50px',
-        'text-align': 'center',
-        'border-radius': '50px',
-      }"
-    >
-      <div
-        :style="{
-          margin: '20px',
-          'font-size': '25px',
-          'font-weight': '700',
-          'background-color': getRGBString(backgroundColorString, 0.8),
-          color: getRGBString(fontColorString, 0.8),
-          'margin-top': '20px',
-          'border-radius': '50px',
-          animation: isCollectChanged ? 'bounceIn' : '',
-          'animation-duration': '1s',
-        }"
-      >
-        {{ headChange === true ? "添加成功" : "请选择收藏夹" }}
-      </div>
-      <image-table
-        :rows="collectionData"
-        :tableSize="[1000]"
-        :entrySize="[200, 200]"
-        :position="'CollectionView'"
-        @flushCollections="updateCollections"
-        :handleClickEntry="handleClickEntry"
-      ></image-table>
-    </div>
-  </n-modal>
 </template>
 
 <script>
 import "animate.css";
-import { NModal } from "naive-ui";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import TopNav from "../components/TopNav.vue";
@@ -1024,10 +988,8 @@ import {
   globalThemeColor,
   getBackgroundColorString,
   getRGBString,
-  getFontColorString,
   changeThemeColorByImage,
 } from "/src/colorMode.js";
-import ImageTable from "/src/components/tables/ImageTable/ImageTable.vue";
 export default defineComponent({
   name: "PlayerView",
   components: {
@@ -1046,8 +1008,6 @@ export default defineComponent({
     ModifyComplainView,
     HeartOutline,
     Heart,
-    ImageTable,
-    NModal,
   },
   created() {
     this.$EventBus.on("timeupdate", (currentTime) => {
@@ -1154,15 +1114,10 @@ export default defineComponent({
       up: {},
       lyricsIndex: 0,
       lyricsObjArr: [],
-      collctionData: this.updateCollections(),
-      showCollections: false,
-      isCollectChanged: false,
-      headChange: false,
       hasTranslation: false,
       showTranslation: true,
       getRGBString,
       backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
-      fontColorString: getFontColorString(globalThemeColor),
       showModifyComplainView: false,
       refreshCommentVir: 0,
     };
@@ -1179,10 +1134,10 @@ export default defineComponent({
         // 已登录
         this.islike = !this.islike;
         /* if (this.islike == true) {
-                  this.success("已添加至我喜欢");
-                } else {
-                  this.success("已从我喜欢移除");
-                } */
+          this.success("已添加至我喜欢");
+        } else {
+          this.success("已从我喜欢移除");
+        } */
         this.$http.post(`/api/like/${this.music.id}/`).then((response) => {
           console.log(response.data);
         });
@@ -1194,15 +1149,22 @@ export default defineComponent({
       }
     },
     collect() {
-      //todo
-      this.showCollections = true;
+      if (!this.$cookies.isKey("userid")) {
+        this.$EventBus.emit("showLoginModal");
+      } else {
+        this.iscollect = !this.iscollect;
+      }
     },
     complain() {
       //todo
-      if (this.iscomplain == false) {
+      /*if (this.iscomplain == false) {
         this.iscomplain = !this.iscomplain;
+      }*/
+      if (!this.$cookies.isKey("userid")) {
+        this.$EventBus.emit("showLoginModal");
+      } else {
+        this.showModifyComplainView = true;
       }
-      this.showModifyComplainView = true;
     },
     cleanComment() {
       this.value = "";
@@ -1228,8 +1190,9 @@ export default defineComponent({
         this.editNewCommentId = 1;
       }
       this.refreshCommentVir++;
+      this.reply2ndComment = false;
       console.log(this.refreshCommentVir);
-      this.value == "";
+      this.value = "";
     },
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
@@ -1257,7 +1220,7 @@ export default defineComponent({
         this.$http
           .post(`/api/comment/edit/${this.edit2ndCommentId}/`, formData)
           .then(() => {
-            //this.success("编辑成功");
+            // this.success("编辑成功");
             this.regetComments();
           });
         this.edit2ndCommentId = 0;
@@ -1265,7 +1228,7 @@ export default defineComponent({
       }
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
-      this.value == "";
+      this.value = "";
     },
     // 编辑回复评论
     editReplyComment(comment) {
@@ -1388,38 +1351,6 @@ export default defineComponent({
     scrollToComments() {
       const t = this.$refs.scrollTarget;
       t.scrollIntoView({ behavior: "smooth" });
-    },
-    handleClickEntry(listId) {
-      this.isCollectChanged = true;
-      this.headChange = true;
-      this.iscollect = true;
-      this.$http.post(`/api/favorite/${listId}/${this.music.id}/`);
-      setTimeout(() => {
-        this.showCollections = false;
-        setTimeout(() => {
-          this.headChange = false;
-          this.isCollectChanged = false;
-        }, 500);
-      }, 800);
-    },
-    updateCollections() {
-      this.$http.get("/api/playlist/of/0/").then((response) => {
-        let key = 0;
-        if (response.data.playlist_set.length == 0) {
-          this.collectionData = [];
-          return;
-        }
-        this.collectionData = response.data.playlist_set.map((collection) => {
-          return {
-            Key: key++,
-            Id: collection.id,
-            imagePath: collection.cover,
-            Name: collection.title,
-            songCount: collection.music_set.length,
-            Type: "Collection",
-          };
-        });
-      }); //更新当前用户的收藏夹数据
     },
   },
 });

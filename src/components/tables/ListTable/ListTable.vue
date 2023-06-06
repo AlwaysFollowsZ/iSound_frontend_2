@@ -70,7 +70,7 @@ export default {
                     this.songData[i].isLikeChanged = false;
                     this.songData[i].isCollectChanged = false;
                 }
-            }, 200);
+            }, 300);
         },
 
     },
