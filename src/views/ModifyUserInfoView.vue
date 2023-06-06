@@ -1,5 +1,6 @@
 <template>
   <n-modal
+    z-index="2"
     :show="showModifyUserInfo"
     :style="{
       'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)',
@@ -197,7 +198,7 @@
               type="success"
               @click="
                 submitModify();
-                closeMWindow();
+                //closeMWindow();
               "
               :focusable="false"
               :style="{
@@ -320,6 +321,7 @@
 <script>
 import { CloseOutline } from "@vicons/ionicons5";
 import { mapState } from "vuex";
+import { message } from "ant-design-vue";
 export default {
   name: "ModifyUserInfo",
   data() {
@@ -344,6 +346,32 @@ export default {
   props: {
     showModifyUserInfo: Boolean,
   },
+  setup() {
+        return {
+            
+            error(msg) {
+                message.error({
+                    content: msg,
+                    duration: 200,
+                    class:'helloaaa',
+                    style: {
+                        "z-index": 101,
+                    },
+                });
+            },
+            warning(msg) {
+                message.warning({
+                    content: msg,
+                    duration: 2,
+                    class:'helloaaa',
+                    style: {
+                        "z-index": 101,
+                     
+                    },
+                })
+            }
+        }
+    },
   methods: {
     fetchData() {
       this.$http
@@ -378,6 +406,14 @@ export default {
       // this.uploadFormData(formData);
     },
     submitModify() {
+      if(this.username == ''){
+        this.warning('用户名不得为空');
+        return;
+      }
+      if(this.email == ''){
+        this.warning('邮箱不得为空');
+        return;
+      }
       let data = new FormData();
       data.append("username", this.username);
       data.append("email", this.email);
@@ -387,11 +423,16 @@ export default {
       this.$http.post("/api/accounts/update/", data).then((response) => {
         if (response.data.code === "0") {
           this.$EventBus.emit("updateInfo");
-          // this.closeMWindow();
+          this.closeMWindow();
           // alert('修改成功!')
         } else if (response.data.code === "-1") {
-          alert("修改失败，请重新修改！");
-          // this.closeMWindow();
+          const message = response.data.message;
+          if ('username' in response.data.message) {
+            this.error(message.username[0].replaceAll('。', ' '));
+          }
+          else if ('email' in response.data.message) {
+            this.error(message.email[0].replaceAll('。', ' '));
+          }
         }
       });
     },
@@ -401,6 +442,9 @@ export default {
 <style scoped>
 .close-icon:hover {
   cursor: pointer;
+}
+.helloaaa.ant-message-notice-content{
+  border-radius:20px !important;
 }
 .outer-container {
   width: 800px;

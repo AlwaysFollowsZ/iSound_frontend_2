@@ -1,5 +1,5 @@
 <template>
-    <n-modal :show="showUploadSong" :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }"
+    <n-modal z-index="2" :show="showUploadSong" :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }"
         :block-scroll="false">
         <div class="outer-container">
 
@@ -120,7 +120,7 @@
                                             }">
                                             {{ songLyricName }}
                                         </n-button>
-                                        <input type="file" accept="application/octet-stream" ref="songLyricInput" @change="handleSongLyricFileChange"
+                                        <input type="file" ref="songLyricInput" @change="handleSongLyricFileChange"
                                             style="display:  none" />
                                     </div>
                                 </n-gi>
@@ -332,10 +332,11 @@
 </template>
   
 <script>
-import { CloseOutline, ArrowUpOutline } from '@vicons/ionicons5'
+import { CloseOutline, ArrowUpOutline, WatchOutline } from '@vicons/ionicons5'
 import { NInput, NModal } from 'naive-ui';
 import { defineComponent, ref, watch } from "vue";
 import { mapState } from 'vuex'
+import { message } from "ant-design-vue";
 export default {
     name: "UploadSong",
     computed: {
@@ -400,6 +401,28 @@ export default {
             tagString: '', // 为了传给后端tag而设置的。
         }
     },
+    setup() {
+        return {
+            error(msg) {
+                message.error({
+                    content: msg,
+                    duration: 2,
+                    style: {
+                        "z-index": 101,
+                    },
+                });
+            },
+            warning(msg) {
+                message.warning({
+                    content: msg,
+                    duration: 2,
+                    style: {
+                        "z-index": 101,
+                    },
+                })
+            }
+        }
+    },
     created() {
         this.songPageUrl='/src/assets/upload-logo.png';
     },
@@ -431,6 +454,14 @@ export default {
             this.songLyricName = this.songLyricFile.name
         },
         submitUpload() {
+            if(this.songSrcFile == null){
+                this.warning('歌曲文件不得为空');
+                return;
+            }
+            if(this.tagList.length == 0){
+                this.warning('歌曲标签不得为空');
+                return;
+            }
             this.handleTagList();
             console.log(this.tagString);
             let data = new FormData();
@@ -444,9 +475,9 @@ export default {
                 console.log(response);
                 if (response.data.code == '0') {
                     this.closeUWindow();
-                    alert('上传歌曲成功!')
                 } else if (response.data.code == '-1') {
-                    alert('上传歌曲失败，请重新上传!');
+                    this.error('上传歌曲失败');
+                    //todo
                 }
             });
         },
@@ -455,15 +486,33 @@ export default {
             this.value.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
-                    this.tagList.push(option.label);
+                    this.tagList.push(option.label);    
                 }
             })
             this.tagString = this.tagList.join(' ');
+            console.log(this.tagString)
         },
         handleUpdateValue(value, option) {
             if (value.length > 4) {
                 value.splice(0, 1)
             }
+            let options=[]
+            this.value.forEach((value) => {      
+                const option = this.options.find((option) => option.value == value);
+                if (option) {
+                    options.push(option);
+                    option.style={'background-color':'red',opacity:0.4,'color':'yellow'}   
+                }
+            })
+            let op=this.options.filter(function(v){return options.indexOf(v)==-1})
+            let i=0,j=0;
+            for(i=0;i<op.length;i++){
+                for(j=0;j<this.options.length;j++){
+                    if(op[i].value==this.options[j].value){
+                        this.options[j].style={'background-color':'white',opacity:1,'color':'black'}
+                    }
+                }
+            }           
         },
         // renderTagChoices() {
         //     setTimeout(() => {

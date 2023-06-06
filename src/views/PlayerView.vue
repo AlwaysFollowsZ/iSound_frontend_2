@@ -156,11 +156,11 @@ export default defineComponent({
     },
     like() {
       this.islike = !this.islike;
-      if (this.islike == true) {
-        this.success("已添加至我喜欢");
-      } else {
-        this.success("已从我喜欢移除");
-      }
+      // if (this.islike == true) {
+      //   this.success("已添加至我喜欢");
+      // } else {
+      //   this.success("已从我喜欢移除");
+      // }
       this.$http.post(`/api/like/${this.music.id}/`).then((response) => {
         console.log(response.data);
       });
@@ -188,11 +188,11 @@ export default defineComponent({
       formData.append("content", this.value);
       if (this.editNewCommentId == 1) {
         this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
-          this.success("评论成功");
+          //this.success("评论成功");
         });
       } else if (this.editNewCommentId == 0 && this.editCommentId != 0) {
         this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
-          this.success("编辑成功");
+          //this.success("编辑成功");
         });
         this.editCommentId = 0;
         this.editNewCommentId = 1;
@@ -204,7 +204,7 @@ export default defineComponent({
     },
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
-        this.success("删除成功");
+        //this.success("删除成功");
       });
       this.regetComments();
       this.refreshCommentVir++;
@@ -221,13 +221,13 @@ export default defineComponent({
         this.$http
           .post(`/api/comment/on/comment/${this.edit2ndCommentParentId}/`, formData)
           .then(() => {
-            this.success("回复评论成功");
+            //this.success("回复评论成功");
           });
       } else {
         this.$http
           .post(`/api/comment/edit/${this.edit2ndCommentId}/`, formData)
           .then(() => {
-            this.success("编辑成功");
+            //this.success("编辑成功");
           });
         this.edit2ndCommentId = 0;
         this.edit2ndCommentParentId = 0;
