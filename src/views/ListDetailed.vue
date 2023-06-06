@@ -61,26 +61,28 @@ export default defineComponent({
         if (this.cover != null) {
           formData.append("cover", this.cover);
         }
-        this.$http
-          .post(`/api/playlist/edit/${this.playlist.id}/`, formData)
-          .then((response) => {
-            this.updateData(this.playlist.id);
-          });
-        this.success("修改歌单信息成功");
-        this.closeWindow();
+        this.$http.post(`/api/playlist/edit/${this.playlist.id}/`, formData).then(() => {
+          this.updateData(this.playlist.id);
+          this.success("修改歌单信息成功");
+          this.closeWindow();
+        });
       }
     },
     shareList() {
       this.showShareListModify = true;
     },
     confirmShare() {
-      this.$http.post(`/api/playlist/share/${this.playlist.id}/`);
-      this.playlist.shared = true;
-      this.success("分享歌单成功");
-      this.closeWindow();
+      this.$http.post(`/api/playlist/share/${this.playlist.id}/`).then(() => {
+        this.playlist.shared = true;
+        this.success("分享歌单成功");
+        this.closeWindow();
+      });
     },
     unshareList() {
-      this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
+      this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`).then(() => {
+        this.playlist.shared = false;
+        this.success("取消分享成功");
+      });
       if (
         this.$cookies.get("is_superuser") == "true" &&
         this.$cookies.get("userid") != this.up.id
@@ -92,8 +94,6 @@ export default defineComponent({
         );
         this.$http.post(`/api/message/to/${this.up.id}/`, formData);
       }
-      this.playlist.shared = false;
-      this.success("取消分享成功");
     },
     playAll() {
       this.$EventBus.emit("playAll", this.playlist.id);
