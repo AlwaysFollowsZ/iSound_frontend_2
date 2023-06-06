@@ -7,7 +7,7 @@
             width="45"
             src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
             style="padding-left: 4%"
-            preview-disabled="true"
+            :preview-disabled="true"
           />
           <div class="isound-style">iSound</div>
         </router-link>
@@ -141,6 +141,7 @@
             <div style="padding-top: 25%">
               <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
                 <n-icon
+                  class="mail-icon"
                   :component="MailOutline"
                   size="27px"
                   @click="readMessage"
@@ -208,7 +209,8 @@
     :showModifyUserMessage="showModifyUserMessage"
     @closeModifyWindow="showModifyUserMessage = false"
   ></modify-user-message-view>
-  <change-passwd-view v-if="isLoggedIn"
+  <change-passwd-view
+    v-if="isLoggedIn"
     :showChangePasswd="showChangePasswd"
     @closeChangePasswdWindow="showChangePasswd = false"
   ></change-passwd-view>
@@ -248,7 +250,6 @@ export default {
     }
   },
   created() {
-    
     this.$EventBus.on("setShowMessage", (unread) => {
       if (unread == 0) {
         this.showMessage = false;
@@ -465,6 +466,10 @@ export default {
 }
 
 .user-avatar:hover {
+  cursor: pointer;
+}
+
+.mail-icon:hover {
   cursor: pointer;
 }
 </style>

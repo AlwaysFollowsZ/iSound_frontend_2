@@ -19,11 +19,9 @@ export default defineComponent({
     CloseOutline,
   },
   created() {
-    if (this.$cookies.isKey("userid") && this.$cookies.get("is_superuser") == "true") {
-      this.$http.get("/api/message/of/1/").then((response) => {
-        this.messages = response.data.message_set;
-      });
-    }
+    this.$http.get("/api/message/of/1/").then((response) => {
+      this.messages = response.data.message_set;
+    });
   },
   methods: {
     removeMessage(message) {
@@ -51,8 +49,9 @@ export default defineComponent({
         }
       }, 700);
     },
-    reply() {
+    reply(message) {
       this.$router.push({ path: "/message/send" });
+      this.$EventBus.emit("updateUsername", message.up.username);
     },
     /*
           此函数用于页码刷新，原理同上，它是页码组件 @click 的响应函数
@@ -140,7 +139,6 @@ export default defineComponent({
               </n-gi>
               <n-gi :span="20">
                 <router-link
-                  target="_blank"
                   :to="{
                     name: 'listdetail',
                     params: { playlistId: message.playlist.id },
@@ -199,7 +197,7 @@ export default defineComponent({
                   strong
                   secondary
                   type="info"
-                  @click="reply"
+                  @click="reply(message)"
                   :style="{
                     '--n-color': `rgba(40, 120, 200, 0.711)`,
                     '--n-color-hover': `rgba(40, 120, 200, 0.95)`,

@@ -38,9 +38,12 @@
                 </n-gi>
             </n-grid>
         </div> -->
-        <image-table :position="'UploadedSongs'" @clickUpload="jumpToUploadSong" :entrySize="[200,200]"></image-table>
+        <div style="text-align:center"><image-table :rows="songData" :handleClickEntry="playSong"
+                @flushUploadSongs="updateSongs" :position="'UploadedSongs'" @clickUpload="jumpToUploadSong"
+                :entrySize="[200, 200]"></image-table></div>
     </div>
-    <upload-song-view :showUploadSong="goToUploadSong" @closeUploadWindow="goToUploadSong = false"></upload-song-view>
+    <upload-song-view @flushUploadSongs="updateSongs" :showUploadSong="goToUploadSong"
+        @closeUploadWindow="goToUploadSong = false"></upload-song-view>
 </template>
 <script>
 import ImageTable from '/src/components/tables/ImageTable/ImageTable.vue';
@@ -57,7 +60,10 @@ export default {
         ...mapState(['accentColor', 'colorMode']),
     },
     data() {
+        let songData = [];//收藏夹数据
+        this.updateSongs()//获取收藏夹数据
         return {
+            songData,
             goToUploadSong: false,
             uploadSongEntryLogoUrl: "/src/assets/upload-logo.png",
             songSheets: [
@@ -113,13 +119,38 @@ export default {
         }
     },
     methods: {
+        playSong(Id) {
+            this.$EventBus.emit('play', Id)
+        },
+        clickSong(Id) {
+            this.$router.push(`/listdetail/${Id}`)
+        },//点击收藏夹。这时候应该跳转到收藏夹详情页面
+        updateSongs() {
+            this.$http.get('/api/music/of/0/').then((response) => {
+                let key = 0
+                if (response.data.music_set.length == 0) {
+                    this.songData = []
+                    return
+                }
+                this.songData = response.data.music_set.map((song) => {
+                    return {
+                        Singer: song.artist,
+                        Key: key++,
+                        Id: song.id,
+                        imagePath: song.cover,
+                        Name: song.name,
+                        Type: 'Song'
+                    }
+                })
+            })
+        },
         jumpToUploadSong() {
             this.goToUploadSong = true;
             // n-select 样式只能这么修改
             // 等待 DOM 加载，然后再获取，否则获取不到
             setTimeout(() => {
                 let selections = document.getElementsByClassName('n-base-selection n-base-selection--multiple')
-                
+
                 // let tags = document.getElementsByClassName('n-tag')
                 // console.log(tags.length)
                 if (selections.length > 0) {
@@ -146,7 +177,7 @@ export default {
                 //     tags[0].style.setProperty('--n-color', 'red')
                 // }
             }, 50)
-            
+
         }
     }
 }

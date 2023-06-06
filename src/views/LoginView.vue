@@ -236,6 +236,9 @@ export default {
           }
           this.changeToLoggedIn();
           this.closeLWindow();
+          if (this.$route.path.includes('player')) {
+            window.location.reload();
+          }
         } else if (response.data.code == "-1") {
           this.error('用户名或密码错误 请重新登录')
           // this.closeLWindow();

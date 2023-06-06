@@ -268,54 +268,6 @@
         </n-grid>
       </div>
     </div>
-    <!-- <div style="background-color:aliceblue">
-            <n-card style="width: 800px; --n-border-radius: 20px;" :bordered="false" :role="dialog" aria-modal="true">
-                <template #header>
-                    <div>
-                        <n-grid :x-gap="12">
-                            <n-gi :span="2"></n-gi>
-                            <n-gi :span="20">
-                                <span class="modify-title">请修改您的个人信息</span>
-                            </n-gi>
-                            <n-gi :span="2">
-                                <div style="padding-top: 30%" @click="closeMWindow">
-                                    <close-outline />
-                                </div>
-                            </n-gi>
-                        </n-grid>
-                    </div>
-                </template>
-                <n-grid x-gap="12" :cols="2">
-                    <n-gi>
-                        <div class="avatar">
-                            <img :src="avatarUrl" @click="uploadFile" />
-                            <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
-                        </div>
-                    </n-gi>
-                    <n-gi>
-                        <span>用户名</span>
-                        <n-input :style="{ '--n-border-radius': `10px` }" type="text" size="small" :placeholder="username"
-                            :value="username" @input="username = $event" />
-                        <span>邮箱</span>
-                        <n-input :style="{ '--n-border-radius': `10px` }" type="text" size="small" :placeholder="email"
-                            :value="email" @input="email = $event" />
-                        <span>历史记录条数</span>
-                        <n-input :style="{ '--n-border-radius': `10px` }" type="text" size="small" :placeholder="recordNum"
-                            :value="recordNum" @input="recordNum = $event" />
-                        <span>个性签名</span>
-                        <n-input :style="{ '--n-border-radius': `10px` }" type="textarea" size="small" :placeholder="bio"
-                            :value="bio" @input="bio = $event" />
-                        <n-button strong secondary round type="primary" class="modify-button-position"
-                            @click="submitModify">
-                            确认修改
-                        </n-button>
-                    </n-gi>
-                </n-grid>
-                <div class="modify-notice-text">
-                    点击头像即可修改用户头像，点击按钮即可修改用户信息。
-                </div>
-            </n-card>
-        </div> -->
   </n-modal>
 </template>
 <script>
@@ -337,7 +289,10 @@ export default {
   computed: {
     ...mapState(["accentColor", "colorMode"]),
   },
-  created() {
+  // created() {
+  //   this.fetchData();
+  // },
+  mounted() {
     this.fetchData();
   },
   components: {

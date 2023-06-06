@@ -64,7 +64,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <n-modal :show="showModifyComplainView" z-index="2">
+  <n-modal :show="showModifyComplainView" :z-index="2">
     <div>
       <n-card class="complain-hodder" style="--n-border-radius: 20px">
         <n-grid>

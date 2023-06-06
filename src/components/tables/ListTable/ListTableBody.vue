@@ -13,12 +13,11 @@ import { backgroundColor } from '../../../colorMode';
 export default {
     data() {
         let isLoggedIn = computed(() => {
-            return store.state.isLoggedIn
+            return this.$cookies.isKey('userid')
         })
         let isAdmin = computed(() => {
-            return store.state.isAdmin
+            return this.$cookies.get('is_superuser') == 'true'
         })
-
         let collectionData = []//当前用户的收藏夹的数据
         let formData = new FormData()
         formData.append('shared', false)
@@ -382,7 +381,7 @@ export default {
                                     //先设置所有项的isCollectChanged
                                     for (let i = 0; i < this.selectedEntries.length; i++) {
                                         this.songData[i].isCollectChanged = true
-                                        this.songData[i].isCollected=true
+                                        this.songData[i].isCollected = true
                                     }
                                     setTimeout(() => {
                                         this.showCollection = false
@@ -496,7 +495,7 @@ export default {
                                     handleClickEntry: (listId) => {
                                         this.headChange = true
                                         row.isCollectChanged = true
-                                        row.isCollected=true
+                                        row.isCollected = true
                                         setTimeout(() => {
                                             row.showCollection = false
                                             setTimeout(() => {
@@ -688,10 +687,20 @@ export default {
                 type: 'selection',
             },
         ])//表头和表项
+        let rowProps = (row) => {
+            if (row.isDeleted !== undefined && isAdmin.value) {//只有管理员有删除动画
+                return {
+                    style: {
+                        'animation': row.isDeleted ? 'slideOutRight' : 'none',
+                        'animation-duration': '1.5s'
+                    }
+                }
+            }
+        }
         return {
             collectionData, HeadBackgroundColorString, DataBackgroundColorString, fontColorString,
             isSelected, selectedEntries, columns, getRGBString, h, BackgroundColorString, headChange,
-            showCollection, isCollectChanged
+            showCollection, isCollectChanged, rowProps
         }
     },
     props: {
@@ -735,8 +744,6 @@ export default {
             }
         },
         updateCollections() {
-            let formData = new FormData()
-            formData.append('shared', false)
             this.$http.get('/api/playlist/of/0/', formData).then((response) => {
                 let key = 0
                 console.log('update:content=' + response.data.playlist_set)
@@ -766,64 +773,65 @@ export default {
     <div class="table-box">
         <div class="before_table">
         </div>
-        <n-data-table ref="dataTable" :bordered="false" :columns="columns" :data="songData" :pagination="{
-            style: {
-                'font-weight': '700',
-                //页面按钮
-                '--n-item-text-color': getRGBString(fontColorString, 0.8, 'font'),
-                '--n-item-text-color-hover': getRGBString(fontColorString, 0.8, 'font'),
-                '--n-item-text-color-active': getRGBString(fontColorString, 0.5),
-                '--n-item-text-color-pressed': getRGBString(fontColorString, 0.2),
-                '--n-item-border-hover': `1px solid ${getRGBString(fontColorString, 0.6)}`,
-                '--n-item-border-pressed': `1px solid ${getRGBString(fontColorString, 0.3)}`,
-                '--n-item-border-active': `1px solid ${getRGBString(fontColorString, 0.6)}`,
-                '--n-item-border-active-hover': `1px solid ${getRGBString(fontColorString, 1)}`,
-                //不可用的跳转按钮
-                '--n-item-border-disabled': `1px solid ${getRGBString(BackgroundColorString, 0.6)}`,
-                '--n-item-color-disabled': getRGBString(BackgroundColorString, 0.3),
-                //可用的跳转按钮
-                '--n-button-color-hover': getRGBString(BackgroundColorString, 0.6),
-                '--n-button-border': `1px solid ${getRGBString(fontColorString, 0.8)}`,
-                '--n-button-border-hover': `1px solid ${getRGBString(fontColorString)}`,
-                '--n-button-icon-color': `${getRGBString(fontColorString, 0.8)}`,
-                '--n-button-icon-color-hover': `${getRGBString(fontColorString, 0.5)}`,
-                '--n-jumper-text-color': `${getRGBString(fontColorString, 0.6)}`,
-                // 单页加载量选择按钮(需要v-deep,此处仅作为标记)
-                // '--n-border-hover': `${getRGBString(fontColorString, 0.6)} `,
-                // '--n-arrow-color': `${getRGBString(fontColorString, 0.5)}`,
-                // '--n-text-color': `${getRGBString(fontColorString, 0.8)}`,
-                // '--n-color': `${getRGBString(BackgroundColorString, 1)}`,
-                // '--n-caret-color': `${getRGBString(fontColorString.value, 0.6)}`
+        <n-data-table ref="dataTable" :bordered="false" :columns="columns" :row-props="rowProps" :data="songData"
+            :pagination="{
+                style: {
+                    'font-weight': '700',
+                    //页面按钮
+                    '--n-item-text-color': getRGBString(fontColorString, 0.8, 'font'),
+                    '--n-item-text-color-hover': getRGBString(fontColorString, 0.8, 'font'),
+                    '--n-item-text-color-active': getRGBString(fontColorString, 0.5),
+                    '--n-item-text-color-pressed': getRGBString(fontColorString, 0.2),
+                    '--n-item-border-hover': `1px solid ${getRGBString(fontColorString, 0.6)}`,
+                    '--n-item-border-pressed': `1px solid ${getRGBString(fontColorString, 0.3)}`,
+                    '--n-item-border-active': `1px solid ${getRGBString(fontColorString, 0.6)}`,
+                    '--n-item-border-active-hover': `1px solid ${getRGBString(fontColorString, 1)}`,
+                    //不可用的跳转按钮
+                    '--n-item-border-disabled': `1px solid ${getRGBString(BackgroundColorString, 0.6)}`,
+                    '--n-item-color-disabled': getRGBString(BackgroundColorString, 0.3),
+                    //可用的跳转按钮
+                    '--n-button-color-hover': getRGBString(BackgroundColorString, 0.6),
+                    '--n-button-border': `1px solid ${getRGBString(fontColorString, 0.8)}`,
+                    '--n-button-border-hover': `1px solid ${getRGBString(fontColorString)}`,
+                    '--n-button-icon-color': `${getRGBString(fontColorString, 0.8)}`,
+                    '--n-button-icon-color-hover': `${getRGBString(fontColorString, 0.5)}`,
+                    '--n-jumper-text-color': `${getRGBString(fontColorString, 0.6)}`,
+                    // 单页加载量选择按钮(需要v-deep,此处仅作为标记)
+                    // '--n-border-hover': `${getRGBString(fontColorString, 0.6)} `,
+                    // '--n-arrow-color': `${getRGBString(fontColorString, 0.5)}`,
+                    // '--n-text-color': `${getRGBString(fontColorString, 0.8)}`,
+                    // '--n-color': `${getRGBString(BackgroundColorString, 1)}`,
+                    // '--n-caret-color': `${getRGBString(fontColorString.value, 0.6)}`
 
-            },
-            showSizePicker: true,
-            showQuickJumper: true,
-            suffix: () => h('span', {
-                style: {
-                    'color': getRGBString(fontColorString, 0.6),
-                    'font-weight': 700
-                }
-            }, '页'),
-            goto: () => h('span', {
-                style: {
-                    'color': getRGBString(fontColorString, 0.6),
-                    'font-weight': 700
-                }
-            }, '跳转到第'),
-            pageSizes: [{
-                label: '5条/页',
-                value: 5
-            }, {
-                label: '10条/页',
-                value: 10
-            }, {
-                label: '20条/页',
-                value: 20
-            }, {
-                label: '50条/页',
-                value: 50
-            }]
-        }" @update:checked-row-keys="handleCheck" class="data-table" :style="{
+                },
+                showSizePicker: true,
+                showQuickJumper: true,
+                suffix: () => h('span', {
+                    style: {
+                        'color': getRGBString(fontColorString, 0.6),
+                        'font-weight': 700
+                    }
+                }, '页'),
+                goto: () => h('span', {
+                    style: {
+                        'color': getRGBString(fontColorString, 0.6),
+                        'font-weight': 700
+                    }
+                }, '跳转到第'),
+                pageSizes: [{
+                    label: '5条/页',
+                    value: 5
+                }, {
+                    label: '10条/页',
+                    value: 10
+                }, {
+                    label: '20条/页',
+                    value: 20
+                }, {
+                    label: '50条/页',
+                    value: 50
+                }]
+            }" @update:checked-row-keys="handleCheck" class="data-table" :style="{
     // 调节字体、背景、边框颜色
     '--n-border-color': getRGBString(fontColorString, 0.3, 'background', viewMode),
     '--n-loading-color': getRGBString(fontColorString, 0.5, 'font', viewMode),

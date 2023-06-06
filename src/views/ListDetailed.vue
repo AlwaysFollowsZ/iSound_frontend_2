@@ -1,7 +1,7 @@
 <script>
 import { NButton, NIcon } from "naive-ui";
 import { defineComponent, ref } from "vue";
-import ListTable from '/src/components/tables/ListTable/ListTable.Vue'
+//import ListTable from "/src/components/tables/ListTable/ListTable.Vue";
 import {
     ChevronBack,
     MusicalNotesOutline,
@@ -13,7 +13,9 @@ import {
     WarningOutline,
 } from "@vicons/ionicons5";
 import { message } from "ant-design-vue";
+import ListTable from '/src/components/tables/ListTable/ListTable.vue'
 import ModifyComplainView from "../views/ModifyComplainView.vue";
+import { getBackgroundColorString, globalThemeColor, getRGBString } from '/src/colorMode.js'
 export default defineComponent({
     name: "ListDetailed",
     components: {
@@ -27,6 +29,11 @@ export default defineComponent({
         WarningOutline,
         ModifyComplainView,
         ListTable
+    },
+    computed: {
+        BackgroundColorString() {
+            return getRGBString(getBackgroundColorString(globalThemeColor))
+        }
     },
     created() {
         this.$watch(
@@ -78,6 +85,9 @@ export default defineComponent({
             this.playlist.shared = true;
             this.success("分享歌单成功");
             this.closeWindow();
+            setTimeout(() => {
+                this.$router.push('/home')
+            }, 1000)
         },
         unshareList() {
             this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
@@ -94,6 +104,9 @@ export default defineComponent({
             }
             this.playlist.shared = false;
             this.success("取消分享成功");
+            setTimeout(() => {
+                this.$router.push('/home')
+            }, 1000)
         },
         playAll() {
             this.$EventBus.emit("playAll", this.playlist.id);
@@ -110,6 +123,7 @@ export default defineComponent({
                 this.listIntro = this.playlist.profile;
                 this.tags = this.playlist.tags;
                 this.up = this.playlist.up;
+                document.title = `${this.up.username}的歌单 - ${this.playlist.title}`;
                 let key = 0;
                 this.songData = this.playlist.music_set.map((music) => ({
                     key: key++,
@@ -120,7 +134,7 @@ export default defineComponent({
                         `${Math.floor(music.duration / 60)}`.padStart(2, "0") +
                         ":" +
                         `${Math.floor(music.duration % 60)}`.padStart(2, "0"),
-                    isliked: music.is_like,
+                    isLiked: music.is_like,
                     isCollected: music.is_favorite,
                     imgSrc: music.cover,
                     showCollection: false,
@@ -148,7 +162,7 @@ export default defineComponent({
                     content: msg,
                     duration: 1,
                     style: {
-                        "z-index": 2,
+                        "z-index": "2",
                     },
                 });
             },
@@ -157,11 +171,17 @@ export default defineComponent({
                     content: msg,
                     duration: 1,
                     style: {
-                        "z-index": 2,
+                        "z-index": "2",
                     },
                 });
             },
         };
+    },
+    mounted() {
+        if (this.$route.params.shareModal === 'true') {
+            alert('show')
+            this.editList()
+        }
     },
     data() {
         return {
@@ -328,20 +348,22 @@ export default defineComponent({
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">
                 <a-divider style="height: 1.8px; background-color: #dddddd" />
-                <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'" :position="'CollectionView'"
-                    v-model:songData="this.songData" :currentListId="this.playlist.id"></list-table>
+                <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'" :position="'PublicView'"
+                    v-model:songData="this.songData"></list-table>
             </n-gi>
             <n-gi :span="4"></n-gi>
         </n-grid>
     </div>
-    <n-modal :show="showEditListModify" z-index="1">
+    <n-modal :show="showEditListModify" :z-index="1">
         <div>
             <n-card class="edit-list-hodder" style="--n-border-radius: 20px">
                 <n-grid>
                     <n-gi :span="1"></n-gi>
                     <n-gi :span="22">
                         <span class="modify-title">
-                            <div class="edit-list-title">编辑{{ this.playlist.shared ? '歌单' : '收藏夹' }}信息</div>
+                            <div class="edit-list-title">
+                                编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}信息
+                            </div>
                         </span>
                     </n-gi>
                     <n-gi :span="1">
@@ -403,7 +425,7 @@ export default defineComponent({
             </n-card>
         </div>
     </n-modal>
-    <n-modal :show="showShareListModify" z-index="1">
+    <n-modal :show="showShareListModify" :z-index="1">
         <div>
             <n-card class="share-list-hodder" style="--n-border-radius: 20px">
                 <span class="modify-title">
@@ -448,6 +470,13 @@ export default defineComponent({
     width: 245px;
     height: 245px;
     border-radius: 10%;
+    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+}
+
+.list-cover-img:hover {
+    /* box-shadow: inset 0 0 0px 15px v-bind("BackgroundColorString") ; */
+    opacity: 0.8;
+    transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 
 .list-information {

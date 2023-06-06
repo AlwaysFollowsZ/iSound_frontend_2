@@ -22,7 +22,7 @@ export default {
         },
         visibility: {
             type: Boolean,
-            default:true
+            default: true
         }
     },
     methods: {
@@ -743,6 +743,84 @@ export default {
                     }
                     //随机化闪烁时间
                     setInterval(() => scene.add(this.element), Math.random() * 5000)
+                }
+            }
+            //渲染rashinban.只有旋转运动
+            class animateRashinban {
+                Position = [0,0,0]//固定在屏幕中心位置
+                DirectionAngle = Math.random() * Math.PI / 3 - Math.PI / 6;
+                Speed = (1 / (200 * (this.Scale)))//根据物体大小决定物体速度
+
+                //创建椭球体的方法。半径为x,y,z
+                EllipsoidGeometry = (x, y, z) => {
+                    const ellipsoidGeometry = new THREE.SphereGeometry(1, 7, 7);
+                    const positionAttribute = ellipsoidGeometry.getAttribute('position');
+
+                    for (let i = 0; i < positionAttribute.count; i++) {
+                        const vertex = new THREE.Vector3();
+                        vertex.fromBufferAttribute(positionAttribute, i);
+                        vertex.x *= x;
+                        vertex.y *= y;
+                        vertex.z *= z;
+                        positionAttribute.setXYZ(i, vertex.x, vertex.y, vertex.z);
+                    }
+                    return ellipsoidGeometry;
+                }
+                //设置音符的三种模型的形状.具体的scale不在这里设置
+                geometries = [
+                    this.EllipsoidGeometry(0.4, 0.2, 0.2),//底部椭球
+                    new THREE.CylinderGeometry(0.08, 0.08, 1.5, 3, 1, true),//长杆
+                    new THREE.CylinderGeometry(0.05, 0.12, 0.8, 8, 1, true)]//短杆
+                //设置材质
+                material = new THREE.MeshLambertMaterial({
+                    color: elementColor,
+                    transparent: true,
+                    opacity: 0.2,
+                });
+                //整个音符
+                element = new THREE.Group()
+
+                // type为1是八分音符，否则为四分音符
+                constructor(type) {
+                    //生成椭球、长杆和短杆
+                    const Ellipsoid = new THREE.Mesh(this.geometries[0], this.material)
+                    const longCylinder = new THREE.Mesh(this.geometries[1], this.material)
+
+                    //调节位置
+                    Ellipsoid.translateY(-0.5)
+                    longCylinder.translateX(0.3)
+                    longCylinder.translateY(0.3)
+                    if (type === 1) {
+                        const shortCylinder = new THREE.Mesh(this.geometries[2], this.material)
+                        shortCylinder.translateX(0.5)
+                        shortCylinder.translateY(0.8)
+                        shortCylinder.rotateZ(Math.PI / 5)
+                        this.element.add(shortCylinder)
+                    }
+                    //加入"group"
+                    this.element.add(Ellipsoid, longCylinder)
+
+                    //设置随机的缩放
+                    this.element.scale.set(this.Scale, this.Scale, this.Scale)
+                    //设置初始位置并加入场景
+                    this.element.position.x = this.Position[0]
+                    this.element.position.y = this.Position[1]
+                    this.element.position.z = this.Position[2]
+                    scene.add(this.element);
+                }
+
+                update = () => {
+                    //以下是针对单个物体的操作
+
+                    //白天和黑夜模式旋转相反
+                    if (colorMode.value === 'white') {
+                        this.element.rotation.x += 0.02;
+                        this.element.rotation.y += 0.02;
+                    }
+                    else {
+                        this.element.rotation.x -= 0.02;
+                        this.element.rotation.y -= 0.02;
+                    }
                 }
             }
             let Tetrahedrons = []//管理正四面体

@@ -111,7 +111,7 @@ export default {
             showModal,
             getRGBString,
             antiBackgroundColor,
-            pageArgs: { currentPage: 1, pageSize: 10 },
+            pageArgs: { currentPage: 1, pageSize: 6 },
             fontColorString,
             defaultBGString,
             changeColorMode,
@@ -185,57 +185,66 @@ export default {
                 this.success('删除收藏夹成功')
                 this.$emit('flushCollections')
             })
-            // alert("todo:deleteCollection");
-            //changeThemeColorByImage(Rows[Key].imagePath)
         },
         //处理点击分享收藏夹事件的方法
         handleClickShareCollection(Key) {
-            // alert("todo:shareCollection");
-            //changeThemeColorByImage(Rows[Key].imagePath)
+            this.$router.push({
+                name: 'listdetailshare',//跳转过去必须直接显示
+                params: {
+                    playlistId: this.rows[Key].Id,
+                    shareModal: true
+                }
+            })
         },
         //处理点击取消分享歌单事件的方法
         handleClickCancelShare(Key) {
-            alert("todo:cancelShare");
+            this.$http.post(`/api/playlist/unshare/${this.row[Key].Id}/`).then(() => {
+                this.success('取消分享成功')
+                this.$emit('flushSonglists')
+            })
             //changeThemeColorByImage(Rows[Key].imagePath)
         },
         //处理点击删除已上传歌曲事件的方法
         handleClickDeleteUploadedSongs(Key) {
-            alert("todo:deleteUploadedSongs");
-            //changeThemeColorByImage(Rows[Key].imagePath)
+            this.$http.delete(`api/music/delete/${this.rows[Key].Id}/`).then(() => {
+                this.success('删除歌曲成功')
+                setTimeout(()=>{this.$emit('flushUploadSongs')},200)
+                
+            })
         },
         handleTopClick() {
             //这两个只会在个人主页用到
             if (this.position === "Collection" || this.position === "CollectionView") {
                 this.showModal = true;
                 setTimeout(() => {
-                let selections = document.getElementsByClassName('n-base-selection n-base-selection--multiple')
-                
-                // let tags = document.getElementsByClassName('n-tag')
-                // console.log(tags.length)
-                if (selections.length > 0) {
-                    // 含有 '--' 分隔的属性只能这么写
-                    selections[0].style.setProperty('--n-color', 'white')
-                    selections[0].style.setProperty('--n-color-focus', 'white')
-                    selections[0].style.setProperty('--n-color-active', 'white')
-                    selections[0].style.setProperty('--n-border', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
-                    selections[0].style.setProperty('--n-border-active', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
-                    selections[0].style.setProperty('--n-border-focus', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
-                    selections[0].style.setProperty('--n-border-hover', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
-                    selections[0].style.setProperty('--n-border-radius', '8px')
-                    selections[0].style.setProperty('--n-box-shadow-active', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
-                    selections[0].style.setProperty('--n-box-shadow-focus', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
-                    selections[0].style.setProperty('--n-box-shadow-hover', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
-                    selections[0].style.setProperty('--n-font-size', '16px')
-                    selections[0].style.setProperty('--n-height', '40px')
-                    selections[0].style.setProperty('--n-caret-color', 'black')
-                    selections[0].style.setProperty('--n-placeholder-color', 'grey')
-                    selections[0].style.setProperty('--n-text-color', 'black')
-                    selections[0].style.setProperty('--n-arrow-color', 'black')
-                }
-                // if (tags.length > 0) {
-                //     tags[0].style.setProperty('--n-color', 'red')
-                // }
-            }, 50)
+                    let selections = document.getElementsByClassName('n-base-selection n-base-selection--multiple')
+
+                    // let tags = document.getElementsByClassName('n-tag')
+                    // console.log(tags.length)
+                    if (selections.length > 0) {
+                        // 含有 '--' 分隔的属性只能这么写
+                        selections[0].style.setProperty('--n-color', 'white')
+                        selections[0].style.setProperty('--n-color-focus', 'white')
+                        selections[0].style.setProperty('--n-color-active', 'white')
+                        selections[0].style.setProperty('--n-border', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                        selections[0].style.setProperty('--n-border-active', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                        selections[0].style.setProperty('--n-border-focus', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                        selections[0].style.setProperty('--n-border-hover', '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)')
+                        selections[0].style.setProperty('--n-border-radius', '8px')
+                        selections[0].style.setProperty('--n-box-shadow-active', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                        selections[0].style.setProperty('--n-box-shadow-focus', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                        selections[0].style.setProperty('--n-box-shadow-hover', '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)')
+                        selections[0].style.setProperty('--n-font-size', '16px')
+                        selections[0].style.setProperty('--n-height', '40px')
+                        selections[0].style.setProperty('--n-caret-color', 'black')
+                        selections[0].style.setProperty('--n-placeholder-color', 'grey')
+                        selections[0].style.setProperty('--n-text-color', 'black')
+                        selections[0].style.setProperty('--n-arrow-color', 'black')
+                    }
+                    // if (tags.length > 0) {
+                    //     tags[0].style.setProperty('--n-color', 'red')
+                    // }
+                }, 50)
                 //this.$emit('clickCreateCollection')
             } else if (this.position === "UploadedSongs") {
                 // alert("上传歌曲")
@@ -316,15 +325,15 @@ export default {
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
-                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker :default-page-size="1"
+                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker
                     :page-sizes="[
                         {
                             label: '6条/页',
                             value: 6,
                         },
                         {
-                            label: '10条/页',
-                            value: 10,
+                            label: '12条/页',
+                            value: 12,
                         },
                         {
                             label: '20条/页',
@@ -334,7 +343,8 @@ export default {
                             label: '50条/页',
                             value: 50,
                         },
-                    ]" :suffix="() =>
+                    ]" 
+                    :suffix="() =>
     h(
         'span',
         {
@@ -435,7 +445,7 @@ export default {
 }
 
 .image_table_list {
-    text-align: center;
+    text-align:center;
     animation: fadeIn;
     animation-duration: 1.2s;
 }

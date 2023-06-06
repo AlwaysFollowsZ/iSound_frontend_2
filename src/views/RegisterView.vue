@@ -45,6 +45,32 @@
                         <n-gi :span="3"></n-gi>
                     </n-grid>
                 </div>
+                <div class="body-item">
+                    <n-grid>
+                        <n-gi :span="3"></n-gi>
+                        <n-gi :span="18">
+                            <n-input type="text" placeholder="邮箱" :value="email" @input="email = $event"
+                                :style="{
+                                    '--n-text-color-disabled': 'black',
+                                    '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                    '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
+                                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-border-hover': 'transparent',
+                                    '--n-border-focus': 'transparent',
+                                    '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                                    '--n-border-radius': '5px',
+                                    '--n-height': '55px',
+                                    '--n-font-size': '18px',
+                                    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                }"
+                            />
+                            <div style="color: grey">邮箱能帮助你找回密码。</div>
+                        </n-gi>
+                        <n-gi :span="3"></n-gi>
+                    </n-grid>
+                </div>
                 <div class="body-item" :style="{'margin-bottom': '30px', 'color': this.colorMode === 'white' ? 'black' : 'white'}">
                     <n-grid>
                         <n-gi :span="3"></n-gi>
@@ -204,6 +230,7 @@ export default {
             }
             let data = new FormData();
             data.append('username', this.username);
+            data.append('email', this.email);
             data.append('password1', this.password1);
             data.append('password2', this.password2);
             this.$http.post('/api/accounts/register/', data).then(response => {
@@ -229,7 +256,8 @@ export default {
         return {
             username: '',
             password1: '',
-            password2: ''
+            password2: '',
+            email: '',
         };
     },
     setup() {

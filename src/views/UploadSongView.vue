@@ -1,6 +1,6 @@
 <template>
-    <n-modal z-index="2" :show="showUploadSong" :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }"
-        :block-scroll="false">
+    <n-modal :show="showUploadSong" :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }"
+        :block-scroll="false" :z-index="1">
         <div class="outer-container">
 
             <div class="title-container">
@@ -23,12 +23,16 @@
             <div class="body-container">
                 <n-grid>
                     <n-gi :span="9">
-                        <div class="upload-song-page">
-                            <img style="border-radius: 10px;" :src="this.songPageUrl" @click="uploadFile" />
-                            <input type="file" ref="fileInput" style="display: none" accept="image/*"
-                                @change="handleSongPageChange" />
-                        </div>
-                        <div class="cover-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">点击此处上传歌曲封面</div>
+                        <n-popover trigger="hover" class="cover-prompt"
+                            :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                            <template #trigger>
+                                <div class="upload-song-page">
+                                    <img style="border-radius: 10px;" :src="this.songPageUrl" @click="uploadFile" />
+                                    <input type="file" ref="fileInput" style="display: none" accept="image/*"
+                                        @change="handleSongPageChange" />
+                                </div>
+                            </template>
+                            点击此处上传歌曲封面</n-popover>
                     </n-gi>
                     <n-gi :span="15">
                         <div class="body-item">
@@ -72,8 +76,8 @@
                                             }">
                                             {{ songFileName }}
                                         </n-button>
-                                        <input type="file" accept="audio/*" ref="songFileInput" @change="handleSongSrcFileChange"
-                                            style="display: none" />
+                                        <input type="file" accept="audio/*" ref="songFileInput"
+                                            @change="handleSongSrcFileChange" style="display: none" />
                                     </div>
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
@@ -132,23 +136,22 @@
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div class="body-item-title">歌名</div>
-                                    <n-input type="text" size="small" placeholder="你需要填写歌曲名称" :value="songName" @input="songName = $event" 
-                                    :style="{
-                                        '--n-color': 'white',
-                                        '--n-color-focus': 'white',
-                                        '--n-text-color': 'black',
-                                        '--n-caret-color': 'black',
-                                        '--n-border-hover': 'transparent',
-                                        '--n-border-focus': 'transparent',
-                                        '--n-placeholder-color': 'grey',
-                                        '--n-border-radius': '8px',
-                                        '--n-height': '40px',
-                                        '--n-font-size': '16px',
-                                        '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
-                                        '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                                        '--n-icon-size': '25px',
-                                    }"
-                                    />
+                                    <n-input type="text" size="small" placeholder="你需要填写歌曲名称" :value="songName"
+                                        @input="songName = $event" :style="{
+                                            '--n-color': 'white',
+                                            '--n-color-focus': 'white',
+                                            '--n-text-color': 'black',
+                                            '--n-caret-color': 'black',
+                                            '--n-border-hover': 'transparent',
+                                            '--n-border-focus': 'transparent',
+                                            '--n-placeholder-color': 'grey',
+                                            '--n-border-radius': '8px',
+                                            '--n-height': '40px',
+                                            '--n-font-size': '16px',
+                                            '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                            '--n-icon-size': '25px',
+                                        }" />
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
                             </n-grid>
@@ -183,9 +186,9 @@
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div class="body-item-title">分类标签</div>
-                                    <n-select v-model:value="value" multiple :options="options" placeholder="你需要为歌曲添加1～4个分类标签" max-tag-count="responsive" 
-                                    @update:value="handleUpdateValue"
-                                    />
+                                    <n-select v-model:value="value" multiple :options="options"
+                                        placeholder="你需要为歌曲添加1～3个分类标签" max-tag-count="responsive"
+                                        @update:value="handleUpdateValue" />
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
                             </n-grid>
@@ -333,7 +336,7 @@
   
 <script>
 import { CloseOutline, ArrowUpOutline, WatchOutline } from '@vicons/ionicons5'
-import { NInput, NModal } from 'naive-ui';
+import { NInput, NModal, NPopover } from 'naive-ui';
 import { defineComponent, ref, watch } from "vue";
 import { mapState } from 'vuex'
 import { message } from "ant-design-vue";
@@ -353,6 +356,7 @@ export default {
     },
     data() {
         return {
+            isUploading: false,
             previewImageUrl: '',
             songName: '',
             songAuthor: '',
@@ -399,6 +403,24 @@ export default {
             ],
             tagList: [],
             tagString: '', // 为了传给后端tag而设置的。
+            warning(msg) {
+                message.warning({
+                    content: msg,
+                    duration: 1,
+                    style: {
+                        "z-index": 2,
+                    },
+                });
+            },
+            success(msg) {
+                message.success({
+                    content: msg,
+                    duration: 1,
+                    style: {
+                        "z-index": 2,
+                    },
+                });
+            },
         }
     },
     setup() {
@@ -424,11 +446,23 @@ export default {
         }
     },
     created() {
-        this.songPageUrl='/src/assets/upload-logo.png';
+        this.songPageUrl = '/src/assets/upload-logo.png';
     },
     methods: {
         closeUWindow() {
-            this.$emit('closeUploadWindow');
+            // === 关闭之前先清空内容 ===
+            // === DO NOT MODIFY ===
+            this.isUploading = false
+            this.songName = ''
+            this.songAuthor = ''
+            this.songSrcFile = null
+            this.songLyricFile = null
+            this.songPageFile = null
+            this.songPageUrl = '/src/assets/upload-logo.png'
+            this.value = []
+            this.songFileName = '点击以上传音频文件',
+                this.songLyricName = '点击以上传歌词文件',
+                this.$emit('closeUploadWindow');
             // location.reload();
         },
         uploadFile() {
@@ -454,32 +488,39 @@ export default {
             this.songLyricName = this.songLyricFile.name
         },
         submitUpload() {
-            if(this.songSrcFile == null){
-                this.warning('歌曲文件不得为空');
-                return;
+            if (this.songSrcFile === null) {
+                this.warning('请上传歌曲文件')
+                return 
             }
-            if(this.tagList.length == 0){
-                this.warning('歌曲标签不得为空');
-                return;
+            if (this.value.length === 0) {
+                this.warning('请选择歌曲标签( 1 ~ 3 个 )')
+                return 
             }
-            this.handleTagList();
-            console.log(this.tagString);
-            let data = new FormData();
-            data.append('title', this.songName);
-            data.append('artist', this.songAuthor);
-            data.append('cover', this.songPageFile);
-            data.append('source', this.songSrcFile);
-            data.append('lyrics', this.songLyricFile);
-            data.append('tags', this.tagString);
-            this.$http.post('/api/music/upload/', data).then(response => {
-                console.log(response);
-                if (response.data.code == '0') {
-                    this.closeUWindow();
-                } else if (response.data.code == '-1') {
-                    this.error('上传歌曲失败');
-                    //todo
-                }
-            });
+            if (this.isUploading === false) {
+                this.isUploading = true
+                this.handleTagList();
+                console.log(this.tagString);
+                let data = new FormData();
+                data.append('title', this.songName);
+                data.append('artist', this.songAuthor);
+                data.append('cover', this.songPageFile);
+                data.append('source', this.songSrcFile);
+                data.append('lyrics', this.songLyricFile);
+                data.append('tags', this.tagString);
+                this.$http.post('/api/music/upload/', data).then(response => {
+                    console.log(response);
+                    if (response.data.code == '0') {
+                        this.$emit('flushUploadSongs')//刷新歌曲
+                        this.closeUWindow();
+                        //this.success('上传歌曲成功!')
+                    } else if (response.data.code == '-1') {
+                        this.error('上传歌曲失败，请重新上传!');
+                    }
+                });
+            }
+            else {
+                this.warning('正在上传歌曲，请稍后...')
+            }
         },
         handleTagList() {
             this.tagList = [];
@@ -493,7 +534,7 @@ export default {
             console.log(this.tagString)
         },
         handleUpdateValue(value, option) {
-            if (value.length > 4) {
+            if (value.length > 3) {
                 value.splice(0, 1)
             }
             let options=[]

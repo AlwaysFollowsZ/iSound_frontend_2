@@ -1,10 +1,905 @@
+<template>
+  <div class="player-page" id="top">
+    <img class="background-img" :src="music.cover" />
+    <div class="background-imgfloat"></div>
+    <div class="content">
+      <n-grid>
+        <n-gi :span="4">
+          <div>
+            <n-button tertiary circle class="back-button" @click="back">
+              <ChevronBack style="width: 36px; position: absolute; left: 0px" />
+            </n-button>
+          </div>
+        </n-gi>
+        <n-gi :span="7">
+          <div class="music-cover">
+            <n-image
+              class="music-cover-img"
+              :src="music.cover"
+              width="400"
+              height="400"
+            />
+          </div>
+          <div class="three-buttons" v-if="this.$cookies.get('is_superuser') == 'false'">
+            <n-grid>
+              <n-gi :span="4"></n-gi>
+              <n-gi :span="4" style="margin: auto">
+                <span style="margin-right: 3px; margin-top: 2px">
+                  <n-icon
+                    class="hoverable-icon"
+                    v-if="islike"
+                    size="45"
+                    color="#ff6666"
+                    @click="like"
+                  >
+                    <Heart />
+                  </n-icon>
+                  <n-icon v-else size="45" @click="like" color="rgba(255,255,255,0.7)" class="hoverable-icon">
+                    <HeartOutline />
+                  </n-icon>
+                </span>
+              </n-gi>
+              <n-gi :span="4" style="margin: auto">
+                <span style="margin-right: 3px; margin-top: 2px">
+                  <n-icon class="hoverable-icon"
+                    v-if="iscollect"
+                    size="40"
+                    color="#FFD700"
+                    @click="collect"
+                  >
+                    <Star />
+                  </n-icon>
+                  <n-icon v-else size="40" @click="collect" color="rgba(255,255,255,0.7)" class="hoverable-icon">
+                    <StarOutline />
+                  </n-icon>
+                </span>
+              </n-gi>
+              <n-gi :span="4" style="margin: auto">
+                <span style="margin-right: 3px; margin-top: 2px">
+                  <!-- <n-icon
+                    v-if="iscomplain"
+                    size="45"
+                    color="#ff6666"
+                    @click="complain"
+                  >
+                    <Warning />
+                  </n-icon> -->
+                  <n-icon size="45" @click="complain" color="#e65c5c" class="hoverable-icon">
+                    <WarningOutline />
+                  </n-icon>
+                </span>
+              </n-gi>
+              <n-gi :span="4" style="margin: auto">
+                <span style="margin-right: 3px; margin-top: 2px">
+                  <!-- <n-icon
+                    v-if="iscomplain"
+                    size="45"
+                    color="#ff6666"
+                    @click="complain"
+                  >
+                    <Warning />
+                  </n-icon> -->
+                  <n-icon size="40" @click="scrollToComments" color="rgba(255,255,255,0.7)" class="hoverable-icon">
+                    <ChatbubbleEllipsesOutline />
+                  </n-icon>
+                </span>
+              </n-gi>
+              <!-- <n-gi :span="6"></n-gi> -->
+            </n-grid>
+          </div>
+        </n-gi>
+        <n-gi :span="10">
+          <div class="lyrics-part">
+            <n-grid :y-gap="15" :cols="1">
+              <n-gi class="music-name">
+                <div style="color: #fff">
+                  {{ music.name }}
+                </div>
+              </n-gi>
+              <n-gi>
+                <div class="music-artist" style="color: #fff">
+                  歌手：{{ music.artist }}
+                </div>
+                <div style="color: #fff">
+                  <span>来源： </span>
+                  <router-link
+                    :to="
+                      this.$cookies.get('userid') == music.up.id
+                        ? '/home'
+                        : `/home/user/${music.up.id}`
+                    "
+                  >
+                    <span class="upload-user" style="color: #fff">{{
+                      music.up.username
+                    }}</span>
+                  </router-link>
+                </div>
+              </n-gi>
+              <n-gi>
+                <div class="song-tags">
+                  <div class="tag-container">
+                    <span v-for="(tag, i) in this.songtags" :key="i">
+                      <n-tag
+                        :bordered="false"
+                        :style="{
+                          '--n-border-radius': `5px`,
+                          '--n-font-weight-strong': `bold`,
+                          '--n-height': `20px`,
+                          '--n-close-margin': `0 18px 0 18px`,
+                        }"
+                        class="tag-item"
+                      >
+                        {{ tag }}
+                      </n-tag>
+                    </span>
+                  </div>
+                </div>
+              </n-gi>
+              <n-gi>
+                <div style="font-size: larger">
+                  <n-scrollbar style="max-height: 400px" ref="lyricsRef">
+                    <div
+                      v-for="(obj, i) in lyricsObjArr"
+                      :key="i"
+                      :style="{
+                        marginBottom:
+                          hasTranslation && showTranslation ? '12.5px' : '31.35px',
+                      }"
+                      class="lyrics-wrap"
+                      :class="{ current: lyricsIndex === i }"
+                    >
+                      <n-grid class="lyrics">
+                        <n-gi :span="2" class="time">
+                          {{ obj.timeStr.slice(0, 5) + "&nbsp;" }}
+                        </n-gi>
+                        <n-gi :span="20" class="content">
+                          {{ obj.lyrics }}
+                        </n-gi>
+                        <n-gi :span="2" class="jumpLink">
+                          <Play color="#fff" @click="jumpToLyrics(obj, i)" width="14px" />
+                        </n-gi>
+                      </n-grid>
+                      <div class="translation" v-show="hasTranslation && showTranslation">
+                        {{ obj.translation }}
+                      </div>
+                    </div>
+                  </n-scrollbar>
+                  <div class="translationSwitch">
+                    <n-switch
+                      :rail-style="railStyle"
+                      v-if="hasTranslation"
+                      v-model:value="showTranslation"
+                      size="small"
+                      :round="false"
+                      @click="scroll"
+                    >
+                      <template #icon> 译 </template>
+                    </n-switch>
+                  </div>
+                </div>
+              </n-gi>
+            </n-grid>
+          </div>
+        </n-gi>
+        <n-gi :span="3"></n-gi>
+      </n-grid>
+    </div>
+  </div>
+  <div class="edit-comment" ref="scrollTarget">
+    <n-grid>
+      <n-gi :span="4"></n-gi>
+      <n-gi :span="16">
+        <div>
+          <n-collapse>
+            <n-collapse-item  :disabled="!this.$cookies.isKey('userid')">
+              <template #arrow>
+                <div style="color: white"></div>
+              </template>
+              <template #header>
+                <span style="margin-right: 3px; margin-top: 2px" @click="judgeLogState">
+                  <n-grid>
+                    <n-gi :span="23" id="comment-top">
+                      <span style="font-size: 30px; font-weight: 500" :style="{'color': 'rgb(' + this.accentColor + ')'}"> 全部评论 </span>
+                    </n-gi>
+                    <n-gi :span="1" style="padding-top: 5px">
+                      <n-icon id="comment-fold" size="36" :color="'rgb(' + this.accentColor + ')'">
+                        <ChatbubbleEllipsesOutline />
+                      </n-icon>
+                    </n-gi>
+                  </n-grid>
+                </span>
+              </template>
+              <div>
+                <n-input
+                  style="margin-bottom: 15px"
+                  maxlength="200"
+                  show-count
+                  placeholder="音你而美，畅所欲言"
+                  type="textarea"
+                  v-model:value="value"
+                  :style="{
+                    '--n-color': 'transparent',
+                    '--n-color-focus': 'transparent',
+                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-border-hover': 'transparent',
+                    '--n-border-focus': 'transparent',
+                    '--n-placeholder-color':
+                      this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                    '--n-border-radius': '8px',
+                    '--n-font-size': '15px',
+                    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                    '--n-box-shadow-focus':
+                      '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                  }"
+                  :autosize="{
+                    minRows: 6,
+                    maxRows: 6,
+                  }"
+                />
+                <div class="my-comment-button">
+                  <n-button
+                    class="send-button"
+                    strong
+                    secondary
+                    type="tertiary"
+                    :focusable="false"
+                    @click="sendComment"
+                    :style="{
+                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                      '--n-color-hover':  'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-border': '1px solid transparent',
+                      '--n-border-hover': '1px solid transparent',
+                      '--n-border-pressed': '1px solid transparent',
+                      '--n-border-radius': '5px',
+                      '--n-height': '36px',
+                      '--n-font-size': '16px',
+                  }"
+                  >
+                    发送
+                  </n-button>
+                  <n-button
+                    class="clean-button"
+                    style="margin-left: 938px"
+                    strong
+                    secondary
+                    type="tertiary"
+                    :focusable="false"
+                    :style="{
+                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                      '--n-color-hover':  'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-border': '1px solid transparent',
+                      '--n-border-hover': '1px solid transparent',
+                      '--n-border-pressed': '1px solid transparent',
+                      '--n-border-radius': '5px',
+                      '--n-height': '36px',
+                      '--n-font-size': '16px',
+                  }"
+                    @click="cleanComment"
+                  >
+                    清空
+                  </n-button>
+                </div>
+              </div>
+            </n-collapse-item>
+          </n-collapse>
+        </div>
+      </n-gi>
+      <n-gi :span="4"></n-gi>
+    </n-grid>
+  </div>
+  <div class="comments" style="margin-top: 10px" :key="this.refreshCommentVir">
+    <n-grid>
+      <n-gi :span="4"></n-gi>
+      <n-gi :span="16">
+        <div
+          v-for="(comment, idx) in comments.slice(
+            5 * (page - 1),
+            5 * (page - 1) + (5 * page > comments.length ? comments.length % 5 : 5)
+          )"
+          :key="idx"
+        >
+          <a-comment>
+            <template #actions>
+              <span key="reply-comment">
+                <span style="padding-left: 843px; cursor: auto">
+                  <!-- <n-popover trigger="hover">
+                    <template #trigger> -->
+                      <n-button
+                        text
+                        circle
+                        :focusable="false"
+                        @click="editReplyComment(comment)"
+                        :disabled="!this.$cookies.isKey('userid')"
+                        :style="{
+                          '--n-color': 'transparent',
+                          '--n-color-hover':  'transparent',
+                          '--n-color-pressed': 'transparent',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-disabled': 'rgba(' + this.accentColor + ', 0.6)',
+                          '--n-border': '1px solid transparent',
+                          '--n-border-hover': '1px solid transparent',
+                          '--n-border-pressed': '1px solid transparent',
+                        }"
+                      >
+                        <n-icon size="18">
+                          <ChatboxEllipsesOutline />
+                        </n-icon>
+                      </n-button>
+                    <!-- </template>
+                    <span>回复评论</span>
+                  </n-popover> -->
+                </span>
+              </span>
+              <span key="edit-comment">
+                <span style="padding-left: 3px; cursor: auto;">
+                  <!-- <n-popover trigger="hover">
+                    <template #trigger> -->
+                      <n-button
+                        text
+                        circle
+                        :focusable="false"
+                        @click="editMyComment(comment)"
+                        :disabled="this.$cookies.get('userid') != comment.up.id"
+                        :style="{
+                          '--n-color': 'transparent',
+                          '--n-color-hover':  'transparent',
+                          '--n-color-pressed': 'transparent',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-disabled': 'rgba(' + this.accentColor + ', 0.6)',
+                          '--n-border': '1px solid transparent',
+                          '--n-border-hover': '1px solid transparent',
+                          '--n-border-pressed': '1px solid transparent',
+                        }"
+                      >
+                        <n-icon size="18">
+                          <CreateOutline />
+                        </n-icon>
+                      </n-button>
+                    <!-- </template> -->
+                    <!-- <span>编辑我的评论</span> -->
+                  <!-- </n-popover> -->
+                </span>
+              </span>
+              <span key="delete-comment"  style="display: inline-block">
+                <span style="padding-left: 3px; cursor: auto">
+                  <n-popconfirm
+                    @positive-click="handlePositiveClick(comment)"
+                    @negative-click="handleNegativeClick"
+                    positive-text="确认" negative-text="取消"
+                    :style="{
+                      '--n-text-color': this.colorMode === 'white' ? 'rgb(57,57,57)' : 'white',
+                      '--n-color': this.colorMode === 'white' ? '#fff' : 'rgb(72,72,72)',
+                      '--n-border-radius': '12px',
+                    }"  
+                    :negative-button-props="{
+                      style:{
+                          '--n-color': 'transparent',
+                          '--n-color-hover': 'transparent',
+                          '--n-color-pressed': 'transparent',
+                          '--n-color-focus': 'transparent',
+                          '--n-text-color': '',
+                          '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
+                          '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
+                          '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
+                          '--n-border': '1px solid rgb(224, 224, 230)',
+                          '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-radius': '8px',
+                      }
+                    }"
+                    :positive-button-props="{
+                      style:{
+                          '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
+                          '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-text-color': 'white',
+                          '--n-text-color-hover': 'white',
+                          '--n-text-color-pressed': 'white',
+                          '--n-text-color-focus': 'white',
+                          '--n-border': '1px solid rgb(224, 224, 230)',
+                          '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-radius': '8px',
+                      }
+                    }"
+                  >
+                    <template #trigger>
+                      <n-button
+                        text
+                        circle
+                        :focusable="false"
+                        :disabled="this.$cookies.get('userid') != comment.up.id"
+                        :style="{
+                          '--n-color': 'transparent',
+                          '--n-color-hover':  'transparent',
+                          '--n-color-pressed': 'transparent',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-disabled': 'rgba(' + this.accentColor + ', 0.6)',
+                          '--n-border': '1px solid transparent',
+                          '--n-border-hover': '1px solid transparent',
+                          '--n-border-pressed': '1px solid transparent',
+                        }"
+                      >
+                        <n-icon size="18">
+                          <TrashOutline />
+                        </n-icon>
+                      </n-button>
+                    </template>
+                    确认删除这条评论吗？
+                  </n-popconfirm>
+                </span>
+              </span>
+            </template>
+            <template #author>
+              <router-link :to="`/home/user/${comment.up.id}`">
+                <div style="font-size: 18px" :style="{'color': 'rgb(' + this.accentColor + ')'}">{{ comment.up.username }}</div>
+              </router-link>
+            </template>
+            <template #avatar>
+              <router-link :to="`/home/user/${comment.up.id}`">
+                <a-avatar :src="comment.up.avatar" :size="50" />
+              </router-link>
+            </template>
+            <template #content>
+              <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                {{ comment.content }}
+              </p>
+            </template>
+            <template #datetime>
+              <a-tooltip :title="comment.date.replace('T', ' ').split('.')[0]">
+                <span style="margin-bottom: 0; font-size: 10px">
+                  {{ dayjs(comment.date.replace("T", " ").split(".")[0]).fromNow() }}
+                </span>
+              </a-tooltip>
+            </template>
+            <div v-if="this.edit1stComment && this.editCommentId == comment.id">
+              <div>
+                <n-input
+                  style="margin-bottom: 15px"
+                  maxlength="200"
+                  show-count
+                  placeholder="延续心动旋律"
+                  type="textarea"
+                  v-model:value="value"
+                  :style="{
+                    '--n-color': 'transparent',
+                    '--n-color-focus': 'transparent',
+                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-border-hover': 'transparent',
+                    '--n-border-focus': 'transparent',
+                    '--n-placeholder-color':
+                      this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                    '--n-border-radius': '8px',
+                    '--n-font-size': '15px',
+                    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                    '--n-box-shadow-focus':
+                      '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                  }"
+                  :autosize="{
+                    minRows: 6,
+                    maxRows: 6,
+                  }"
+                />
+                <div class="my-comment-button">
+                  <n-button
+                    class="send-button"
+                    strong
+                    secondary
+                    type="tertiary"
+                    :style="{
+                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                      '--n-color-hover':  'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-border': '1px solid transparent',
+                      '--n-border-hover': '1px solid transparent',
+                      '--n-border-pressed': '1px solid transparent',
+                      '--n-border-radius': '5px',
+                      '--n-height': '36px',
+                      '--n-font-size': '16px',
+                  }"
+                    @click="sendComment"
+                  >
+                    发送
+                  </n-button>
+                  <n-button
+                    class="clean-button"
+                    style="margin-left: 893px"
+                    strong
+                    secondary
+                    type="tertiary"
+                    @click="cleanComment"
+                    :style="{
+                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                      '--n-color-hover':  'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-border': '1px solid transparent',
+                      '--n-border-hover': '1px solid transparent',
+                      '--n-border-pressed': '1px solid transparent',
+                      '--n-border-radius': '5px',
+                      '--n-height': '36px',
+                      '--n-font-size': '16px',
+                  }"
+                  >
+                    清空
+                  </n-button>
+                </div>
+              </div>
+            </div>
+            <div v-if="this.reply2ndComment && this.edit2ndCommentParentId == comment.id">
+              <div>
+                <n-input
+                  style="margin-bottom: 15px"
+                  maxlength="200"
+                  show-count
+                  placeholder="延续心动旋律"
+                  type="textarea"
+                  v-model:value="value"
+                  :style="{
+                    '--n-color': 'transparent',
+                    '--n-color-focus': 'transparent',
+                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-border-hover': 'transparent',
+                    '--n-border-focus': 'transparent',
+                    '--n-placeholder-color':
+                      this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                    '--n-border-radius': '8px',
+                    '--n-font-size': '15px',
+                    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                    '--n-box-shadow-focus':
+                      '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                  }"
+                  :autosize="{
+                    minRows: 6,
+                    maxRows: 6,
+                  }"
+                />
+                <div class="my-comment-button">
+                  <n-button
+                    class="send-button"
+                    strong
+                    secondary
+                    type="tertiary"
+                    :style="{
+                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                      '--n-color-hover':  'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-border': '1px solid transparent',
+                      '--n-border-hover': '1px solid transparent',
+                      '--n-border-pressed': '1px solid transparent',
+                      '--n-border-radius': '5px',
+                      '--n-height': '36px',
+                      '--n-font-size': '16px',
+                  }"
+                    @click="send2ndComment"
+                  >
+                    发送
+                  </n-button>
+                  <n-button
+                    class="clean-button"
+                    style="margin-left: 893px"
+                    strong
+                    secondary
+                    type="tertiary"
+                    :style="{
+                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                      '--n-color-hover':  'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                      '--n-border': '1px solid transparent',
+                      '--n-border-hover': '1px solid transparent',
+                      '--n-border-pressed': '1px solid transparent',
+                      '--n-border-radius': '5px',
+                      '--n-height': '36px',
+                      '--n-font-size': '16px',
+                  }"
+                    @click="cleanComment"
+                  >
+                    清空
+                  </n-button>
+                </div>
+              </div>
+            </div>
+            <div v-if="comment.comment_set.length > 0">
+              <div v-for="(comment_2nd, idx) in comment.comment_set" :key="idx">
+                <a-comment>
+                  <template #actions>
+                    <span key="edit-comment">
+                      <span style="padding-left: 830px; cursor: auto">
+                        <!-- <n-popover trigger="hover">
+                          <template #trigger> -->
+                            <n-button
+                              text
+                              circle
+                              :focusable="false"
+                              @click="editMy2ndComment(comment_2nd)"
+                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
+                              :style="{
+                                '--n-color': 'transparent',
+                                '--n-color-hover':  'transparent',
+                                '--n-color-pressed': 'transparent',
+                                '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-disabled': 'rgba(' + this.accentColor + ', 0.6)',
+                                '--n-border': '1px solid transparent',
+                                '--n-border-hover': '1px solid transparent',
+                                '--n-border-pressed': '1px solid transparent',
+                              }"
+                            >
+                              <n-icon size="18">
+                                <CreateOutline />
+                              </n-icon>
+                            </n-button>
+                          <!-- </template> -->
+                          <!-- <span>编辑我的评论</span>
+                        </n-popover> -->
+                      </span>
+                    </span>
+                    <span key="delete-comment">
+                      <span style="padding-left: 3px; cursor: auto">
+                        <n-popconfirm
+                          @positive-click="handlePositiveClick(comment_2nd)"
+                          @negative-click="handleNegativeClick"
+                          positive-text="确认" negative-text="取消"
+                    :style="{
+                      '--n-text-color': this.colorMode === 'white' ? 'rgb(57,57,57)' : 'white',
+                      '--n-color': this.colorMode === 'white' ? '#fff' : 'rgb(72,72,72)',
+                      '--n-border-radius': '12px',
+                    }"  
+                    :negative-button-props="{
+                      style:{
+                          '--n-color': 'transparent',
+                          '--n-color-hover': 'transparent',
+                          '--n-color-pressed': 'transparent',
+                          '--n-color-focus': 'transparent',
+                          '--n-text-color': '',
+                          '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
+                          '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
+                          '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
+                          '--n-border': '1px solid rgb(224, 224, 230)',
+                          '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-radius': '8px',
+                      }
+                    }"
+                    :positive-button-props="{
+                      style:{
+                          '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
+                          '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-text-color': 'white',
+                          '--n-text-color-hover': 'white',
+                          '--n-text-color-pressed': 'white',
+                          '--n-text-color-focus': 'white',
+                          '--n-border': '1px solid rgb(224, 224, 230)',
+                          '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+                          '--n-border-radius': '8px',
+                      }
+                    }"
+                        >
+                          <template #trigger>
+                            <n-button
+                              text
+                              circle
+                              :focusable="false"
+                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
+                              :style="{
+                                '--n-color': 'transparent',
+                                '--n-color-hover':  'transparent',
+                                '--n-color-pressed': 'transparent',
+                                '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-disabled': 'rgba(' + this.accentColor + ', 0.6)',
+                                '--n-border': '1px solid transparent',
+                                '--n-border-hover': '1px solid transparent',
+                                '--n-border-pressed': '1px solid transparent',
+                              }"
+                            >
+                              <n-icon size="18">
+                                <TrashOutline />
+                              </n-icon>
+                            </n-button>
+                          </template>
+                          确认删除这条评论吗？
+                        </n-popconfirm>
+                      </span>
+                    </span>
+                  </template>
+                  <template #author>
+                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
+                      <div style="font-size: 18px" :style="{'color': 'rgb(' + this.accentColor + ')'}">{{ comment_2nd.up.username }}</div>
+                    </router-link></template
+                  >
+                  <template #avatar>
+                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
+                      <a-avatar :src="comment_2nd.up.avatar" :size="50"
+                    /></router-link>
+                  </template>
+                  <template #content>
+                    <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                      {{ comment_2nd.content }}
+                    </p>
+                  </template>
+                  <template #datetime>
+                    <a-tooltip :title="comment_2nd.date.replace('T', ' ').split('.')[0]">
+                      <span style="margin-bottom: 0; font-size: 10px">
+                        {{
+                          dayjs(
+                            comment_2nd.date.replace("T", " ").split(".")[0]
+                          ).fromNow()
+                        }}
+                      </span>
+                    </a-tooltip>
+                  </template>
+                  <div
+                    v-if="this.edit2ndComment && this.edit2ndCommentId == comment_2nd.id"
+                  >
+                    <div>
+                      <n-input
+                        style="margin-bottom: 15px"
+                        maxlength="200"
+                        show-count
+                        placeholder=""
+                        type="textarea"
+                        v-model:value="value"
+                        :style="{
+                          '--n-color': 'transparent',
+                          '--n-color-focus': 'transparent',
+                          '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                          '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                          '--n-border-hover': 'transparent',
+                          '--n-border-focus': 'transparent',
+                          '--n-placeholder-color':
+                            this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                          '--n-border-radius': '8px',
+                          '--n-font-size': '15px',
+                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-box-shadow-focus':
+                            '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                        }"
+                        :autosize="{
+                          minRows: 6,
+                          maxRows: 6,
+                        }"
+                      />
+                      <div class="my-comment-button">
+                        <n-button
+                          class="send-button"
+                          strong
+                          secondary
+                          type="tertiary"
+                          :style="{
+                            '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                            '--n-color-hover':  'rgba(' + this.accentColor + ', 0.25)',
+                            '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-border': '1px solid transparent',
+                            '--n-border-hover': '1px solid transparent',
+                            '--n-border-pressed': '1px solid transparent',
+                            '--n-border-radius': '5px',
+                            '--n-height': '36px',
+                            '--n-font-size': '16px',
+                        }"
+                          @click="send2ndComment"
+                        >
+                          发送
+                        </n-button>
+                        <n-button
+                          class="clean-button-2nd"
+                          strong
+                          secondary
+                          type="tertiary"
+                          :style="{
+                            '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                            '--n-color-hover':  'rgba(' + this.accentColor + ', 0.25)',
+                            '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-border': '1px solid transparent',
+                            '--n-border-hover': '1px solid transparent',
+                            '--n-border-pressed': '1px solid transparent',
+                            '--n-border-radius': '5px',
+                            '--n-height': '36px',
+                            '--n-font-size': '16px',
+                        }"
+                          @click="cleanComment"
+                        >
+                          清空
+                        </n-button>
+                      </div>
+                    </div>
+                  </div>
+                </a-comment>
+              </div>
+            </div>
+          </a-comment>
+        </div>
+        <div class="card-pagination">
+          <n-grid>
+            <n-gi :span="8"></n-gi>
+            <n-gi :span="8">
+              <div
+                style="display: flex; justify-content: center"
+                v-if="comments.length > 0"
+              >
+                <n-pagination
+                  v-model:page="page"
+                  :page-count="Math.ceil(comments.length / 5)"
+                  :style="{
+                    '--n-item-text-color-hover': 'rgb(' + this.accentColor + ')',
+                    '--n-item-text-color-active': 'rgb(' + this.accentColor + ')',
+                    '--n-item-text-color-pressed': 'rgb(' + this.accentColor + ')',
+                    '--n-item-border-active': '1px solid rgb(' + this.accentColor + ')',
+                    '--n-item-color-disabled': 'transparent',
+                }"
+                />
+              </div>
+              <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+                期待你的评论
+              </div>
+            </n-gi>
+            <n-gi :span="8"></n-gi>
+          </n-grid>
+        </div>
+      </n-gi>
+      <n-gi :span="4"></n-gi>
+    </n-grid>
+  </div>
+  <modify-complain-view
+    :showModifyComplainView="showModifyComplainView"
+    @closeModifyWindow="showModifyComplainView = false"
+  ></modify-complain-view>
+  <div v-show="false"><top-nav></top-nav></div>
+</template>
+
 <script>
 import "animate.css";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import TopNav from "../components/TopNav.vue";
 import ModifyComplainView from "../views/ModifyComplainView.vue";
 import { defineComponent, ref } from "vue";
 import { message } from "ant-design-vue";
+import { mapState } from 'vuex';
 import {
   ChevronBack,
   StarOutline,
@@ -18,6 +913,8 @@ import {
   Star,
   Warning,
   Play,
+  HeartOutline,
+  Heart,
 } from "@vicons/ionicons5";
 dayjs.extend(relativeTime);
 import {
@@ -42,6 +939,8 @@ export default defineComponent({
     Warning,
     Play,
     ModifyComplainView,
+    HeartOutline,
+    Heart,
   },
   created() {
     this.$EventBus.on("timeupdate", (currentTime) => {
@@ -53,6 +952,7 @@ export default defineComponent({
         const musicId = this.$route.params.musicId;
         this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
           this.music = response.data.music_set[0];
+          document.title = `${this.music.name} - ${this.music.artist}`;
           this.islike = this.music.is_like;
           this.iscollect = this.music.is_favorite;
           this.songtags = this.music.tags;
@@ -75,6 +975,9 @@ export default defineComponent({
   mounted() {
     this.lyricsIndex = 0;
     this.scroll("auto");
+  },
+  computed: {
+    ...mapState(['colorMode', 'accentColor']),
   },
   setup() {
     return {
@@ -155,15 +1058,24 @@ export default defineComponent({
       this.$router.go(-1);
     },
     like() {
-      this.islike = !this.islike;
-      // if (this.islike == true) {
-      //   this.success("已添加至我喜欢");
-      // } else {
-      //   this.success("已从我喜欢移除");
-      // }
-      this.$http.post(`/api/like/${this.music.id}/`).then((response) => {
-        console.log(response.data);
-      });
+      if (!this.$cookies.isKey('userid')) { // 未登录
+        this.$EventBus.emit('showLoginModal');
+      } else {                              // 已登录
+        this.islike = !this.islike;
+        /* if (this.islike == true) {
+          this.success("已添加至我喜欢");
+        } else {
+          this.success("已从我喜欢移除");
+        } */
+        this.$http.post(`/api/like/${this.music.id}/`).then((response) => {
+          console.log(response.data);
+        });
+      }
+    },
+    judgeLogState() {
+      if (!this.$cookies.isKey('userid')) {
+        this.$EventBus.emit('showLoginModal')
+      }
     },
     collect() {
       //todo
@@ -189,15 +1101,16 @@ export default defineComponent({
       if (this.editNewCommentId == 1) {
         this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
           //this.success("评论成功");
+          this.regetComments();
         });
       } else if (this.editNewCommentId == 0 && this.editCommentId != 0) {
         this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
           //this.success("编辑成功");
+          this.regetComments();
         });
         this.editCommentId = 0;
         this.editNewCommentId = 1;
       }
-      this.regetComments();
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
       this.value == "";
@@ -205,8 +1118,8 @@ export default defineComponent({
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
         //this.success("删除成功");
+        this.regetComments();
       });
-      this.regetComments();
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
     },
@@ -222,17 +1135,18 @@ export default defineComponent({
           .post(`/api/comment/on/comment/${this.edit2ndCommentParentId}/`, formData)
           .then(() => {
             //this.success("回复评论成功");
+            this.regetComments();
           });
       } else {
         this.$http
           .post(`/api/comment/edit/${this.edit2ndCommentId}/`, formData)
           .then(() => {
             //this.success("编辑成功");
+            this.regetComments();
           });
         this.edit2ndCommentId = 0;
         this.edit2ndCommentParentId = 0;
       }
-      this.regetComments();
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
       this.value == "";
@@ -350,577 +1264,19 @@ export default defineComponent({
       });
     },
     regetComments() {
+      const musicId = this.$route.params.musicId;
       this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
         this.comments = response.data.comment_set;
       });
     },
+    scrollToComments() {
+      const t = this.$refs.scrollTarget
+      t.scrollIntoView({ behavior: 'smooth' })
+    }
   },
 });
 </script>
 
-<template>
-  <div class="player-page" id="top">
-    <img class="background-img" :src="music.cover" />
-    <div class="background-imgfloat"></div>
-    <div class="content">
-      <n-grid>
-        <n-gi :span="4">
-          <div>
-            <n-button tertiary circle class="back-button" @click="back">
-              <ChevronBack style="width: 36px; position: absolute; left: 0px" />
-            </n-button>
-          </div>
-        </n-gi>
-        <n-gi :span="7">
-          <div class="music-cover">
-            <n-image
-              class="music-cover-img"
-              :src="music.cover"
-              width="400"
-              height="400"
-            />
-          </div>
-          <div class="three-buttons" v-if="this.$cookies.get('is_superuser') == 'false'">
-            <n-grid>
-              <n-gi :span="6"></n-gi>
-              <n-gi :span="4" style="margin: auto">
-                <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon
-                    v-if="islike"
-                    size="30"
-                    color="#ff69b4"
-                    @click="like"
-                    class="animate__animated animate__heartBeat"
-                  >
-                    <Fitness />
-                  </n-icon>
-                  <n-icon v-else size="30" @click="like">
-                    <FitnessOutline />
-                  </n-icon>
-                </span>
-              </n-gi>
-              <n-gi :span="4" style="margin: auto">
-                <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon
-                    v-if="iscollect"
-                    size="30"
-                    color="#FFD700"
-                    @click="collect"
-                    class="animate__animated animate__flash"
-                  >
-                    <Star />
-                  </n-icon>
-                  <n-icon v-else size="30" @click="collect">
-                    <StarOutline />
-                  </n-icon>
-                </span>
-              </n-gi>
-              <n-gi :span="4" style="margin: auto">
-                <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon
-                    v-if="iscomplain"
-                    size="30"
-                    color="#DC143C"
-                    @click="complain"
-                    class="animate__animated animate__headShake"
-                  >
-                    <Warning />
-                  </n-icon>
-                  <n-icon v-else size="30" @click="complain">
-                    <WarningOutline />
-                  </n-icon>
-                </span>
-              </n-gi>
-              <n-gi :span="6"></n-gi>
-            </n-grid>
-          </div>
-        </n-gi>
-        <n-gi :span="10">
-          <div class="lyrics-part">
-            <n-grid :y-gap="15" :cols="1">
-              <n-gi class="music-name">
-                <div style="color: #fff">
-                  {{ music.name }}
-                </div>
-              </n-gi>
-              <n-gi>
-                <div class="music-artist" style="color: #fff">
-                  歌手：{{ music.artist }}
-                </div>
-                <div style="color: #fff">
-                  <span>来源： </span>
-                  <router-link
-                    :to="
-                      this.$cookies.get('userid') == music.up.id
-                        ? '/home'
-                        : `/home/user/${music.up.id}`
-                    "
-                  >
-                    <span class="upload-user" style="color: #fff">{{
-                      music.up.username
-                    }}</span>
-                  </router-link>
-                </div>
-              </n-gi>
-              <n-gi>
-                <div class="song-tags">
-                  <div class="tag-container">
-                    <span v-for="(tag, i) in this.songtags" :key="i">
-                      <n-tag
-                        :bordered="false"
-                        :style="{
-                          '--n-border-radius': `5px`,
-                          '--n-font-weight-strong': `bold`,
-                          '--n-height': `20px`,
-                          '--n-close-margin': `0 18px 0 18px`,
-                        }"
-                        class="tag-item"
-                      >
-                        {{ tag }}
-                        <br />
-                      </n-tag>
-                    </span>
-                  </div>
-                </div>
-              </n-gi>
-              <n-gi>
-                <div style="font-size: larger">
-                  <n-scrollbar style="max-height: 400px" ref="lyricsRef">
-                    <div
-                      v-for="(obj, i) in lyricsObjArr"
-                      :key="i"
-                      :style="{
-                        marginBottom:
-                          hasTranslation && showTranslation ? '12.5px' : '31.35px',
-                      }"
-                      class="lyrics-wrap"
-                      :class="{ current: lyricsIndex === i }"
-                    >
-                      <n-grid class="lyrics">
-                        <n-gi :span="2" class="time">
-                          {{ obj.timeStr.slice(0, 5) + "&nbsp;" }}
-                        </n-gi>
-                        <n-gi :span="20" class="content">
-                          {{ obj.lyrics }}
-                        </n-gi>
-                        <n-gi :span="2" class="jumpLink">
-                          <Play color="#fff" @click="jumpToLyrics(obj, i)" width="14px" />
-                        </n-gi>
-                      </n-grid>
-                      <div class="translation" v-show="hasTranslation && showTranslation">
-                        {{ obj.translation }}
-                      </div>
-                    </div>
-                  </n-scrollbar>
-                  <div class="translationSwitch">
-                    <n-switch
-                      :rail-style="railStyle"
-                      v-if="hasTranslation"
-                      v-model:value="showTranslation"
-                      size="small"
-                      :round="false"
-                      @click="scroll"
-                    >
-                      <template #icon> 译 </template>
-                    </n-switch>
-                  </div>
-                </div>
-              </n-gi>
-            </n-grid>
-          </div>
-        </n-gi>
-        <n-gi :span="3"></n-gi>
-      </n-grid>
-    </div>
-  </div>
-  <div class="edit-comment">
-    <n-grid>
-      <n-gi :span="4"></n-gi>
-      <n-gi :span="16">
-        <div>
-          <n-collapse>
-            <n-collapse-item>
-              <template #arrow>
-                <div style="color: white"></div>
-              </template>
-              <template #header>
-                <span style="margin-right: 3px; margin-top: 2px">
-                  <n-grid>
-                    <n-gi :span="23" id="comment-top">
-                      <span style="font-size: 22px"> 全部评论 </span>
-                    </n-gi>
-                    <n-gi
-                      :span="1"
-                      style="padding-top: 5px"
-                      v-if="this.$cookies.get('is_superuser') == 'false'"
-                    >
-                      <n-icon id="comment-fold" size="27">
-                        <ChatbubbleEllipsesOutline />
-                      </n-icon>
-                    </n-gi>
-                  </n-grid>
-                </span>
-              </template>
-              <div>
-                <n-input
-                  style="margin-bottom: 15px"
-                  maxlength="200"
-                  show-count
-                  placeholder="我的评论"
-                  type="textarea"
-                  v-model:value="value"
-                  :style="{ '--n-border-radius': `10px` }"
-                  :autosize="{
-                    minRows: 6,
-                    maxRows: 6,
-                  }"
-                />
-                <div class="my-comment-button">
-                  <n-button
-                    class="send-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="sendComment"
-                  >
-                    发送
-                  </n-button>
-                  <n-button
-                    class="clean-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="cleanComment"
-                  >
-                    清空
-                  </n-button>
-                </div>
-              </div>
-            </n-collapse-item>
-          </n-collapse>
-        </div>
-      </n-gi>
-      <n-gi :span="4"></n-gi>
-    </n-grid>
-  </div>
-  <a-divider style="height: 1.8px; background-color: #dddddd" />
-  <div class="comments" :key="this.refreshCommentVir">
-    <n-grid>
-      <n-gi :span="4"></n-gi>
-      <n-gi :span="16">
-        <div
-          v-for="(comment, idx) in comments.slice(
-            5 * (page - 1),
-            5 * (page - 1) + (5 * page > comments.length ? comments.length % 5 : 5)
-          )"
-          :key="idx"
-        >
-          <a-comment>
-            <template #actions>
-              <span key="reply-comment">
-                <span style="padding-left: 855px; cursor: auto">
-                  <n-popover trigger="hover">
-                    <template #trigger>
-                      <n-button
-                        text
-                        circle
-                        focusable="false"
-                        @click="editReplyComment(comment)"
-                      >
-                        <n-icon size="18">
-                          <ChatboxEllipsesOutline />
-                        </n-icon>
-                      </n-button>
-                    </template>
-                    <span>回复评论</span>
-                  </n-popover>
-                </span>
-              </span>
-              <span key="edit-comment">
-                <span style="padding-left: 3px; cursor: auto">
-                  <n-popover trigger="hover">
-                    <template #trigger>
-                      <n-button
-                        text
-                        circle
-                        focusable="false"
-                        @click="editMyComment(comment)"
-                        :disabled="this.$cookies.get('userid') != comment.up.id"
-                      >
-                        <n-icon size="18">
-                          <CreateOutline />
-                        </n-icon>
-                      </n-button>
-                    </template>
-                    <span>编辑我的评论</span>
-                  </n-popover>
-                </span>
-              </span>
-              <span key="delete-comment">
-                <span style="padding-left: 3px; cursor: auto">
-                  <n-popconfirm
-                    @positive-click="handlePositiveClick(comment)"
-                    @negative-click="handleNegativeClick"
-                  >
-                    <template #trigger>
-                      <n-button
-                        text
-                        circle
-                        focusable="false"
-                        :disabled="this.$cookies.get('userid') != comment.up.id"
-                      >
-                        <n-icon size="18">
-                          <TrashOutline />
-                        </n-icon>
-                      </n-button>
-                    </template>
-                    确认删除这条评论吗？
-                  </n-popconfirm>
-                </span>
-              </span>
-            </template>
-            <template #author>
-              <router-link :to="`/home/user/${comment.up.id}`">
-                <div style="font-size: 18px">{{ comment.up.username }}</div>
-              </router-link>
-            </template>
-            <template #avatar>
-              <router-link :to="`/home/user/${comment.up.id}`">
-                <a-avatar :src="comment.up.avatar" :size="50" />
-              </router-link>
-            </template>
-            <template #content>
-              <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
-                {{ comment.content }}
-              </p>
-            </template>
-            <template #datetime>
-              <a-tooltip :title="comment.date.replace('T', ' ').split('.')[0]">
-                <span style="margin-bottom: 0; font-size: 10px">
-                  {{ dayjs(comment.date.replace("T", " ").split(".")[0]).fromNow() }}
-                </span>
-              </a-tooltip>
-            </template>
-            <div v-if="this.edit1stComment && this.editCommentId == comment.id">
-              <div>
-                <n-input
-                  style="margin-bottom: 15px"
-                  maxlength="200"
-                  show-count
-                  placeholder="我的评论"
-                  type="textarea"
-                  v-model:value="value"
-                  :style="{ '--n-border-radius': `10px` }"
-                  :autosize="{
-                    minRows: 6,
-                    maxRows: 6,
-                  }"
-                />
-                <div class="my-comment-button">
-                  <n-button
-                    class="send-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="sendComment"
-                  >
-                    发送
-                  </n-button>
-                  <n-button
-                    class="clean-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="cleanComment"
-                  >
-                    清空
-                  </n-button>
-                </div>
-              </div>
-            </div>
-            <div v-if="this.reply2ndComment && this.edit2ndCommentParentId == comment.id">
-              <div>
-                <n-input
-                  style="margin-bottom: 15px"
-                  maxlength="200"
-                  show-count
-                  placeholder="我的评论"
-                  type="textarea"
-                  v-model:value="value"
-                  :style="{ '--n-border-radius': `10px` }"
-                  :autosize="{
-                    minRows: 6,
-                    maxRows: 6,
-                  }"
-                />
-                <div class="my-comment-button">
-                  <n-button
-                    class="send-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="send2ndComment"
-                  >
-                    发送
-                  </n-button>
-                  <n-button
-                    class="clean-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    @click="cleanComment"
-                  >
-                    清空
-                  </n-button>
-                </div>
-              </div>
-            </div>
-            <div v-if="comment.comment_set.length > 0">
-              <div v-for="(comment_2nd, idx) in comment.comment_set" :key="idx">
-                <a-comment>
-                  <template #actions>
-                    <span key="edit-comment">
-                      <span style="padding-left: 842px; cursor: auto">
-                        <n-popover trigger="hover">
-                          <template #trigger>
-                            <n-button
-                              text
-                              circle
-                              focusable="false"
-                              @click="editMy2ndComment(comment_2nd)"
-                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
-                            >
-                              <n-icon size="18">
-                                <CreateOutline />
-                              </n-icon>
-                            </n-button>
-                          </template>
-                          <span>编辑我的评论</span>
-                        </n-popover>
-                      </span>
-                    </span>
-                    <span key="delete-comment">
-                      <span style="padding-left: 3px; cursor: auto">
-                        <n-popconfirm
-                          @positive-click="handlePositiveClick(comment_2nd)"
-                          @negative-click="handleNegativeClick"
-                        >
-                          <template #trigger>
-                            <n-button
-                              text
-                              circle
-                              focusable="false"
-                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
-                            >
-                              <n-icon size="18">
-                                <TrashOutline />
-                              </n-icon>
-                            </n-button>
-                          </template>
-                          确认删除这条评论吗？
-                        </n-popconfirm>
-                      </span>
-                    </span>
-                  </template>
-                  <template #author>
-                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
-                      <div style="font-size: 18px">{{ comment_2nd.up.username }}</div>
-                    </router-link></template
-                  >
-                  <template #avatar>
-                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
-                      <a-avatar :src="comment_2nd.up.avatar" :size="50"
-                    /></router-link>
-                  </template>
-                  <template #content>
-                    <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
-                      {{ comment_2nd.content }}
-                    </p>
-                  </template>
-                  <template #datetime>
-                    <a-tooltip :title="comment_2nd.date.replace('T', ' ').split('.')[0]">
-                      <span style="margin-bottom: 0; font-size: 10px">
-                        {{
-                          dayjs(
-                            comment_2nd.date.replace("T", " ").split(".")[0]
-                          ).fromNow()
-                        }}
-                      </span>
-                    </a-tooltip>
-                  </template>
-                  <div
-                    v-if="this.edit2ndComment && this.edit2ndCommentId == comment_2nd.id"
-                  >
-                    <div>
-                      <n-input
-                        style="margin-bottom: 15px"
-                        maxlength="200"
-                        show-count
-                        placeholder="我的评论"
-                        type="textarea"
-                        v-model:value="value"
-                        :style="{ '--n-border-radius': `10px` }"
-                        :autosize="{
-                          minRows: 6,
-                          maxRows: 6,
-                        }"
-                      />
-                      <div class="my-comment-button">
-                        <n-button
-                          class="send-button"
-                          strong
-                          secondary
-                          type="tertiary"
-                          @click="send2ndComment"
-                        >
-                          发送
-                        </n-button>
-                        <n-button
-                          class="clean-button-2nd"
-                          strong
-                          secondary
-                          type="tertiary"
-                          @click="cleanComment"
-                        >
-                          清空
-                        </n-button>
-                      </div>
-                    </div>
-                  </div>
-                </a-comment>
-              </div>
-            </div>
-          </a-comment>
-        </div>
-        <div class="card-pagination">
-          <n-grid>
-            <n-gi :span="8"></n-gi>
-            <n-gi :span="8">
-              <div
-                style="display: flex; justify-content: center"
-                v-if="comments.length > 0"
-              >
-                <n-pagination
-                  v-model:page="page"
-                  :page-count="Math.ceil(comments.length / 5)"
-                />
-              </div>
-              <div style="display: flex; justify-content: center; font-size: 20px" v-else>
-                期待你的评论！
-              </div>
-            </n-gi>
-            <n-gi :span="8"></n-gi>
-          </n-grid>
-        </div>
-      </n-gi>
-      <n-gi :span="4"></n-gi>
-    </n-grid>
-  </div>
-  <modify-complain-view
-    :showModifyComplainView="showModifyComplainView"
-    @closeModifyWindow="showModifyComplainView = false"
-  ></modify-complain-view>
-</template>
 
 <style scoped>
 .content {
@@ -1159,5 +1515,9 @@ export default defineComponent({
 
 .tag-item {
   margin-left: 10px;
+}
+
+.hoverable-icon:hover {
+  cursor: pointer;
 }
 </style>

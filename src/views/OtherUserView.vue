@@ -21,67 +21,52 @@
               <div class="user-info">
                 <n-grid :y-gap="12" :cols="1">
                   <n-gi>
-                    <div class="user-name" :style="{'color': 'rgb(' + this.accentColor + ')'}">{{ this.username }}</div>
+                    <div class="user-name" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">{{ this.username }}</div>
                   </n-gi>
                   <n-gi>
-                    <div class="user-email" :style="{'color': 'rgb(' + this.accentColor + ')'}">
-                      邮箱 
+                    <div class="user-email" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
+                      邮箱
                     </div>
-                    <div class="info-content" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                    <div class="info-content" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
                       {{ this.userEmail }}
                     </div>
                   </n-gi>
                   <n-gi>
-                    <div class="user-bio" :style="{'color': 'rgb(' + this.accentColor + ')'}">
-                      个性签名 
+                    <div class="user-bio" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
+                      个性签名
                     </div>
-                    <div class="info-content" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                    <div class="info-content" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
                       {{ this.userBio }}
                     </div>
                   </n-gi>
                   <n-gi>
                     <div class="follow-unfollow-button">
-                      <n-popconfirm
-                        v-if="this.userIsFollowed"
-                        @positive-click="follow"
-                        positive-text="确认"
-                        negative-text="取消"
-                      >
+                      <n-popconfirm v-if="this.userIsFollowed" @positive-click="follow" positive-text="确认"
+                        negative-text="取消">
                         <template #trigger>
-                          <n-button strong secondary type="primary" :focusable="false"
-                          :style="{
+                          <n-button strong secondary type="primary" :focusable="false" :style="{
                             '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
                             '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
-                            '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)', 
+                            '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)',
                             '--n-color-focus': 'rgba(' + this.accentColor + ', 0.5)',
-                            '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
-                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
-                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
-                            '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
-                          }"
-                            >已关注</n-button
-                          >
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                          }">已关注</n-button>
                         </template>
                         您要确定要取消关注该用户吗？
                       </n-popconfirm>
-                      <n-button
-                        v-else
-                        @click="follow()"
-                        strong
-                        secondary
-                        type="default" :focusable="false"
-                        :style="{
-                          '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
-                          '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
-                          '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)', 
-                          '--n-color-focus': 'rgba(' + this.accentColor + ', 0.5)',
-                          '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
-                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
-                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
-                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
-                        }"
-                        >加关注</n-button
-                      >
+                      <n-button v-else @click="follow()" strong secondary type="default" :focusable="false" :style="{
+                        '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
+                        '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
+                        '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)',
+                        '--n-color-focus': 'rgba(' + this.accentColor + ', 0.5)',
+                        '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
+                        '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                        '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                        '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                      }">加关注</n-button>
                     </div>
                   </n-gi>
                 </n-grid>
@@ -90,16 +75,14 @@
           </n-grid>
         </div>
         <div class="user-song-songsheet">
-          <n-tabs type="line" animated
-          :style="{
+          <n-tabs type="line" animated :style="{
             '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
             '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
             '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
             '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
             '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
             '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
-          }"
-          >
+          }">
             <n-tab-pane name="ta的歌单" tab="ta的歌单">
               <other-user-song-sheet-view />
             </n-tab-pane>
@@ -108,13 +91,10 @@
             </n-tab-pane>
             <template #suffix>
               <div :style="{ color: 'rgb(' + this.accentColor + ')' }">
-              粉丝数：{{ this.userFansNum }}
-              <a-divider
-                type="vertical"
-                style="width: 1.5px; background-color: #dddddd"
-              />
-              关注数：{{ this.userFollowingNum }}
-            </div>
+                粉丝数：{{ this.userFansNum }}
+                <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd" />
+                关注数：{{ this.userFollowingNum }}
+              </div>
             </template>
           </n-tabs>
         </div>
@@ -127,7 +107,7 @@
 import TopNav from "../components/TopNav.vue";
 import OtherUserSongSheetView from "../components/OtherUserSongSheetView.vue";
 import OtherUserUploadSongView from "../components/OtherUserUploadedSongView.vue";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 import {
   CreateOutline,
   PaperPlaneOutline,
@@ -136,6 +116,7 @@ import {
   ChevronBack,
 } from "@vicons/ionicons5";
 import { NewspaperOutline, FlowerOutline, FlashOutline } from "@vicons/ionicons5";
+import "animate.css";
 export default {
   name: "OtherUserView",
   components: {
@@ -156,7 +137,7 @@ export default {
       userid: "",
       username: "",
       userBio: "",
-      userAvatar: null,   // 得改
+      userAvatar: null, // 得改
       userEmail: "",
       userIsFollowed: "",
       userFansNum: "",
@@ -171,6 +152,7 @@ export default {
         this.$http.get(`/api/accounts/detail/${userId}/`).then((response) => {
           this.userid = response.data.id;
           this.username = response.data.username;
+          document.title = `${this.username}的个人主页`;
           this.userBio = response.data.profile;
           this.userEmail = response.data.email;
           this.userAvatar = response.data.avatar;
@@ -188,12 +170,17 @@ export default {
       this.$router.go(-1);
     },
     follow() {
-      this.userIsFollowed = !this.userIsFollowed;
-      if (this.userIsFollowed) {
-        this.followUser();
+      if (!this.$cookies.isKey('userid')) {
+        this.$EventBus.emit('showLoginModal')
       } else {
-        this.unFollowUser();
+        this.userIsFollowed = !this.userIsFollowed;
+        if (this.userIsFollowed) {
+          this.followUser();
+        } else {
+          this.unFollowUser();
+        }
       }
+
     },
     followUser() {
       this.$http.post(`/api/follow/${this.userid}/`).then((response) => {
