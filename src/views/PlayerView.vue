@@ -1034,6 +1034,7 @@ export default defineComponent({
       edit1stComment: ref(false), // 修改一级评论
       reply2ndComment: ref(false), // 回复一级评论，即编辑二级评论
       edit2ndComment: ref(false), // 修改二级评论
+      showSend1stComment: ref(false),
     };
   },
   data() {
@@ -1120,7 +1121,6 @@ export default defineComponent({
         this.editNewCommentId = 1;
       }
       this.refreshCommentVir++;
-      console.log(this.refreshCommentVir);
       this.value = "";
     },
     deleteMyComment(comment) {
@@ -1156,6 +1156,7 @@ export default defineComponent({
         this.edit2ndCommentParentId = 0;
       }
       this.refreshCommentVir++;
+      this.reply2ndComment = false;
       console.log(this.refreshCommentVir);
       this.value = "";
     },
