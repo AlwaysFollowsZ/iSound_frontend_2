@@ -65,7 +65,7 @@ export default {
                 length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.floor(song.duration % 60)}`.padStart(2, '0'),
                 imgSrc: song.cover,
                 isLiked: song.is_like,
-                isCollected: false,
+                isCollected: song.is_favorite,
                 showCollection: false,
             }))
             if (this.loadingPercentage >= 100) {

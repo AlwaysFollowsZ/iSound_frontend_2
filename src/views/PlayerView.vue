@@ -1,5 +1,6 @@
 <script>
 import "animate.css";
+import { NModal } from "naive-ui";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import ModifyComplainView from "../views/ModifyComplainView.vue";
@@ -22,10 +23,12 @@ import {
 dayjs.extend(relativeTime);
 import {
   globalThemeColor,
+  getFontColorString,
   getBackgroundColorString,
   getRGBString,
   changeThemeColorByImage,
 } from "/src/colorMode.js";
+import ImageTable from "/src/components/tables/ImageTable/ImageTable.vue";
 export default defineComponent({
   name: "PlayerView",
   components: {
@@ -42,6 +45,8 @@ export default defineComponent({
     Warning,
     Play,
     ModifyComplainView,
+    ImageTable,
+    NModal,
   },
   created() {
     this.$EventBus.on("timeupdate", (currentTime) => {
@@ -146,6 +151,11 @@ export default defineComponent({
       hasTranslation: false,
       showTranslation: true,
       getRGBString,
+      collctionData: this.updateCollections(),
+      showCollections: false,
+      isCollectChanged: false,
+      headChange: false,
+      fontColorString: getFontColorString(globalThemeColor),
       backgroundColorString: getBackgroundColorString(globalThemeColor, 225),
       showModifyComplainView: false,
       refreshCommentVir: 0,
@@ -200,6 +210,7 @@ export default defineComponent({
         this.editCommentId = 0;
         this.editNewCommentId = 1;
       }
+
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
       this.value == "";
@@ -236,6 +247,7 @@ export default defineComponent({
         this.edit2ndCommentId = 0;
         this.edit2ndCommentParentId = 0;
       }
+      this.regetComments();
       this.refreshCommentVir++;
       console.log(this.refreshCommentVir);
       this.value == "";
@@ -357,6 +369,38 @@ export default defineComponent({
       this.$http.get(`/api/comment/of/${musicId}/`).then((response) => {
         this.comments = response.data.comment_set;
       });
+    },
+    handleClickEntry(listId) {
+      this.isCollectChanged = true;
+      this.headChange = true;
+      this.iscollect = true;
+      this.$http.post(`/api/favorite/${listId}/${this.music.id}/`);
+      setTimeout(() => {
+        this.showCollections = false;
+        setTimeout(() => {
+          this.headChange = false;
+          this.isCollectChanged = false;
+        }, 500);
+      }, 800);
+    },
+    updateCollections() {
+      this.$http.get("/api/playlist/of/0/").then((response) => {
+        let key = 0;
+        if (response.data.playlist_set.length == 0) {
+          this.collectionData = [];
+          return;
+        }
+        this.collectionData = response.data.playlist_set.map((collection) => {
+          return {
+            Key: key++,
+            Id: collection.id,
+            imagePath: collection.cover,
+            Name: collection.title,
+            songCount: collection.music_set.length,
+            Type: "Collection",
+          };
+        });
+      }); //更新当前用户的收藏夹数据
     },
   },
 });
@@ -774,121 +818,119 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div v-if="comment.comment_set.length > 0">
-              <div v-for="(comment_2nd, idx) in comment.comment_set" :key="idx">
-                <a-comment>
-                  <template #actions>
-                    <span key="edit-comment">
-                      <span style="padding-left: 842px; cursor: auto">
-                        <n-popover trigger="hover">
-                          <template #trigger>
-                            <n-button
-                              text
-                              circle
-                              :focusable="false"
-                              @click="editMy2ndComment(comment_2nd)"
-                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
-                            >
-                              <n-icon size="18">
-                                <CreateOutline />
-                              </n-icon>
-                            </n-button>
-                          </template>
-                          <span>编辑我的评论</span>
-                        </n-popover>
-                      </span>
+            <!-- <div v-if="comment.comment_set.length > 0"> -->
+            <div v-for="(comment_2nd, idx) in comment.comment_set" :key="idx">
+              <a-comment>
+                <template #actions>
+                  <span key="edit-comment">
+                    <span style="padding-left: 842px; cursor: auto">
+                      <n-popover trigger="hover">
+                        <template #trigger>
+                          <n-button
+                            text
+                            circle
+                            :focusable="false"
+                            @click="editMy2ndComment(comment_2nd)"
+                            :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
+                          >
+                            <n-icon size="18">
+                              <CreateOutline />
+                            </n-icon>
+                          </n-button>
+                        </template>
+                        <span>编辑我的评论</span>
+                      </n-popover>
                     </span>
-                    <span key="delete-comment">
-                      <span style="padding-left: 3px; cursor: auto">
-                        <n-popconfirm
-                          @positive-click="handlePositiveClick(comment_2nd)"
-                          @negative-click="handleNegativeClick"
-                        >
-                          <template #trigger>
-                            <n-button
-                              text
-                              circle
-                              :focusable="false"
-                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
-                            >
-                              <n-icon size="18">
-                                <TrashOutline />
-                              </n-icon>
-                            </n-button>
-                          </template>
-                          确认删除这条评论吗？
-                        </n-popconfirm>
-                      </span>
+                  </span>
+                  <span key="delete-comment">
+                    <span style="padding-left: 3px; cursor: auto">
+                      <n-popconfirm
+                        @positive-click="handlePositiveClick(comment_2nd)"
+                        @negative-click="handleNegativeClick"
+                      >
+                        <template #trigger>
+                          <n-button
+                            text
+                            circle
+                            :focusable="false"
+                            :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
+                          >
+                            <n-icon size="18">
+                              <TrashOutline />
+                            </n-icon>
+                          </n-button>
+                        </template>
+                        确认删除这条评论吗？
+                      </n-popconfirm>
                     </span>
-                  </template>
-                  <template #author>
-                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
-                      <div style="font-size: 18px">{{ comment_2nd.up.username }}</div>
-                    </router-link></template
-                  >
-                  <template #avatar>
-                    <router-link :to="`/home/user/${comment_2nd.up.id}`">
-                      <a-avatar :src="comment_2nd.up.avatar" :size="50"
-                    /></router-link>
-                  </template>
-                  <template #content>
-                    <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
-                      {{ comment_2nd.content }}
-                    </p>
-                  </template>
-                  <template #datetime>
-                    <a-tooltip :title="comment_2nd.date.replace('T', ' ').split('.')[0]">
-                      <span style="margin-bottom: 0; font-size: 10px">
-                        {{
-                          dayjs(
-                            comment_2nd.date.replace("T", " ").split(".")[0]
-                          ).fromNow()
-                        }}
-                      </span>
-                    </a-tooltip>
-                  </template>
-                  <div
-                    v-if="this.edit2ndComment && this.edit2ndCommentId == comment_2nd.id"
-                  >
-                    <div>
-                      <n-input
-                        style="margin-bottom: 15px"
-                        maxlength="200"
-                        show-count
-                        placeholder="我的评论"
-                        type="textarea"
-                        v-model:value="value"
-                        :style="{ '--n-border-radius': `10px` }"
-                        :autosize="{
-                          minRows: 6,
-                          maxRows: 6,
-                        }"
-                      />
-                      <div class="my-comment-button">
-                        <n-button
-                          class="send-button"
-                          strong
-                          secondary
-                          type="tertiary"
-                          @click="send2ndComment"
-                        >
-                          发送
-                        </n-button>
-                        <n-button
-                          class="clean-button-2nd"
-                          strong
-                          secondary
-                          type="tertiary"
-                          @click="cleanComment"
-                        >
-                          清空
-                        </n-button>
-                      </div>
+                  </span>
+                </template>
+                <template #author>
+                  <router-link :to="`/home/user/${comment_2nd.up.id}`">
+                    <div style="font-size: 18px">{{ comment_2nd.up.username }}</div>
+                  </router-link></template
+                >
+                <template #avatar>
+                  <router-link :to="`/home/user/${comment_2nd.up.id}`">
+                    <a-avatar :src="comment_2nd.up.avatar" :size="50"
+                  /></router-link>
+                </template>
+                <template #content>
+                  <p style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px">
+                    {{ comment_2nd.content }}
+                  </p>
+                </template>
+                <template #datetime>
+                  <a-tooltip :title="comment_2nd.date.replace('T', ' ').split('.')[0]">
+                    <span style="margin-bottom: 0; font-size: 10px">
+                      {{
+                        dayjs(comment_2nd.date.replace("T", " ").split(".")[0]).fromNow()
+                      }}
+                    </span>
+                  </a-tooltip>
+                </template>
+                <div
+                  v-if="this.edit2ndComment && this.edit2ndCommentId == comment_2nd.id"
+                >
+                  <div>
+                    <n-input
+                      style="margin-bottom: 15px"
+                      maxlength="200"
+                      show-count
+                      placeholder="我的评论"
+                      type="textarea"
+                      v-model:value="value"
+                      :style="{ '--n-border-radius': `10px` }"
+                      :autosize="{
+                        minRows: 6,
+                        maxRows: 6,
+                      }"
+                    />
+                    <div class="my-comment-button">
+                      <n-button
+                        class="send-button"
+                        strong
+                        secondary
+                        type="tertiary"
+                        @click="send2ndComment"
+                      >
+                        发送
+                      </n-button>
+                      <n-button
+                        class="clean-button-2nd"
+                        strong
+                        secondary
+                        type="tertiary"
+                        @click="cleanComment"
+                      >
+                        清空
+                      </n-button>
                     </div>
                   </div>
-                </a-comment>
-              </div>
+                </div>
+              </a-comment>
             </div>
+            <!-- </div> -->
           </a-comment>
         </div>
         <div class="card-pagination">
