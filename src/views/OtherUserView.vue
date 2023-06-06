@@ -107,7 +107,7 @@
 import TopNav from "../components/TopNav.vue";
 import OtherUserSongSheetView from "../components/OtherUserSongSheetView.vue";
 import OtherUserUploadSongView from "../components/OtherUserUploadedSongView.vue";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 import {
   CreateOutline,
   PaperPlaneOutline,
@@ -137,7 +137,7 @@ export default {
       userid: "",
       username: "",
       userBio: "",
-      userAvatar: null,   // 得改
+      userAvatar: null, // 得改
       userEmail: "",
       userIsFollowed: "",
       userFansNum: "",
@@ -152,6 +152,7 @@ export default {
         this.$http.get(`/api/accounts/detail/${userId}/`).then((response) => {
           this.userid = response.data.id;
           this.username = response.data.username;
+          document.title = `${this.username}的个人主页`;
           this.userBio = response.data.profile;
           this.userEmail = response.data.email;
           this.userAvatar = response.data.avatar;
@@ -169,12 +170,17 @@ export default {
       this.$router.go(-1);
     },
     follow() {
-      this.userIsFollowed = !this.userIsFollowed;
-      if (this.userIsFollowed) {
-        this.followUser();
+      if (!this.$cookies.isKey('userid')) {
+        this.$EventBus.emit('showLoginModal')
       } else {
-        this.unFollowUser();
+        this.userIsFollowed = !this.userIsFollowed;
+        if (this.userIsFollowed) {
+          this.followUser();
+        } else {
+          this.unFollowUser();
+        }
       }
+
     },
     followUser() {
       this.$http.post(`/api/follow/${this.userid}/`).then((response) => {

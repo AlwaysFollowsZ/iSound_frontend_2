@@ -183,7 +183,7 @@
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div class="body-item-title">分类标签</div>
-                                    <n-select v-model:value="value" multiple :options="options" placeholder="你需要为歌曲添加1～4个分类标签" max-tag-count="responsive" 
+                                    <n-select v-model:value="value" multiple :options="options" placeholder="你需要为歌曲添加1～3个分类标签" max-tag-count="responsive" 
                                     @update:value="handleUpdateValue"
                                     />
                                 </n-gi>
@@ -405,6 +405,18 @@ export default {
     },
     methods: {
         closeUWindow() {
+            // === 关闭之前先清空内容 ===
+            // === DO NOT MODIFY ===
+            this.songName = ''
+            this.songAuthor = ''
+            this.songSrcFile = null
+            this.songLyricFile = null
+            this.songPageFile = null
+            this.songPageUrl = '/src/assets/upload-logo.png'
+            this.value = []
+            this.songFileName = '点击以上传音频文件',
+            this.songLyricName = '点击以上传歌词文件',
+
             this.$emit('closeUploadWindow');
             // location.reload();
         },
@@ -462,7 +474,7 @@ export default {
             this.tagString = this.tagList.join(' ');
         },
         handleUpdateValue(value, option) {
-            if (value.length > 4) {
+            if (value.length > 3) {
                 value.splice(0, 1)
             }
         },

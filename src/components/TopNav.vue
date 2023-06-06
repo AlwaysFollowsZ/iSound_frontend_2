@@ -248,7 +248,6 @@ export default {
     }
   },
   created() {
-    
     this.$EventBus.on("setShowMessage", (unread) => {
       if (unread == 0) {
         this.showMessage = false;

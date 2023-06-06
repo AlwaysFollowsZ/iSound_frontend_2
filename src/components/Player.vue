@@ -223,7 +223,7 @@ onMounted(() => {
   z-index: -100 !important;
 }
 
-.aplayer-narrow+a>.aplayer-launch {
+.aplayer-narrow + a > .aplayer-launch {
   display: none !important;
 }
 
@@ -246,7 +246,7 @@ onMounted(() => {
   z-index: 100 !important;
 }
 
-.aplayer-fixed:not(.aplayer-narrow)>.aplayer-body>.aplayer-pic>.aplayer-button {
+.aplayer-fixed:not(.aplayer-narrow) > .aplayer-body > .aplayer-pic > .aplayer-button {
   display: none !important;
 }
 
@@ -322,11 +322,11 @@ onMounted(() => {
 }
 
 .aplayer-volume-bar {
-  background: v-bind("secondaryFontColor") !important
+  background: v-bind("secondaryFontColor") !important;
 }
 
 .aplayer-volume {
-  background: v-bind("mainFontColor") !important
+  background: v-bind("mainFontColor") !important;
 }
 
 .aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path {
@@ -365,7 +365,7 @@ onMounted(() => {
   height: 32px !important;
 }
 
-.aplayer-lrc-contents>p {
+.aplayer-lrc-contents > p {
   font-size: 16px !important;
 }
 
