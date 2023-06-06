@@ -182,7 +182,7 @@ export default {
         //处理点击删除收藏夹事件的方法
         handleClickDeleteCollection(Key) {
             this.$http.delete(`api/playlist/delete/${this.rows[Key].Id}/`).then(() => {
-                this.success('删除收藏夹成功')
+                //this.success('删除收藏夹成功')
                 this.$emit('flushCollections')
             })
         },
@@ -199,7 +199,7 @@ export default {
         //处理点击取消分享歌单事件的方法
         handleClickCancelShare(Key) {
             this.$http.post(`/api/playlist/unshare/${this.row[Key].Id}/`).then(() => {
-                this.success('取消分享成功')
+                //this.success('取消分享成功')
                 this.$emit('flushSonglists')
             })
             //changeThemeColorByImage(Rows[Key].imagePath)
@@ -207,7 +207,7 @@ export default {
         //处理点击删除已上传歌曲事件的方法
         handleClickDeleteUploadedSongs(Key) {
             this.$http.delete(`api/music/delete/${this.rows[Key].Id}/`).then(() => {
-                this.success('删除歌曲成功')
+                //this.success('删除歌曲成功')
                 setTimeout(()=>{this.$emit('flushUploadSongs')},200)
                 
             })

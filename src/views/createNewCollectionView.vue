@@ -41,6 +41,9 @@ export default defineComponent({
             if (this.listName == '') {
                 this.warning('收藏夹名称不得为空');
             }
+            if (this.tags.length == 0) {
+                this.warning('请选择收藏夹标签( 1 ~ 3 个 )')
+            }
             else {
                 let form = new FormData()
                 form.append('title', this.listName)
@@ -49,7 +52,7 @@ export default defineComponent({
                 form.append('tags', this.tags.join(' '))
                 this.$http.post('/api/playlist/create/', form).then(() => {
                     this.$emit('flushCollections')//通知上层组件更新收藏夹
-                    this.success('新建收藏夹成功');
+                    //this.success('新建收藏夹成功');
                     this.closeWindow()
                     //清空信息
                     this.listName = ''
@@ -61,7 +64,7 @@ export default defineComponent({
             }
 
         },handleUpdateValue(value, option) {
-            if (value.length > 4) {
+            if (value.length > 3) {
                 value.splice(0, 1)
             }
         },
@@ -229,7 +232,7 @@ export default defineComponent({
                                     <div class="body-item-title">
                                         分类标签
                                     </div>
-                                    <n-select v-model:value="tags" multiple :options="options" placeholder="你需要为收藏夹添加1～4个分类标签" @update:value="handleUpdateValue"/>
+                                    <n-select v-model:value="tags" multiple :options="options" placeholder="你需要为收藏夹添加1～3个分类标签" @update:value="handleUpdateValue"/>
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
                             </n-grid>
