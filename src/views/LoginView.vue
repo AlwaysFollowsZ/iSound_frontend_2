@@ -221,6 +221,9 @@ export default {
           }
           this.changeToLoggedIn();
           this.closeLWindow();
+          if (this.$route.path.includes('player')) {
+            window.location.reload();
+          }
         } else if (response.data.code == "-1") {
           alert("登录失败，请重新登录！");
           // this.closeLWindow();

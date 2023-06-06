@@ -131,7 +131,7 @@
                         '--n-item-color-disabled': 'transparent',
                     }"  />
                 </div>
-                <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+                <div class="no-result-info" v-else>
                     暂无粉丝
                 </div>
             </n-gi>
@@ -262,5 +262,14 @@ export default {
     font-size: small;
     font-weight: 500;
     color: grey;
+}
+.no-result-info {
+    font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0.8;
+    /* 不透明度 */
 }
 </style>

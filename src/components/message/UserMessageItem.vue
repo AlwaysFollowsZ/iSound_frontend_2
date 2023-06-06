@@ -29,15 +29,19 @@ export default defineComponent({
   methods: {
     removeMessage(message) {
       this.messages = this.messages.filter((t) => t !== message);
-      this.$http.delete(`/api/message/delete/${message.id}/`);
-      this.unread--;
-      this.$EventBus.emit("setShowMessage", this.unread);
+      this.$http.delete(`/api/message/delete/${message.id}/`).then(() => {
+        if (message.read == false) {
+          this.unread--;
+          this.$EventBus.emit("setShowMessage", this.unread);
+        }
+      });
     },
     readMessage(message) {
-      this.$http.post(`/api/message/read/${message.id}/`);
-      this.unread--;
-      message.read = !message.read;
-      this.$EventBus.emit("setShowMessage", this.unread);
+      this.$http.post(`/api/message/read/${message.id}/`).then(() => {
+        this.unread--;
+        message.read = !message.read;
+        this.$EventBus.emit("setShowMessage", this.unread);
+      });
     },
   },
 });
