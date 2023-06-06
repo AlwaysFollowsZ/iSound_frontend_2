@@ -346,7 +346,7 @@ export default {
                     }
                         , h('div', {
                             style: {
-                                'background': getRGBString(BackgroundColorString, 0.3),
+                                'background': getRGBString(BackgroundColorString, 0.6),
                                 'position': 'relative',
                                 'top': '-50px',
                                 'text-align': 'center',
@@ -466,7 +466,7 @@ export default {
                         }
                             , h('div', {
                                 style: {
-                                    'background': getRGBString(BackgroundColorString, 0.3),
+                                    'background': getRGBString(BackgroundColorString, 0.6),
                                     'position': 'relative',
                                     'top': '-50px',
                                     'text-align': 'center',

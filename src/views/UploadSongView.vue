@@ -1,6 +1,6 @@
 <template>
-    <n-modal :show="showUploadSong" :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }"
-        :block-scroll="false" :z-index="1">
+    <n-modal :show="showUploadSong" :style="{ 'background-color': BackgroundColorString }" :block-scroll="false"
+        :z-index="1">
         <div class="outer-container">
 
             <div class="title-container">
@@ -8,12 +8,11 @@
                     <n-grid>
                         <n-gi :span="2"></n-gi>
                         <n-gi :span="20">
-                            <div class="upload-card-title"
-                                :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">上传歌曲：编织你的音乐篇章</div>
+                            <div class="upload-card-title" :style="{ 'color': fontColorString }">上传歌曲：编织你的音乐篇章</div>
                         </n-gi>
                         <n-gi :span="2">
                             <div class="close-icon" style="padding-top: 5px" @click="closeUWindow"
-                                :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                                :style="{ 'color': fontColorString }">
                                 <n-icon size="40"><close-outline /></n-icon>
                             </div>
                         </n-gi>
@@ -23,8 +22,7 @@
             <div class="body-container">
                 <n-grid>
                     <n-gi :span="9">
-                        <n-popover trigger="hover" class="cover-prompt"
-                            :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                        <n-popover trigger="hover" class="cover-prompt" :style="{ 'color': fontColorString }">
                             <template #trigger>
                                 <div class="upload-song-page">
                                     <img style="border-radius: 10px;" :src="this.songPageUrl" @click="uploadFile" />
@@ -45,16 +43,16 @@
                                             :style="{
                                                 '--n-color':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
+                                                        BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-color-hover':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                                        BackgroundColorHover : 'rgba(' + this.accentColor + ', 0.45)',
                                                 '--n-color-pressed':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                                        BackgroundColorPress : 'rgba(' + this.accentColor + ', 0.45)',
                                                 '--n-color-focus':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
+                                                        BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-text-color':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
                                                         'white' : 'rgba(' + this.accentColor + ', 1)',
@@ -93,28 +91,28 @@
                                             :focusable="false" :style="{
                                                 '--n-color':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
+                                                        BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-color-hover':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                                        BackgroundColorHover : 'rgba(' + this.accentColor + ', 0.45)',
                                                 '--n-color-pressed':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
+                                                        BackgroundColorPress : 'rgba(' + this.accentColor + ', 0.45)',
                                                 '--n-color-focus':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
+                                                        BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-text-color':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                                        fontColorString : 'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-hover':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                                        fontColorHover : 'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-pressed':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                                        fontColorPress : 'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-focus':
                                                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        'white' : 'rgba(' + this.accentColor + ', 1)',
+                                                       fontColorString : 'rgba(' + this.accentColor + ', 1)',
                                                 '--n-border': '1px solid transparent',
                                                 '--n-border-hover': '1px solid transparent',
                                                 '--n-border-pressed': '1px solid transparent',
@@ -203,7 +201,7 @@
                         <n-button strong secondary type="success" @click="submitUpload" :focusable="false" :style="{
                             '--n-color':
                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)',
+                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
                             '--n-color-hover':
                                 (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
                                     '#539df5' : 'rgba(' + this.accentColor + ', 0.45)',
@@ -340,6 +338,7 @@ import { NInput, NModal, NPopover } from 'naive-ui';
 import { defineComponent, ref, watch } from "vue";
 import { mapState } from 'vuex'
 import { message } from "ant-design-vue";
+import { getRGBString, getFontColorString, getBackgroundColorString, globalThemeColor } from '/src/colorMode.js'
 export default {
     name: "UploadSong",
     computed: {
@@ -353,6 +352,26 @@ export default {
     },
     props: {
         showUploadSong: Boolean,
+    },
+    computed: {
+        BackgroundColorString() {
+            return getRGBString(getBackgroundColorString(globalThemeColor), 0.8)
+        },
+        fontColorString() {
+            return getRGBString(getFontColorString(globalThemeColor), 0.8)
+        },
+        fontColorHover() {
+            return getRGBString(getFontColorString(globalThemeColor), 0.6)
+        },
+        BackgroundColorHover() {
+            return getRGBString(getBackgroundColorString(globalThemeColor), 0.6)
+        },
+        fontColorPress() {
+            return getRGBString(getFontColorString(globalThemeColor), 0.5)
+        },
+        BackgroundColorPress() {
+            return getRGBString(getBackgroundColorString(globalThemeColor), 0.5)
+        }
     },
     data() {
         return {
@@ -490,11 +509,11 @@ export default {
         submitUpload() {
             if (this.songSrcFile === null) {
                 this.warning('请上传歌曲文件')
-                return 
+                return
             }
             if (this.value.length === 0) {
                 this.warning('请选择歌曲标签( 1 ~ 3 个 )')
-                return 
+                return
             }
             if (this.isUploading === false) {
                 this.isUploading = true
@@ -527,7 +546,7 @@ export default {
             this.value.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
-                    this.tagList.push(option.label);    
+                    this.tagList.push(option.label);
                 }
             })
             this.tagString = this.tagList.join(' ');
@@ -537,23 +556,23 @@ export default {
             if (value.length > 3) {
                 value.splice(0, 1)
             }
-            let options=[]
-            this.value.forEach((value) => {      
+            let options = []
+            this.value.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     options.push(option);
-                    option.style={'background-color':'red',opacity:0.4,'color':'yellow'}   
+                    option.style = { 'background-color': 'red', opacity: 0.4, 'color': 'yellow' }
                 }
             })
-            let op=this.options.filter(function(v){return options.indexOf(v)==-1})
-            let i=0,j=0;
-            for(i=0;i<op.length;i++){
-                for(j=0;j<this.options.length;j++){
-                    if(op[i].value==this.options[j].value){
-                        this.options[j].style={'background-color':'white',opacity:1,'color':'black'}
+            let op = this.options.filter(function (v) { return options.indexOf(v) == -1 })
+            let i = 0, j = 0;
+            for (i = 0; i < op.length; i++) {
+                for (j = 0; j < this.options.length; j++) {
+                    if (op[i].value == this.options[j].value) {
+                        this.options[j].style = { 'background-color': 'white', opacity: 1, 'color': 'black' }
                     }
                 }
-            }           
+            }
         },
         // renderTagChoices() {
         //     setTimeout(() => {
@@ -561,14 +580,14 @@ export default {
         //         if (selectMenu.length > 0) {
         //             selectMenu[0].style.setProperty('--n-color', this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)')
         //             selectMenu[0].style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
-        //             selectMenu[0].style.setProperty('--n-option-text-color', this.colorMode === 'white' ? 'black' : 'white')
+        //             selectMenu[0].style.setProperty('--n-option-text-color', fontColorString)
         //             selectMenu[0].style.setProperty('--n-border-radius', '8px')
         //             selectMenu[0].style.setProperty('--n-option-check-color', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)')
+        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)')
         //             selectMenu[0].style.setProperty('--n-option-text-color-active', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)')
+        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)')
         //             selectMenu[0].style.setProperty('--n-option-text-color-pressed', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)')
+        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)')
         //                     console.log(selectMenu.length)
     }
     // let tags = document.getElementsByClassName('n-base-select-option')
@@ -578,7 +597,7 @@ export default {
     //     tags[i].style.color = 
     //         (tags[i].classList.contains('n-base-select-option--selected')) ?
     //         ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //             '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
+    //             BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
     // }
     //     }, 0)
     // },
@@ -598,7 +617,7 @@ export default {
     //             tags[i].style.color = 
     //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
     //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
+    //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
     //         }
     //         console.log('hello')
     // },
@@ -608,7 +627,7 @@ export default {
     //             tags[i].style.color = 
     //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
     //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
+    //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
     //         }
     // }
     // }
