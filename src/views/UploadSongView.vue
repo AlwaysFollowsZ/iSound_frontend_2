@@ -120,7 +120,7 @@
                                             }">
                                             {{ songLyricName }}
                                         </n-button>
-                                        <input type="file" accept="application/octet-stream" ref="songLyricInput" @change="handleSongLyricFileChange"
+                                        <input type="file"  ref="songLyricInput" @change="handleSongLyricFileChange"
                                             style="display:  none" />
                                     </div>
                                 </n-gi>
