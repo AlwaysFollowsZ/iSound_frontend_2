@@ -19,8 +19,8 @@
                 </n-gi>
             </n-grid>
         </div> -->
-        <div style="text-align:center"><image-table :position="'Songlist'" :rows="songlistData"
-                :entrySize="[200, 200]"  @flushSonglists="updateSonglists" :handleClickEntry="clickSonglists"></image-table></div>
+        <div style="text-align:center"><image-table :position="'Songlist'" :rows="songlistData" :entrySize="[200, 200]"
+                @flushSonglists="updateSonglists" :handleClickEntry="clickSonglists"></image-table></div>
     </div>
 </template>
 <script>

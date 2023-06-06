@@ -170,7 +170,6 @@ export default defineComponent({
         };
     },
     mounted() {
-        console.log(JSON.stringify(this.$route.params))
         if (this.$route.params.shareModal === 'true') {
             alert('show')
             this.editList()

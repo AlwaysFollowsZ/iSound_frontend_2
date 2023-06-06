@@ -72,10 +72,7 @@ export default {
             this.$router.push(`/listdetail/${Id}`)
         },//点击收藏夹。这时候应该跳转到收藏夹详情页面
         updateCollections() {
-            this.$http.get('/api/playlist/of/0/',
-                {
-                    params: { 'shared': 'False' }
-                }).then((response) => {
+            this.$http.get('/api/playlist/of/0/').then((response) => {
                     let key = 0
                     console.log('update:content=' + response.data.playlist_set)
                     if (response.data.playlist_set.length == 0) {
