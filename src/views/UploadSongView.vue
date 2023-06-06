@@ -186,7 +186,7 @@
                                     <div class="body-item-title">分类标签</div>
                                     <n-select v-model:value="value" multiple :options="options"
                                         placeholder="你需要为歌曲添加1～3个分类标签" max-tag-count="responsive"
-                                        @update:value="handleUpdateValue" />
+                                        @update:value="handleUpdateValue" @click="renderTags"/>
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
                             </n-grid>
@@ -561,19 +561,56 @@ export default {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     options.push(option);
-                    option.style = { 'background-color': 'red', opacity: 0.4, 'color': 'yellow' }
+                    option.style={
+                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ? 
+                        this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
+                        'rgba(' + this.accentColor + ', 0.2)',
+                        'color': 'rgb(' + this.accentColor + ')',
+                        '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                    }   
                 }
             })
-            let op = this.options.filter(function (v) { return options.indexOf(v) == -1 })
-            let i = 0, j = 0;
-            for (i = 0; i < op.length; i++) {
-                for (j = 0; j < this.options.length; j++) {
-                    if (op[i].value == this.options[j].value) {
-                        this.options[j].style = { 'background-color': 'white', opacity: 1, 'color': 'black' }
+            let op=this.options.filter(function(v){return options.indexOf(v)==-1})
+            let i=0,j=0;
+            for(i=0;i<op.length;i++){
+                for(j=0;j<this.options.length;j++){
+                    if(op[i].value==this.options[j].value){
+                        this.options[j].style={'background-color':this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                        'color':this.colorMode === 'white' ? 'black' : 'white',}
                     }
                 }
-            }
+            } 
         },
+        renderTags() {
+            let menus = document.getElementsByClassName('n-base-select-menu n-base-select-menu--multiple n-select-menu')
+            if (menus.length > 0) {
+                let menu = menus[0]
+                menu.style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
+                menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
+            }
+            //let options = []
+            
+            for (let i = 0; i < this.options.length; i++) {
+                this.options[i].style = 
+                    { 
+                      'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                      'color': this.colorMode === 'white' ? 'black' : 'white',
+                    }
+            }
+            this.value.forEach((value) => {      
+                const option = this.options.find((option) => option.value == value);
+                if (option) {
+                    //options.push(option);
+                    option.style={
+                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ? 
+                        this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
+                        'rgba(' + this.accentColor + ', 0.2)',
+                        'color': 'rgb(' + this.accentColor + ')',
+                        '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                    }   
+                }
+            })
+        }
         // renderTagChoices() {
         //     setTimeout(() => {
         //         let selectMenu = document.getElementsByClassName('n-base-select-menu')

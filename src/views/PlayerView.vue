@@ -709,7 +709,7 @@
                                     '--n-item-color-disabled': 'transparent',
                                 }" />
                             </div>
-                            <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+                            <div style="display: flex; justify-content: center; font-size: 20px" v-else :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
                                 期待你的评论
                             </div>
                         </n-gi>
@@ -909,7 +909,7 @@ export default defineComponent({
             music: {},
             lyricsIndex: 0,
             lyricsObjArr: [],
-            collctionData: this.updateCollections(),
+            collectionData: this.updateCollections(),
             showCollections: false,
             isCollectChanged: false,
             headChange: false,
@@ -956,14 +956,15 @@ export default defineComponent({
         },
         complain() {
             //todo
+            // if (this.iscomplain == false) {
+            //     this.iscomplain = !this.iscomplain;
+            // }
             if (!this.$cookies.isKey('userid')) {
-                this.$EventBus.emit('showLoginModal')
-                return
+              this.$EventBus.emit('showLoginModal')
+            } else {
+              this.showModifyComplainView = true;
             }
-            if (this.iscomplain == false) {
-                this.iscomplain = !this.iscomplain;
-            }
-            this.showModifyComplainView = true;
+            
         },
         cleanComment() {
             this.value = "";
@@ -990,7 +991,7 @@ export default defineComponent({
             }
             this.refreshCommentVir++;
             console.log(this.refreshCommentVir);
-            this.value == "";
+            this.value = "";
         },
         deleteMyComment(comment) {
             this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
@@ -1026,7 +1027,7 @@ export default defineComponent({
             }
             this.refreshCommentVir++;
             console.log(this.refreshCommentVir);
-            this.value == "";
+            this.value = "";
         },
         // 编辑回复评论
         editReplyComment(comment) {
