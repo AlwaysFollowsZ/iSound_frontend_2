@@ -114,6 +114,7 @@ import {
   PersonCircleSharp,
   PricetagOutline,
   ChevronBack,
+  TimeSharp,
 } from "@vicons/ionicons5";
 import { NewspaperOutline, FlowerOutline, FlashOutline } from "@vicons/ionicons5";
 import "animate.css";
@@ -161,6 +162,9 @@ export default {
           this.userFollowingNum = response.data.following;
           console.log(response);
         });
+        if (userId == this.$cookies.get('userid')) {
+          this.$router.push("/home");
+        }
       },
       { immediate: true }
     );
