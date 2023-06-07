@@ -1,6 +1,6 @@
 <template>
-  <div :style="{'animation':'bounce';'animation-duration':2s}"></div>
-  <top-nav></top-nav></div>
+  <div :style="{'animation':'bounce', 'animation-duration': '2s'}"></div>
+  <top-nav></top-nav>
   <div class="img-show" :class="{ 'animate__animated animate__zoomIn': !isLoggedIn }">
     <n-grid>
       <n-gi :span="24">
