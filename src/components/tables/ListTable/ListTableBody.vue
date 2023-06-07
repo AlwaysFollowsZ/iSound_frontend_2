@@ -6,7 +6,7 @@ import { Rows } from '/src/components/tables/ImageTable/ImageRowData'
 import { NDataTable, NButton, NPopconfirm, NPopover, NEllipsis, NPagination, NConfigProvider, NModal, NIcon } from 'naive-ui'
 import { Heart12Filled, Star12Filled, Delete20Regular, DeleteDismiss20Regular } from '@vicons/fluent';
 import { ArrowBack, CheckmarkCircleOutline } from '@vicons/ionicons5';
-import { getFontColorString, getBackgroundColorString, globalThemeColor, changeThemeColorByImage, getRGBString, antiBackgroundColor } from '/src/colorMode'
+import { getFontColorString, getBackgroundColorString, globalThemeColor, changeThemeColorByImage, getRGBString, antiBackgroundColor, colorMode } from '/src/colorMode'
 import imageTable from '../ImageTable/ImageTable.vue';
 import 'animate.css';
 import { backgroundColor } from '../../../colorMode';
@@ -41,6 +41,7 @@ export default {
         const DataBackgroundColorString = getBackgroundColorString(globalThemeColor)
         const BackgroundColorString = DataBackgroundColorString
         const fontColorString = getFontColorString(globalThemeColor)
+        //似乎这些需要先设置一遍
         watch(globalThemeColor, () => {
             const tempFontColorString = getFontColorString(globalThemeColor)
             const tempBackgroundColorString = getBackgroundColorString(globalThemeColor)
@@ -59,8 +60,16 @@ export default {
             document.documentElement.style.setProperty('--my-td-color-checked', `${getRGBString(tempFontColorString.value, 0.6)}`)
             document.documentElement.style.setProperty('--my-th-color-checked', `${getRGBString(tempFontColorString.value, 0.8)}`)
             document.documentElement.style.setProperty('--my-th-border-checked', `1px solid ${getRGBString(tempFontColorString.value, 1)}`)
-            document.documentElement.style.setProperty('--my-td-boeder-checked', `1px solod ${getRGBString(tempFontColorString.value, 1)}`)
+            document.documentElement.style.setProperty('--my-td-border-checked', `1px solid ${getRGBString(tempFontColorString.value, 1)}`)
         }, { immediate: true })
+        watch(colorMode, () => {
+            document.documentElement.style.setProperty('--my-modal-select-color', colorMode.value === 'white' ? 'white' : 'rgb(72,72,72)')
+            document.documentElement.style.setProperty('--my-modal-select-tag-color', colorMode.value === 'white' ? 'rgb(230,230,230)' : 'rgb(108,108,108)')
+            document.documentElement.style.setProperty('--my-modal-select-text-color', colorMode.value === 'white' ? 'rgb(45,45,45)' : 'rgb(230,230,230)')
+        }, { immediate: true })
+        watch(this.accentColor, () => {
+            document.documentElement.style.setProperty('--my-accent-color', this.accentColor)//只有这个是a,b,c
+        })
         const emit = this.$emit
         let isSelected = false//当前是否有歌曲被选择
         let selectedEntries = []//被选择的项（和rowKey同步更新）
@@ -337,8 +346,8 @@ export default {
                             }
                         }),
                     //标题模态框
-                        h(NModal, {
-                        blockScroll:false,
+                    h(NModal, {
+                        blockScroll: false,
                         'z-index': 1,
                         show: this.showCollection,
                         'on-mask-click': () => {
@@ -415,7 +424,7 @@ export default {
                                         emit('recollect', row.key)
                                         setTimeout(() => {
                                             row.isCollectChanged = false
-                                        },500)
+                                        }, 500)
                                     }
                                     else {
                                         row.showCollection = true
@@ -459,7 +468,7 @@ export default {
                             },
                             // 
                         }), h(NModal, {
-                            blockScroll:false,
+                            blockScroll: false,
                             'z-index': 1,
                             show: row.showCollection,
                             'on-mask-click': () => {
@@ -564,7 +573,7 @@ export default {
                                             row.showCollection = false
                                             setTimeout(() => {
                                                 this.headChange = false
-                                                row.isCollectChanged=false
+                                                row.isCollectChanged = false
                                             }, 500)
                                         }, 800)
                                     }
@@ -708,6 +717,9 @@ export default {
             isSelected, selectedEntries, columns, getRGBString, h, BackgroundColorString, headChange,
             showCollection, isCollectChanged, rowProps
         }
+    },
+    computed: {
+        ...mapState(['colorMode', 'accentColor'])
     },
     props: {
         songData: {
@@ -882,7 +894,10 @@ export default {
     --my-td-color-checked: none;
     --my-th-border-checked: none;
     --my-td-border-checked: none;
-
+    --my-modal-select-color: none;
+    --my-modal-select-text-color: none;
+    --my-modal-select-tag-color: none;
+    --my-accent-color: none;
 }
 
 .data-table {
