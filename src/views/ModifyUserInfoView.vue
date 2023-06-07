@@ -14,7 +14,7 @@
             <n-gi :span="20">
               <div
                 class="modify-card-title"
-                :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }"
+                :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }" @click="console.log('this.username ' + this.username)"
               >
                 编辑个人信息
               </div>
@@ -285,6 +285,11 @@ export default {
             bio: "",
             avatarFile: null,
             avatarUrl: "",
+            tmpUsername: "",
+            tmpEmail: "",
+            tmpRecordNum: "",
+            tmpBio: "",
+            tmpAvatarUrl: "",
         };
     },
     computed: {
@@ -338,12 +343,22 @@ export default {
                     this.bio = response.data.profile;
                     this.avatarFile = response.data.avatar;
                     this.avatarUrl = response.data.avatar;
+                    this.tmpUsername = this.username + ''
+                    this.tmpEmail = this.email + ''
+                    this.tmpRecordNum = this.recordNum + ''
+                    this.tmpBio = this.bio + ''
+                    this.tmpAvatarUrl = this.avatarUrl + ''
                 })
                 .catch((error) => {
                     console.error(error);
                 });
         },
         closeMWindow() {
+            this.username = this.tmpUsername
+            this.email = this.tmpEmail
+            this.recordNum = this.tmpRecordNum
+            this.bio = this.tmpBio
+            this.avatarUrl = this.tmpAvatarUrl
             this.$emit("closeModifyWindow");
             // location.reload(); // 可以自动刷新一下，但是会抖动一下，观看效果不太好。
         },

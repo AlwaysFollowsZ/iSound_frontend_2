@@ -651,7 +651,8 @@ export default {
                 for(j=0;j<this.options.length;j++){
                     if(op[i].value==this.options[j].value){
                         this.options[j].style={'background-color':this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                        'color':this.colorMode === 'white' ? 'black' : 'white',}
+                        'color':this.colorMode === 'white' ? 'black' : 'white',
+                        '--n-option-check-color': 'rgb(' + this.accentColor + ')',}
                     }
                 }
             } 

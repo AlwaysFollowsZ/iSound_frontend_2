@@ -8,7 +8,7 @@
                         :content="content"
                         :color-display="this.colorMode === 'white' ? 
                                         (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.3)': 'rgba(' + this.accentColor + ', 0.5)') : 
-                                        (idx % 2 === 0 ? '#908e8e' : '#bcbbbb')"
+                                        (idx % 2 === 0 ? '#5f5c5c' : '#bcbbbb')"
                         :color-hover="this.colorMode === 'white' ?
                                       (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.6)' : 'rgba(' + this.accentColor + ', 0.65)') : 
                                       (idx % 2 === 0 ? '#373333' : '#373333')"

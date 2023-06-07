@@ -56,10 +56,10 @@
               </div>
               <div class="single-card-info-container">
                 <div class="single-card-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                  {{ song.title }}
+                  <n-ellipsis style="max-width: 160px">{{ song.title }}</n-ellipsis>
                 </div>
                 <div class="single-card-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">
-                  {{ song.singer }}
+                  <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@
                 <n-gi :span="15">
                   <div class="song-entry-info-container">
                     <div class="song-entry-info-name" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}"><n-ellipsis style="max-width: 200px">{{ song.title}}</n-ellipsis></div>
-                    <div class="song-entry-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}">{{ song.singer }}</div>
+                    <div class="song-entry-info-singer" :style="{'color': 'rgba(' + this.accentColor + ',0.7)'}"><n-ellipsis style="max-width: 200px">{{ song.singer }}</n-ellipsis></div>
                   </div>
                 </n-gi>
               </n-grid>
