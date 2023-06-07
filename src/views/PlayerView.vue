@@ -15,7 +15,7 @@
           <div class="music-cover">
             <n-image class="music-cover-img" :src="music.cover" width="400" height="400" />
           </div>
-          <div class="three-buttons" v-if="this.$cookies.get('is_superuser') == 'false'">
+          <div class="three-buttons" v-if="!this.$cookies.isKey('userid') || this.$cookies.get('is_superuser') == 'false'">
             <n-grid>
               <n-gi :span="4"></n-gi>
               <n-gi :span="4" style="margin: auto">
