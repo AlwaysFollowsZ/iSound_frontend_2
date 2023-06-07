@@ -459,6 +459,7 @@ export default {
     data() {
         return {
             isUploading: false,
+            percentage: 0,
             previewImageUrl: '',
             songName: '',
             songAuthor: '',
@@ -599,7 +600,7 @@ export default {
                 return
             }
             if (this.isUploading === false) {
-                this.isUploading = true
+                this.isUploading = true;
                 this.handleTagList();
                 console.log(this.tagString);
                 let data = new FormData();
@@ -609,7 +610,12 @@ export default {
                 data.append('source', this.songSrcFile);
                 data.append('lyrics', this.songLyricFile);
                 data.append('tags', this.tagString);
-                this.$http.post('/api/music/upload/', data).then(response => {
+                this.$http.post('/api/music/upload/', data, {
+                    onUploadProgress: (progress) => {
+                        this.percentage = ((progress.loaded / progress.total) * 100) | 0;
+                    }
+                }).then(response => {
+                    this.isUploading = false;
                     console.log(response);
                     if (response.data.code == '0') {
                         this.$emit('flushUploadSongs')//刷新歌曲

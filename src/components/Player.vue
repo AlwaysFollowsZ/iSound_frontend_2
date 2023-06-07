@@ -43,7 +43,6 @@ const mainFontColor = computed(() => {
 const secondaryFontColor = computed(() => {
   return getRGBString(getFontColorString(globalThemeColor), 0.5);
 });
-console.log("theme:" + mainColor.value);
 const footerHeight = ref("130px");
 const { proxy } = getCurrentInstance();
 const colorThief = new ColorThief();
@@ -176,7 +175,9 @@ onMounted(() => {
 
   onBeforeUnmount(() => {
     ap.destroy();
-    proxy.$EventBus.all.clear();
+    proxy.$EventBus.off("play");
+    proxy.$EventBus.off("playAll");
+    proxy.$EventBus.off("seek");
   });
 });
 </script>
