@@ -189,6 +189,9 @@ export default {
     this.$EventBus.on("showLoginModal", () => {
       this.showLogin = true;
     });
+    this.$EventBus.on('refresh', () => {
+      this.fetchData()
+    })
   },
   data() {
     return {
