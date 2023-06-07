@@ -489,6 +489,7 @@ export default defineComponent({
                                 '--n-color-hover': 'transparent',
                                 '--n-color-pressed': 'transparent',
                                 '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                '--n-ripple-color': 'rgba(' + this.accentColor + ', 0.7)',
                                 '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
                                 '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
                                 '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
@@ -518,6 +519,7 @@ export default defineComponent({
         '--n-border-radius': '5px',
         '--n-height': '36px',
         '--n-font-size': '16px',
+        '--n-ripple-color': 'rgba(' + this.accentColor + ', 0.7)',
     }">
                                 <n-icon>
                                     <OpenOutline />
@@ -540,6 +542,7 @@ export default defineComponent({
         '--n-border-radius': '5px',
         '--n-height': '36px',
         '--n-font-size': '16px',
+        '--n-ripple-color': 'rgba(' + this.accentColor + ', 0.7)',
     }">
                                 <n-icon>
                                     <OpenOutline />
@@ -561,6 +564,7 @@ export default defineComponent({
         '--n-border-radius': '5px',
         '--n-height': '36px',
         '--n-font-size': '16px',
+        '--n-ripple-color': 'rgba(' + this.accentColor + ', 0.7)',
     }">
                                 <n-icon>
                                     <WarningOutline />
