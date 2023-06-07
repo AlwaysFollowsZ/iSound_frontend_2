@@ -21,7 +21,8 @@
             </div>
             <div class="body-container">
                 <n-grid>
-                    <n-gi :span="9">
+                    <n-gi :span="10" >
+                        
                         <n-popover trigger="hover" class="cover-prompt" :style="{ 'color': fontColorString }">
                             <template #trigger>
                                 <div class="upload-song-page">
@@ -48,8 +49,8 @@
                             点击此处上传歌曲封面</n-popover>
                         <div class="body-item">
                             <n-grid>
-                                <n-gi :span="3"></n-gi>
-                                <n-gi :span="21">
+                                <n-gi :span="1"></n-gi>
+                                <n-gi :span="23" class="tags-container">
                                     <div class="body-item-title">分类标签</div>
                                     <n-select v-model:value="value" multiple :options="options" placeholder="为歌曲添加1～3个分类标签"
                                         max-tag-count="responsive" @update:value="handleUpdateValue" @click="renderTags" />
@@ -57,7 +58,7 @@
                             </n-grid>
                         </div>
                     </n-gi>
-                    <n-gi :span="1"></n-gi>
+                    <!-- <n-gi :span="1"></n-gi> -->
                     <n-gi :span="14">
                         <div class="body-item">
                             <n-grid>
@@ -646,7 +647,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-left: 40px;
 }
 
 .upload-song-page div {
@@ -702,10 +702,4 @@ export default {
     --n-close-icon-color:var(--my-modal-select-text-color) !important
 }
 
-/* :global(.ant-select-dropdown){
-        border-radius: 0 0 10px 10px;
-}
-:global(.ant-select-dropdown-menu,.ant-select-dropdown-menu-root,.ant-select-dropdown-menu-vertical){
-    background-color: aquamarine;
-} */
 </style>

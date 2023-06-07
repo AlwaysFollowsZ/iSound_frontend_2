@@ -264,9 +264,9 @@ export default defineComponent({
             </div>
             <div class="body-container">
                 <n-grid>
-                    <n-gi :span="2"></n-gi>
-                    <n-gi :span="8">
-                        <div style="height: 280px; position: relative">
+                    <n-gi :span="1"></n-gi>
+                    <n-gi :span="9">
+                        <div style="height: 280px; position: relative" class="img-container">
                             <div style="position: absolute; top: 10%;">
                                 <n-popover trigger="hover">
                                     <template #trigger>
@@ -291,7 +291,7 @@ export default defineComponent({
                             <div class="body-item-title" :style="{
                                 'color': (this.colorMode === 'white') ? 'black' : 'white',
                             }">分类标签</div>
-                            <n-select v-model:value="value" multiple :options="options" placeholder="为歌曲添加1～3个分类标签"
+                            <n-select v-model:value="tags" multiple :options="options" placeholder="为歌曲添加1～3个分类标签"
                                 max-tag-count="responsive" @update:value="handleUpdateValue" @click="renderTags" />
 
                         </div>
@@ -756,5 +756,11 @@ export default defineComponent({
 :deep(.n-base-close){
     --n-close-icon-color:var(--my-modal-select-text-color) !important;
     --n-close-icon-color-hover:red !important
+}
+
+.img-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
