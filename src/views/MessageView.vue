@@ -30,7 +30,7 @@ export default defineComponent({
     },
     created() {
         document.title = "消息中心";
-    }
+    },
     setup() {
 
     }
