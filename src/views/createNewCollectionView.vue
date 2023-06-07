@@ -172,7 +172,7 @@ export default defineComponent({
     },
     data() {
         return {
-            value:[],
+            value: [],
             songPageUrl: "/src/assets/upload-logo.png",
             listName: ref('默认收藏夹'),
             listIntro: ref(''),
@@ -350,26 +350,27 @@ export default defineComponent({
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div style="display: flex; justify-content: right;">
-                                        <n-button strong secondary type="primary" @click="submitEdit" :style="{
-                                            '--n-color': 'rgba(' + this.accentColor + ', 0.25)',
-                                            '--n-color-hover':
-                                                'rgba(' + this.accentColor + ', 0.45)',
-                                            '--n-color-pressed':
-                                                'rgba(' + this.accentColor + ', 0.45)',
-                                            '--n-text-color':
-                                                'rgba(' + this.accentColor + ', 1)',
-                                            '--n-text-color-hover':
-                                                'rgba(' + this.accentColor + ', 1)',
-                                            '--n-text-color-pressed':
-                                                'rgba(' + this.accentColor + ', 1)',
-                                            '--n-border': '1px solid transparent',
-                                            '--n-border-hover': '1px solid transparent',
-                                            '--n-border-pressed': '1px solid transparent',
-                                            '--n-border-radius': '5px',
-                                            '--n-width': '64px',
-                                            '--n-height': '39px',
-                                            '--n-font-size': '18px',
-                                        }">
+                                        <n-button strong secondary type="primary" @click="submitEdit" :focusable="false"
+                                            :style="{
+                                                '--n-color': 'rgba(' + this.accentColor + ', 0.25)',
+                                                '--n-color-hover':
+                                                    'rgba(' + this.accentColor + ', 0.45)',
+                                                '--n-color-pressed':
+                                                    'rgba(' + this.accentColor + ', 0.45)',
+                                                '--n-text-color':
+                                                    'rgba(' + this.accentColor + ', 1)',
+                                                '--n-text-color-hover':
+                                                    'rgba(' + this.accentColor + ', 1)',
+                                                '--n-text-color-pressed':
+                                                    'rgba(' + this.accentColor + ', 1)',
+                                                '--n-border': '1px solid transparent',
+                                                '--n-border-hover': '1px solid transparent',
+                                                '--n-border-pressed': '1px solid transparent',
+                                                '--n-border-radius': '5px',
+                                                '--n-width': '64px',
+                                                '--n-height': '39px',
+                                                '--n-font-size': '18px',
+                                            }">
                                             新建
                                         </n-button>
                                     </div>
@@ -737,8 +738,8 @@ export default defineComponent({
     --n-text-color: var(--my-modal-select-text-color) !important
 }
 
-:deep(.n-base-close){
-    --n-close-icon-color:var(--my-modal-select-text-color) !important;
-    --n-close-icon-color-hover:red !important
+:deep(.n-base-close) {
+    --n-close-icon-color: var(--my-modal-select-text-color) !important;
+    --n-close-icon-color-hover: red !important
 }
 </style>

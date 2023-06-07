@@ -3,8 +3,7 @@
     <n-grid x-gap="0">
       <n-gi :span="4">
         <router-link to="/">
-          <img  src="/src/assets/iSound.png"
-            style="padding-left: 10px; height:40px" :preview-disabled="true" />
+          <img src="/src/assets/iSound.png" style="padding-left: 10px; height:40px" :preview-disabled="true" />
           <!-- <div class="isound-style">iSound</div> -->
         </router-link>
       </n-gi>
@@ -61,7 +60,7 @@
                 @update:show="handleUpdateShow">
                 <template #trigger>
                   <div :style="{
-                    'color': 'rgba(' + this.accentColor + ', 0.9)',
+                    'color': 'rgba(' + this.accentColor + ')',
                     'transition': 'all linear 0.3s'
                   }">
                     <n-icon size="27px" v-if="this.colorMode === 'white'"
@@ -114,7 +113,7 @@
         </n-grid>
       </n-gi>
       <n-gi :span="1">
-        <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options">
+        <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options" :style="{'animation':'bounce'}">
           <n-avatar v-if="isLoggedIn" class="user-avatar" @click="this.$router.push('/home')" @mouseover="renderDropDown"
             :src="this.avatarFile" size="large"></n-avatar>
           <n-avatar v-else src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
@@ -155,7 +154,7 @@ import ChangePasswdView from "../views/ChangePasswdView.vue";
 import { mapState, mapMutations } from "vuex";
 import ModifyUserMessageView from "../views/ModifyUserMessageView.vue";
 import { changeColorMode } from "/src/colorMode";
-
+import 'animate.css'
 export default {
   name: "TopNav",
   components: {
@@ -374,10 +373,13 @@ export default {
 }
 
 .color-icon-container {
+  opacity:0.5;
   padding-top: 20%;
+  transition: all linear 0.3s
 }
 
 .color-icon-container:hover {
+  opacity:1;
   cursor: pointer;
 }
 
@@ -398,8 +400,8 @@ export default {
 }
 
 .choose-color-default {
-  vertical-align:bottom;
-  display:inline-block;
+  vertical-align: bottom;
+  display: inline-block;
   padding-right: 3px;
   color: cornflowerblue;
 }

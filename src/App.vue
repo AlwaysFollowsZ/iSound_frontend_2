@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import { ref,computed } from "vue";
+import { ref, computed, watch } from "vue";
 import Background from "./components/GlobalBackground.vue";
 import HelloWorld from "./components/HelloWorld.vue";
 import ImageTable from "./components/tables/ImageTable/ImageTable.vue";
@@ -10,31 +10,24 @@ import TopNav from "./components/TopNav.vue";
 import ListTable from "./components/tables/ListTable/ListTable.vue";
 import Player from "./components/Player.vue";
 import MixedTable from "./components/tables/ImageTable/MixedImageTable.vue";
-import {globalThemeColor,getFontColorString,getRGBString} from'/src/colorMode.js'
-let fontColorString = computed(() => {
-  return getRGBString(getFontColorString(globalThemeColor))
+import { globalThemeColor, getRGBString, getBackgroundColorString } from '/src/colorMode.js'
+//全局主题色~
+watch(globalThemeColor, () => {
+  document.documentElement.style.setProperty('--my-color', getRGBString(getBackgroundColorString(globalThemeColor), 0.5))
 })
 </script>
 <template>
-<background></background>
-  <!-- <TopNav></TopNav> -->
-  <!-- <message-item></message-item> -->
-  <!-- <message-send></message-send> -->
-  <!--  -->
-
+  <background></background>
   <RouterView />
-  <!-- <mixed-table></mixed-table> -->
-  <!-- <div :style="{'text-align':'center'}"> -->
-  <!-- 请直接传入数字(px)(高度可略)-->
-  <!-- <image-table :table-size="[1000,]" :position="'HomeView'"></image-table> -->
-  <!-- <mixed-table></mixed-table> -->
-  <!-- <list-table :position="'CollectionView'" :currentListId="3"></list-table> -->
-  <!-- <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songData"></list-table> -->
   <Player />
 </template>
 <style scoped>
 * {
   scroll-behavior: smooth !important;
+}
+
+:root {
+  --my-color: none;
 }
 
 header {

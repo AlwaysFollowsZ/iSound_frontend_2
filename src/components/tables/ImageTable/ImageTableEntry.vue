@@ -178,7 +178,7 @@ isClickOnMask ? 'mask_box-click' : '']" @mouseenter="isHoverOnMask = true" @mous
                                 '--n-text-color-focus': getRGBString(fontColorString, 0.6),
                                 '--n-ripple-color': getRGBString(fontColorString, 0.5),
                                 '--n-wave-opacity': '1',
-                            }">进入歌单编辑页面</n-button>
+                            }">点击分享</n-button>
                         </div>
                     </n-popover>
                     <!-- 这是第一个图标  -->
