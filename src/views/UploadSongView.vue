@@ -57,7 +57,7 @@
                             </n-grid>
                         </div>
                     </n-gi>
-                    <n-gi :span="14"+>
+                    <n-gi :span="14">
                         <div class="body-item">
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
