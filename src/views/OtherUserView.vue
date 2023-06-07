@@ -42,9 +42,48 @@
                   <n-gi>
                     <div class="follow-unfollow-button">
                       <n-popconfirm v-if="this.userIsFollowed" @positive-click="follow" positive-text="确认"
-                        negative-text="取消">
+                        negative-text="取消"
+                        :style="{
+                                '--n-text-color': this.colorMode === 'white' ? 'rgb(57,57,57)' : 'white',
+                                '--n-color': this.colorMode === 'white' ? '#fff' : 'rgb(72,72,72)',
+                                '--n-border-radius': '12px',
+                            }"  
+                            :negative-button-props="{
+                                style:{
+                                    '--n-color': 'transparent',
+                                    '--n-color-hover': 'transparent',
+                                    '--n-color-pressed': 'transparent',
+                                    '--n-color-focus': 'transparent',
+                                    '--n-text-color': '',
+                                    '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
+                                    '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
+                                    '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
+                                    '--n-border': '1px solid rgb(224, 224, 230)',
+                                    '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-radius': '8px',
+                                }
+                            }"
+                            :positive-button-props="{
+                                style:{
+                                    '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-text-color': 'white',
+                                    '--n-text-color-hover': 'white',
+                                    '--n-text-color-pressed': 'white',
+                                    '--n-text-color-focus': 'white',
+                                    '--n-border': '1px solid rgb(224, 224, 230)',
+                                    '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+                                    '--n-border-radius': '8px',
+                                }
+                            }">
                         <template #trigger>
-                          <n-button strong secondary type="primary" :focusable="false" :style="{
+                          <n-button round strong secondary type="primary" :focusable="false" :style="{
                             '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
                             '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
                             '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)',
@@ -57,7 +96,7 @@
                         </template>
                         您要确定要取消关注该用户吗？
                       </n-popconfirm>
-                      <n-button v-else @click="follow()" strong secondary type="default" :focusable="false" :style="{
+                      <n-button v-else @click="follow()" strong secondary round type="default" :focusable="false" :style="{
                         '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
                         '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
                         '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)',

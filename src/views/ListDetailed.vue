@@ -107,7 +107,7 @@ export default defineComponent({
                     .then((response) => {
                         this.updateData(this.playlist.id);
                     });
-                this.success("修改歌单信息成功");
+                //this.success("修改歌单信息成功");
                 this.closeWindow();
             }
         },
@@ -117,7 +117,7 @@ export default defineComponent({
         confirmShare() {
             this.$http.post(`/api/playlist/share/${this.playlist.id}/`);
             this.playlist.shared = true;
-            this.success("分享歌单成功");
+            //this.success("分享歌单成功");
             this.closeWindow();
             setTimeout(() => {
                 this.$router.push('/home')
@@ -196,11 +196,13 @@ export default defineComponent({
                 if (option) {
                     options.push(option);
                     option.style = {
-                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
-                            this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
-                            'rgba(' + this.accentColor + ', 0.2)',
-                        'color': 'rgb(' + this.accentColor + ')',
+                        '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
+                        '--n-option-text-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
+                        '--n-option-text-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                        '--n-option-color-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                        '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
                     }
                 }
             })
@@ -211,8 +213,11 @@ export default defineComponent({
                     if (op[i].value == this.options[j].value) {
                         this.options[j].style = {
                             'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                            'color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-option-text-color': this.colorMode === 'white' ? 'black' : 'white',
                             '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                            '--n-option-color-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                            '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                            '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
                         }
                     }
                 }
@@ -222,8 +227,9 @@ export default defineComponent({
             let menus = document.getElementsByClassName('n-base-select-menu n-base-select-menu--multiple n-select-menu')
             if (menus.length > 0) {
                 let menu = menus[0]
-                menu.style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
-                menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
+                menu.style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
+                menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
+                menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
             }
             //let options = []
 
@@ -231,7 +237,10 @@ export default defineComponent({
                 this.options[i].style =
                 {
                     'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                    'color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-option-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-option-color-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                    '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                    '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
                 }
             }
             this.tags.forEach((value) => {
@@ -242,8 +251,14 @@ export default defineComponent({
                         'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
                             this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
                             'rgba(' + this.accentColor + ', 0.2)',
-                        'color': 'rgb(' + this.accentColor + ')',
+                            '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
+                        '--n-option-text-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
+                        '--n-option-text-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                        '--n-option-color-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                        '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                        '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
                     }
                 }
             })
@@ -478,6 +493,7 @@ export default defineComponent({
                                 '--n-color-hover': 'transparent',
                                 '--n-color-pressed': 'transparent',
                                 '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                '--n-ripple-color': 'rgba(' + this.accentColor + ', 0.7)',
                                 '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
                                 '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
                                 '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
@@ -507,6 +523,7 @@ export default defineComponent({
         '--n-border-radius': '5px',
         '--n-height': '36px',
         '--n-font-size': '16px',
+        '--n-ripple-color': 'rgba(' + this.accentColor + ', 0.7)',
     }">
                                 <n-icon>
                                     <OpenOutline />
@@ -529,6 +546,7 @@ export default defineComponent({
         '--n-border-radius': '5px',
         '--n-height': '36px',
         '--n-font-size': '16px',
+        '--n-ripple-color': 'rgba(' + this.accentColor + ', 0.7)',
     }">
                                 <n-icon>
                                     <OpenOutline />
@@ -550,6 +568,7 @@ export default defineComponent({
         '--n-border-radius': '5px',
         '--n-height': '36px',
         '--n-font-size': '16px',
+        '--n-ripple-color': 'rgba(' + this.accentColor + ', 0.7)',
     }">
                                 <n-icon>
                                     <WarningOutline />
@@ -1032,8 +1051,8 @@ export default defineComponent({
     border-radius: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 80px;
+    padding-right: 80px;
 }
 
 .title-container {
