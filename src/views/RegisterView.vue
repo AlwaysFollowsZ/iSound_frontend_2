@@ -220,6 +220,10 @@ export default {
                 this.warning('用户名不得为空');
                 return;
             }
+            if(this.email == ''){
+                this.warning('邮箱不得为空');
+                return;
+            }
             if(this.password1 == ''){
                 this.warning('密码不得为空');
                 return;

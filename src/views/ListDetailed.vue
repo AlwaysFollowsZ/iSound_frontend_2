@@ -585,6 +585,7 @@ export default defineComponent({
 
 .tags {
     margin-right: 10px;
+    border-radius: 5px;
 }
 
 .share-list-hodder {

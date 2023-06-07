@@ -224,7 +224,7 @@
                                     '--n-close-margin': `0 18px 0 18px`,
                                   }
                                     " class="tag-item">
-                                    {{ tag }}
+                                    #{{ tag }}
                                   </n-tag>
                                   <!-- <a-divider type="vertical"
                                                             style="width: 1.5px; background-color: #dddddd" /> -->
