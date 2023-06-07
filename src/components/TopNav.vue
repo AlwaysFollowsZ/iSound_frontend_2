@@ -252,6 +252,7 @@ export default {
               this.setLogState(false);
               this.$http.post("/api/accounts/logout/");
               this.$cookies.remove("userid");
+              this.$cookies.remove("is_superuser");
               this.$router.push("/");
             },
           },
@@ -398,6 +399,8 @@ export default {
 }
 
 .choose-color-default {
+  vertical-align:bottom;
+  display:inline-block;
   padding-right: 3px;
   color: cornflowerblue;
 }

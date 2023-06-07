@@ -4,14 +4,14 @@ import { defineComponent, ref } from "vue";
 import { mapState } from 'vuex'
 //import ListTable from "/src/components/tables/ListTable/ListTable.Vue";
 import {
-  ChevronBack,
-  MusicalNotesOutline,
-  PlayOutline,
-  OpenOutline,
-  CreateOutline,
-  CloseOutline,
-  ImageOutline,
-  WarningOutline,
+    ChevronBack,
+    MusicalNotesOutline,
+    PlayOutline,
+    OpenOutline,
+    CreateOutline,
+    CloseOutline,
+    ImageOutline,
+    WarningOutline,
 } from "@vicons/ionicons5";
 import { message } from "ant-design-vue";
 import ListTable from "/src/components/tables/ListTable/ListTable.vue";
@@ -193,26 +193,28 @@ export default defineComponent({
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     options.push(option);
-                    option.style={
-                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ? 
-                        this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
-                        'rgba(' + this.accentColor + ', 0.2)',
+                    option.style = {
+                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
+                            this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
+                            'rgba(' + this.accentColor + ', 0.2)',
                         'color': 'rgb(' + this.accentColor + ')',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
-                    }   
-                }
-            })
-            let op=this.options.filter(function(v){return options.indexOf(v)==-1})
-            let i=0,j=0;
-            for(i=0;i<op.length;i++){
-                for(j=0;j<this.options.length;j++){
-                    if(op[i].value==this.options[j].value){
-                        this.options[j].style={'background-color':this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                        'color':this.colorMode === 'white' ? 'black' : 'white',
-                        '--n-option-check-color': 'rgb(' + this.accentColor + ')',}
                     }
                 }
-            } 
+            })
+            let op = this.options.filter(function (v) { return options.indexOf(v) == -1 })
+            let i = 0, j = 0;
+            for (i = 0; i < op.length; i++) {
+                for (j = 0; j < this.options.length; j++) {
+                    if (op[i].value == this.options[j].value) {
+                        this.options[j].style = {
+                            'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                            'color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                        }
+                    }
+                }
+            }
         },
         renderTags() {
             let menus = document.getElementsByClassName('n-base-select-menu n-base-select-menu--multiple n-select-menu')
@@ -222,25 +224,25 @@ export default defineComponent({
                 menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
             }
             //let options = []
-            
+
             for (let i = 0; i < this.options.length; i++) {
-                this.options[i].style = 
-                    { 
-                      'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                      'color': this.colorMode === 'white' ? 'black' : 'white',
-                    }
+                this.options[i].style =
+                {
+                    'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                    'color': this.colorMode === 'white' ? 'black' : 'white',
+                }
             }
-            this.tags.forEach((value) => {      
+            this.tags.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     //options.push(option);
-                    option.style={
-                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ? 
-                        this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
-                        'rgba(' + this.accentColor + ', 0.2)',
+                    option.style = {
+                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
+                            this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
+                            'rgba(' + this.accentColor + ', 0.2)',
                         'color': 'rgb(' + this.accentColor + ')',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
-                    }   
+                    }
                 }
             })
         }
@@ -337,6 +339,19 @@ export default defineComponent({
             active2: false,
             active3: false,
             confirmButton: false,
+            //给开关用的
+            railStyle: ({
+                focused,
+                checked
+            }) => {
+                const style = {};
+                style.boxShadow = `none`;
+                if (checked) {
+                    style.background = `rgb(${this.accentColor},0.7)`;
+                }
+                return style;
+            }
+
         };
     },
 });
@@ -354,12 +369,14 @@ export default defineComponent({
                 </div>
                 <div style="margin: 30px 0px 20px 0px">
                     <n-breadcrumb>
-                        <n-breadcrumb-item >
-                            <div style="font-size: 30px; font-weight: 500" :style="{'color': 'rgb(' + this.accentColor + ')'}">
-                                <n-icon :component="MusicalNotesOutline" size="36" :color="'rgb(' + this.accentColor + ')'"/>
+                        <n-breadcrumb-item>
+                            <div style="font-size: 30px; font-weight: 500"
+                                :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
+                                <n-icon :component="MusicalNotesOutline" size="36"
+                                    :color="'rgb(' + this.accentColor + ')'" />
                                 歌曲列表
                             </div>
-                            </n-breadcrumb-item>
+                        </n-breadcrumb-item>
                     </n-breadcrumb>
                 </div>
             </n-gi>
@@ -370,13 +387,13 @@ export default defineComponent({
                         <n-gi style="height: 50px">
                             <n-grid>
                                 <n-gi :span="21">
-                                    <div style="font-size: 30px; font-weight:500; height: 50px" :style="{'color': 'rgb(' + this.accentColor + ')'}">
+                                    <div style="font-size: 30px; font-weight:500; height: 50px"
+                                        :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
                                         {{ this.playlist.title }}
                                     </div>
                                 </n-gi>
                                 <n-gi v-if="this.$cookies.get('userid') == this.up.id" :span="3">
-                                    <n-button :focusable="false" @click="editList"
-                                    :style="{
+                                    <n-button :focusable="false" @click="editList" :style="{
                                         '--n-color': 'transparent',
                                         '--n-color-hover': 'transparent',
                                         '--n-color-pressed': 'transparent',
@@ -389,8 +406,7 @@ export default defineComponent({
                                         '--n-border-radius': '5px',
                                         '--n-height': '36px',
                                         '--n-font-size': '16px',
-                                    }"
-                                    >
+                                    }">
                                         <n-icon size="20">
                                             <CreateOutline />
                                         </n-icon>
@@ -403,21 +419,19 @@ export default defineComponent({
                             <div>
                                 <a v-if="this.$cookies.get('userid') == this.up.id && this.tagsNum == 0"
                                     @click="editList">添加标签</a>
-                                <n-tag 
-                                    v-else v-for="(tag, i) in this.playlist.tags" :key="i" class="tags"
-                                    :style="{
-                                        '--n-border-radius': '4px',
-                                        '--n-border': '1px solid rgba(' + this.accentColor + ', 0.5)',
-                                        '--n-color': 'transparent',
-                                        '--n-text-color': 'rgb(' + this.accentColor + ')',
-                                    }"
-                                >
+                                <n-tag v-else v-for="(tag, i) in this.playlist.tags" :key="i" class="tags" :style="{
+                                    '--n-border-radius': '4px',
+                                    '--n-border': '1px solid rgba(' + this.accentColor + ', 0.5)',
+                                    '--n-color': 'transparent',
+                                    '--n-text-color': 'rgb(' + this.accentColor + ')',
+                                }">
                                     # {{ tag }}
                                 </n-tag>
                             </div>
                         </n-gi>
                         <n-gi>
-                            <span style="font-size: 16px; font-weight: 450" :style="{'color': 'rgb(' + this.accentColor + ')'}">来源  </span>
+                            <span style="font-size: 16px; font-weight: 450"
+                                :style="{ 'color': 'rgb(' + this.accentColor + ')' }">来源 </span>
                             <span class="up-link" @click="
                                 this.$router.push(
                                     this.$cookies.get('userid') == this.up.id
@@ -425,49 +439,50 @@ export default defineComponent({
                                         : `/home/user/${this.up.id}`
                                 )
                                 "
-                                :style="{'color': this.colorMode === 'white' ? 'rgb(50,50,50)' : 'rgb(222,222,222)'}"  
-                                style="font-size: 16px"  
-                            >
+                                :style="{ 'color': this.colorMode === 'white' ? 'rgb(50,50,50)' : 'rgb(222,222,222)' }"
+                                style="font-size: 16px">
                                 {{ this.up.username }}
                             </span>
                         </n-gi>
                         <n-gi>
                             <div>
-                                <span style="font-size: 16px; font-weight: 450" :style="{'color': 'rgb(' + this.accentColor + ')'}">
-                                    歌曲数量  
+                                <span style="font-size: 16px; font-weight: 450"
+                                    :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
+                                    歌曲数量
                                 </span>
-                                <span style="font-size: 16px" :style="{'color': this.colorMode === 'white' ? 'rgb(50,50,50)' : 'rgb(222,222,222)'}">
-                                {{ this.songNum }}
+                                <span style="font-size: 16px"
+                                    :style="{ 'color': this.colorMode === 'white' ? 'rgb(50,50,50)' : 'rgb(222,222,222)' }">
+                                    {{ this.songNum }}
                                 </span>
                             </div>
                         </n-gi>
                         <n-gi>
                             <div>
-                                <span style="font-size: 16px; font-weight: 450" :style="{'color': 'rgb(' + this.accentColor + ')'}">
-                                    歌单简介 
+                                <span style="font-size: 16px; font-weight: 450"
+                                    :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
+                                    歌单简介
                                 </span>
-                                <span style="font-size: 16px" :style="{'color': this.colorMode === 'white' ? 'rgb(50,50,50)' : 'rgb(222,222,222)'}">
+                                <span style="font-size: 16px"
+                                    :style="{ 'color': this.colorMode === 'white' ? 'rgb(50,50,50)' : 'rgb(222,222,222)' }">
                                     {{ this.playlist.profile }}
                                 </span>
                             </div>
                         </n-gi>
                         <n-gi>
-                            <n-button :focusable="false" @click="playAll" class="playall-button"
-                                :style="{
-                                    '--n-color': 'transparent',
-                                    '--n-color-hover': 'transparent',
-                                    '--n-color-pressed': 'transparent',
-                                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
-                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
-                                    '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
-                                    '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
-                                    '--n-border-radius': '5px',
-                                    '--n-height': '36px',
-                                    '--n-font-size': '16px',
-                                }"
-                            >
+                            <n-button :focusable="false" @click="playAll" class="playall-button" :style="{
+                                '--n-color': 'transparent',
+                                '--n-color-hover': 'transparent',
+                                '--n-color-pressed': 'transparent',
+                                '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
+                                '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
+                                '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
+                                '--n-border-radius': '5px',
+                                '--n-height': '36px',
+                                '--n-font-size': '16px',
+                            }">
                                 <n-icon>
                                     <PlayOutline />
                                 </n-icon>
@@ -475,22 +490,20 @@ export default defineComponent({
                             </n-button>
                             <n-button v-if="this.$cookies.get('userid') == this.up.id &&
                                 this.playlist.shared == false
-                                " :focusable="false" @click="shareList" class="share-button"
-                                :style="{
-                                    '--n-color': 'transparent',
-                                    '--n-color-hover': 'transparent',
-                                    '--n-color-pressed': 'transparent',
-                                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
-                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
-                                    '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
-                                    '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
-                                    '--n-border-radius': '5px',
-                                    '--n-height': '36px',
-                                    '--n-font-size': '16px',
-                                }"    
-                            >
+                                " :focusable="false" @click="shareList" class="share-button" :style="{
+        '--n-color': 'transparent',
+        '--n-color-hover': 'transparent',
+        '--n-color-pressed': 'transparent',
+        '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
+        '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+        '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+        '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
+        '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
+        '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
+        '--n-border-radius': '5px',
+        '--n-height': '36px',
+        '--n-font-size': '16px',
+    }">
                                 <n-icon>
                                     <OpenOutline />
                                 </n-icon>
@@ -499,22 +512,20 @@ export default defineComponent({
                             <n-button v-if="(this.$cookies.get('userid') == this.up.id ||
                                 this.$cookies.get('is_superuser') == 'true') &&
                                 this.playlist.shared == true
-                                " :focusable="false" @click="unshareList" class="share-button"
-                                :style="{
-                                    '--n-color': 'transparent',
-                                    '--n-color-hover': 'transparent',
-                                    '--n-color-pressed': 'transparent',
-                                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
-                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
-                                    '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
-                                    '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
-                                    '--n-border-radius': '5px',
-                                    '--n-height': '36px',
-                                    '--n-font-size': '16px',
-                                }"        
-                            >
+                                " :focusable="false" @click="unshareList" class="share-button" :style="{
+        '--n-color': 'transparent',
+        '--n-color-hover': 'transparent',
+        '--n-color-pressed': 'transparent',
+        '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
+        '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+        '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+        '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
+        '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
+        '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
+        '--n-border-radius': '5px',
+        '--n-height': '36px',
+        '--n-font-size': '16px',
+    }">
                                 <n-icon>
                                     <OpenOutline />
                                 </n-icon>
@@ -522,22 +533,20 @@ export default defineComponent({
                             </n-button>
                             <n-button v-if="this.$cookies.isKey('userid') &&
                                 this.$cookies.get('userid') != this.up.id
-                                " :focusable="false" @click="complainList"
-                                :style="{
-                                    '--n-color': 'transparent',
-                                    '--n-color-hover': 'transparent',
-                                    '--n-color-pressed': 'transparent',
-                                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
-                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
-                                    '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
-                                    '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
-                                    '--n-border-radius': '5px',
-                                    '--n-height': '36px',
-                                    '--n-font-size': '16px',
-                                }"    
-                            >
+                                " :focusable="false" @click="complainList" :style="{
+        '--n-color': 'transparent',
+        '--n-color-hover': 'transparent',
+        '--n-color-pressed': 'transparent',
+        '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
+        '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+        '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+        '--n-border': '1px solid rgba(' + this.accentColor + ', 0.25)',
+        '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
+        '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
+        '--n-border-radius': '5px',
+        '--n-height': '36px',
+        '--n-font-size': '16px',
+    }">
                                 <n-icon>
                                     <WarningOutline />
                                 </n-icon>
@@ -555,108 +564,70 @@ export default defineComponent({
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">
                 <a-divider style="height: 1.8px; background-color: #dddddd" />
-                <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'" :position="playlist.shared===true?'PublicView':'CollectionView'"
-                    v-model:songData="this.songData" :currentListId="playlist.id"></list-table>
+                <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'"
+                    :position="playlist.shared === true ? 'PublicView' : 'CollectionView'" v-model:songData="this.songData"
+                    :currentListId="playlist.id"></list-table>
             </n-gi>
             <n-gi :span="4"></n-gi>
         </n-grid>
     </div>
-    <n-modal :show="showEditListModify" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false"  z-index="2">
-        
-            <div class="outer-container" style="width: 700px">
-                <div class="title-container">
-                    <div style="margin-bottom: 25px">
-                        
-                            <n-grid>
-                                <n-gi :span="2"></n-gi>
-                                <n-gi :span="20">
-                                    <div class="register-card-title" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                                        编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}
-                                    </div>
-                                </n-gi>
-                                <n-gi :span="2">
-                                    <n-icon class="close-icon" style="padding-top: 5px" size="40px" @click="closeWindow" :color="this.colorMode === 'white' ? 'black' : 'white'">
-                                        <close-outline />
-                                    </n-icon>
-                                </n-gi>
-                            </n-grid>
-                    </div>
-                </div>
-                <div class="body-container">
+    <n-modal :show="showEditListModify"
+        :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }" :block-scroll="false"
+        z-index="2">
+
+        <div class="outer-container" style="width: 700px">
+            <div class="title-container">
+                <div style="margin-bottom: 25px">
+
                     <n-grid>
-                        <n-gi :span="1"></n-gi>
-                        <n-gi :span="6">
-                            <n-popover trigger="hover">
-                                <template #trigger>
-                                    <div class="upload-list-cover" @click="uploadFile">
-                                        <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
-                                            max="1" @preview="handlePreview" :on-change="handleCoverChange"
-                                            style="max-width: 200px">
-                                            <n-icon size="100" depth="5">
-                                                <ImageOutline />
-                                            </n-icon>
-                                        </n-upload>
-                                        <n-image :src="previewImageUrl" style="width: 200px" />
-                                    </div>
-                                </template>
-                                <span>点击以上传封面</span>
-                            </n-popover>
-                        </n-gi>
                         <n-gi :span="2"></n-gi>
-                        <n-gi :span="15">
-                            <div class="body-item">
-                                <n-grid>
-                                    <n-gi :span="3"></n-gi>
-                                    <n-gi :span="18">
-                                        <div class="body-item-title">
-                                            {{ this.playlist.shared ? "歌单" : "收藏夹" }}名称
-                                        </div>
-                                        <n-input type="text" :placeholder="'你需要填写' + (this.playlist.shared ? '歌单' : '收藏夹') + '名称'" :maxlength="20" show-count
-                                            v-model:value="listName"
-                                            :style="{
-                                                '--n-text-color-disabled': 'black',
-                                                '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                                                '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
-                                                '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                                                '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                                                '--n-border-hover': 'transparent',
-                                                '--n-border-focus': 'transparent',
-                                                '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                                                '--n-border-radius': '5px',
-                                                '--n-height': '40px',
-                                                '--n-font-size': '18px',
-                                                '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
-                                                '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                                            }"    
-                                        />
-                                    </n-gi>
-                                    <n-gi :span="3"></n-gi>
-                                </n-grid>
+                        <n-gi :span="20">
+                            <div class="register-card-title"
+                                :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                                编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}
                             </div>
-                            <div class="body-item">
-                                <n-grid>
-                                    <n-gi :span="3"></n-gi>
-                                    <n-gi :span="18">
-                                        <div class="body-item-title">
-                                            分类标签
-                                        </div>
-                                        <n-select v-model:value="tags" multiple :options="options" :placeholder="'你需要选择1～3个分类标签'" @click="renderTags" @update:value="handleUpdateValue"/>
-                                    </n-gi>
-                                    <n-gi :span="3"></n-gi>
-                                </n-grid>
-                            </div>
-                            <div class="body-item">
-                                <n-grid>
-                                    <n-gi :span="3"></n-gi>
-                                    <n-gi :span="18">
-                                        <div class="body-item-title">
-                                            简介
-                                        </div>
-                                        <n-input v-model:value="listIntro" type="textarea" placeholder="" :autosize="{
-                                            minRows: 6,
-                                            maxRows: 6,
-                                        }" :maxlength="150" show-count
-                                        :style="{
+                        </n-gi>
+                        <n-gi :span="2">
+                            <n-icon class="close-icon" style="padding-top: 5px" size="40px" @click="closeWindow"
+                                :color="this.colorMode === 'white' ? 'black' : 'white'">
+                                <close-outline />
+                            </n-icon>
+                        </n-gi>
+                    </n-grid>
+                </div>
+            </div>
+            <div class="body-container">
+                <n-grid>
+                    <n-gi :span="1"></n-gi>
+                    <n-gi :span="6">
+                        <n-popover trigger="hover">
+                            <template #trigger>
+                                <div class="upload-list-cover" @click="uploadFile">
+                                    <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
+                                        max="1" @preview="handlePreview" :on-change="handleCoverChange"
+                                        style="max-width: 200px">
+                                        <n-icon size="100" depth="5">
+                                            <ImageOutline />
+                                        </n-icon>
+                                    </n-upload>
+                                    <n-image :src="previewImageUrl" style="width: 200px" />
+                                </div>
+                            </template>
+                            <span>点击以上传封面</span>
+                        </n-popover>
+                    </n-gi>
+                    <n-gi :span="2"></n-gi>
+                    <n-gi :span="15">
+                        <div class="body-item">
+                            <n-grid>
+                                <n-gi :span="3"></n-gi>
+                                <n-gi :span="18">
+                                    <div class="body-item-title">
+                                        {{ this.playlist.shared ? "歌单" : "收藏夹" }}名称
+                                    </div>
+                                    <n-input type="text"
+                                        :placeholder="'你需要填写' + (this.playlist.shared ? '歌单' : '收藏夹') + '名称'"
+                                        :maxlength="20" show-count v-model:value="listName" :style="{
                                             '--n-text-color-disabled': 'black',
                                             '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                                             '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
@@ -666,48 +637,88 @@ export default defineComponent({
                                             '--n-border-focus': 'transparent',
                                             '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
                                             '--n-border-radius': '5px',
+                                            '--n-height': '40px',
                                             '--n-font-size': '18px',
                                             '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
                                             '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                                        }"   
-                                        >
-                                        </n-input>
-                                    </n-gi>
-                                    <n-gi :span="3"></n-gi>
-                                </n-grid>
-                            </div>
-                        </n-gi>
-                    </n-grid>
-                </div>
-                <div style="width: 100%;">
-                    <n-grid>
-                        <n-gi :span="20"></n-gi>
-                        <n-gi :span="2">
-                            <div style="display: flex; justify-content: right">
-                                <n-button strong secondary type="primary" @click="submitEdit"
-                                :style="{
-                                    '--n-color': 'rgba(' + this.accentColor + ', 0.25)',
-                                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.45)',
-                                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.45)',
-                                    '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                                    '--n-border': '1px solid transparent',
-                                    '--n-border-hover': '1px solid transparent',
-                                    '--n-border-pressed': '1px solid transparent',
-                                    '--n-border-radius': '5px',
-                                    '--n-height': '40px',
-                                    '--n-font-size': '18px',
-                                }"
-                                >
-                                    完成
-                                </n-button>
-                            </div>
-                        </n-gi>
-                    </n-grid>
-                    
-                </div>
-            
+                                        }" />
+                                </n-gi>
+                                <n-gi :span="3"></n-gi>
+                            </n-grid>
+                        </div>
+                        <div class="body-item">
+                            <n-grid>
+                                <n-gi :span="3"></n-gi>
+                                <n-gi :span="18">
+                                    <div class="body-item-title">
+                                        分类标签
+                                    </div>
+                                    <n-select v-model:value="tags" multiple :options="options"
+                                        :placeholder="'你需要选择1～3个分类标签'" @click="renderTags"
+                                        @update:value="handleUpdateValue" />
+                                </n-gi>
+                                <n-gi :span="3"></n-gi>
+                            </n-grid>
+                        </div>
+                        <div class="body-item">
+                            <n-grid>
+                                <n-gi :span="3"></n-gi>
+                                <n-gi :span="18">
+                                    <div class="body-item-title">
+                                        简介
+                                    </div>
+                                    <n-input v-model:value="listIntro" type="textarea" placeholder="" :autosize="{
+                                        minRows: 6,
+                                        maxRows: 6,
+                                    }" :maxlength="150" show-count :style="{
+    '--n-text-color-disabled': 'black',
+    '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+    '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
+    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+    '--n-border-hover': 'transparent',
+    '--n-border-focus': 'transparent',
+    '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+    '--n-border-radius': '5px',
+    '--n-font-size': '18px',
+    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+    '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+}">
+                                    </n-input>
+                                </n-gi>
+                                <n-gi :span="3"></n-gi>
+                            </n-grid>
+                        </div>
+                    </n-gi>
+                </n-grid>
+            </div>
+            <div style="width: 100%;">
+                <n-grid>
+                    <n-gi :span="20"></n-gi>
+                    <n-gi :span="2">
+                        <div style="display: flex; justify-content: right">
+                            <n-button strong secondary type="primary" @click="submitEdit" :style="{
+                                '--n-color': 'rgba(' + this.accentColor + ', 0.25)',
+                                '--n-color-hover': 'rgba(' + this.accentColor + ', 0.45)',
+                                '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.45)',
+                                '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-border': '1px solid transparent',
+                                '--n-border-hover': '1px solid transparent',
+                                '--n-border-pressed': '1px solid transparent',
+                                '--n-border-radius': '5px',
+                                '--n-height': '40px',
+                                '--n-font-size': '18px',
+                            }">
+                                完成
+                            </n-button>
+                        </div>
+                    </n-gi>
+                </n-grid>
+
+            </div>
+
             <!-- <n-card class="edit-list-hodder" style="--n-border-radius: 20px">
                 <n-grid>
                     <n-gi :span="1"></n-gi>
@@ -777,55 +788,59 @@ export default defineComponent({
             </n-card> -->
         </div>
     </n-modal>
-    <n-modal :show="showShareListModify" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false"  z-index="2">
+    <n-modal :show="showShareListModify"
+        :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }" :block-scroll="false"
+        z-index="2">
         <div class="outer-container">
             <div class="title container">
                 <div style="margin-bottom: 25px">
                     <n-grid>
-                        <n-gi :span="2"></n-gi>
-                        <n-gi :span="20">
-                            <div class="register-card-title" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
+                        <n-gi :span="24">
+                            <div class="register-card-title"
+                                :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
                                 来自 iSound 的提醒
                             </div>
                         </n-gi>
                     </n-grid>
                 </div>
                 <div class="body-container">
-                    <div class="body-item" :style="{'color': 'rgb(' + this.accentColor + ')', 'font-size': '20px'}">
+                    <div class="body-item" :style="{ 'color': 'rgb(' + this.accentColor + ')', 'font-size': '20px' }">
                         <n-grid><n-gi :span="3"></n-gi>
-                        <n-gi :span="18">
-                            <div :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                            你确认歌单名称了吗&nbsp;
-                            <n-switch v-model:value="active1" @update:value="handleSwitchActive"></n-switch>
-                        </div>
-                        </n-gi>
-                        <n-gi :span="3"></n-gi>
-                    </n-grid>
+                            <n-gi :span="18">
+                                <div :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                                    你确认歌单名称了吗?&nbsp;
+                                    <n-switch :rail-style="railStyle" v-model:value="active1"
+                                        @update:value="handleSwitchActive"></n-switch>
+                                </div>
+                            </n-gi>
+                            <n-gi :span="3"></n-gi>
+                        </n-grid>
                     </div>
-                    <div class="body-item" :style="{'color': 'rgb(' + this.accentColor + ')', 'font-size': '20px'}">
+                    <div class="body-item" :style="{ 'color': 'rgb(' + this.accentColor + ')', 'font-size': '20px' }">
                         <n-grid><n-gi :span="3"></n-gi>
-                        <n-gi :span="18">
-                            <div :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                            你确认分类标签了吗&nbsp;
-                            <n-switch v-model:value="active2" @update:value="handleSwitchActive"></n-switch>
-                            </div>
-                        </n-gi>
-                        <n-gi :span="3"></n-gi></n-grid>
+                            <n-gi :span="18">
+                                <div :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                                    你确认分类标签了吗?&nbsp;
+                                    <n-switch :rail-style="railStyle" v-model:value="active2"
+                                        @update:value="handleSwitchActive"></n-switch>
+                                </div>
+                            </n-gi>
+                            <n-gi :span="3"></n-gi></n-grid>
                     </div>
-                    <div class="body-item" :style="{'color': 'rgb(' + this.accentColor + ')', 'font-size': '20px'}">
+                    <div class="body-item" :style="{ 'color': 'rgb(' + this.accentColor + ')', 'font-size': '20px' }">
                         <n-grid><n-gi :span="3"></n-gi>
-                        <n-gi :span="18">
-                            <div :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">
-                            你确认歌单简介了吗&nbsp;
-                            <n-switch v-model:value="active3" @update:value="handleSwitchActive"></n-switch>
-                            </div>
-                        </n-gi>
-                        <n-gi :span="3"></n-gi></n-grid>
+                            <n-gi :span="18">
+                                <div :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                                    你确认歌单简介了吗?&nbsp;
+                                    <n-switch :rail-style="railStyle" v-model:value="active3"
+                                        @update:value="handleSwitchActive"></n-switch>
+                                </div>
+                            </n-gi>
+                            <n-gi :span="3"></n-gi></n-grid>
                     </div>
                 </div>
                 <div style="width: 100%; display: flex; justify-content: center">
-                    <n-button :focusable="false" @click="closeWindow" style="margin: 0 10px"
-                    :style="{
+                    <n-button :focusable="false" @click="closeWindow" style="margin: 0 10px" :style="{
                         '--n-color': 'rgba(' + this.accentColor + ', 0.25)',
                         '--n-color-hover': 'rgba(' + this.accentColor + ', 0.45)',
                         '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.45)',
@@ -838,31 +853,29 @@ export default defineComponent({
                         '--n-border-radius': '5px',
                         '--n-height': '36px',
                         '--n-font-size': '18px',
-                    }"
-                    >取消</n-button>
+                    }">取消</n-button>
                     <n-button :focusable="false" @click="confirmShare" style="margin: 0 10px" :disabled="!confirmButton"
-                    :style="{
-                        '--n-color': 'rgba(' + this.accentColor + ', 0.25)',
-                        '--n-color-hover': 'rgba(' + this.accentColor + ', 0.45)',
-                        '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.45)',
-                        '--n-color-disabled': 'grey',
-                        '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
-                        '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                        '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                        '--n-text-color-disabled': 'white',
-                        '--n-border': '1px solid transparent',
-                        '--n-border-hover': '1px solid transparent',
-                        '--n-border-pressed': '1px solid transparent',
-                        '--n-border-disabled': '1px solid transparent',
-                        '--n-border-radius': '5px',
-                        '--n-height': '36px',
-                        '--n-font-size': '18px',
-                    }"
-                    >确认</n-button>
+                        :style="{
+                            '--n-color': 'rgba(' + this.accentColor + ', 0.8)',
+                            '--n-color-hover': 'rgba(' + this.accentColor + ', 0.6)',
+                            '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)',
+                            '--n-color-disabled': 'grey',
+                            '--n-text-color': 'var(--my-modal-select-color)',
+                            '--n-text-color-hover': 'var(--my-modal-select-color)',
+                            '--n-text-color-pressed': 'var(--my-modal-select-color)',
+                            '--n-text-color-disabled': 'white',
+                            '--n-border': '1px solid transparent',
+                            '--n-border-hover': '1px solid transparent',
+                            '--n-border-pressed': '1px solid transparent',
+                            '--n-border-disabled': '1px solid transparent',
+                            '--n-border-radius': '5px',
+                            '--n-height': '36px',
+                            '--n-font-size': '18px',
+                        }">确认</n-button>
                 </div>
             </div>
         </div>
-            <!-- <n-card class="share-list-hodder" style="--n-border-radius: 20px">
+        <!-- <n-card class="share-list-hodder" style="--n-border-radius: 20px">
                 <span class="modify-title">
                     <div class="share-list-title">来自 iSound 的提醒</div>
                 </span>
@@ -876,7 +889,7 @@ export default defineComponent({
                     <n-button :focusable="false" @click="confirmShare" style="margin: 0 10px">确认</n-button>
                 </div>
             </n-card> -->
-        
+
     </n-modal>
     <modify-complain-view :showModifyComplainView="showModifyComplainView"
         @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
@@ -884,94 +897,94 @@ export default defineComponent({
 </template>
 <style scoped>
 .back-button {
-  width: 40px;
-  height: 40px;
-  /* position: absolute; */
-  left: 20px;
-  top: 20px;
+    width: 40px;
+    height: 40px;
+    /* position: absolute; */
+    left: 20px;
+    top: 20px;
 }
 
 .list-cover {
-  /* position: absolute; */
-  margin-top: 10%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+    /* position: absolute; */
+    margin-top: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .list-cover-img {
-  /* position: absolute; */
-  margin: auto;
-  width: 245px;
-  height: 245px;
-  border-radius: 10%;
-  transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+    /* position: absolute; */
+    margin: auto;
+    width: 245px;
+    height: 245px;
+    border-radius: 10%;
+    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
 }
 
 .list-cover-img:hover {
-  /* box-shadow: inset 0 0 0px 15px v-bind("BackgroundColorString") ; */
-  opacity: 0.8;
-  transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
+    /* box-shadow: inset 0 0 0px 15px v-bind("BackgroundColorString") ; */
+    opacity: 0.8;
+    transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 
 .list-information {
-  display: flex;
-  margin-top: 4%;
+    display: flex;
+    margin-top: 4%;
 }
 
 .list-circle {
-  margin-top: 10px;
-  margin-right: 5px;
+    margin-top: 10px;
+    margin-right: 5px;
 }
 
 .ant-divider-horizontal {
-  display: flex;
-  clear: both;
-  width: 100%;
-  min-width: 0px;
-  margin-top: 0;
-  margin-bottom: 0px;
+    display: flex;
+    clear: both;
+    width: 100%;
+    min-width: 0px;
+    margin-top: 0;
+    margin-bottom: 0px;
 }
 
 .playall-button {
-  margin-right: 20px;
+    margin-right: 20px;
 }
 
 .modify-title {
-  font-size: 25px;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 0px;
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0px;
 }
 
 .edit-list-hodder {
-  width: 800px;
-  height: 500px;
+    width: 800px;
+    height: 500px;
 }
 
 .close-edit-modify {
-  margin-right: 0px;
-  margin-top: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
 }
 
 .edit-list-title {
-  display: flex;
-  font-weight: bold;
+    display: flex;
+    font-weight: bold;
 }
 
 .upload-list-cover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* border-style: dashed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border-style: dashed;
     border-width:3px; */
-  color: rgb(209, 209, 209);
-  height: 220px;
-  width: 220px;
-  border-radius: 5%;
+    color: rgb(209, 209, 209);
+    height: 220px;
+    width: 220px;
+    border-radius: 5%;
 }
 
 /* .upload-list-cover:hover {
@@ -979,45 +992,45 @@ export default defineComponent({
 } */
 
 .edit-list-main {
-  margin: 30px 30px;
+    margin: 30px 30px;
 }
 
 .upload-list-cover-image {
-  height: 200px;
-  width: 200px;
+    height: 200px;
+    width: 200px;
 }
 
 :deep(.n-upload-trigger.n-upload-trigger--image-card) {
-  margin-top: -8px;
-  width: 216px;
-  height: 216px;
-  z-index: 1;
+    margin-top: -8px;
+    width: 216px;
+    height: 216px;
+    z-index: 1;
 }
 
 :deep(.n-upload-dragger) {
-  border-radius: 5%;
-  border-width: 3px;
+    border-radius: 5%;
+    border-width: 3px;
 }
 
 :deep(.n-upload-file-list .n-upload-file.n-upload-file--image-card-type) {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  border: var(--n-item-border-image-card);
-  border-radius: var(--n-border-radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.3s var(--n-bezier), background-color 0.3s var(--n-bezier);
-  border-radius: var(--n-border-radius);
-  overflow: hidden;
-  border-radius: 5%;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border: var(--n-item-border-image-card);
+    border-radius: var(--n-border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s var(--n-bezier), background-color 0.3s var(--n-bezier);
+    border-radius: var(--n-border-radius);
+    overflow: hidden;
+    border-radius: 5%;
 }
 
 .submit-button {
-  margin-top: 15px;
-  display: flex;
-  justify-content: right;
+    margin-top: 15px;
+    display: flex;
+    justify-content: right;
 }
 
 .tags {
@@ -1028,32 +1041,32 @@ export default defineComponent({
 }
 
 .share-list-hodder {
-  width: 480px;
-  height: 300px;
+    width: 480px;
+    height: 300px;
 }
 
 .confirm-message {
-  margin-top: 20px;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  height: 140px;
-  font-size: 18px;
+    margin-top: 20px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    height: 140px;
+    font-size: 18px;
 }
 
 .buttons {
-  margin-top: 20px;
-  display: flex;
-  align-content: center;
-  justify-content: right;
+    margin-top: 20px;
+    display: flex;
+    align-content: center;
+    justify-content: right;
 }
 
 .share-button {
-  margin-right: 20px;
+    margin-right: 20px;
 }
 
 .up-link:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .outer-container {
@@ -1063,13 +1076,15 @@ export default defineComponent({
     padding-left: 25px;
     padding-right: 25px;
 }
+
 .title-container {
     margin-top: 10px;
     margin-bottom: 10px;
     width: 100%;
 }
+
 .body-item {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     display: flex;
     justify-content: center;
     align-items: center;

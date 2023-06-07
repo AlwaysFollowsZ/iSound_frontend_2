@@ -26,7 +26,7 @@
                             <template #trigger>
                                 <div class="upload-song-page">
                                     <div :style="{
-                                        'border': this.songPageUrl === '/src/assets/upload-logo.png' ? `2px solid rgba(${this.accentColor},0.5)` : '',
+                                        'border': this.songPageUrl === '/src/assets/upload-logo.png' ? `2px solid rgba(${this.accentColor},0.3)` : '',
                                         'display': 'flex',
                                         'justify-content': 'center',
                                         'align-items': 'center',
