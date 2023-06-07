@@ -89,7 +89,7 @@ export default {
             this.songLists = response.data.playlist_set.map(songlist => ({
                 Key: j++,
                 Type: 'songList',
-                imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
+                imagePath: songlist.cover,     // === NEED TO BE REPLACED ===
                 songCount: songlist.music_set.length,
                 Name: songlist.title,
             }))
