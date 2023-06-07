@@ -242,7 +242,7 @@ export default defineComponent({
         <n-grid>
             <n-gi :span="4">
                 <n-button tertiary circle class="back-button" @click="back">
-                    <ChevronBack style="width: 36px; position: absolute; left: 0px" />
+                    <ChevronBack style="width: 36px; position: absolute; left: 0px;" />
                 </n-button></n-gi>
             <n-gi :span="4">
                 <div class="list-cover">
@@ -281,8 +281,16 @@ export default defineComponent({
                             <div>
                                 <a v-if="this.$cookies.get('userid') == this.up.id && this.tagsNum == 0"
                                     @click="editList">添加标签</a>
-                                <n-tag v-else v-for="(tag, i) in this.playlist.tags" :key="i" class="tags">#{{ tag
-                                }}</n-tag>
+                                <n-tag v-else v-for="(tag, i) in this.playlist.tags" :key="i" 
+            
+                                :style="{
+                                '--n-border-radius': `5px`,
+                                '--n-font-weight-strong': `bold`,
+                                '--n-height': `22px`,
+                                '--n-close-margin': `0 18px 0 18px`}"
+                                class="tags">
+                                #{{ tag }}
+                                </n-tag>
                             </div>
                         </n-gi>
                         <n-gi>
@@ -585,7 +593,9 @@ export default defineComponent({
 
 .tags {
     margin-right: 10px;
+    padding-bottom: 1px;
     border-radius: 5px;
+    font-size: 13px;
 }
 
 .share-list-hodder {
