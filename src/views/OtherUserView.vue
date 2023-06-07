@@ -90,7 +90,10 @@
               <other-user-upload-song-view />
             </n-tab-pane>
             <template #suffix>
-              <div :style="{ color: 'rgb(' + this.accentColor + ')' }">
+              <div :style="{
+                'color': 'rgba(' + this.accentColor + ',0.9)',
+                'transition': 'all linear 0.3s'
+              }">
                 粉丝数：{{ this.userFansNum }}
                 <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd" />
                 关注数：{{ this.userFollowingNum }}

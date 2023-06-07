@@ -4,17 +4,17 @@ import { defineComponent, ref } from "vue";
 import { mapState } from 'vuex'
 //import ListTable from "/src/components/tables/ListTable/ListTable.Vue";
 import {
-    ChevronBack,
-    MusicalNotesOutline,
-    PlayOutline,
-    OpenOutline,
-    CreateOutline,
-    CloseOutline,
-    ImageOutline,
-    WarningOutline,
+  ChevronBack,
+  MusicalNotesOutline,
+  PlayOutline,
+  OpenOutline,
+  CreateOutline,
+  CloseOutline,
+  ImageOutline,
+  WarningOutline,
 } from "@vicons/ionicons5";
 import { message } from "ant-design-vue";
-import ListTable from '/src/components/tables/ListTable/ListTable.vue'
+import ListTable from "/src/components/tables/ListTable/ListTable.vue";
 import ModifyComplainView from "../views/ModifyComplainView.vue";
 import { getBackgroundColorString, globalThemeColor, getRGBString } from '/src/colorMode.js'
 import TopNav from "../components/TopNav.vue";
@@ -346,7 +346,7 @@ export default defineComponent({
         <n-grid>
             <n-gi :span="4">
                 <n-button tertiary circle class="back-button" @click="back">
-                    <ChevronBack style="width: 36px; position: absolute; left: 0px" />
+                    <ChevronBack style="width: 36px; position: absolute; left: 0px;" />
                 </n-button></n-gi>
             <n-gi :span="4">
                 <div class="list-cover">
@@ -884,94 +884,94 @@ export default defineComponent({
 </template>
 <style scoped>
 .back-button {
-    width: 40px;
-    height: 40px;
-    /* position: absolute; */
-    left: 20px;
-    top: 20px;
+  width: 40px;
+  height: 40px;
+  /* position: absolute; */
+  left: 20px;
+  top: 20px;
 }
 
 .list-cover {
-    /* position: absolute; */
-    margin-top: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+  /* position: absolute; */
+  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .list-cover-img {
-    /* position: absolute; */
-    margin: auto;
-    width: 245px;
-    height: 245px;
-    border-radius: 10%;
-    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+  /* position: absolute; */
+  margin: auto;
+  width: 245px;
+  height: 245px;
+  border-radius: 10%;
+  transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
 }
 
 .list-cover-img:hover {
-    /* box-shadow: inset 0 0 0px 15px v-bind("BackgroundColorString") ; */
-    opacity: 0.8;
-    transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
+  /* box-shadow: inset 0 0 0px 15px v-bind("BackgroundColorString") ; */
+  opacity: 0.8;
+  transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 
 .list-information {
-    display: flex;
-    margin-top: 4%;
+  display: flex;
+  margin-top: 4%;
 }
 
 .list-circle {
-    margin-top: 10px;
-    margin-right: 5px;
+  margin-top: 10px;
+  margin-right: 5px;
 }
 
 .ant-divider-horizontal {
-    display: flex;
-    clear: both;
-    width: 100%;
-    min-width: 0px;
-    margin-top: 0;
-    margin-bottom: 0px;
+  display: flex;
+  clear: both;
+  width: 100%;
+  min-width: 0px;
+  margin-top: 0;
+  margin-bottom: 0px;
 }
 
 .playall-button {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .modify-title {
-    font-size: 25px;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 0px;
+  font-size: 25px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0px;
 }
 
 .edit-list-hodder {
-    width: 800px;
-    height: 500px;
+  width: 800px;
+  height: 500px;
 }
 
 .close-edit-modify {
-    margin-right: 0px;
-    margin-top: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
 }
 
 .edit-list-title {
-    display: flex;
-    font-weight: bold;
+  display: flex;
+  font-weight: bold;
 }
 
 .upload-list-cover {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* border-style: dashed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* border-style: dashed;
     border-width:3px; */
-    color: rgb(209, 209, 209);
-    height: 220px;
-    width: 220px;
-    border-radius: 5%;
+  color: rgb(209, 209, 209);
+  height: 220px;
+  width: 220px;
+  border-radius: 5%;
 }
 
 /* .upload-list-cover:hover {
@@ -979,78 +979,81 @@ export default defineComponent({
 } */
 
 .edit-list-main {
-    margin: 30px 30px;
+  margin: 30px 30px;
 }
 
 .upload-list-cover-image {
-    height: 200px;
-    width: 200px;
+  height: 200px;
+  width: 200px;
 }
 
 :deep(.n-upload-trigger.n-upload-trigger--image-card) {
-    margin-top: -8px;
-    width: 216px;
-    height: 216px;
-    z-index: 1;
+  margin-top: -8px;
+  width: 216px;
+  height: 216px;
+  z-index: 1;
 }
 
 :deep(.n-upload-dragger) {
-    border-radius: 5%;
-    border-width: 3px;
+  border-radius: 5%;
+  border-width: 3px;
 }
 
 :deep(.n-upload-file-list .n-upload-file.n-upload-file--image-card-type) {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    border: var(--n-item-border-image-card);
-    border-radius: var(--n-border-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.3s var(--n-bezier), background-color 0.3s var(--n-bezier);
-    border-radius: var(--n-border-radius);
-    overflow: hidden;
-    border-radius: 5%;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border: var(--n-item-border-image-card);
+  border-radius: var(--n-border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s var(--n-bezier), background-color 0.3s var(--n-bezier);
+  border-radius: var(--n-border-radius);
+  overflow: hidden;
+  border-radius: 5%;
 }
 
 .submit-button {
-    margin-top: 15px;
-    display: flex;
-    justify-content: right;
+  margin-top: 15px;
+  display: flex;
+  justify-content: right;
 }
 
 .tags {
     margin-right: 10px;
+    padding-bottom: 1px;
+    border-radius: 5px;
+    font-size: 13px;
 }
 
 .share-list-hodder {
-    width: 480px;
-    height: 300px;
+  width: 480px;
+  height: 300px;
 }
 
 .confirm-message {
-    margin-top: 20px;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    height: 140px;
-    font-size: 18px;
+  margin-top: 20px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  height: 140px;
+  font-size: 18px;
 }
 
 .buttons {
-    margin-top: 20px;
-    display: flex;
-    align-content: center;
-    justify-content: right;
+  margin-top: 20px;
+  display: flex;
+  align-content: center;
+  justify-content: right;
 }
 
 .share-button {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .up-link:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .outer-container {

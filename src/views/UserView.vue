@@ -6,7 +6,7 @@
             <n-gi :span="7">
                 <div class="user-info-container">
                     <div class="avatar">
-                        <img :src="avatarUrl" alt="avatar" @click="showModifyUserInfo = true"/>
+                        <img :src="avatarUrl" alt="avatar" @click="showModifyUserInfo = true" />
                     </div>
                     <div class="user-info-card">
                         <div class="user-info-title" :style="{ color: 'rgb(' + this.accentColor + ')' }">
@@ -84,7 +84,10 @@
                                     <fan-list-view />
                                 </n-tab-pane>
                                 <template #suffix>
-                                    <div :style="{ color: 'rgb(' + this.accentColor + ')' }">
+                                    <div :style="{
+                                        'color': 'rgba(' + this.accentColor + ',0.9)',
+                                        'transition': 'all linear 0.3s'
+                                    }">
                                         粉丝数：{{ this.fansNum }}
                                         <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd" />
                                         <!-- <flash-outline style="width: 20px;"/>  -->

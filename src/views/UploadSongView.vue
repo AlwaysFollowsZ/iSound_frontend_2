@@ -1,5 +1,6 @@
 <template>
-    <n-modal :show="showUploadSong" :style="{ 'background-color': BoxColorString }" :block-scroll="false" :z-index="1">
+    <n-modal :show="showUploadSong" :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }"
+        :block-scroll="false" :z-index="1">
         <div class="outer-container">
 
             <div class="title-container">
@@ -7,11 +8,12 @@
                     <n-grid>
                         <n-gi :span="2"></n-gi>
                         <n-gi :span="20">
-                            <div class="upload-card-title" :style="{ 'color': fontColorString }">上传歌曲：编织你的音乐篇章</div>
+                            <div class="upload-card-title"
+                                :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">上传歌曲：编织你的音乐篇章</div>
                         </n-gi>
                         <n-gi :span="2">
                             <div class="close-icon" style="padding-top: 5px" @click="closeUWindow"
-                                :style="{ 'color': fontColorString }">
+                                :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
                                 <n-icon size="40"><close-outline /></n-icon>
                             </div>
                         </n-gi>
@@ -25,18 +27,21 @@
                             <template #trigger>
                                 <div class="upload-song-page">
                                     <div :style="{
+                                        'border': this.songPageUrl === '/src/assets/upload-logo.png'? `2px solid rgba(${this.accentColor},0.5)`:'',
                                         'display': 'flex',
                                         'justify-content': 'center',
                                         'align-items': 'center',
                                         'border-radius': '10px',
-                                        'background':fontColorSlight,
-                                        'border': `5px solid ${fontColorString}`,
-                                        'height': '238px',
+                                        'background': `rgb(${this.accentColor},0.2)`,
+                                        'height': '220px',
+                                        'margin-bottom': '18px',
                                         'aspect-ratio': '1',
-                                    }" v-if="this.songPageUrl === '/src/assets/upload-logo.png'" @click="uploadFile">
-                                        <n-icon size="150" :color="fontColorString"><image-outline /></n-icon>
+                                    }" @click="uploadFile">
+                                        <n-icon size="150" :depth="3" :color="`rgb(${this.accentColor})`"
+                                            v-if="this.songPageUrl === '/src/assets/upload-logo.png'"><image-outline /></n-icon>
+                                        <img v-else style="border-radius: 10px;" :src="this.songPageUrl"
+                                            @click="uploadFile" />
                                     </div>
-                                    <img v-else style="border-radius: 10px;" :src="this.songPageUrl" @click="uploadFile" />
                                     <input type="file" ref="fileInput" style="display: none" accept="image/*"
                                         @change="handleSongPageChange" />
                                 </div>
@@ -44,58 +49,44 @@
                             点击此处上传歌曲封面</n-popover>
                         <div class="body-item">
                             <n-grid>
-                                <n-gi :span="2"></n-gi>
-                                <n-gi :span="22">
-                                    <div class="body-item-title" :style="{
-                                        'color': (accentColor === '0,0,0' || accentColor === '255,255,255') ? fontColorString : 'rgba(' + this.accentColor + ', 0.25)'
-                                    }">分类标签</div>
+                                <n-gi :span="3"></n-gi>
+                                <n-gi :span="21">
+                                    <div class="body-item-title">分类标签</div>
                                     <n-select v-model:value="value" multiple :options="options" placeholder="为歌曲添加1～3个分类标签"
-                                        max-tag-count="responsive" @update:value="handleUpdateValue" />
+                                        max-tag-count="responsive" @update:value="handleUpdateValue" @click="renderTags" />
                                 </n-gi>
-                                <!-- <n-gi :span="3"></n-gi> -->
                             </n-grid>
                         </div>
                     </n-gi>
-                    <n-gi :span="15">
+                    <n-gi :span="1"></n-gi>
+                    <n-gi :span="14">
                         <div class="body-item">
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
-                                    <div class="body-item-title" :style="{
-                                        'color': (accentColor === '0,0,0' || accentColor === '255,255,255') ? fontColorString : 'rgba(' + this.accentColor + ', 0.25)'
-                                    }" @click="testfunc">你需要上传歌曲文件</div>
+                                    <div class="body-item-title" @click="testfunc">你需要上传歌曲文件</div>
                                     <div class="body-item-file-input">
                                         <n-button strong secondary type="primary" @click="uploadSongFile" :focusable="false"
                                             :style="{
                                                 '--n-color':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                                    'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-color-hover':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        fontColorHover : 'rgba(' + this.accentColor + ', 0.45)',
+                                                    'rgba(' + this.accentColor + ', 0.45)',
                                                 '--n-color-pressed':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        fontColorPress : 'rgba(' + this.accentColor + ', 0.45)',
+                                                    'rgba(' + this.accentColor + ', 0.45)',
                                                 '--n-color-focus':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                                    'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-text-color':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-hover':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        BackgroundColorHover : 'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-pressed':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        BackgroundColorPress : 'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-focus':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
-                                                '--n-border': '2px solid transparent',
-                                                '--n-border-hover': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    `2px solid  ${fontColorHover}` : '2px solid rgba(' + this.accentColor + ', 1)',
-                                                '--n-border-pressed': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    `2px solid  ${fontColorPress}` : '2px solid rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 1)',
+                                                '--n-border': '1px solid transparent',
+                                                '--n-border-hover': '1px solid transparent',
+                                                '--n-border-pressed': '1px solid transparent',
                                                 '--n-border-radius': '8px',
                                                 '--n-height': '36px',
                                                 '--n-font-size': '18px',
@@ -113,41 +104,29 @@
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
-                                    <div class="body-item-title" :style="{
-                                        'color': (accentColor === '0,0,0' || accentColor === '255,255,255') ? fontColorString : 'rgba(' + this.accentColor + ', 0.25)'
-                                    }">你可以选择上传歌词文件</div>
+                                    <div class="body-item-title">你可以选择上传歌词文件</div>
                                     <div class="body-item-file-input">
                                         <n-button strong secondary type="primary" @click="uploadLyricFile"
                                             :focusable="false" :style="{
                                                 '--n-color':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                                    'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-color-hover':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        fontColorHover : 'rgba(' + this.accentColor + ', 0.45)',
+                                                    'rgba(' + this.accentColor + ', 0.45)',
                                                 '--n-color-pressed':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        fontColorPress : 'rgba(' + this.accentColor + ', 0.45)',
+                                                    'rgba(' + this.accentColor + ', 0.45)',
                                                 '--n-color-focus':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                                    'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-text-color':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-hover':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        BackgroundColorHover : 'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-pressed':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        BackgroundColorPress : 'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 1)',
                                                 '--n-text-color-focus':
-                                                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                        BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 1)',
                                                 '--n-border': '1px solid transparent',
-                                                '--n-border-hover': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    `2px solid  ${fontColorHover}` : '2px solid rgba(' + this.accentColor + ', 1)',
-                                                '--n-border-pressed': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    `2px solid  ${fontColorPress}` : '2px solid rgba(' + this.accentColor + ', 1)',
+                                                '--n-border-hover': '1px solid transparent',
+                                                '--n-border-pressed': '1px solid transparent',
                                                 '--n-border-radius': '8px',
                                                 '--n-height': '36px',
                                                 '--n-font-size': '18px',
@@ -165,37 +144,21 @@
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
-                                    <div class="body-item-title" :style="{
-                                        'color': (accentColor === '0,0,0' || accentColor === '255,255,255') ? fontColorString : 'rgba(' + this.accentColor + ', 0.25)'
-                                    }">歌名</div>
+                                    <div class="body-item-title">歌名</div>
                                     <n-input type="text" size="small" placeholder="你需要填写歌曲名称" :value="songName"
                                         @input="songName = $event" :style="{
-                                            '--n-color':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
-                                            '--n-color-focus':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    fontColorHover : 'rgba(' + this.accentColor + ', 0.25)',
-                                            '--n-text-color':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
-                                            '--n-caret-color':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                            '--n-color': 'white',
+                                            '--n-color-focus': 'white',
+                                            '--n-text-color': 'black',
+                                            '--n-caret-color': 'black',
                                             '--n-border-hover': 'transparent',
                                             '--n-border-focus': 'transparent',
-                                            '--n-placeholder-color':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    BackgroundColorString : '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                            '--n-placeholder-color': 'grey',
                                             '--n-border-radius': '8px',
                                             '--n-height': '40px',
                                             '--n-font-size': '16px',
-                                            '--n-border':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    `2px solid ${fontColorString}` : '2px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
-                                            '--n-box-shadow-focus':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    `0 0 0 2px ${fontColorHover}` : '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                            '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                                             '--n-icon-size': '25px',
                                         }" />
                                 </n-gi>
@@ -206,37 +169,21 @@
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
-                                    <div class="body-item-title" :style="{
-                                        'color': (accentColor === '0,0,0' || accentColor === '255,255,255') ? fontColorString : 'rgba(' + this.accentColor + ', 0.25)'
-                                    }">歌手</div>
+                                    <div class="body-item-title">歌手</div>
                                     <n-input type="text" size="small" placeholder="佚名" :value="songAuthor"
                                         @input="songAuthor = $event" :style="{
-                                            '--n-color':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
-                                            '--n-color-focus':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    fontColorHover : 'rgba(' + this.accentColor + ', 0.25)',
-                                            '--n-text-color':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
-                                            '--n-caret-color':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                            '--n-color': 'white',
+                                            '--n-color-focus': 'white',
+                                            '--n-text-color': 'black',
+                                            '--n-caret-color': 'black',
                                             '--n-border-hover': 'transparent',
                                             '--n-border-focus': 'transparent',
-                                            '--n-placeholder-color':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    BackgroundColorString : '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                            '--n-placeholder-color': 'grey',
                                             '--n-border-radius': '8px',
                                             '--n-height': '40px',
                                             '--n-font-size': '16px',
-                                            '--n-border':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    `2px solid ${fontColorString}` : '2px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
-                                            '--n-box-shadow-focus':
-                                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                                    `0 0 0 2px ${fontColorHover}` : '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                                            '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+                                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                                             '--n-icon-size': '25px',
                                         }" />
                                 </n-gi>
@@ -246,35 +193,23 @@
                     </n-gi>
                 </n-grid>
             </div>
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 20px; margin-bottom: 25px">
                 <n-grid class="login-button-top">
                     <n-gi :span="4"></n-gi>
                     <n-gi :span="4" style="display: flex; justify-content: right">
                         <n-button strong secondary type="success" @click="submitUpload" :focusable="false" :style="{
                             '--n-color':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                'rgba(' + this.accentColor + ', 0.25)',
                             '--n-color-hover':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    fontColorHover : 'rgba(' + this.accentColor + ', 0.45)',
+                                'rgba(' + this.accentColor + ', 0.45)',
                             '--n-color-pressed':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    fontColorPress : 'rgba(' + this.accentColor + ', 0.45)',
-                            '--n-color-focus':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                'rgba(' + this.accentColor + ', 0.45)',
                             '--n-text-color':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 1)',
                             '--n-text-color-hover':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    BackgroundColorHover : 'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 1)',
                             '--n-text-color-pressed':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    BackgroundColorPress : 'rgba(' + this.accentColor + ', 1)',
-                            '--n-text-color-focus':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 1)',
                             '--n-border': '1px solid transparent',
                             '--n-border-hover': '1px solid transparent',
                             '--n-border-pressed': '1px solid transparent',
@@ -290,29 +225,17 @@
                     <n-gi :span="4" style="display: flex; justify-content: left">
                         <n-button strong secondary type="Warning" @click="closeUWindow" :style="{
                             '--n-color':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                'grey',
                             '--n-color-hover':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    BackgroundColorHover : 'rgba(' + this.accentColor + ', 0.45)',
+                                '#5d5d60',
                             '--n-color-pressed':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    BackgroundColorPress : 'rgba(' + this.accentColor + ', 0.45)',
-                            '--n-color-focus':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                                '#5d5d60',
                             '--n-text-color':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    fontColorString : 'rgba(' + this.accentColor + ', 1)',
+                                'white',
                             '--n-text-color-hover':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    fontColorHover : 'rgba(' + this.accentColor + ', 1)',
+                                'white',
                             '--n-text-color-pressed':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    fontColorPress : 'rgba(' + this.accentColor + ', 1)',
-                            '--n-text-color-focus':
-                                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                                    fontColorString : 'rgba(' + this.accentColor + ', 1)',
+                                'white',
                             '--n-border': '1px solid transparent',
                             '--n-border-hover': '1px solid transparent',
                             '--n-border-pressed': '1px solid transparent',
@@ -404,49 +327,24 @@
   
 <script>
 import { CloseOutline, ArrowUpOutline, WatchOutline, ImageOutline } from '@vicons/ionicons5'
-import { NInput, NModal, NPopover, NIcon } from 'naive-ui';
+import { NInput, NModal, NPopover } from 'naive-ui';
 import { defineComponent, ref, watch } from "vue";
 import { mapState } from 'vuex'
 import { message } from "ant-design-vue";
-import { getRGBString, getFontColorString, getBackgroundColorString, globalThemeColor } from '/src/colorMode.js'
 export default {
     name: "UploadSong",
+    computed: {
+        ...mapState(['accentColor', 'colorMode']),
+    },
     components: {
         CloseOutline,
         ArrowUpOutline,
-        ImageOutline,
         NInput,
-        NModal
+        NModal,
+        ImageOutline
     },
     props: {
         showUploadSong: Boolean,
-    },
-    computed: {
-        ...mapState(['accentColor', 'colorMode']),
-        BoxColorString() {
-            return getRGBString(getBackgroundColorString(globalThemeColor), 0.9)
-        },
-        BackgroundColorString() {
-            return getRGBString(getBackgroundColorString(globalThemeColor), 0.8)
-        },
-        fontColorString() {
-            return getRGBString(getFontColorString(globalThemeColor), 0.8)
-        },
-        fontColorHover() {
-            return getRGBString(getFontColorString(globalThemeColor), 0.6)
-        },
-        BackgroundColorHover() {
-            return getRGBString(getBackgroundColorString(globalThemeColor), 0.6)
-        },
-        fontColorPress() {
-            return getRGBString(getFontColorString(globalThemeColor), 0.5)
-        },
-        BackgroundColorPress() {
-            return getRGBString(getBackgroundColorString(globalThemeColor), 0.5)
-        },
-        fontColorSlight() {
-            return getRGBString(getFontColorString(globalThemeColor), 0.4)
-        }
     },
     data() {
         return {
@@ -636,13 +534,13 @@ export default {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     options.push(option);
-                    option.style={
-                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ? 
-                        this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
-                        'rgba(' + this.accentColor + ', 0.2)',
+                    option.style = {
+                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
+                            this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
+                            'rgba(' + this.accentColor + ', 0.2)',
                         'color': 'rgb(' + this.accentColor + ')',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
-                    }   
+                    }
                 }
             })
             let op=this.options.filter(function(v){return options.indexOf(v)==-1})
@@ -655,7 +553,7 @@ export default {
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',}
                     }
                 }
-            } 
+            }
         },
         renderTags() {
             let menus = document.getElementsByClassName('n-base-select-menu n-base-select-menu--multiple n-select-menu')
@@ -665,25 +563,25 @@ export default {
                 menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
             }
             //let options = []
-            
+
             for (let i = 0; i < this.options.length; i++) {
-                this.options[i].style = 
-                    { 
-                      'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                      'color': this.colorMode === 'white' ? 'black' : 'white',
-                    }
+                this.options[i].style =
+                {
+                    'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                    'color': this.colorMode === 'white' ? 'black' : 'white',
+                }
             }
-            this.value.forEach((value) => {      
+            this.value.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     //options.push(option);
-                    option.style={
-                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ? 
-                        this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
-                        'rgba(' + this.accentColor + ', 0.2)',
+                    option.style = {
+                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
+                            this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
+                            'rgba(' + this.accentColor + ', 0.2)',
                         'color': 'rgb(' + this.accentColor + ')',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
-                    }   
+                    }
                 }
             })
         }
@@ -693,14 +591,14 @@ export default {
         //         if (selectMenu.length > 0) {
         //             selectMenu[0].style.setProperty('--n-color', this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)')
         //             selectMenu[0].style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
-        //             selectMenu[0].style.setProperty('--n-option-text-color', fontColorString)
+        //             selectMenu[0].style.setProperty('--n-option-text-color', this.colorMode === 'white' ? 'black' : 'white')
         //             selectMenu[0].style.setProperty('--n-border-radius', '8px')
         //             selectMenu[0].style.setProperty('--n-option-check-color', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)')
+        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)')
         //             selectMenu[0].style.setProperty('--n-option-text-color-active', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)')
+        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)')
         //             selectMenu[0].style.setProperty('--n-option-text-color-pressed', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)')
+        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)')
         //                     console.log(selectMenu.length)
     }
     // let tags = document.getElementsByClassName('n-base-select-option')
@@ -710,7 +608,7 @@ export default {
     //     tags[i].style.color = 
     //         (tags[i].classList.contains('n-base-select-option--selected')) ?
     //         ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //             BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
+    //             '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
     // }
     //     }, 0)
     // },
@@ -730,7 +628,7 @@ export default {
     //             tags[i].style.color = 
     //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
     //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
+    //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
     //         }
     //         console.log('hello')
     // },
@@ -740,7 +638,7 @@ export default {
     //             tags[i].style.color = 
     //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
     //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
+    //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
     //         }
     // }
     // }
@@ -765,11 +663,15 @@ export default {
 }
 
 .body-item {
-    max-width: 600px;
+    max-width: 500px;
     margin-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.body-item-title {
+    color: grey;
 }
 
 .upload-card-title {
@@ -787,20 +689,11 @@ export default {
     padding-left: 40px;
 }
 
+.upload-song-page:hover {}
+
 .upload-song-page img {
-    height: 238px;
-    aspect-ratio: 1;
-    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;
-}
-
-.upload-song-page div {
-    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;
-}
-
-.upload-song-page div:hover,.upload-song-page img:hover {
-    opacity:0.8;
-    transform: scale(1.02);
-    transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.5s;
+    width: 220px;
+    height: 220px;
 }
 
 .upload-button-position {

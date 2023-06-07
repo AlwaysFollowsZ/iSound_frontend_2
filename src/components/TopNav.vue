@@ -3,12 +3,8 @@
     <n-grid x-gap="0">
       <n-gi :span="4">
         <router-link to="/">
-          <n-image
-            width="45"
-            src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-            style="padding-left: 4%"
-            :preview-disabled="true"
-          />
+          <n-image width="45" src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
+            style="padding-left: 4%" :preview-disabled="true" />
           <div class="isound-style">iSound</div>
         </router-link>
       </n-gi>
@@ -34,88 +30,59 @@
           <n-gi :span="3" v-if="!this.isLoggedIn"></n-gi>
           <n-gi :span="15">
             <div style="padding-top: 3%; padding-right: 3%; padding-left: 7%">
-              <n-input
-                :style="{
-                  '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                  '--n-color-focus':
-                    this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                  '--n-border-radius': `10px`,
-                  '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                  '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                  border: '1px solid rgb(224, 224, 230)',
-                  '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                  '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                  '--n-box-shadow-focus':
-                    '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                }"
-                type="text"
-                v-model:value="searchValue"
-                placeholder="歌曲、歌单以及更多内容"
-                @keyup.enter="search"
-              />
+              <n-input :style="{
+                '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                '--n-color-focus':
+                  this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                '--n-border-radius': `10px`,
+                '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                border: '1px solid rgb(224, 224, 230)',
+                '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                '--n-box-shadow-focus':
+                  '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+              }" type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" />
             </div>
           </n-gi>
           <n-gi :span="3">
-            <div
-              style="padding-top: 25%"
-              class="search-icon-container"
-              :style="{
-                color: this.searchIconIsHovered
-                  ? 'rgba(' + this.accentColor + ', 0.9)'
-                  : 'lightgrey',
-              }"
-              @mouseover="this.searchIconIsHovered = true"
-              @mouseout="this.searchIconIsHovered = false"
-            >
+            <div style="padding-top: 20%" class="search-icon-container" :style="{
+              color: this.searchIconIsHovered
+                ? 'rgba(' + this.accentColor + ', 0.9)'
+                : colorMode === 'white' ? 'grey' : 'lightgrey',
+              'transition': 'all linear 0.4s'
+            }" @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
               <n-icon :component="SearchOutline" size="27px" @click="search" />
             </div>
           </n-gi>
           <n-gi :span="3">
             <div class="color-icon-container">
-              <n-tooltip
-                :style="{ maxWidth: '270px', maxHeight: '200px' }"
-                placement="bottom-start"
-                trigger="hover"
-                @update:show="handleUpdateShow"
-              >
+              <n-tooltip :style="{ maxWidth: '270px', maxHeight: '200px' }" placement="bottom-start" trigger="hover"
+                @update:show="handleUpdateShow">
                 <template #trigger>
-                  <div style="color: lightgrey">
-                    <n-icon
-                      size="27px"
-                      v-if="this.colorMode === 'white'"
-                      @click="changeColorMode"
-                      ><moon-outline
-                    /></n-icon>
-                    <n-icon size="27px" v-else @click="changeColorMode"
-                      ><sunny-outline
-                    /></n-icon>
+                  <div :style="{
+                    'color': 'rgba(' + this.accentColor + ', 0.9)',
+                    'transition': 'all linear 0.3s'
+                  }">
+                    <n-icon size="27px" v-if="this.colorMode === 'white'"
+                      @click="changeColorMode"><moon-outline /></n-icon>
+                    <n-icon size="27px" v-else @click="changeColorMode"><sunny-outline /></n-icon>
                   </div>
                 </template>
                 <template #default>
                   <div>
-                    <span
-                      class="choose-color-default"
-                      @click="
-                        this.setAccentColor(
-                          this.colorMode === 'white' ? '0,0,0' : '255,255,255'
-                        )
-                      "
-                    >
+                    <span class="choose-color-default" @click="
+                      this.setAccentColor(
+                        this.colorMode === 'white' ? '0,0,0' : '255,255,255'
+                      )
+                      ">
                       默认
                     </span>
-                    <span
-                      style="max-width: 200px"
-                      v-for="(c, idx) in accentColorChoices"
-                      :key="idx"
-                    >
-                      <button
-                        class="round-button"
-                        :style="{
-                          'background-color': 'rgb(' + c + ')',
-                          border: '1px solid rgb(' + c + ')',
-                        }"
-                        @click="this.setAccentColor(c)"
-                      ></button>
+                    <span style="max-width: 200px" v-for="(c, idx) in accentColorChoices" :key="idx">
+                      <button class="round-button" :style="{
+                        'background-color': 'rgb(' + c + ')',
+                        border: '1px solid rgb(' + c + ')',
+                      }" @click="this.setAccentColor(c)"></button>
                       <!-- < :style="{'--n-color': }" @click="this.setAccentColor(c); console.log(c)"/> -->
                     </span>
                     <div style="margin-top: 3%">
@@ -123,11 +90,8 @@
                         <n-gi :span="14">开启多彩背景色变换</n-gi>
                         <n-gi :span="5"></n-gi>
                         <n-gi :span="5">
-                          <n-switch
-                            v-model:value="multiColorShouldDisplay"
-                            @update:value="handleMultiColorChange"
-                            :style="{ '--n-rail-color': 'grey' }"
-                          />
+                          <n-switch :rail-style="railStyle" v-model:value="multiColorShouldDisplay"
+                            @update:value="handleMultiColorChange" :style="{ '--n-rail-color': 'grey' }" />
                         </n-gi>
                       </n-grid>
                     </div>
@@ -138,15 +102,12 @@
           </n-gi>
 
           <n-gi :span="3" v-if="this.isLoggedIn">
-            <div style="padding-top: 25%">
+            <div style="padding-top: 20%">
               <n-badge dot :offset="[-2.5, 7.5]" :show="showMessage">
-                <n-icon
-                  class="mail-icon"
-                  :component="MailOutline"
-                  size="27px"
-                  @click="readMessage"
-                  color="lightgray"
-                />
+                <n-icon @mouseenter="mailIconIsHovered = true" @mouseleave="mailIconIsHovered = false" :style="{
+                  'transition': 'all linear 0.4s'
+                }" class="mail-icon" :component="MailOutline" size="27px" @click="readMessage"
+                  :color="mailIconIsHovered ? `rgb(${accentColor},0.9)` : colorMode === 'white' ? 'grey' : 'lightgrey'" />
               </n-badge>
             </div>
           </n-gi>
@@ -154,66 +115,35 @@
       </n-gi>
       <n-gi :span="1">
         <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options">
-          <n-avatar
-            v-if="isLoggedIn"
-            class="user-avatar"
-            @click="this.$router.push('/home')"
-            @mouseover="renderDropDown"
-            :src="this.avatarFile"
-            size="large"
-          ></n-avatar>
-          <n-avatar
-            v-else
-            src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-            size="large"
-          ></n-avatar>
+          <n-avatar v-if="isLoggedIn" class="user-avatar" @click="this.$router.push('/home')" @mouseover="renderDropDown"
+            :src="this.avatarFile" size="large"></n-avatar>
+          <n-avatar v-else src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
         </n-dropdown>
         <n-tooltip v-else placement="bottom-start" trigger="hover">
           <template #trigger>
-            <n-avatar
-              class="user-avatar"
-              src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-              size="large"
-            ></n-avatar>
+            <n-avatar class="user-avatar" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+              size="large"></n-avatar>
           </template>
-          已有账号？请<a style="color: cornflowerblue" @click="showLogin = true">登录</a
-          >；未注册账号？请<a style="color: cornflowerblue" @click="showRegister = true"
-            >注册</a
-          >。
+          已有账号？请<a style="color: cornflowerblue" @click="showLogin = true">登录</a>；未注册账号？请<a style="color: cornflowerblue"
+            @click="showRegister = true">注册</a>。
         </n-tooltip>
       </n-gi>
     </n-grid>
   </div>
-  <login-view
-    :showLogin="showLogin"
-    @closeLoginWindow="showLogin = false"
-    @switch2Register="
-      showLogin = false;
-      showRegister = true;
-    "
-    @switch2ResetPasswd="
-      showLogin = false;
-      showResetPasswd = true;
-    "
-    @login="toLogIn"
-  ></login-view>
-  <register-view
-    :showRegister="showRegister"
-    @closeRegisterWindow="showRegister = false"
-  ></register-view>
-  <reset-passwd-view
-    :showResetPasswd="showResetPasswd"
-    @closeResetPasswdWindow="showResetPasswd = false"
-  ></reset-passwd-view>
-  <modify-user-message-view
-    :showModifyUserMessage="showModifyUserMessage"
-    @closeModifyWindow="showModifyUserMessage = false"
-  ></modify-user-message-view>
-  <change-passwd-view
-    v-if="isLoggedIn"
-    :showChangePasswd="showChangePasswd"
-    @closeChangePasswdWindow="showChangePasswd = false"
-  ></change-passwd-view>
+  <login-view :showLogin="showLogin" @closeLoginWindow="showLogin = false" @switch2Register="
+    showLogin = false;
+  showRegister = true;
+  " @switch2ResetPasswd="
+  showLogin = false;
+showResetPasswd = true;
+" @login="toLogIn"></login-view>
+  <register-view :showRegister="showRegister" @closeRegisterWindow="showRegister = false"></register-view>
+  <reset-passwd-view :showResetPasswd="showResetPasswd"
+    @closeResetPasswdWindow="showResetPasswd = false"></reset-passwd-view>
+  <modify-user-message-view :showModifyUserMessage="showModifyUserMessage"
+    @closeModifyWindow="showModifyUserMessage = false"></modify-user-message-view>
+  <change-passwd-view v-if="isLoggedIn" :showChangePasswd="showChangePasswd"
+    @closeChangePasswdWindow="showChangePasswd = false"></change-passwd-view>
 </template>
 
 <script>
@@ -280,6 +210,7 @@ export default {
       showResetPasswd: false,
       showChangePasswd: false,
       searchIconIsHovered: false,
+      mailIconIsHovered: false,
       backToHomeIsHovered: false,
       multiColorShouldDisplay: false, // 多彩背景变换，要求必须默认 false
       SearchOutline,
@@ -326,6 +257,25 @@ export default {
           },
         },
       ],
+    };
+  },
+  setup() {
+    return {
+      railStyle: ({ focused, checked }) => {
+        const style = {};
+        if (checked) {
+          style.background = "#fff";
+          if (focused) {
+            style.boxShadow = "0 0 0 2px #fff";
+          }
+        } else {
+          style.background = "grey";
+          if (focused) {
+            style.boxShadow = "0 0 0 2px grey";
+          }
+        }
+        return style;
+      },
     };
   },
   methods: {
