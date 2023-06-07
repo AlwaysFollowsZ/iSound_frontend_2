@@ -39,8 +39,8 @@
                 </span>
               </n-gi>
               <n-gi :span="4" style="margin: auto">
-                <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon size="45" @click="complain" color="rgba(255,255,255,0.7)" class="hoverable-icon">
+                <span style="margin-right: 3px; margin-top: 2px;">
+                  <n-icon size="45" @click="complain" :color="this.iscomplain ? 'red' : 'rgba(255,255,255,0.7)'" class="hoverable-icon" >
                     <WarningOutline />
                   </n-icon>
                 </span>
@@ -121,7 +121,7 @@
                     </div>
                   </n-scrollbar>
                   <div class="translationSwitch">
-                    <n-switch size="small" :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
+                    <n-switch :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
                       @click="scroll('auto')" :style="{ '--n-rail-color': 'grey' }">
                       <template #icon> 译 </template>
                     </n-switch>
@@ -261,8 +261,8 @@
                   </n-gi>
                   <n-gi :span="2" class="icon-container">
                     <div class="comment-icon" style="margin-top: 8px">
-                      <span key="reply-comment">
-                        <span style="cursor: auto">
+                      <span key="reply-comment" style="margin-right: 3px;">
+                        <span style="cursor: auto;">
                           <n-button text circle :focusable="false" @click="editReplyComment(comment)"
                             :disabled="!this.$cookies.isKey('userid')" :style="{
                               '--n-color': 'transparent',
@@ -286,8 +286,8 @@
                           </n-button>
                         </span>
                       </span>
-                      <span key="edit-comment">
-                        <span style="padding-left: 3px; cursor: auto">
+                      <span key="edit-comment" style="margin-left: 3px">
+                        <span style="cursor: auto" v-if="this.$cookies.get('userid') == comment.up.id">
                           <n-button text circle :focusable="false" @click="editMyComment(comment)" :disabled="this.$cookies.get('userid') != comment.up.id
                             " :style="{
     '--n-color': 'transparent',
@@ -311,8 +311,8 @@
                           </n-button>
                         </span>
                       </span>
-                      <span key="delete-comment" style="display: inline-block">
-                        <span style="padding-left: 3px; cursor: auto">
+                      <span key="delete-comment" style="display: inline-block; margin-left: 3px" v-if="this.$cookies.get('userid') == comment.up.id">
+                        <span style="cursor: auto">
                           <n-popconfirm @positive-click="handlePositiveClick(comment)"
                             @negative-click="handleNegativeClick" positive-text="确认" negative-text="取消" :style="{
                               '--n-text-color':
@@ -591,7 +591,7 @@
                         </n-gi>
                         <n-gi :span="2" class="icon-container">
                           <div class="comment-icon" style="margin-top: 8px">
-                            <span key="edit-comment">
+                            <span key="edit-comment" v-if="this.$cookies.get('userid') == comment_2nd.up.id">
                               <span style="cursor: auto">
                                 <!-- <n-popover trigger="hover">
                           <template #trigger> -->
@@ -620,7 +620,7 @@
                                 </n-button>
                               </span>
                             </span>
-                            <span key="delete-comment">
+                            <span key="delete-comment" v-if="this.$cookies.get('userid') == comment_2nd.up.id">
                               <span style="padding-left: 3px; cursor: auto">
                                 <n-popconfirm @positive-click="
                                   handlePositiveClick(comment_2nd)
@@ -860,7 +860,7 @@
     </n-grid>
   </div>
   <modify-complain-view :showModifyComplainView="showModifyComplainView"
-    @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
+    @closeModifyWindow="closeM"></modify-complain-view>
   <div v-show="false"><top-nav></top-nav></div>
   <n-modal :z-index="2" v-model:show="showCollections" :block-scroll="false">
     <div :style="{
@@ -1363,6 +1363,15 @@ export default defineComponent({
         });
       }); //更新当前用户的收藏夹数据
     },
+    closeM() {
+      this.showModifyComplainView = false
+      const musicId = this.$route.params.musicId;
+      this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
+        this.iscomplain = response.data.music_set[0].is_complained;
+        
+      });
+      //console.log('com: ' + this.iscomplain)
+    }
   },
 });
 </script>
@@ -1607,7 +1616,9 @@ export default defineComponent({
   margin-right: 5px;
   font-size: 13px;
 }
-
+.hoverable-icon {
+  transition: color 1s;
+}
 .hoverable-icon:hover {
   cursor: pointer;
 }

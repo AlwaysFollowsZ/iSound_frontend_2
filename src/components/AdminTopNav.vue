@@ -34,7 +34,7 @@
                         <n-gi :span="14">
                             <n-dropdown trigger="hover" :options="options">
                             <div class="admin-avatar" >
-                                <n-avatar src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
+                                <n-avatar src="/src/assets/admin-avatar.png" size="large"></n-avatar>
                             </div>
                          </n-dropdown>
                         </n-gi>

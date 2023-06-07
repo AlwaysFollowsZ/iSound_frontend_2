@@ -334,7 +334,8 @@ export default {
       this.$http.post("/api/accounts/update/", data).then((response) => {
         if (response.data.code === "0") {
           this.$EventBus.emit("updateInfo");
-          this.closeMWindow();
+          this.$emit("closeModifyWindow");
+          this.$EventBus.emit('refresh')
           // alert('修改成功!')
         } else if (response.data.code === "-1") {
           const message = response.data.message;

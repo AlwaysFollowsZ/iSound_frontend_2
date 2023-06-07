@@ -43,6 +43,7 @@ export default {
             this.cleanChangeReaction()
         },
         handleDelete(key) {
+            let id = this.songData[key].id;
             this.songData[key].isDeleted = true//只在adminView有用
             this.$http.delete(`/api/music/delete/${this.songData[key].id}/`).then(() => {
                 this.$emit('flushData')//只在adminView有用

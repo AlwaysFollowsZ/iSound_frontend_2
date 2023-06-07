@@ -703,8 +703,8 @@ export default {
             if (row.isDeleted !== undefined && isAdmin.value) {//只有管理员有删除动画
                 return {
                     style: {
-                        'animation': row.isDeleted ? 'slideOutRight' : 'none',
-                        'animation-duration': '1.5s'
+                        'animation': row.isDeleted ? 'fadeOut' : 'none',
+                        'animation-duration': '2.2s'
                     }
                 }
             }
@@ -759,7 +759,7 @@ export default {
             }
         },
         updateCollections() {
-            this.$http.get('/api/playlist/of/0/', formData).then((response) => {
+            this.$http.get('/api/playlist/of/0/').then((response) => {
                 let key = 0
                 console.log('update:content=' + response.data.playlist_set)
                 if (response.data.playlist_set.length == 0) {

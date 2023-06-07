@@ -66,7 +66,7 @@ export default defineComponent({
         },
         handleTagList() {
             this.tagList = [];
-            this.value.forEach((value) => {
+            this.tags.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     this.tagList.push(option.label);
@@ -80,7 +80,7 @@ export default defineComponent({
                 value.splice(0, 1)
             }
             let options = []
-            this.value.forEach((value) => {
+            this.tags.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     options.push(option);
@@ -133,7 +133,7 @@ export default defineComponent({
                     '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
                 }
             }
-            this.value.forEach((value) => {
+            this.tags.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     //options.push(option);
