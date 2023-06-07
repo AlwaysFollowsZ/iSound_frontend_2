@@ -108,8 +108,8 @@ export default {
                 if (hoverIndex === index) {//是被hover的标签
                     return {
                         // 'height': '80px',
-                        'width': '180px',
-                        'transform': 'scale(1.25)'
+                        'width': '170px',
+                        'transform': 'scale(1.3)'
                     }
                 }
                 else {//其他标签
@@ -117,7 +117,7 @@ export default {
                     return {
                         // 'height': '80px',
                         // 'width': `${140-Math.abs(hoverIndex-index)*10}px'`,
-                        'margin': `${15 - Math.abs(hoverIndex - index)*2}px`
+                        'margin': `0 ${15 - Math.abs(hoverIndex - index)*2}px`
                     }
                 }
             }
