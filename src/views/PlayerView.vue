@@ -261,7 +261,7 @@
                   </n-gi>
                   <n-gi :span="2" class="icon-container">
                     <div class="comment-icon" style="margin-top: 8px">
-                      <span key="reply-comment">
+                      <span key="reply-comment" style="margin-right: 3px;">
                         <span style="cursor: auto">
                           <n-button text circle :focusable="false" @click="editReplyComment(comment)"
                             :disabled="!this.$cookies.isKey('userid')" :style="{
@@ -286,8 +286,8 @@
                           </n-button>
                         </span>
                       </span>
-                      <span key="edit-comment">
-                        <span style="padding-left: 3px; cursor: auto">
+                      <span key="edit-comment" style="margin-left: 3px">
+                        <span style="cursor: auto" v-if="this.$cookies.get('userid') == comment.up.id">
                           <n-button text circle :focusable="false" @click="editMyComment(comment)" :disabled="this.$cookies.get('userid') != comment.up.id
                             " :style="{
     '--n-color': 'transparent',
@@ -311,8 +311,8 @@
                           </n-button>
                         </span>
                       </span>
-                      <span key="delete-comment" style="display: inline-block">
-                        <span style="padding-left: 3px; cursor: auto">
+                      <span key="delete-comment" style="display: inline-block; margin-left: 3px" v-if="this.$cookies.get('userid') == comment.up.id">
+                        <span style="cursor: auto">
                           <n-popconfirm @positive-click="handlePositiveClick(comment)"
                             @negative-click="handleNegativeClick" positive-text="确认" negative-text="取消" :style="{
                               '--n-text-color':
@@ -591,7 +591,7 @@
                         </n-gi>
                         <n-gi :span="2" class="icon-container">
                           <div class="comment-icon" style="margin-top: 8px">
-                            <span key="edit-comment">
+                            <span key="edit-comment" v-if="this.$cookies.get('userid') == comment_2nd.up.id">
                               <span style="cursor: auto">
                                 <!-- <n-popover trigger="hover">
                           <template #trigger> -->
@@ -620,7 +620,7 @@
                                 </n-button>
                               </span>
                             </span>
-                            <span key="delete-comment">
+                            <span key="delete-comment" v-if="this.$cookies.get('userid') == comment_2nd.up.id">
                               <span style="padding-left: 3px; cursor: auto">
                                 <n-popconfirm @positive-click="
                                   handlePositiveClick(comment_2nd)
@@ -1274,7 +1274,7 @@ export default defineComponent({
         obj.time = this.parseTime(obj.timeStr);
         if (
           this.lyricsObjArr.length > 0 &&
-          obj.time <= this.lyricsObjArr[this.lyricsObjArr.length - 1].time
+          obj.time < this.lyricsObjArr[this.lyricsObjArr.length - 1].time
         ) {
           this.hasTranslation = true;
           for (let i = 0; i < this.lyricsObjArr.length; i++) {

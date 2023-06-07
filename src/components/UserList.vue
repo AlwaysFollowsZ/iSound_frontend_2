@@ -85,7 +85,7 @@
                             </template>
                             确定要取消关注该用户吗？
                         </n-popconfirm>
-                        <n-button v-else strong secondary round style="margin-top: 15px;" @click="follow(user)"
+                        <n-button v-else-if="!user.isFollowing && ((this.$cookies.isKey('userid') && user.id != this.$cookies.get('userid')) || !this.$cookies.isKey('userid'))" strong secondary round style="margin-top: 15px;" @click="follow(user)"
                             :style="{
                                 '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
                                 '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 

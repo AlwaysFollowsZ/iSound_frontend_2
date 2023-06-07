@@ -120,7 +120,7 @@
         </n-dropdown>
         <n-tooltip v-else placement="bottom-start" trigger="hover">
           <template #trigger>
-            <n-avatar class="user-avatar" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+            <n-avatar class="user-avatar" src="/src/assets/ava.jpg"
               size="large"></n-avatar>
           </template>
           已有账号？请<a style="color: cornflowerblue" @click="showLogin = true">登录</a>；未注册账号？请<a style="color: cornflowerblue"
