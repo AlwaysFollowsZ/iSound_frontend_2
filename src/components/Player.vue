@@ -22,7 +22,7 @@ import {
 
 const containerRef = ref();
 const mainColor = computed(() => {
-  return getRGBString(getBackgroundColorString(globalThemeColor), 0.7);
+  return getRGBString(getBackgroundColorString(globalThemeColor), 0.9);
 });
 const hoverColor = computed(() => {
   return getRGBString(getBackgroundColorString(globalThemeColor), 1);
@@ -112,7 +112,7 @@ onMounted(() => {
     storageName: "aplayer-setting",
   });
 
-  proxy.$http.get("/api/index/").then((response) => {
+  proxy.$http.get("/api/music/detail/1/").then((response) => {
     ap.list.add(response.data.music_set);
   });
 

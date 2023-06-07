@@ -304,7 +304,6 @@ export default {
     },
     setup() {
         return {
-            
             error(msg) {
                 message.error({
                     content: msg,
