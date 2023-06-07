@@ -69,14 +69,6 @@
               </n-gi>
               <n-gi :span="4" style="margin: auto">
                 <span style="margin-right: 3px; margin-top: 2px">
-                  <!-- <n-icon
-                    v-if="iscomplain"
-                    size="45"
-                    color="#ff6666"
-                    @click="complain"
-                  >
-                    <Warning />
-                  </n-icon> -->
                   <n-icon
                     size="45"
                     @click="complain"
@@ -89,14 +81,6 @@
               </n-gi>
               <n-gi :span="4" style="margin: auto">
                 <span style="margin-right: 3px; margin-top: 2px">
-                  <!-- <n-icon
-                    v-if="iscomplain"
-                    size="45"
-                    color="#ff6666"
-                    @click="complain"
-                  >
-                    <Warning />
-                  </n-icon> -->
                   <n-icon
                     size="40"
                     @click="scrollToComments"
@@ -107,7 +91,6 @@
                   </n-icon>
                 </span>
               </n-gi>
-              <!-- <n-gi :span="6"></n-gi> -->
             </n-grid>
           </div>
         </n-gi>
@@ -127,13 +110,13 @@
                   <span>来源： </span>
                   <router-link
                     :to="
-                      this.$cookies.get('userid') == this.up.id
+                      this.$cookies.get('userid') == music.up.id
                         ? '/home'
-                        : `/home/user/${this.up.id}`
+                        : `/home/user/${music.up.id}`
                     "
                   >
                     <span class="upload-user" style="color: #fff">{{
-                      this.up.username
+                      music.up.username
                     }}</span>
                   </router-link>
                 </div>
@@ -192,9 +175,8 @@
                       :rail-style="railStyle"
                       v-if="hasTranslation"
                       v-model:value="showTranslation"
-                      size="small"
-                      :round="false"
                       @click="scroll"
+                      :style="{ '--n-rail-color': 'grey' }"
                     >
                       <template #icon> 译 </template>
                     </n-switch>
@@ -212,117 +194,104 @@
     <n-grid>
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
-        <div>
-          <n-collapse>
-            <n-collapse-item :disabled="!this.$cookies.isKey('userid')">
-              <template #arrow>
-                <div style="color: white"></div>
-              </template>
-              <template #header>
-                <span style="margin-right: 3px; margin-top: 2px" @click="judgeLogState">
-                  <n-grid>
-                    <n-gi :span="23" id="comment-top">
-                      <span
-                        style="font-size: 30px; font-weight: 500"
-                        :style="{ color: 'rgb(' + this.accentColor + ')' }"
-                      >
-                        全部评论
-                      </span>
-                    </n-gi>
-                    <n-gi :span="1" style="padding-top: 5px">
-                      <n-icon
-                        id="comment-fold"
-                        size="36"
-                        :color="'rgb(' + this.accentColor + ')'"
-                      >
-                        <ChatbubbleEllipsesOutline />
-                      </n-icon>
-                    </n-gi>
-                  </n-grid>
-                </span>
-              </template>
-              <div>
-                <n-input
-                  style="margin-bottom: 15px"
-                  maxlength="200"
-                  show-count
-                  placeholder="音你而美，畅所欲言"
-                  type="textarea"
-                  v-model:value="value"
-                  :style="{
-                    '--n-color': 'transparent',
-                    '--n-color-focus': 'transparent',
-                    '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                    '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                    '--n-border-hover': 'transparent',
-                    '--n-border-focus': 'transparent',
-                    '--n-placeholder-color':
-                      this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                    '--n-border-radius': '8px',
-                    '--n-font-size': '15px',
-                    '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
-                    '--n-box-shadow-focus':
-                      '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                  }"
-                  :autosize="{
-                    minRows: 6,
-                    maxRows: 6,
-                  }"
-                />
-                <div class="my-comment-button">
-                  <n-button
-                    class="send-button"
-                    strong
-                    secondary
-                    type="tertiary"
-                    :focusable="false"
-                    @click="sendComment"
-                    :style="{
-                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                      '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
-                      '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
-                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                      '--n-border': '1px solid transparent',
-                      '--n-border-hover': '1px solid transparent',
-                      '--n-border-pressed': '1px solid transparent',
-                      '--n-border-radius': '5px',
-                      '--n-height': '36px',
-                      '--n-font-size': '16px',
-                    }"
-                  >
-                    发送
-                  </n-button>
-                  <n-button
-                    class="clean-button"
-                    style="margin-left: 938px"
-                    strong
-                    secondary
-                    type="tertiary"
-                    :focusable="false"
-                    :style="{
-                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                      '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
-                      '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
-                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                      '--n-border': '1px solid transparent',
-                      '--n-border-hover': '1px solid transparent',
-                      '--n-border-pressed': '1px solid transparent',
-                      '--n-border-radius': '5px',
-                      '--n-height': '36px',
-                      '--n-font-size': '16px',
-                    }"
-                    @click="cleanComment"
-                  >
-                    清空
-                  </n-button>
-                </div>
-              </div>
-            </n-collapse-item>
-          </n-collapse>
+        <div class="comment-title" style="margin-bottom: 10px">
+          <n-grid>
+            <n-gi :span="23" id="comment-top">
+              <span
+                style="font-size: 30px; font-weight: 500"
+                :style="{ color: 'rgb(' + this.accentColor + ')' }"
+              >
+                全部评论
+              </span>
+            </n-gi>
+            <n-gi :span="1" style="padding-top: 5px">
+              <n-icon
+                id="comment-fold"
+                size="36"
+                :color="'rgb(' + this.accentColor + ')'"
+                @click="handleShow1stComment"
+              >
+                <ChatbubbleEllipsesOutline />
+              </n-icon>
+            </n-gi>
+          </n-grid>
+        </div>
+        <div v-if="this.write1stConmment">
+          <n-input
+            style="margin-bottom: 15px"
+            maxlength="200"
+            show-count
+            placeholder="音你而美，畅所欲言"
+            type="textarea"
+            v-model:value="value"
+            :style="{
+              '--n-color': 'transparent',
+              '--n-color-focus': 'transparent',
+              '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+              '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+              '--n-border-hover': 'transparent',
+              '--n-border-focus': 'transparent',
+              '--n-placeholder-color':
+                this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+              '--n-border-radius': '8px',
+              '--n-font-size': '15px',
+              '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
+              '--n-box-shadow-focus':
+                '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+            }"
+            :autosize="{ minRows: 6, maxRows: 6 }"
+          />
+          <div class="my-comment-button">
+            <n-button
+              class="send-button"
+              strong
+              secondary
+              type="tertiary"
+              :focusable="false"
+              @click="sendComment"
+              :style="{
+                '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
+                '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                '--n-border': '1px solid transparent',
+                '--n-border-hover': '1px solid transparent',
+                '--n-border-pressed': '1px solid transparent',
+                '--n-border-radius': '5px',
+                '--n-height': '36px',
+                '--n-font-size': '16px',
+              }"
+            >
+              发送
+            </n-button>
+            <n-button
+              class="clean-button"
+              style="margin-left: 938px"
+              strong
+              secondary
+              type="tertiary"
+              :focusable="false"
+              :style="{
+                '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
+                '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                '--n-border': '1px solid transparent',
+                '--n-border-hover': '1px solid transparent',
+                '--n-border-pressed': '1px solid transparent',
+                '--n-border-radius': '5px',
+                '--n-height': '36px',
+                '--n-font-size': '16px',
+              }"
+              @click="cleanComment"
+            >
+              清空
+            </n-button>
+          </div>
         </div>
       </n-gi>
       <n-gi :span="4"></n-gi>
@@ -340,149 +309,6 @@
           :key="idx"
         >
           <a-comment>
-            <template #actions>
-              <span key="reply-comment">
-                <span style="padding-left: 843px; cursor: auto">
-                  <!-- <n-popover trigger="hover">
-                    <template #trigger> -->
-                  <n-button
-                    text
-                    circle
-                    :focusable="false"
-                    @click="editReplyComment(comment)"
-                    :disabled="!this.$cookies.isKey('userid')"
-                    :style="{
-                      '--n-color': 'transparent',
-                      '--n-color-hover': 'transparent',
-                      '--n-color-pressed': 'transparent',
-                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                      '--n-text-color-disabled': 'rgba(' + this.accentColor + ', 0.6)',
-                      '--n-border': '1px solid transparent',
-                      '--n-border-hover': '1px solid transparent',
-                      '--n-border-pressed': '1px solid transparent',
-                    }"
-                  >
-                    <n-icon size="18">
-                      <ChatboxEllipsesOutline />
-                    </n-icon>
-                  </n-button>
-                  <!-- </template>
-                    <span>回复评论</span>
-                  </n-popover> -->
-                </span>
-              </span>
-              <span key="edit-comment">
-                <span style="padding-left: 3px; cursor: auto">
-                  <!-- <n-popover trigger="hover">
-                    <template #trigger> -->
-                  <n-button
-                    text
-                    circle
-                    :focusable="false"
-                    @click="editMyComment(comment)"
-                    :disabled="this.$cookies.get('userid') != comment.up.id"
-                    :style="{
-                      '--n-color': 'transparent',
-                      '--n-color-hover': 'transparent',
-                      '--n-color-pressed': 'transparent',
-                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                      '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                      '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                      '--n-text-color-disabled': 'rgba(' + this.accentColor + ', 0.6)',
-                      '--n-border': '1px solid transparent',
-                      '--n-border-hover': '1px solid transparent',
-                      '--n-border-pressed': '1px solid transparent',
-                    }"
-                  >
-                    <n-icon size="18">
-                      <CreateOutline />
-                    </n-icon>
-                  </n-button>
-                  <!-- </template> -->
-                  <!-- <span>编辑我的评论</span> -->
-                  <!-- </n-popover> -->
-                </span>
-              </span>
-              <span key="delete-comment" style="display: inline-block">
-                <span style="padding-left: 3px; cursor: auto">
-                  <n-popconfirm
-                    @positive-click="handlePositiveClick(comment)"
-                    @negative-click="handleNegativeClick"
-                    positive-text="确认"
-                    negative-text="取消"
-                    :style="{
-                      '--n-text-color':
-                        this.colorMode === 'white' ? 'rgb(57,57,57)' : 'white',
-                      '--n-color': this.colorMode === 'white' ? '#fff' : 'rgb(72,72,72)',
-                      '--n-border-radius': '12px',
-                    }"
-                    :negative-button-props="{
-                      style: {
-                        '--n-color': 'transparent',
-                        '--n-color-hover': 'transparent',
-                        '--n-color-pressed': 'transparent',
-                        '--n-color-focus': 'transparent',
-                        '--n-text-color': '',
-                        '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
-                        '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
-                        '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
-                        '--n-border': '1px solid rgb(224, 224, 230)',
-                        '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
-                        '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
-                        '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
-                        '--n-border-radius': '8px',
-                      },
-                    }"
-                    :positive-button-props="{
-                      style: {
-                        '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
-                        '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
-                        '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.8)',
-                        '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
-                        '--n-text-color': 'white',
-                        '--n-text-color-hover': 'white',
-                        '--n-text-color-pressed': 'white',
-                        '--n-text-color-focus': 'white',
-                        '--n-border': '1px solid rgb(224, 224, 230)',
-                        '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
-                        '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
-                        '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
-                        '--n-border-radius': '8px',
-                      },
-                    }"
-                  >
-                    <template #trigger>
-                      <n-button
-                        text
-                        circle
-                        :focusable="false"
-                        :disabled="this.$cookies.get('userid') != comment.up.id"
-                        :style="{
-                          '--n-color': 'transparent',
-                          '--n-color-hover': 'transparent',
-                          '--n-color-pressed': 'transparent',
-                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-text-color-disabled':
-                            'rgba(' + this.accentColor + ', 0.6)',
-                          '--n-border': '1px solid transparent',
-                          '--n-border-hover': '1px solid transparent',
-                          '--n-border-pressed': '1px solid transparent',
-                        }"
-                      >
-                        <n-icon size="18">
-                          <TrashOutline />
-                        </n-icon>
-                      </n-button>
-                    </template>
-                    确认删除这条评论吗？
-                  </n-popconfirm>
-                </span>
-              </span>
-            </template>
             <template #author>
               <router-link :to="`/home/user/${comment.up.id}`">
                 <div
@@ -499,12 +325,176 @@
               </router-link>
             </template>
             <template #content>
-              <p
-                style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px"
-                :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }"
-              >
-                {{ comment.content }}
-              </p>
+              <div class="comment-content-container" style="margin-bottom: 10px">
+                <n-grid x-gap="12">
+                  <n-gi :span="22">
+                    <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
+                      <div
+                        style="
+                          font-size: 13.5px;
+                          margin-top: 8px;
+                          margin-bottom: 0px;
+                          word-wrap: break-word;
+                        "
+                        :style="{
+                          color: this.colorMode === 'white' ? 'black' : 'white',
+                        }"
+                      >
+                        <span>{{ comment.content }}</span>
+                      </div>
+                    </n-ellipsis>
+                  </n-gi>
+                  <n-gi :span="2" class="icon-container">
+                    <div class="comment-icon" style="margin-top: 8px">
+                      <span key="reply-comment">
+                        <span style="cursor: auto">
+                          <n-button
+                            text
+                            circle
+                            :focusable="false"
+                            @click="editReplyComment(comment)"
+                            :disabled="!this.$cookies.isKey('userid')"
+                            :style="{
+                              '--n-color': 'transparent',
+                              '--n-color-hover': 'transparent',
+                              '--n-color-pressed': 'transparent',
+                              '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                              '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                              '--n-text-color-pressed':
+                                'rgba(' + this.accentColor + ', 1)',
+                              '--n-text-color-disabled':
+                                'rgba(' + this.accentColor + ', 0.6)',
+                              '--n-border': '1px solid transparent',
+                              '--n-border-hover': '1px solid transparent',
+                              '--n-border-pressed': '1px solid transparent',
+                            }"
+                          >
+                            <n-icon size="18">
+                              <ChatboxEllipsesOutline />
+                            </n-icon>
+                          </n-button>
+                        </span>
+                      </span>
+                      <span key="edit-comment">
+                        <span style="padding-left: 3px; cursor: auto">
+                          <n-button
+                            text
+                            circle
+                            :focusable="false"
+                            @click="editMyComment(comment)"
+                            :disabled="this.$cookies.get('userid') != comment.up.id"
+                            :style="{
+                              '--n-color': 'transparent',
+                              '--n-color-hover': 'transparent',
+                              '--n-color-pressed': 'transparent',
+                              '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                              '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                              '--n-text-color-pressed':
+                                'rgba(' + this.accentColor + ', 1)',
+                              '--n-text-color-disabled':
+                                'rgba(' + this.accentColor + ', 0.6)',
+                              '--n-border': '1px solid transparent',
+                              '--n-border-hover': '1px solid transparent',
+                              '--n-border-pressed': '1px solid transparent',
+                            }"
+                          >
+                            <n-icon size="18">
+                              <CreateOutline />
+                            </n-icon>
+                          </n-button>
+                        </span>
+                      </span>
+                      <span key="delete-comment" style="display: inline-block">
+                        <span style="padding-left: 3px; cursor: auto">
+                          <n-popconfirm
+                            @positive-click="handlePositiveClick(comment)"
+                            @negative-click="handleNegativeClick"
+                            positive-text="确认"
+                            negative-text="取消"
+                            :style="{
+                              '--n-text-color':
+                                this.colorMode === 'white' ? 'rgb(57,57,57)' : 'white',
+                              '--n-color':
+                                this.colorMode === 'white' ? '#fff' : 'rgb(72,72,72)',
+                              '--n-border-radius': '12px',
+                            }"
+                            :negative-button-props="{
+                              style: {
+                                '--n-color': 'transparent',
+                                '--n-color-hover': 'transparent',
+                                '--n-color-pressed': 'transparent',
+                                '--n-color-focus': 'transparent',
+                                '--n-text-color': '',
+                                '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
+                                '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
+                                '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
+                                '--n-border': '1px solid rgb(224, 224, 230)',
+                                '--n-border-hover':
+                                  '1px solid rgb(' + this.accentColor + ')',
+                                '--n-border-pressed':
+                                  '1px solid rgb(' + this.accentColor + ')',
+                                '--n-border-focus':
+                                  '1px solid rgb(' + this.accentColor + ')',
+                                '--n-border-radius': '8px',
+                              },
+                            }"
+                            :positive-button-props="{
+                              style: {
+                                '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
+                                '--n-color-pressed':
+                                  'rgba(' + this.accentColor + ', 0.8)',
+                                '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
+                                '--n-text-color': 'white',
+                                '--n-text-color-hover': 'white',
+                                '--n-text-color-pressed': 'white',
+                                '--n-text-color-focus': 'white',
+                                '--n-border': '1px solid rgb(224, 224, 230)',
+                                '--n-border-hover':
+                                  '1px solid rgb(' + this.accentColor + ')',
+                                '--n-border-pressed':
+                                  '1px solid rgb(' + this.accentColor + ')',
+                                '--n-border-focus':
+                                  '1px solid rgb(' + this.accentColor + ')',
+                                '--n-border-radius': '8px',
+                              },
+                            }"
+                          >
+                            <template #trigger>
+                              <n-button
+                                text
+                                circle
+                                :focusable="false"
+                                :disabled="this.$cookies.get('userid') != comment.up.id"
+                                :style="{
+                                  '--n-color': 'transparent',
+                                  '--n-color-hover': 'transparent',
+                                  '--n-color-pressed': 'transparent',
+                                  '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                                  '--n-text-color-hover':
+                                    'rgba(' + this.accentColor + ', 1)',
+                                  '--n-text-color-pressed':
+                                    'rgba(' + this.accentColor + ', 1)',
+                                  '--n-text-color-disabled':
+                                    'rgba(' + this.accentColor + ', 0.6)',
+                                  '--n-border': '1px solid transparent',
+                                  '--n-border-hover': '1px solid transparent',
+                                  '--n-border-pressed': '1px solid transparent',
+                                }"
+                              >
+                                <n-icon size="18">
+                                  <TrashOutline />
+                                </n-icon>
+                              </n-button>
+                            </template>
+                            确认删除这条评论吗？
+                          </n-popconfirm>
+                        </span>
+                      </span>
+                    </div>
+                  </n-gi>
+                </n-grid>
+              </div>
             </template>
             <template #datetime>
               <a-tooltip :title="comment.date.replace('T', ' ').split('.')[0]">
@@ -537,10 +527,7 @@
                     '--n-box-shadow-focus':
                       '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                   }"
-                  :autosize="{
-                    minRows: 6,
-                    maxRows: 6,
-                  }"
+                  :autosize="{ minRows: 6, maxRows: 6 }"
                 />
                 <div class="my-comment-button">
                   <n-button
@@ -617,10 +604,7 @@
                     '--n-box-shadow-focus':
                       '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                   }"
-                  :autosize="{
-                    minRows: 6,
-                    maxRows: 6,
-                  }"
+                  :autosize="{ minRows: 6, maxRows: 6 }"
                 />
                 <div class="my-comment-button">
                   <n-button
@@ -676,127 +660,6 @@
             <div v-if="comment.comment_set.length > 0">
               <div v-for="(comment_2nd, idx) in comment.comment_set" :key="idx">
                 <a-comment>
-                  <template #actions>
-                    <span key="edit-comment">
-                      <span style="padding-left: 830px; cursor: auto">
-                        <!-- <n-popover trigger="hover">
-                          <template #trigger> -->
-                        <n-button
-                          text
-                          circle
-                          :focusable="false"
-                          @click="editMy2ndComment(comment_2nd)"
-                          :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
-                          :style="{
-                            '--n-color': 'transparent',
-                            '--n-color-hover': 'transparent',
-                            '--n-color-pressed': 'transparent',
-                            '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                            '--n-text-color-disabled':
-                              'rgba(' + this.accentColor + ', 0.6)',
-                            '--n-border': '1px solid transparent',
-                            '--n-border-hover': '1px solid transparent',
-                            '--n-border-pressed': '1px solid transparent',
-                          }"
-                        >
-                          <n-icon size="18">
-                            <CreateOutline />
-                          </n-icon>
-                        </n-button>
-                        <!-- </template> -->
-                        <!-- <span>编辑我的评论</span>
-                        </n-popover> -->
-                      </span>
-                    </span>
-                    <span key="delete-comment">
-                      <span style="padding-left: 3px; cursor: auto">
-                        <n-popconfirm
-                          @positive-click="handlePositiveClick(comment_2nd)"
-                          @negative-click="handleNegativeClick"
-                          positive-text="确认"
-                          negative-text="取消"
-                          :style="{
-                            '--n-text-color':
-                              this.colorMode === 'white' ? 'rgb(57,57,57)' : 'white',
-                            '--n-color':
-                              this.colorMode === 'white' ? '#fff' : 'rgb(72,72,72)',
-                            '--n-border-radius': '12px',
-                          }"
-                          :negative-button-props="{
-                            style: {
-                              '--n-color': 'transparent',
-                              '--n-color-hover': 'transparent',
-                              '--n-color-pressed': 'transparent',
-                              '--n-color-focus': 'transparent',
-                              '--n-text-color': '',
-                              '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
-                              '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
-                              '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
-                              '--n-border': '1px solid rgb(224, 224, 230)',
-                              '--n-border-hover':
-                                '1px solid rgb(' + this.accentColor + ')',
-                              '--n-border-pressed':
-                                '1px solid rgb(' + this.accentColor + ')',
-                              '--n-border-focus':
-                                '1px solid rgb(' + this.accentColor + ')',
-                              '--n-border-radius': '8px',
-                            },
-                          }"
-                          :positive-button-props="{
-                            style: {
-                              '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
-                              '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
-                              '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.8)',
-                              '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
-                              '--n-text-color': 'white',
-                              '--n-text-color-hover': 'white',
-                              '--n-text-color-pressed': 'white',
-                              '--n-text-color-focus': 'white',
-                              '--n-border': '1px solid rgb(224, 224, 230)',
-                              '--n-border-hover':
-                                '1px solid rgb(' + this.accentColor + ')',
-                              '--n-border-pressed':
-                                '1px solid rgb(' + this.accentColor + ')',
-                              '--n-border-focus':
-                                '1px solid rgb(' + this.accentColor + ')',
-                              '--n-border-radius': '8px',
-                            },
-                          }"
-                        >
-                          <template #trigger>
-                            <n-button
-                              text
-                              circle
-                              :focusable="false"
-                              :disabled="this.$cookies.get('userid') != comment_2nd.up.id"
-                              :style="{
-                                '--n-color': 'transparent',
-                                '--n-color-hover': 'transparent',
-                                '--n-color-pressed': 'transparent',
-                                '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                                '--n-text-color-hover':
-                                  'rgba(' + this.accentColor + ', 1)',
-                                '--n-text-color-pressed':
-                                  'rgba(' + this.accentColor + ', 1)',
-                                '--n-text-color-disabled':
-                                  'rgba(' + this.accentColor + ', 0.6)',
-                                '--n-border': '1px solid transparent',
-                                '--n-border-hover': '1px solid transparent',
-                                '--n-border-pressed': '1px solid transparent',
-                              }"
-                            >
-                              <n-icon size="18">
-                                <TrashOutline />
-                              </n-icon>
-                            </n-button>
-                          </template>
-                          确认删除这条评论吗？
-                        </n-popconfirm>
-                      </span>
-                    </span>
-                  </template>
                   <template #author>
                     <router-link :to="`/home/user/${comment_2nd.up.id}`">
                       <div
@@ -805,20 +668,177 @@
                       >
                         {{ comment_2nd.up.username }}
                       </div>
-                    </router-link></template
-                  >
+                    </router-link>
+                  </template>
                   <template #avatar>
                     <router-link :to="`/home/user/${comment_2nd.up.id}`">
-                      <a-avatar :src="comment_2nd.up.avatar" :size="50"
-                    /></router-link>
+                      <a-avatar :src="comment_2nd.up.avatar" :size="50" />
+                    </router-link>
                   </template>
                   <template #content>
-                    <p
-                      style="font-size: 13.5px; margin-top: 8px; margin-bottom: 0px"
-                      :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }"
-                    >
-                      {{ comment_2nd.content }}
-                    </p>
+                    <div class="comment-content-container" style="margin-bottom: 10px">
+                      <n-grid x-gap="12">
+                        <n-gi :span="22">
+                          <n-ellipsis
+                            expand-trigger="click"
+                            line-clamp="1"
+                            :tooltip="false"
+                          >
+                            <div
+                              style="
+                                font-size: 13.5px;
+                                margin-top: 8px;
+                                margin-bottom: 0px;
+                                word-wrap: break-word;
+                              "
+                              :style="{
+                                color: this.colorMode === 'white' ? 'black' : 'white',
+                              }"
+                            >
+                              <span>{{ comment_2nd.content }}</span>
+                            </div>
+                          </n-ellipsis>
+                        </n-gi>
+                        <n-gi :span="2" class="icon-container">
+                          <div class="comment-icon" style="margin-top: 8px">
+                            <span key="edit-comment">
+                              <span style="cursor: auto">
+                                <!-- <n-popover trigger="hover">
+                          <template #trigger> -->
+                                <n-button
+                                  text
+                                  circle
+                                  :focusable="false"
+                                  @click="editMy2ndComment(comment_2nd)"
+                                  :disabled="
+                                    this.$cookies.get('userid') != comment_2nd.up.id
+                                  "
+                                  :style="{
+                                    '--n-color': 'transparent',
+                                    '--n-color-hover': 'transparent',
+                                    '--n-color-pressed': 'transparent',
+                                    '--n-text-color':
+                                      'rgba(' + this.accentColor + ', 0.8)',
+                                    '--n-text-color-hover':
+                                      'rgba(' + this.accentColor + ', 1)',
+                                    '--n-text-color-pressed':
+                                      'rgba(' + this.accentColor + ', 1)',
+                                    '--n-text-color-disabled':
+                                      'rgba(' + this.accentColor + ', 0.6)',
+                                    '--n-border': '1px solid transparent',
+                                    '--n-border-hover': '1px solid transparent',
+                                    '--n-border-pressed': '1px solid transparent',
+                                  }"
+                                >
+                                  <n-icon size="18">
+                                    <CreateOutline />
+                                  </n-icon>
+                                </n-button>
+                              </span>
+                            </span>
+                            <span key="delete-comment">
+                              <span style="padding-left: 3px; cursor: auto">
+                                <n-popconfirm
+                                  @positive-click="handlePositiveClick(comment_2nd)"
+                                  @negative-click="handleNegativeClick"
+                                  positive-text="确认"
+                                  negative-text="取消"
+                                  :style="{
+                                    '--n-text-color':
+                                      this.colorMode === 'white'
+                                        ? 'rgb(57,57,57)'
+                                        : 'white',
+                                    '--n-color':
+                                      this.colorMode === 'white'
+                                        ? '#fff'
+                                        : 'rgb(72,72,72)',
+                                    '--n-border-radius': '12px',
+                                  }"
+                                  :negative-button-props="{
+                                    style: {
+                                      '--n-color': 'transparent',
+                                      '--n-color-hover': 'transparent',
+                                      '--n-color-pressed': 'transparent',
+                                      '--n-color-focus': 'transparent',
+                                      '--n-text-color': '',
+                                      '--n-text-color-hover':
+                                        'rgb(' + this.accentColor + ')',
+                                      '--n-text-color-pressed':
+                                        'rgb(' + this.accentColor + ')',
+                                      '--n-text-color-focus':
+                                        'rgb(' + this.accentColor + ')',
+                                      '--n-border': '1px solid rgb(224, 224, 230)',
+                                      '--n-border-hover':
+                                        '1px solid rgb(' + this.accentColor + ')',
+                                      '--n-border-pressed':
+                                        '1px solid rgb(' + this.accentColor + ')',
+                                      '--n-border-focus':
+                                        '1px solid rgb(' + this.accentColor + ')',
+                                      '--n-border-radius': '8px',
+                                    },
+                                  }"
+                                  :positive-button-props="{
+                                    style: {
+                                      '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                      '--n-color-hover':
+                                        'rgba(' + this.accentColor + ', 0.8)',
+                                      '--n-color-pressed':
+                                        'rgba(' + this.accentColor + ', 0.8)',
+                                      '--n-color-focus':
+                                        'rgba(' + this.accentColor + ', 0.8)',
+                                      '--n-text-color': 'white',
+                                      '--n-text-color-hover': 'white',
+                                      '--n-text-color-pressed': 'white',
+                                      '--n-text-color-focus': 'white',
+                                      '--n-border': '1px solid rgb(224, 224, 230)',
+                                      '--n-border-hover':
+                                        '1px solid rgb(' + this.accentColor + ')',
+                                      '--n-border-pressed':
+                                        '1px solid rgb(' + this.accentColor + ')',
+                                      '--n-border-focus':
+                                        '1px solid rgb(' + this.accentColor + ')',
+                                      '--n-border-radius': '8px',
+                                    },
+                                  }"
+                                >
+                                  <template #trigger>
+                                    <n-button
+                                      text
+                                      circle
+                                      :focusable="false"
+                                      :disabled="
+                                        this.$cookies.get('userid') != comment_2nd.up.id
+                                      "
+                                      :style="{
+                                        '--n-color': 'transparent',
+                                        '--n-color-hover': 'transparent',
+                                        '--n-color-pressed': 'transparent',
+                                        '--n-text-color':
+                                          'rgba(' + this.accentColor + ', 0.8)',
+                                        '--n-text-color-hover':
+                                          'rgba(' + this.accentColor + ', 1)',
+                                        '--n-text-color-pressed':
+                                          'rgba(' + this.accentColor + ', 1)',
+                                        '--n-text-color-disabled':
+                                          'rgba(' + this.accentColor + ', 0.6)',
+                                        '--n-border': '1px solid transparent',
+                                        '--n-border-hover': '1px solid transparent',
+                                        '--n-border-pressed': '1px solid transparent',
+                                      }"
+                                    >
+                                      <n-icon size="18">
+                                        <TrashOutline />
+                                      </n-icon>
+                                    </n-button>
+                                  </template>
+                                  确认删除这条评论吗？
+                                </n-popconfirm>
+                              </span>
+                            </span>
+                          </div>
+                        </n-gi>
+                      </n-grid>
+                    </div>
                   </template>
                   <template #datetime>
                     <a-tooltip :title="comment_2nd.date.replace('T', ' ').split('.')[0]">
@@ -860,10 +880,7 @@
                           '--n-box-shadow-focus':
                             '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                         }"
-                        :autosize="{
-                          minRows: 6,
-                          maxRows: 6,
-                        }"
+                        :autosize="{ minRows: 6, maxRows: 6 }"
                       />
                       <div class="my-comment-button">
                         <n-button
@@ -940,7 +957,13 @@
                   }"
                 />
               </div>
-              <div style="display: flex; justify-content: center; font-size: 20px" v-else>
+              <div
+                style="display: flex; justify-content: center; font-size: 20px"
+                v-else
+                :style="{
+                  color: this.colorMode === 'white' ? 'black' : 'white',
+                }"
+              >
                 期待你的评论
               </div>
             </n-gi>
@@ -956,10 +979,46 @@
     @closeModifyWindow="showModifyComplainView = false"
   ></modify-complain-view>
   <div v-show="false"><top-nav></top-nav></div>
+  <n-modal :z-index="2" v-model:show="showCollections">
+    <div
+      :style="{
+        background: getRGBString(backgroundColorString, 0.6),
+        position: 'relative',
+        top: '-50px',
+        'text-align': 'center',
+        'border-radius': '50px',
+      }"
+    >
+      <div
+        :style="{
+          margin: '20px',
+          'font-size': '25px',
+          'font-weight': '700',
+          'background-color': getRGBString(backgroundColorString, 0.8),
+          color: getRGBString(fontColorString, 0.8),
+          'margin-top': '20px',
+          'border-radius': '50px',
+          animation: isCollectChanged ? 'bounceIn' : '',
+          'animation-duration': '1s',
+        }"
+      >
+        {{ headChange === true ? "添加成功" : "请选择收藏夹" }}
+      </div>
+      <image-table
+        :rows="collectionData"
+        :tableSize="[1000]"
+        :entrySize="[200, 200]"
+        :position="'CollectionView'"
+        @flushCollections="updateCollections"
+        :handleClickEntry="handleClickEntry"
+      ></image-table>
+    </div>
+  </n-modal>
 </template>
 
 <script>
 import "animate.css";
+import { NModal } from "naive-ui";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import TopNav from "../components/TopNav.vue";
@@ -982,14 +1041,17 @@ import {
   Play,
   HeartOutline,
   Heart,
+  FastFood,
 } from "@vicons/ionicons5";
 dayjs.extend(relativeTime);
 import {
   globalThemeColor,
   getBackgroundColorString,
   getRGBString,
+  getFontColorString,
   changeThemeColorByImage,
 } from "/src/colorMode.js";
+import ImageTable from "/src/components/tables/ImageTable/ImageTable.vue";
 export default defineComponent({
   name: "PlayerView",
   components: {
@@ -1008,6 +1070,8 @@ export default defineComponent({
     ModifyComplainView,
     HeartOutline,
     Heart,
+    ImageTable,
+    NModal,
   },
   created() {
     this.$EventBus.on("timeupdate", (currentTime) => {
@@ -1101,6 +1165,7 @@ export default defineComponent({
       edit1stComment: ref(false), // 修改一级评论
       reply2ndComment: ref(false), // 回复一级评论，即编辑二级评论
       edit2ndComment: ref(false), // 修改二级评论
+      write1stConmment: ref(false),
     };
   },
   data() {
@@ -1112,7 +1177,7 @@ export default defineComponent({
       music: {},
       lyricsIndex: 0,
       lyricsObjArr: [],
-      collctionData: this.updateCollections(),
+      collectionData: this.updateCollections(),
       showCollections: false,
       isCollectChanged: false,
       headChange: false,
@@ -1137,10 +1202,10 @@ export default defineComponent({
         // 已登录
         this.islike = !this.islike;
         /* if (this.islike == true) {
-                  this.success("已添加至我喜欢");
-                } else {
-                  this.success("已从我喜欢移除");
-                } */
+          this.success("已添加至我喜欢");
+        } else {
+          this.success("已从我喜欢移除");
+        } */
         this.$http.post(`/api/like/${this.music.id}/`).then((response) => {
           console.log(response.data);
         });
@@ -1161,14 +1226,14 @@ export default defineComponent({
     },
     complain() {
       //todo
+      // if (this.iscomplain == false) {
+      //     this.iscomplain = !this.iscomplain;
+      // }
       if (!this.$cookies.isKey("userid")) {
         this.$EventBus.emit("showLoginModal");
-        return;
+      } else {
+        this.showModifyComplainView = true;
       }
-      if (this.iscomplain == false) {
-        this.iscomplain = !this.iscomplain;
-      }
-      this.showModifyComplainView = true;
     },
     cleanComment() {
       this.value = "";
@@ -1180,22 +1245,22 @@ export default defineComponent({
       }
       let formData = new FormData();
       formData.append("content", this.value);
-      if (this.editNewCommentId == 1) {
+      if (this.write1stConmment) {
         this.$http.post(`/api/comment/on/music/${this.music.id}/`, formData).then(() => {
           //this.success("评论成功");
           this.regetComments();
         });
-      } else if (this.editNewCommentId == 0 && this.editCommentId != 0) {
+      } else if (!this.write1stConmment && this.editCommentId != 0) {
         this.$http.post(`/api/comment/edit/${this.editCommentId}/`, formData).then(() => {
           //this.success("编辑成功");
           this.regetComments();
         });
         this.editCommentId = 0;
-        this.editNewCommentId = 1;
       }
       this.refreshCommentVir++;
+      this.write1stConmment = false;
       console.log(this.refreshCommentVir);
-      this.value == "";
+      this.value = "";
     },
     deleteMyComment(comment) {
       this.$http.delete(`/api/comment/delete/${comment.id}/`).then(() => {
@@ -1212,7 +1277,7 @@ export default defineComponent({
       }
       let formData = new FormData();
       formData.append("content", this.value);
-      if (this.edit2ndCommentId == 0) {
+      if (this.reply2ndComment) {
         this.$http
           .post(`/api/comment/on/comment/${this.edit2ndCommentParentId}/`, formData)
           .then(() => {
@@ -1230,18 +1295,34 @@ export default defineComponent({
         this.edit2ndCommentParentId = 0;
       }
       this.refreshCommentVir++;
+      this.reply2ndComment = false;
+      this.edit2ndComment = false;
       console.log(this.refreshCommentVir);
-      this.value == "";
+      this.value = "";
+    },
+    handleShow1stComment() {
+      this.reply2ndComment = false;
+      this.edit1stComment = false;
+      this.edit2ndComment = false;
+      this.value = "";
+      if (!this.write1stConmment) {
+        this.write1stConmment = true;
+      } else {
+        this.write1stConmment = false;
+      }
     },
     // 编辑回复评论
     editReplyComment(comment) {
+      this.value = "";
       this.edit2ndCommentParentId = comment.id;
       if (!this.reply2ndComment) {
         this.reply2ndComment = true;
       } else {
-        this.value = "";
         this.reply2ndComment = false;
       }
+      this.edit2ndComment = false;
+      this.edit1stComment = false;
+      this.write1stConmment = false;
     },
     // 修改回复评论
     editMy2ndComment(comment) {
@@ -1253,14 +1334,13 @@ export default defineComponent({
         this.value = "";
         this.edit2ndComment = false;
       }
+      this.edit1stComment = false;
+      this.reply2ndComment = false;
+      this.write1stConmment = false;
     },
     // 修改我的评论
     editMyComment(comment) {
-      // console.log(this.$cookies.get("userid"));
-      // console.log(comment.author_id);
-      // alert("yes!");
       this.value = comment.content;
-      this.editNewCommentId = 0;
       this.editCommentId = comment.id;
       if (!this.edit1stComment) {
         this.edit1stComment = true;
@@ -1268,6 +1348,9 @@ export default defineComponent({
         this.value = "";
         this.edit1stComment = false;
       }
+      this.edit2ndComment = false;
+      this.reply2ndComment = false;
+      this.write1stConmment = false;
       // document.querySelector("#comment-top").scrollIntoView({
       //   behavior: "smooth",
       // });
@@ -1632,5 +1715,10 @@ export default defineComponent({
 
 .hoverable-icon:hover {
   cursor: pointer;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

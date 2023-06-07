@@ -124,6 +124,7 @@
                         <n-gi :span="5"></n-gi>
                         <n-gi :span="5">
                           <n-switch
+                            :rail-style="railStyle"
                             v-model:value="multiColorShouldDisplay"
                             @update:value="handleMultiColorChange"
                             :style="{ '--n-rail-color': 'grey' }"
@@ -326,6 +327,25 @@ export default {
           },
         },
       ],
+    };
+  },
+  setup() {
+    return {
+      railStyle: ({ focused, checked }) => {
+        const style = {};
+        if (checked) {
+          style.background = "#fff";
+          if (focused) {
+            style.boxShadow = "0 0 0 2px #fff";
+          }
+        } else {
+          style.background = "grey";
+          if (focused) {
+            style.boxShadow = "0 0 0 2px grey";
+          }
+        }
+        return style;
+      },
     };
   },
   methods: {

@@ -1,7 +1,10 @@
 <template>
   <div ref="containerRef"></div>
-  <a @click="launch">
+  <a v-if="!launched" @click="launch">
     <ChevronUp class="aplayer-launch" />
+  </a>
+  <a v-if="launched" @click="unlaunch">
+    <ChevronDown class="aplayer-unlaunch" />
   </a>
   <div class="footer"></div>
 </template>
@@ -12,6 +15,7 @@ import "APlayer/dist/APlayer.min.css";
 import APlayer from "APlayer";
 import ColorThief from "colorthief";
 import { ChevronUp } from "@vicons/ionicons5";
+import { ChevronDown } from "@vicons/ionicons5";
 import {
   globalThemeColor,
   getBackgroundColorString,
@@ -47,18 +51,24 @@ const image = new Image();
 const xhr = new XMLHttpRequest();
 
 let ap;
-let launched = false;
+let launched = ref(false);
 let currentMusicId;
-let currentLyricsUrl;
 
 function launch() {
   if (currentMusicId !== undefined) {
-    if (launched) {
+    if (launched.value) {
       proxy.$router.replace(`/player/${currentMusicId}`);
     } else {
       proxy.$router.push(`/player/${currentMusicId}`);
     }
-    launched = true;
+    launched.value = true;
+  }
+}
+
+function unlaunch() {
+  if (launched.value == true) {
+    proxy.$router.go(-1);
+    launched.value = false;
   }
 }
 
@@ -123,14 +133,14 @@ onMounted(() => {
   ap.on("listswitch", (e) => {
     currentMusicId = ap.list.audios[e.index].id;
     if (proxy.$router.currentRoute.value.name == "player") {
-      if (launched) {
+      if (launched.value) {
         launch();
       } else {
         currentMusicId = proxy.$route.params.musicId;
-        launched = true;
+        launched.value = true;
       }
     } else {
-      launched = false;
+      launched.value = false;
     }
     changeThemeColorByImage(ap.list.audios[e.index].cover);
     setTheme(e.index);
@@ -227,7 +237,12 @@ onMounted(() => {
   display: none !important;
 }
 
-.aplayer-launch {
+.aplayer-narrow + a > .aplayer-unlaunch {
+  display: none !important;
+}
+
+.aplayer-launch,
+.aplayer-unlaunch {
   position: fixed !important;
   width: 46px !important;
   height: 46px !important;
@@ -240,7 +255,8 @@ onMounted(() => {
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.7s;
 }
 
-.aplayer-launch:hover {
+.aplayer-launch:hover,
+.aplayer-unlaunch:hover {
   background-color: #696969 !important;
   opacity: 0.6 !important;
   z-index: 100 !important;
