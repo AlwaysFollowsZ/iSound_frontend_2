@@ -1274,7 +1274,7 @@ export default defineComponent({
         obj.time = this.parseTime(obj.timeStr);
         if (
           this.lyricsObjArr.length > 0 &&
-          obj.time <= this.lyricsObjArr[this.lyricsObjArr.length - 1].time
+          obj.time < this.lyricsObjArr[this.lyricsObjArr.length - 1].time
         ) {
           this.hasTranslation = true;
           for (let i = 0; i < this.lyricsObjArr.length; i++) {
