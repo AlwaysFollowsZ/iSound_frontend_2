@@ -89,17 +89,16 @@ export default defineComponent({
             this.active2 = false
             this.active3 = false
             this.confirmButton = false
-
             this.showShareListModify = false;
+            if (this.showEditListModify) {
+                this.showEditListModify = false;
+            }
             setTimeout(() => {
                 this.cover = null
-                if (this.showEditListModify) {
-                    this.showEditListModify = false;
-                    //this.cover = this.tmpCover
-                    this.listIntro = this.tmpListIntro
-                    this.listName = this.tmpListName
-                    this.tags = this.tmpTags.slice()
-                }
+                //this.cover = this.tmpCover
+                this.listIntro = this.tmpListIntro
+                this.listName = this.tmpListName
+                this.tags = this.tmpTags.slice()
             }, 1000)
 
 
@@ -418,7 +417,7 @@ export default defineComponent({
                     </n-button></n-gi>
                 <n-gi :span="4">
                     <div class="list-cover">
-                        <img draggable="false" class="list-cover-img" :src="this.playlist.cover" />
+                        <n-image class="list-cover-img" :src="this.playlist.cover" object-fit="contain" />
                     </div>
                     <div style="margin: 30px 0px 20px 0px">
                         <n-breadcrumb>
@@ -672,7 +671,6 @@ export default defineComponent({
                                             </n-upload>
                                             <n-image v-if="this.cover === null" :preview-disabled="true"
                                                 :src="previewImageUrl" :style="{
-
                                                     'aspect-ratio': '1',
                                                     'cursor': 'pointer',
                                                     'border-radius': '10px'
@@ -993,14 +991,15 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    border-radius: 10%;
 }
 
 .list-cover-img {
     /* position: absolute; */
     margin: auto;
-    width: 245px;
+    /* width: 245px; */
     height: 245px;
-    border-radius: 10%;
+
     transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
 }
 
@@ -1177,6 +1176,7 @@ export default defineComponent({
 }
 
 .body-item {
+    max-width: 400px;
     margin-bottom: 25px;
     display: flex;
     justify-content: center;
