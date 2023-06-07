@@ -3,6 +3,7 @@ import { NGrid } from "naive-ui";
 import { defineComponent } from "vue";
 import { MailOutline, TrashOutline, MailOpenOutline } from "@vicons/ionicons5";
 import { mapState } from "vuex";
+import { message } from "ant-design-vue";
 export default defineComponent({
   name: "UserMessageItem",
   components: {
@@ -41,6 +42,22 @@ export default defineComponent({
         this.unread--;
         message.read = !message.read;
         this.$EventBus.emit("setShowMessage", this.unread);
+      });
+    },
+    jumpToPlaylist(playlist) {
+      if (playlist.shared == true) {
+        this.$router.push(`/listdetail/${playlist.id}`);
+      } else {
+        this.warning("该歌单已被取消分享");
+      }
+    },
+    warning(msg) {
+      message.warning({
+        content: msg,
+        duration: 1,
+        style: {
+          "z-index": 200,
+        },
       });
     },
   },
@@ -121,10 +138,7 @@ export default defineComponent({
                       {{ message.up.username }}
                     </a>
                     分享了歌单
-                    <a
-                      class="playlist-link"
-                      @click="this.$router.push(`/listdetail/${message.playlist.id}`)"
-                    >
+                    <a class="playlist-link" @click="jumpToPlaylist(message.playlist)">
                       {{ message.playlist.title }}
                     </a>
                     ，快去听听吧。

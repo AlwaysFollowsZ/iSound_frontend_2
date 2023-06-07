@@ -1347,7 +1347,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   min-width: 1400px;
-  min-height: 790px;
+  min-height: 840px;
   object-fit: cover;
   filter: blur(40px) saturate(1);
   /* 背景图片模糊效果 */
@@ -1361,16 +1361,16 @@ export default defineComponent({
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  max-height: 100%;
   min-width: 1400px;
-  min-height: 790px;
+  min-height: 840px;
   background-color: rgba(0, 0, 0, 0.4);
   /* 黑色遮罩，透明度为0.5 */
   z-index: 1;
 }
 
 .player-page {
-  min-height: 790px;
+  min-height: 840px;
   min-width: 1400px;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
   font-family: Arial, Helvetica, sans-serif;
