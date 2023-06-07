@@ -7,7 +7,7 @@
         <n-gi :span="4">
           <div>
             <n-button tertiary circle class="back-button" @click="back">
-              <ChevronBack style="width: 36px; position: absolute; left: 0px" />
+              <ChevronBack style="width: 36px; position: absolute; left: 0px; color: white; opacity: 0.8;"/>
             </n-button>
           </div>
         </n-gi>
@@ -86,10 +86,10 @@
                       <n-tag :bordered="false" :style="{
                         '--n-border-radius': `5px`,
                         '--n-font-weight-strong': `bold`,
-                        '--n-height': `20px`,
+                        '--n-height': `22px`,
                         '--n-close-margin': `0 18px 0 18px`,
                       }" class="tag-item">
-                        {{ tag }}
+                        #{{ tag }}
                       </n-tag>
                     </span>
                   </div>
@@ -1603,7 +1603,9 @@ export default defineComponent({
 }
 
 .tag-item {
-  margin-left: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 13px;
 }
 
 .hoverable-icon:hover {
