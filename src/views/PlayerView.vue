@@ -7,7 +7,7 @@
         <n-gi :span="4">
           <div>
             <n-button tertiary circle class="back-button" @click="back">
-              <ChevronBack style="width: 36px; position: absolute; left: 0px; color: white; opacity: 0.8;" />
+              <ChevronBack style="width: 36px; position: absolute; left: 0px" />
             </n-button>
           </div>
         </n-gi>
@@ -69,12 +69,12 @@
                 </div>
                 <div style="color: #fff">
                   <span>来源： </span>
-                  <router-link :to="this.$cookies.get('userid') == music.up.id
+                  <router-link :to="this.$cookies.get('userid') == this.up.id
                       ? '/home'
-                      : `/home/user/${music.up.id}`
+                      : `/home/user/${this.up.id}`
                     ">
                     <span class="upload-user" style="color: #fff">{{
-                      music.up.username
+                      this.up.username
                     }}</span>
                   </router-link>
                 </div>
@@ -89,7 +89,7 @@
                         '--n-height': `20px`,
                         '--n-close-margin': `0 18px 0 18px`,
                       }" class="tag-item">
-                        #{{ tag }}
+                        {{ tag }}
                       </n-tag>
                     </span>
                   </div>
@@ -122,7 +122,7 @@
                   </n-scrollbar>
                   <div class="translationSwitch">
                     <n-switch :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
-                      @click="scroll" :style="{ '--n-rail-color': 'grey' }">
+                      @click="scroll('auto')" :style="{ '--n-rail-color': 'grey' }">
                       <template #icon> 译 </template>
                     </n-switch>
                   </div>
@@ -928,6 +928,7 @@ export default defineComponent({
         const musicId = this.$route.params.musicId;
         this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
           this.music = response.data.music_set[0];
+          this.up = this.music.up;
           document.title = `${this.music.name} - ${this.music.artist}`;
           this.islike = this.music.is_like;
           this.iscollect = this.music.is_favorite;
@@ -951,6 +952,9 @@ export default defineComponent({
   mounted() {
     this.lyricsIndex = 0;
     this.scroll("auto");
+  },
+  beforeUnmount() {
+    this.$EventBus.off("timeupdate");
   },
   computed: {
     ...mapState(["colorMode", "accentColor"]),
@@ -1020,6 +1024,7 @@ export default defineComponent({
       comments: [],
       songtags: [],
       music: {},
+      up: {},
       lyricsIndex: 0,
       lyricsObjArr: [],
       collectionData: this.updateCollections(),
@@ -1559,9 +1564,7 @@ export default defineComponent({
 }
 
 .tag-item {
-  margin-left: 5px;
-  margin-right: 5px;
-  font-size: 13px;
+  margin-left: 10px;
 }
 
 .hoverable-icon:hover {

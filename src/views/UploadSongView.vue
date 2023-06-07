@@ -400,16 +400,24 @@
                 </div>
             </n-card>
         </div> -->
-    </n-modal>
+  </n-modal>
+  <n-modal :show="isUploading" :z-index="150">
+    <n-progress type="circle" status="success" :percentage="percentage"></n-progress>
+  </n-modal>
 </template>
-  
+
 <script>
 import { CloseOutline, ArrowUpOutline, WatchOutline, ImageOutline } from '@vicons/ionicons5'
 import { NInput, NModal, NPopover, NIcon } from 'naive-ui';
 import { defineComponent, ref, watch, computed } from "vue";
 import { mapState } from 'vuex'
 import { message } from "ant-design-vue";
-import { getRGBString, getFontColorString, getBackgroundColorString, globalThemeColor } from '/src/colorMode.js'
+import {
+  getRGBString,
+  getFontColorString,
+  getBackgroundColorString,
+  globalThemeColor,
+} from "/src/colorMode.js";
 export default {
     name: "UploadSong",
     components: {
@@ -428,6 +436,7 @@ export default {
     data() {
         return {
             isUploading: false,
+            percentage: 0,
             previewImageUrl: '',
             songName: '',
             songAuthor: '',
@@ -604,7 +613,7 @@ export default {
                 return
             }
             if (this.isUploading === false) {
-                this.isUploading = true
+                this.isUploading = true;
                 this.handleTagList();
                 console.log(this.tagString);
                 let data = new FormData();
@@ -614,7 +623,12 @@ export default {
                 data.append('source', this.songSrcFile);
                 data.append('lyrics', this.songLyricFile);
                 data.append('tags', this.tagString);
-                this.$http.post('/api/music/upload/', data).then(response => {
+                this.$http.post('/api/music/upload/', data, {
+                    onUploadProgress: (progress) => {
+                        this.percentage = ((progress.loaded / progress.total) * 100) | 0;
+                    }
+                }).then(response => {
+                    this.isUploading = false;
                     console.log(response);
                     if (response.data.code == '0') {
                         this.$emit('flushUploadSongs')//刷新歌曲
@@ -723,20 +737,20 @@ export default {
 
 <style scoped>
 .close-icon:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .outer-container {
-    width: 700px;
-    border-radius: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 25px;
+  width: 700px;
+  border-radius: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 25px;
 }
 
 .title-container {
-    margin-top: 10px;
-    margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .body-item {
@@ -748,18 +762,18 @@ export default {
 }
 
 .upload-card-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 30px;
-    font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
 }
 
 .upload-song-page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 40px;
 }
 
 .upload-song-page img {
@@ -780,28 +794,28 @@ export default {
 }
 
 .upload-button-position {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .select-container {
-    height: 200px;
-    /* 设置容器的高度 */
-    overflow-y: scroll;
-    /* 添加垂直滚动条 */
+  height: 200px;
+  /* 设置容器的高度 */
+  overflow-y: scroll;
+  /* 添加垂直滚动条 */
 }
 
 .login-button-top {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .cover-prompt {
-    margin-top: 10px;
-    padding-left: 30px;
-    text-align: center;
+  margin-top: 10px;
+  padding-left: 30px;
+  text-align: center;
 }
 
 .upload-song-page:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* 悬浮标签 */
