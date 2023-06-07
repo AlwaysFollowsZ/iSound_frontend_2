@@ -205,7 +205,7 @@ export default {
                                 '--n-color-hover': getRGBString(fontColorString.value, 0.5, 'background', viewMode),
                                 '--n-color-focus': getRGBString(fontColorString.value, 0.4, 'background', viewMode),
                                 '--n-color-pressed': getRGBString(fontColorString.value, 0.3, 'background', viewMode),
-                                '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.8, 'font', viewMode)}`,
+                                '--n-border-hover': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
                                 '--n-border-focus': `none`,
                                 '--n-border-pressed': `1px solid ${getRGBString(fontColorString.value, 0.5, 'font', viewMode)}`,
                                 '--n-border-disabled': `none`,
@@ -337,7 +337,8 @@ export default {
                             }
                         }),
                     //标题模态框
-                    h(NModal, {
+                        h(NModal, {
+                        blockScroll:false,
                         'z-index': 1,
                         show: this.showCollection,
                         'on-mask-click': () => {
@@ -458,6 +459,7 @@ export default {
                             },
                             // 
                         }), h(NModal, {
+                            blockScroll:false,
                             'z-index': 1,
                             show: row.showCollection,
                             'on-mask-click': () => {

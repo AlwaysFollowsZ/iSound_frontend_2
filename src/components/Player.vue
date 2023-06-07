@@ -22,7 +22,7 @@ import {
 
 const containerRef = ref();
 const mainColor = computed(() => {
-  return getRGBString(getBackgroundColorString(globalThemeColor), 0.7);
+  return getRGBString(getBackgroundColorString(globalThemeColor), 0.9);
 });
 const hoverColor = computed(() => {
   return getRGBString(getBackgroundColorString(globalThemeColor), 1);

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="{ 'position': 'relative' }">
         <div class="shared-song-sheet-title">
             全部分享歌单
         </div>
