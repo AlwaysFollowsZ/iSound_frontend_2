@@ -6,7 +6,7 @@
       <n-grid>
         <n-gi :span="4">
           <div>
-            <n-button tertiary circle class="back-button" @click="back">
+            <n-button quaternary circle class="back-button" @click="back">
               <ChevronBack style="width: 36px; position: absolute; left: 0px; color: white; opacity: 0.8;"/>
             </n-button>
           </div>
