@@ -1,107 +1,112 @@
 <template>
-    <div class="user-page-TopNav"><top-nav></top-nav></div>
-    <div class="user-page-body" style="min-width: 1400px">
-        <n-grid x-gap="0">
-            <n-gi :span="2"> <!--左右边栏留一部分空袭空隙，使主页主体居中--></n-gi>
-            <n-gi :span="7">
-                <div class="user-info-container">
-                    <div class="avatar">
-                        <img :src="avatarUrl" alt="avatar" @click="showModifyUserInfo = true" />
-                    </div>
-                    <div class="user-info-card">
-                        <div class="user-info-title" :style="{ color: 'rgb(' + this.accentColor + ')' }">
-                            {{ this.username }}
+    <div :style="{
+        'animation': isEnteringPage ? 'fadeIn' : 'fadeOutDown',
+        'animation-duration': '1.5s'
+    }">
+        <div class="user-page-TopNav"><top-nav @exit="this.isEnteringPage = false"></top-nav></div>
+        <div class="user-page-body" style="min-width: 1400px">
+            <n-grid x-gap="0">
+                <n-gi :span="2"> <!--左右边栏留一部分空袭空隙，使主页主体居中--></n-gi>
+                <n-gi :span="7">
+                    <div class="user-info-container">
+                        <div class="avatar">
+                            <img :src="avatarUrl" alt="avatar" @click="showModifyUserInfo = true" />
                         </div>
-                        <div class="user-info-body">
-                            <!-- <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ this.username }}<br /> -->
-                            <!-- <newspaper-outline style="width: 20px; margin-top: 3px;" /> -->
+                        <div class="user-info-card">
+                            <div class="user-info-title" :style="{ color: 'rgb(' + this.accentColor + ')' }">
+                                {{ this.username }}
+                            </div>
+                            <div class="user-info-body">
+                                <!-- <person-circle-sharp style="width: 20px; margin-top: 3px;" />用户名：{{ this.username }}<br /> -->
+                                <!-- <newspaper-outline style="width: 20px; margin-top: 3px;" /> -->
 
-                            <div class="user-info-body-title" :style="{ color: 'rgb(' + this.accentColor + ')' }">
-                                邮箱
-                            </div>
-                            <div class="user-info-body-content"
-                                :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
-                                {{ this.email }}
-                            </div>
+                                <div class="user-info-body-title" :style="{ color: 'rgb(' + this.accentColor + ')' }">
+                                    邮箱
+                                </div>
+                                <div class="user-info-body-content"
+                                    :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
+                                    {{ this.email }}
+                                </div>
 
-                            <div class="user-info-body-title" :style="{ color: 'rgb(' + this.accentColor + ')' }">
-                                个性签名
-                            </div>
-                            <div class="user-info-body-content"
-                                :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
-                                {{ this.bio }}
-                            </div>
+                                <div class="user-info-body-title" :style="{ color: 'rgb(' + this.accentColor + ')' }">
+                                    个性签名
+                                </div>
+                                <div class="user-info-body-content"
+                                    :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
+                                    {{ this.bio }}
+                                </div>
 
-                            <!-- <pricetag-outline style="width: 20px; margin-top: 3px;" /> -->
-                        </div>
-                        <div><br /><!--用来隔开基本信息和修改个人信息--></div>
-                        <div class="modify-user-info-button">
-                            <n-button text @click="showModifyUserInfo = true" :focusable="false" :style="{
-                                '--n-color': 'transparent',
-                                '--n-color-hover': 'transparent',
-                                '--n-color-pressed': 'transparent',
-                                '--n-color-focus': 'transparent',
-                                '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
-                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                                '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
-                            }">
-                                <template #icon><n-icon size="25"><create-outline /></n-icon></template>编辑个人信息
-                            </n-button>
-                        </div>
-                    </div>
-                </div>
-            </n-gi>
-            <n-gi :span="1"></n-gi>
-            <n-gi :span="12">
-                <div class="user-other-info-container">
-                    <div class="user-tabs">
-                        <div>
-                            <n-tabs size="large" type="line" animated :style="{
-                                '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
-                                '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                                '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
-                                '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
-                                '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
-                                '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
-                            }">
-                                <n-tab-pane name="收藏夹" tab="收藏夹">
-                                    <my-song-sheet-view />
-                                </n-tab-pane>
-                                <n-tab-pane name="我喜欢" tab="我喜欢">
-                                    <my-favorites />
-                                </n-tab-pane>
-                                <n-tab-pane name="分享歌单" tab="分享歌单">
-                                    <shared-song-sheet-view />
-                                </n-tab-pane>
-                                <n-tab-pane name="我的歌曲" tab="我的歌曲">
-                                    <my-upload-song-view />
-                                </n-tab-pane>
-                                <n-tab-pane name="我的关注" tab="我的关注">
-                                    <follow-list-view />
-                                </n-tab-pane>
-                                <n-tab-pane name="我的粉丝" tab="我的粉丝">
-                                    <fan-list-view />
-                                </n-tab-pane>
-                                <template #suffix>
-                                    <div :style="{
-                                        'color': 'rgba(' + this.accentColor + ',0.9)',
-                                        'transition': 'all linear 0.3s'
-                                    }">
-                                        粉丝数：{{ this.fansNum }}
-                                        <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd" />
-                                        <!-- <flash-outline style="width: 20px;"/>  -->
-                                        关注数：{{ this.followingNum }}
-                                    </div>
-                                    <!-- <flower-outline style="width: 20px;"/> -->
-                                </template>
-                            </n-tabs>
+                                <!-- <pricetag-outline style="width: 20px; margin-top: 3px;" /> -->
+                            </div>
+                            <div><br /><!--用来隔开基本信息和修改个人信息--></div>
+                            <div class="modify-user-info-button">
+                                <n-button text @click="showModifyUserInfo = true" :focusable="false" :style="{
+                                    '--n-color': 'transparent',
+                                    '--n-color-hover': 'transparent',
+                                    '--n-color-pressed': 'transparent',
+                                    '--n-color-focus': 'transparent',
+                                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
+                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                                    '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                                }">
+                                    <template #icon><n-icon size="25"><create-outline /></n-icon></template>编辑个人信息
+                                </n-button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </n-gi>
-            <n-gi :span="2"></n-gi>
-        </n-grid>
+                </n-gi>
+                <n-gi :span="1"></n-gi>
+                <n-gi :span="12">
+                    <div class="user-other-info-container">
+                        <div class="user-tabs">
+                            <div>
+                                <n-tabs size="large" type="line" animated :style="{
+                                    '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
+                                    '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                    '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
+                                    '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
+                                    '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
+                                    '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
+                                }">
+                                    <n-tab-pane name="收藏夹" tab="收藏夹">
+                                        <my-song-sheet-view />
+                                    </n-tab-pane>
+                                    <n-tab-pane name="我喜欢" tab="我喜欢">
+                                        <my-favorites />
+                                    </n-tab-pane>
+                                    <n-tab-pane name="分享歌单" tab="分享歌单">
+                                        <shared-song-sheet-view />
+                                    </n-tab-pane>
+                                    <n-tab-pane name="我的歌曲" tab="我的歌曲">
+                                        <my-upload-song-view />
+                                    </n-tab-pane>
+                                    <n-tab-pane name="我的关注" tab="我的关注">
+                                        <follow-list-view />
+                                    </n-tab-pane>
+                                    <n-tab-pane name="我的粉丝" tab="我的粉丝">
+                                        <fan-list-view />
+                                    </n-tab-pane>
+                                    <template #suffix>
+                                        <div :style="{
+                                            'color': 'rgba(' + this.accentColor + ',0.9)',
+                                            'transition': 'all linear 0.3s'
+                                        }">
+                                            粉丝数：{{ this.fansNum }}
+                                            <a-divider type="vertical" style="width: 1.5px; background-color: #dddddd" />
+                                            <!-- <flash-outline style="width: 20px;"/>  -->
+                                            关注数：{{ this.followingNum }}
+                                        </div>
+                                        <!-- <flower-outline style="width: 20px;"/> -->
+                                    </template>
+                                </n-tabs>
+                            </div>
+                        </div>
+                    </div>
+                </n-gi>
+                <n-gi :span="2"></n-gi>
+            </n-grid>
+        </div>
     </div>
 
     <modify-user-info-view :showModifyUserInfo="showModifyUserInfo" @closeModifyWindow="
@@ -170,6 +175,7 @@ export default {
             avatarFile: "",
             fansNum: "",
             followingNum: "",
+            isEnteringPage:true
         };
     },
     created() {
@@ -197,6 +203,7 @@ export default {
                     console.error(error);
                 });
         },
+
         // updateUserInfo(userInfo) {
         //     this.avatarUrl = userInfo.avatarUrl;
         //     this.username = userInfo.username;

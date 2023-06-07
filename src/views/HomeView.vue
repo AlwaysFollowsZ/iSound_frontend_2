@@ -1,152 +1,157 @@
 <template>
-  <div :style="{'animation':'bounce', 'animation-duration': '2s'}"></div>
-  <top-nav></top-nav>
-  <div class="img-show" :class="{ 'animate__animated animate__zoomIn': !isLoggedIn }">
-    <n-grid>
-      <n-gi :span="24">
-        <div style="padding-bottom: 0%; padding-left: 4.5%">
-          <div style="
+  <div :style="{
+    'animation': isEnteringPage ? 'fadeIn' : 'fadeOutUp',
+    'animation-duration': '1.5s'
+  }">
+    <top-nav @exit="this.isEnteringPage = false"></top-nav>
+
+    <div class="img-show" :class="{ 'animate__animated animate__zoomIn': !isLoggedIn }">
+      <n-grid>
+        <n-gi :span="24">
+          <div style="padding-bottom: 0%; padding-left: 4.5%">
+            <div style="
           /* min-width:1400px; */
           margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
-            :style="{ 'color': 'rgb(' + this.accentColor + ')' }" @click="prompt('hello')">
-            来点不一样的歌单
+              :style="{ 'color': 'rgb(' + this.accentColor + ')' }" @click="prompt('hello')">
+              来点不一样的歌单
+            </div>
           </div>
-        </div>
-        <div class="carousel-container">
-          <n-carousel :autoplay="true" :interval="5000" effect="card"
-            prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
-            next-slide-style="transform: translateX(20%) translateZ(-500px);" style="height: 85%" :show-dots="true">
-            <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }"
-              v-for="(songlist, idx) in songlists" :key="idx">
-              <img class="carousel-img" :src="songlist.path" draggable="false" @click="jumpToSongList(songlist.id)">
-            </n-carousel-item>
-          </n-carousel>
-        </div>
-      </n-gi>
-    </n-grid>
-  </div>
-  <div v-if="scrollPromptShouldDisplay && !isLoggedIn"
-    :class="[`${songEntryShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
-    <n-grid>
-      <n-gi :span="9"></n-gi>
-      <n-gi :span="8">
-        <div class="scroll-prompt rainbow-text" style="min-width: 1400px">往下滑，探索新世界</div>
-      </n-gi><n-gi :span="7"></n-gi>
-    </n-grid>
-  </div>
-
-
-  <div v-if="songEntryShouldAnimate || isLoggedIn">
-    <div class="animate__animated" :class="{ 'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn }" style=" 
+          <div class="carousel-container">
+            <n-carousel :autoplay="true" :interval="5000" effect="card"
+              prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
+              next-slide-style="transform: translateX(20%) translateZ(-500px);" style="height: 85%" :show-dots="true">
+              <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }"
+                v-for="(songlist, idx) in songlists" :key="idx">
+                <img class="carousel-img" :src="songlist.path" draggable="false" @click="jumpToSongList(songlist.id)">
+              </n-carousel-item>
+            </n-carousel>
+          </div>
+        </n-gi>
+      </n-grid>
+    </div>
+    <div v-if="scrollPromptShouldDisplay && !isLoggedIn"
+      :class="[`${songEntryShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
+      <n-grid>
+        <n-gi :span="9"></n-gi>
+        <n-gi :span="8">
+          <div class="scroll-prompt rainbow-text" style="min-width: 1400px">往下滑，探索新世界</div>
+        </n-gi><n-gi :span="7"></n-gi>
+      </n-grid>
+    </div>
+    <div v-if="songEntryShouldAnimate || isLoggedIn">
+      <div class="animate__animated" :class="{ 'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn }" style=" 
       min-width:1400px;padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
-      :style="{ 'color': 'rgb(' + this.accentColor + ')' }">现在就听</div>
-    <div class="song-entry-outter animate__animated"
-      :class="{ 'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn }">
-      <n-grid :x-gap="0" :y-gap="0">
-        <n-gi :span="6" v-for="(song, idx) in songs.slice(6, 18)" :key="idx">
-          <div class="song-entry-card-container">
-            <div class="song-entry-container">
-              <div style="padding-bottom: 3%; padding-top: 3%; height: 15px;">
-                <!-- <hr style="box-shadow: none;  margin: 0; transition: color 1s;" 
+        :style="{ 'color': 'rgb(' + this.accentColor + ')' }">现在就听</div>
+      <div class="song-entry-outter animate__animated"
+        :class="{ 'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn }">
+        <n-grid :x-gap="0" :y-gap="0">
+          <n-gi :span="6" v-for="(song, idx) in songs.slice(6, 18)" :key="idx">
+            <div class="song-entry-card-container">
+              <div class="song-entry-container">
+                <div style="padding-bottom: 3%; padding-top: 3%; height: 15px;">
+                  <!-- <hr style="box-shadow: none;  margin: 0; transition: color 1s;" 
                 :style="{'border-color': 'rgba(' + this.accentColor + ',0.7)', 'background-color': 'rgba(' + this.accentColor + ',0.7)'}"
                 /> -->
-              </div>
-              <n-grid @click="jumpToSong(song.id)" class="song-entry-content">
-                <n-gi :span="4">
-                  <div class="song-entry-img-container">
-                    <img class="song-entry-img" :src="song.imgSrc" draggable="false">
-                  </div>
-                </n-gi>
-                <n-gi :span="2"></n-gi>
-                <n-gi :span="15">
-                  <div class="song-entry-info-container">
-                    <div class="song-entry-info-name"
-                      :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
-                      <n-ellipsis style="max-width: 200px">{{ song.title }}</n-ellipsis>
+                </div>
+                <n-grid @click="jumpToSong(song.id)" class="song-entry-content">
+                  <n-gi :span="4">
+                    <div class="song-entry-img-container">
+                      <img class="song-entry-img" :src="song.imgSrc" draggable="false">
                     </div>
-                    <div class="song-entry-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
-                      <n-ellipsis style="max-width: 200px">{{ song.singer }}</n-ellipsis>
+                  </n-gi>
+                  <n-gi :span="2"></n-gi>
+                  <n-gi :span="15">
+                    <div class="song-entry-info-container">
+                      <div class="song-entry-info-name"
+                        :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                        <n-ellipsis style="max-width: 200px">{{ song.title }}</n-ellipsis>
+                      </div>
+                      <div class="song-entry-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
+                        <n-ellipsis style="max-width: 200px">{{ song.singer }}</n-ellipsis>
+                      </div>
                     </div>
+                  </n-gi>
+                </n-grid>
+              </div>
+            </div>
+          </n-gi>
+        </n-grid>
+      </div>
+    </div>
+    <div ref="songEntryRef" class="placeholder" v-else></div>
+
+    <div v-if="cardsShouldAnimate || isLoggedIn">
+      <div class="animate__animated" :class="{ 'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn }"
+        style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
+        :style="{ 'color': 'rgb(' + this.accentColor + ')' }">猜你喜欢</div>
+      <div class="card-container animate__animated "
+        :class="{ 'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn }">
+        <n-grid :col="6">
+          <n-gi :span="4" v-for="(song, idx) in songs.slice(0, 6)" :key="idx">
+            <div class="single-card-container-wrap">
+              <div class="single-card-container">
+                <div class="single-card-img-container">
+                  <img class="single-card-img" draggable="false" :src="song.imgSrc" @click="jumpToSong(song.id)">
+                </div>
+                <div class="single-card-info-container">
+                  <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                    <n-ellipsis style="max-width: 160px" @click="jumpToSong(song.id)">{{ song.title }}</n-ellipsis>
                   </div>
-                </n-gi>
-              </n-grid>
-            </div>
-          </div>
-        </n-gi>
-      </n-grid>
-    </div>
-  </div>
-  <div ref="songEntryRef" class="placeholder" v-else></div>
-
-  <div v-if="cardsShouldAnimate || isLoggedIn">
-    <div class="animate__animated" :class="{ 'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn }"
-      style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
-      :style="{ 'color': 'rgb(' + this.accentColor + ')' }">猜你喜欢</div>
-    <div class="card-container animate__animated " :class="{ 'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn }">
-      <n-grid :col="6">
-        <n-gi :span="4" v-for="(song, idx) in songs.slice(0, 6)" :key="idx">
-          <div class="single-card-container-wrap">
-            <div class="single-card-container">
-              <div class="single-card-img-container">
-                <img class="single-card-img" draggable="false" :src="song.imgSrc" @click="jumpToSong(song.id)">
-              </div>
-              <div class="single-card-info-container">
-                <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
-                  <n-ellipsis style="max-width: 160px" @click="jumpToSong(song.id)">{{ song.title }}</n-ellipsis>
-                </div>
-                <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
-                  <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
+                  <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
+                    <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </n-gi>
-      </n-grid>
+          </n-gi>
+        </n-grid>
+      </div>
     </div>
-  </div>
-  <div ref="songCardRef" class="placeholder" v-else></div>
+    <div ref="songCardRef" class="placeholder" v-else></div>
 
 
-  <div v-if="hotsShouldAnimate || isLoggedIn">
-    <div class="animate__animated" :class="{ 'animate__slideInLeft': hotsShouldAnimate && !isLoggedIn }"
-      style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
-      :style="{ 'color': 'rgb(' + this.accentColor + ')' }">最近热门</div>
-    <div class="card-container animate__animated " :class="{ 'animate__fadeInRight': hotsShouldAnimate && !isLoggedIn }">
-      <n-grid :col="6">
-        <n-gi :span="4" v-for="(song, idx) in hotSongs.slice(0, 6)" :key="idx">
-          <div class="single-card-container-wrap">
-            <div class="single-card-container">
-              <div class="single-card-img-container">
-                <img class="single-card-img" draggable="false" :src="song.imgSrc" @click="jumpToSong(song.id)">
-              </div>
-              <div class="single-card-info-container">
-                <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
-                  <n-ellipsis style="max-width: 160px" @click="jumpToSong(song.id)">{{ song.title }}</n-ellipsis>
+    <div v-if="hotsShouldAnimate || isLoggedIn">
+      <div class="animate__animated" :class="{ 'animate__slideInLeft': hotsShouldAnimate && !isLoggedIn }"
+        style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
+        :style="{ 'color': 'rgb(' + this.accentColor + ')' }">最近热门</div>
+      <div class="card-container animate__animated "
+        :class="{ 'animate__fadeInRight': hotsShouldAnimate && !isLoggedIn }">
+        <n-grid :col="6">
+          <n-gi :span="4" v-for="(song, idx) in hotSongs.slice(0, 6)" :key="idx">
+            <div class="single-card-container-wrap">
+              <div class="single-card-container">
+                <div class="single-card-img-container">
+                  <img class="single-card-img" draggable="false" :src="song.imgSrc" @click="jumpToSong(song.id)">
                 </div>
-                <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
-                  <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
+                <div class="single-card-info-container">
+                  <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                    <n-ellipsis style="max-width: 160px" @click="jumpToSong(song.id)">{{ song.title }}</n-ellipsis>
+                  </div>
+                  <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
+                    <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </n-gi>
-      </n-grid>
+          </n-gi>
+        </n-grid>
+      </div>
     </div>
-  </div>
-  <div ref="songHotRef" class="placeholder" v-else></div>
+    <div ref="songHotRef" class="placeholder" v-else></div>
 
 
-  <div v-if="tagShouldAnimate || isLoggedIn">
-    <div class="animate__animated" :class="{ 'animate__slideInLeft': tagShouldAnimate && !isLoggedIn }"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s; min-width:1400px;"
-      :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
-      分类标签：总有你的喜欢
+    <div v-if="tagShouldAnimate || isLoggedIn">
+      <div class="animate__animated" :class="{ 'animate__slideInLeft': tagShouldAnimate && !isLoggedIn }"
+        style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s; min-width:1400px;"
+        :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
+        分类标签：总有你的喜欢
+      </div>
+      <div class="tagtable-container animate__animated">
+        <tag-table :width="1400" :should-animate="true" />
+      </div>
     </div>
-    <div class="tagtable-container animate__animated">
-      <tag-table :width="1400" :should-animate="true" />
-    </div>
+    <div ref="tagRef" class="placeholder" v-else></div>
   </div>
-  <div ref="tagRef" class="placeholder" v-else></div>
 </template>
 
 <script>
@@ -171,6 +176,7 @@ export default {
   },
   data() {
     return {
+      isEnteringPage: true,
       cardsShouldAnimate: false,
       songEntryShouldAnimate: false,
       scrollPromptShouldDisplay: false,
@@ -316,7 +322,10 @@ export default {
     },
     jumpToSongList(id) {
       // this.$router.push(jumpLink)
-      this.$router.push('/listdetail/' + id)
+      this.isEnteringPage = false
+      setTimeout(() => {
+        this.$router.push('/listdetail/' + id)
+      }, 1400)
     },
     jumpToSong(id) {
       // this.$router.push(jumpLink)
