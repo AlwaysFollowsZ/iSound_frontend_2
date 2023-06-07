@@ -275,7 +275,7 @@ export default defineComponent({
                             <div class="body-item-title" :style="{
                                 'color': (this.colorMode === 'white') ? 'black' : 'white',
                             }">分类标签</div>
-                            <n-select v-model:value="value" multiple :options="options" placeholder="为歌曲添加1～3个分类标签"
+                            <n-select v-model:value="tags" multiple :options="options" placeholder="为歌曲添加1～3个分类标签"
                                 max-tag-count="responsive" @update:value="handleUpdateValue" @click="renderTags" />
 
                         </div>
