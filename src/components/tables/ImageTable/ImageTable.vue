@@ -262,8 +262,8 @@ export default {
     <div class="image_table" :style="{
         'background-color': getRGBString(BackgroundColorString, 0.2),
         'border-radius': '50px',
-        width: `${tableSize[0]}px`,
-        height: `${tableSize[1]}px`,
+        'width': tableSize[0]===undefined?'90%':`${tableSize[0]}px`,
+        'height': `${tableSize[1]}px`,
         // 'animation':'zoomIn',
         // 'animation-duration':'1.5s'
     }">

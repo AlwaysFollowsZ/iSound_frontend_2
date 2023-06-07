@@ -217,14 +217,14 @@
                               <div class="tag-container">
                                 <span v-for="( tag, i ) in  item.music.tags " :key="i">
                                   <!-- <span v-for="tag in historyPrompt"> -->
-                                  <n-tag :bordered="false" :style="{
+                                  <n-tag :style="{
                                     '--n-border-radius': `5px`,
                                     '--n-font-weight-strong': `bold`,
-                                    '--n-height': `20px`,
+                                    '--n-height': `22px`,
                                     '--n-close-margin': `0 18px 0 18px`,
                                   }
                                     " class="tag-item">
-                                    {{ tag }}
+                                    #{{ tag }}
                                   </n-tag>
                                   <!-- <a-divider type="vertical"
                                                             style="width: 1.5px; background-color: #dddddd" /> -->
@@ -495,5 +495,7 @@ export default {
 
 .tag-item {
   margin-right: 10px;
+  font-size: 13px;
+  padding-bottom: 2px;
 }
 </style>

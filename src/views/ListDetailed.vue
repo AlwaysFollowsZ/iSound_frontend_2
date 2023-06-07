@@ -242,271 +242,220 @@ export default defineComponent({
 });
 </script>
 <template>
-  <div class="list-detail-page" v-if="this.playlist.up !== undefined">
-    <n-grid>
-      <n-gi :span="4">
-        <n-button tertiary circle class="back-button" @click="back">
-          <ChevronBack style="width: 36px; position: absolute; left: 0px" /> </n-button
-      ></n-gi>
-      <n-gi :span="4">
-        <div class="list-cover">
-          <n-image class="list-cover-img" :src="this.playlist.cover" />
-        </div>
-        <div style="margin: 30px 0px 20px 0px">
-          <n-breadcrumb>
-            <n-breadcrumb-item style="font-size: 25px">
-              <n-icon :component="MusicalNotesOutline" size="30" />
-              歌曲列表</n-breadcrumb-item
-            >
-          </n-breadcrumb>
-        </div>
-      </n-gi>
-      <n-gi :span="1"></n-gi>
-      <n-gi :span="11" class="list-information">
-        <div style="height: 245px">
-          <n-grid :y-gap="10" :cols="1" style="width: 671px; height: 256px">
-            <n-gi style="height: 50px">
-              <n-grid>
-                <n-gi :span="21">
-                  <div style="font-size: xx-large; height: 50px">
-                    {{ this.playlist.title }}
-                  </div>
-                </n-gi>
-                <n-gi v-if="this.$cookies.get('userid') == this.up.id" :span="3">
-                  <n-button quaternary :focusable="false" @click="editList">
-                    <n-icon>
-                      <CreateOutline />
-                    </n-icon>
-                    编辑
-                  </n-button>
-                </n-gi>
-              </n-grid>
-            </n-gi>
-            <n-gi>
-              <div>
-                <a
-                  v-if="this.$cookies.get('userid') == this.up.id && this.tagsNum == 0"
-                  @click="editList"
-                  >添加标签</a
-                >
-                <n-tag v-else v-for="(tag, i) in this.playlist.tags" :key="i" class="tags"
-                  >#{{ tag }}</n-tag
-                >
-              </div>
-            </n-gi>
-            <n-gi>
-              来源：
-              <span
-                class="up-link"
-                @click="
-                  this.$router.push(
-                    this.$cookies.get('userid') == this.up.id
-                      ? '/home'
-                      : `/home/user/${this.up.id}`
-                  )
-                "
-              >
-                {{ this.up.username }}
-              </span>
-            </n-gi>
-            <n-gi>
-              <div>歌曲数：{{ this.songNum }}</div>
-            </n-gi>
-            <n-gi>
-              <div>歌单简介：{{ this.playlist.profile }}</div>
-            </n-gi>
-            <n-gi>
-              <n-button :focusable="false" @click="playAll" class="playall-button">
-                <n-icon>
-                  <PlayOutline />
-                </n-icon>
-                播放全部
-              </n-button>
-              <n-button
-                v-if="
-                  this.$cookies.get('userid') == this.up.id &&
-                  this.playlist.shared == false
-                "
-                :focusable="false"
-                @click="shareList"
-                class="share-button"
-              >
-                <n-icon>
-                  <OpenOutline />
-                </n-icon>
-                分享歌单
-              </n-button>
-              <n-button
-                v-if="
-                  (this.$cookies.get('userid') == this.up.id ||
-                    this.$cookies.get('is_superuser') == 'true') &&
-                  this.playlist.shared == true
-                "
-                :focusable="false"
-                @click="unshareList"
-                class="share-button"
-              >
-                <n-icon>
-                  <OpenOutline />
-                </n-icon>
-                取消分享
-              </n-button>
-              <n-button
-                v-if="
-                  this.$cookies.isKey('userid') &&
-                  this.$cookies.get('userid') != this.up.id
-                "
-                :focusable="false"
-                @click="complainList"
-              >
-                <n-icon>
-                  <WarningOutline />
-                </n-icon>
-                投诉歌单
-              </n-button>
-            </n-gi>
-          </n-grid>
-        </div>
-      </n-gi>
-      <n-gi :span="4"></n-gi>
-    </n-grid>
-  </div>
-  <div class="music-list-item" v-if="this.playlist.up !== undefined">
-    <n-grid>
-      <n-gi :span="4"></n-gi>
-      <n-gi :span="16">
-        <a-divider style="height: 1.8px; background-color: #dddddd" />
-        <list-table
-          v-if="playlist.music_set.length > 0"
-          :view-mode="'user'"
-          :position="playlist.shared === true ? 'PublicView' : 'CollectionView'"
-          v-model:songData="this.songData"
-          :currentListId="playlist.id"
-        ></list-table>
-      </n-gi>
-      <n-gi :span="4"></n-gi>
-    </n-grid>
-  </div>
-  <n-modal :show="showEditListModify" :z-index="1">
-    <div>
-      <n-card class="edit-list-hodder" style="--n-border-radius: 20px">
+    <div class="list-detail-page" v-if="this.playlist.up !== undefined">
         <n-grid>
-          <n-gi :span="1"></n-gi>
-          <n-gi :span="22">
-            <span class="modify-title">
-              <div class="edit-list-title">
-                编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}信息
-              </div>
-            </span>
-          </n-gi>
-          <n-gi :span="1">
-            <div class="close-edit-modify">
-              <n-icon size="32px" @click="closeWindow">
-                <close-outline />
-              </n-icon>
-            </div>
-          </n-gi>
-        </n-grid>
-        <div class="edit-list-main">
-          <n-grid>
-            <n-gi :span="8">
-              <n-popover trigger="hover">
-                <template #trigger>
-                  <div class="upload-list-cover" @click="uploadFile">
-                    <n-upload
-                      class="upload-list-cover-image"
-                      list-type="image-card"
-                      accept="image/*"
-                      max="1"
-                      @preview="handlePreview"
-                      :on-change="handleCoverChange"
-                      style="max-width: 200px"
-                    >
-                      <n-icon size="100" depth="5">
-                        <ImageOutline />
-                      </n-icon>
-                    </n-upload>
-                    <n-image :src="previewImageUrl" style="width: 200px" />
-                  </div>
-                </template>
-                <span>点击此处上传歌单封面</span>
-              </n-popover>
+            <n-gi :span="4">
+                <n-button tertiary circle class="back-button" @click="back">
+                    <ChevronBack style="width: 36px; position: absolute; left: 0px;" />
+                </n-button></n-gi>
+            <n-gi :span="4">
+                <div class="list-cover">
+                    <n-image class="list-cover-img" :src="this.playlist.cover" />
+                </div>
+                <div style="margin: 30px 0px 20px 0px">
+                    <n-breadcrumb>
+                        <n-breadcrumb-item style="font-size: 25px">
+                            <n-icon :component="MusicalNotesOutline" size="30" />
+                            歌曲列表</n-breadcrumb-item>
+                    </n-breadcrumb>
+                </div>
             </n-gi>
             <n-gi :span="1"></n-gi>
-            <n-gi :span="15">
-              <div>
-                <div style="padding-bottom: 3px; font-size: 16px">歌单名</div>
-                <n-input
-                  type="text"
-                  placeholder="请输入歌单名称"
-                  :maxlength="20"
-                  show-count
-                  v-model:value="listName"
-                />
-              </div>
-              <div>
-                <div style="padding: 10px 0px 3px 0px; font-size: 16px">标签</div>
-                <n-space vertical>
-                  <n-select
-                    v-model:value="tags"
-                    multiple
-                    :options="options"
-                    placeholder="请选择歌单标签"
-                  />
-                </n-space>
-              </div>
-              <div>
-                <div style="padding: 10px 0px 3px 0px; font-size: 16px">简介</div>
-                <n-input
-                  v-model:value="listIntro"
-                  type="textarea"
-                  placeholder="每张歌单都有自己的故事~"
-                  :autosize="{
-                    minRows: 6,
-                    maxRows: 6,
-                  }"
-                  :maxlength="150"
-                  show-count
-                >
-                </n-input>
-              </div>
-              <div class="submit-button">
-                <n-button strong secondary type="primary" @click="submitEdit">
-                  保存修改
-                </n-button>
-              </div>
+            <n-gi :span="11" class="list-information">
+                <div style="height: 245px">
+                    <n-grid :y-gap="10" :cols="1" style="width: 671px; height: 256px">
+                        <n-gi style="height: 50px">
+                            <n-grid>
+                                <n-gi :span="21">
+                                    <div style="font-size: xx-large; height: 50px">
+                                        {{ this.playlist.title }}
+                                    </div>
+                                </n-gi>
+                                <n-gi v-if="this.$cookies.get('userid') == this.up.id" :span="3">
+                                    <n-button quaternary :focusable="false" @click="editList">
+                                        <n-icon>
+                                            <CreateOutline />
+                                        </n-icon>
+                                        编辑
+                                    </n-button>
+                                </n-gi>
+                            </n-grid>
+                        </n-gi>
+                        <n-gi>
+                            <div>
+                                <a v-if="this.$cookies.get('userid') == this.up.id && this.tagsNum == 0"
+                                    @click="editList">添加标签</a>
+                                <n-tag v-else v-for="(tag, i) in this.playlist.tags" :key="i" 
+            
+                                :style="{
+                                '--n-border-radius': `5px`,
+                                '--n-font-weight-strong': `bold`,
+                                '--n-height': `22px`,
+                                '--n-close-margin': `0 18px 0 18px`}"
+                                class="tags">
+                                #{{ tag }}
+                                </n-tag>
+                            </div>
+                        </n-gi>
+                        <n-gi>
+                            来源：
+                            <span class="up-link" @click="
+                                this.$router.push(
+                                    this.$cookies.get('userid') == this.up.id
+                                        ? '/home'
+                                        : `/home/user/${this.up.id}`
+                                )
+                                ">
+                                {{ this.up.username }}
+                            </span>
+                        </n-gi>
+                        <n-gi>
+                            <div>歌曲数：{{ this.songNum }}</div>
+                        </n-gi>
+                        <n-gi>
+                            <div>歌单简介：{{ this.playlist.profile }}</div>
+                        </n-gi>
+                        <n-gi>
+                            <n-button :focusable="false" @click="playAll" class="playall-button">
+                                <n-icon>
+                                    <PlayOutline />
+                                </n-icon>
+                                播放全部
+                            </n-button>
+                            <n-button v-if="this.$cookies.get('userid') == this.up.id &&
+                                this.playlist.shared == false
+                                " :focusable="false" @click="shareList" class="share-button">
+                                <n-icon>
+                                    <OpenOutline />
+                                </n-icon>
+                                分享歌单
+                            </n-button>
+                            <n-button v-if="(this.$cookies.get('userid') == this.up.id ||
+                                this.$cookies.get('is_superuser') == 'true') &&
+                                this.playlist.shared == true
+                                " :focusable="false" @click="unshareList" class="share-button">
+                                <n-icon>
+                                    <OpenOutline />
+                                </n-icon>
+                                取消分享
+                            </n-button>
+                            <n-button v-if="this.$cookies.isKey('userid') &&
+                                this.$cookies.get('userid') != this.up.id
+                                " :focusable="false" @click="complainList">
+                                <n-icon>
+                                    <WarningOutline />
+                                </n-icon>
+                                投诉歌单
+                            </n-button>
+                        </n-gi>
+                    </n-grid>
+                </div>
             </n-gi>
-          </n-grid>
-        </div>
-      </n-card>
+            <n-gi :span="4"></n-gi>
+        </n-grid>
     </div>
-  </n-modal>
-  <n-modal :show="showShareListModify" :z-index="1">
-    <div>
-      <n-card class="share-list-hodder" style="--n-border-radius: 20px">
-        <span class="modify-title">
-          <div class="share-list-title">iSound提醒您</div>
-        </span>
-        <div class="confirm-message">
-          您确认歌单名了吗？<br /><br />
-          您为歌单添加标签了吗？<br /><br />
-          您为歌单添加简介了吗？
-        </div>
-        <div class="buttons">
-          <n-button :focusable="false" @click="closeWindow" style="margin: 0 10px"
-            >取消</n-button
-          >
-          <n-button :focusable="false" @click="confirmShare" style="margin: 0 10px"
-            >确认</n-button
-          >
-        </div>
-      </n-card>
+    <div class="music-list-item" v-if="this.playlist.up !== undefined">
+        <n-grid>
+            <n-gi :span="4"></n-gi>
+            <n-gi :span="16">
+                <a-divider style="height: 1.8px; background-color: #dddddd" />
+                <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'" :position="playlist.shared===true?'PublicView':'CollectionView'"
+                    v-model:songData="this.songData" :currentListId="playlist.id"></list-table>
+            </n-gi>
+            <n-gi :span="4"></n-gi>
+        </n-grid>
     </div>
-  </n-modal>
-  <modify-complain-view
-    :showModifyComplainView="showModifyComplainView"
-    @closeModifyWindow="showModifyComplainView = false"
-  ></modify-complain-view>
+    <n-modal :show="showEditListModify" :z-index="1">
+        <div>
+            <n-card class="edit-list-hodder" style="--n-border-radius: 20px">
+                <n-grid>
+                    <n-gi :span="1"></n-gi>
+                    <n-gi :span="22">
+                        <span class="modify-title">
+                            <div class="edit-list-title">
+                                编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}信息
+                            </div>
+                        </span>
+                    </n-gi>
+                    <n-gi :span="1">
+                        <div class="close-edit-modify">
+                            <n-icon size="32px" @click="closeWindow">
+                                <close-outline />
+                            </n-icon>
+                        </div>
+                    </n-gi>
+                </n-grid>
+                <div class="edit-list-main">
+                    <n-grid>
+                        <n-gi :span="8">
+                            <n-popover trigger="hover">
+                                <template #trigger>
+                                    <div class="upload-list-cover" @click="uploadFile">
+                                        <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
+                                            max="1" @preview="handlePreview" :on-change="handleCoverChange"
+                                            style="max-width: 200px">
+                                            <n-icon size="100" depth="5">
+                                                <ImageOutline />
+                                            </n-icon>
+                                        </n-upload>
+                                        <n-image :src="previewImageUrl" style="width: 200px" />
+                                    </div>
+                                </template>
+                                <span>点击此处上传歌单封面</span>
+                            </n-popover>
+                        </n-gi>
+                        <n-gi :span="1"></n-gi>
+                        <n-gi :span="15">
+                            <div>
+                                <div style="padding-bottom: 3px; font-size: 16px">歌单名</div>
+                                <n-input type="text" placeholder="请输入歌单名称" :maxlength="20" show-count
+                                    v-model:value="listName" />
+                            </div>
+                            <div>
+                                <div style="padding: 10px 0px 3px 0px; font-size: 16px">标签</div>
+                                <n-space vertical>
+                                    <n-select v-model:value="tags" multiple :options="options" placeholder="请选择歌单标签" />
+                                </n-space>
+                            </div>
+                            <div>
+                                <div style="padding: 10px 0px 3px 0px; font-size: 16px">简介</div>
+                                <n-input v-model:value="listIntro" type="textarea" placeholder="每张歌单都有自己的故事~" :autosize="{
+                                    minRows: 6,
+                                    maxRows: 6,
+                                }" :maxlength="150" show-count>
+                                </n-input>
+                            </div>
+                            <div class="submit-button">
+                                <n-button strong secondary type="primary" @click="submitEdit">
+                                    保存修改
+                                </n-button>
+                            </div>
+                        </n-gi>
+                    </n-grid>
+                </div>
+            </n-card>
+        </div>
+    </n-modal>
+    <n-modal :show="showShareListModify" :z-index="1">
+        <div>
+            <n-card class="share-list-hodder" style="--n-border-radius: 20px">
+                <span class="modify-title">
+                    <div class="share-list-title">iSound提醒您</div>
+                </span>
+                <div class="confirm-message">
+                    您确认歌单名了吗？<br /><br />
+                    您为歌单添加标签了吗？<br /><br />
+                    您为歌单添加简介了吗？
+                </div>
+                <div class="buttons">
+                    <n-button :focusable="false" @click="closeWindow" style="margin: 0 10px">取消</n-button>
+                    <n-button :focusable="false" @click="confirmShare" style="margin: 0 10px">确认</n-button>
+                </div>
+            </n-card>
+        </div>
+    </n-modal>
+    <modify-complain-view :showModifyComplainView="showModifyComplainView"
+        @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
 </template>
 <style scoped>
 .back-button {
@@ -647,7 +596,10 @@ export default defineComponent({
 }
 
 .tags {
-  margin-right: 10px;
+    margin-right: 10px;
+    padding-bottom: 1px;
+    border-radius: 5px;
+    font-size: 13px;
 }
 
 .share-list-hodder {

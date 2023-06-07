@@ -98,6 +98,7 @@
 }
 
 .outer-container {
+    height: 500px;
     width: 800px;
     border-radius: 20px;
     padding-top: 20px;
