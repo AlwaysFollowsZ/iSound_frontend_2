@@ -109,7 +109,7 @@ export default defineComponent({
 }
 
 .outer-container {
-  height: 560px;
+  height: 550px;
   width: 800px;
   border-radius: 20px;
   padding-top: 20px;

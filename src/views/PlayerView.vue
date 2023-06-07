@@ -121,7 +121,7 @@
                     </div>
                   </n-scrollbar>
                   <div class="translationSwitch">
-                    <n-switch :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
+                    <n-switch size="small" :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
                       @click="scroll('auto')" :style="{ '--n-rail-color': 'grey' }">
                       <template #icon> 译 </template>
                     </n-switch>
