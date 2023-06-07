@@ -66,7 +66,12 @@ function launch() {
 
 function unlaunch() {
   if (launched.value == true) {
-    proxy.$router.go(-1);
+    if (proxy.$route.path.includes('player')) {
+      proxy.$router.go(-2);
+    }
+    else {
+      proxy.$router.go(-1);
+    }
     launched.value = false;
   }
 }
@@ -258,11 +263,11 @@ onMounted(() => {
   z-index: -100 !important;
 }
 
-.aplayer-narrow + a > .aplayer-launch {
+.aplayer-narrow+a>.aplayer-launch {
   display: none !important;
 }
 
-.aplayer-narrow + a > .aplayer-unlaunch {
+.aplayer-narrow+a>.aplayer-unlaunch {
   display: none !important;
 }
 
@@ -287,7 +292,7 @@ onMounted(() => {
   z-index: 100 !important;
 }
 
-.aplayer-fixed:not(.aplayer-narrow) > .aplayer-body > .aplayer-pic > .aplayer-button {
+.aplayer-fixed:not(.aplayer-narrow)>.aplayer-body>.aplayer-pic>.aplayer-button {
   display: none !important;
 }
 
@@ -406,7 +411,7 @@ onMounted(() => {
   height: 32px !important;
 }
 
-.aplayer-lrc-contents > p {
+.aplayer-lrc-contents>p {
   font-size: 16px !important;
 }
 

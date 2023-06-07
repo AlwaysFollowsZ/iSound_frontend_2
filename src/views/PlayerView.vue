@@ -1089,7 +1089,7 @@ export default defineComponent({
     back() {
       this.isEnteringPage = false
       setTimeout(() => {
-        this.$router.go(-1);
+        this.$router.go(-2);
       }, 1400)
     },
     like() {

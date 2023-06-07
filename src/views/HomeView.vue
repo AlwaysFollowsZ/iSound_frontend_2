@@ -512,12 +512,12 @@ export default {
 }
 
 .song-entry-card-container {
-  padding-left: 19%;
+  padding-left: 15%;
 }
 
 
 .song-entry-container {
-  min-width: 320px;
+  min-width: 300px;
   margin-top: 0%;
   margin-bottom: 0%;
 }
