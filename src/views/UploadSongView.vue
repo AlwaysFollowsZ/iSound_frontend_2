@@ -32,15 +32,18 @@
                                         'justify-content': 'center',
                                         'align-items': 'center',
                                         'border-radius': '10px',
-                                        'background': `rgb(${this.accentColor},0.1)`,
+                                        'background': this.songPageUrl === '/src/assets/upload-logo.png'?`rgb(${this.accentColor},0.1)`:`url(${this.songPageUrl})`,
+                                        'background-repeat':'no-repeat',
+                                        'background-size':'cover',
+                                        'background-position':'center center',
                                         'height': '220px',
                                         'margin-bottom': '18px',
                                         'aspect-ratio': '1',
                                     }" @click="uploadFile">
                                         <n-icon size="150" :depth="3" :color="`rgb(${this.accentColor})`"
                                             v-if="this.songPageUrl === '/src/assets/upload-logo.png'"><image-outline /></n-icon>
-                                        <img v-else style="border-radius: 10px;" :src="this.songPageUrl"
-                                            @click="uploadFile" />
+                                        <!-- <img v-else style="border-radius: 10px;" :src="this.songPageUrl"
+                                            @click="uploadFile" /> -->
                                     </div>
                                     <input type="file" ref="fileInput" style="display: none" accept="image/*"
                                         @change="handleSongPageChange" />
@@ -103,7 +106,12 @@
                                                 '--n-height': '36px',
                                                 '--n-font-size': '18px',
                                             }">
-                                            {{ songFileName }}
+                                            <n-ellipsis style="max-width:265px" :tooltip="{
+                                                style: {
+                                                    'color': `rgba(${this.accentColor},0.8)`,
+                                                    'background-color': this.colorMode === 'white' ? 'rgb(245,245,245)' : 'rgb(45,45,45)'
+                                                }
+                                            }">{{ songFileName }}</n-ellipsis>
                                         </n-button>
                                         <input type="file" accept="audio/*" ref="songFileInput"
                                             @change="handleSongSrcFileChange" style="display: none" />
@@ -143,10 +151,11 @@
                                                 '--n-height': '36px',
                                                 '--n-font-size': '18px',
                                             }">
-                                            {{ songLyricName }}
+                                            <n-ellipsis style="max-width:265px">{{ songLyricName }}</n-ellipsis>
                                         </n-button>
                                         <input type="file" ref="songLyricInput" @change="handleSongLyricFileChange"
                                             style="display:  none" />
+
                                     </div>
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
@@ -299,7 +308,7 @@
 <script>
 import { CloseOutline, ArrowUpOutline, WatchOutline, ImageOutline, CheckmarkCircleOutline, MusicalNoteOutline } from '@vicons/ionicons5'
 import 'animate.css'
-import { NInput, NModal, NPopover } from 'naive-ui';
+import { NInput, NModal, NPopover, NEllipsis } from 'naive-ui';
 import { defineComponent, ref, watch } from "vue";
 import { mapState } from 'vuex'
 import { message } from "ant-design-vue";
@@ -313,6 +322,7 @@ export default {
         ArrowUpOutline,
         NInput,
         NModal,
+        NEllipsis,
         ImageOutline,
         CheckmarkCircleOutline,
         MusicalNoteOutline,

@@ -36,12 +36,12 @@
                   </span>
                 </template>
                 <div class="avatar-prompt" :style="{
-                  'font-weight':'600',
-                  'margin':'5px 20px',
-                  'display':'flex',
-                  'justify-content':'center',
-                  'align-items':'center',
-                  'height':'30px',
+                  'font-weight': '600',
+                  'margin': '5px 20px',
+                  'display': 'flex',
+                  'justify-content': 'center',
+                  'align-items': 'center',
+                  'height': '30px',
                   'color': `rgb(${this.accentColor},0.7)`,
                   'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                 }">
@@ -167,19 +167,19 @@
               submitModify();
             //closeMWindow();
             " :focusable="false" :style="{
-              '--n-color': 'rgba(' + this.accentColor + ', 0.25)',
-              '--n-color-hover': 'rgba(' + this.accentColor + ', 0.45)',
-              '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.45)',
-              '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
-              '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-              '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-              '--n-border': '1px solid transparent',
-              '--n-border-hover': '1px solid transparent',
-              '--n-border-pressed': '1px solid transparent',
-              '--n-border-radius': '5px',
-              '--n-width': '64px',
-              '--n-height': '39px',
-              '--n-font-size': '18px',
+  '--n-color': 'rgba(' + this.accentColor + ', 0.25)',
+  '--n-color-hover': 'rgba(' + this.accentColor + ', 0.45)',
+  '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.45)',
+  '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
+  '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+  '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+  '--n-border': '1px solid transparent',
+  '--n-border-hover': '1px solid transparent',
+  '--n-border-pressed': '1px solid transparent',
+  '--n-border-radius': '5px',
+  '--n-width': '64px',
+  '--n-height': '39px',
+  '--n-font-size': '18px',
 }">
               完成
             </n-button>
@@ -333,6 +333,13 @@ export default {
       data.append("avatar", this.avatarFile);
       this.$http.post("/api/accounts/update/", data).then((response) => {
         if (response.data.code === "0") {
+          //上传成功应该更新临时信息
+          this.tmpUsername = this.username
+          this.tmpEmail = this.email
+          this.tmpRecordNum = this.recordNum
+          this.tmpBio = this.bio
+          this.tmpAvatarUrl = this.avatarUrl
+
           this.$EventBus.emit("updateInfo");
           this.$emit("closeModifyWindow");
           this.$EventBus.emit('refresh')
