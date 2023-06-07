@@ -40,7 +40,7 @@
               </n-gi>
               <n-gi :span="4" style="margin: auto">
                 <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon size="45" @click="complain" color="#e65c5c" class="hoverable-icon">
+                  <n-icon size="45" @click="complain" color="rgba(255,255,255,0.7)" class="hoverable-icon">
                     <WarningOutline />
                   </n-icon>
                 </span>
@@ -121,7 +121,7 @@
                     </div>
                   </n-scrollbar>
                   <div class="translationSwitch">
-                    <n-switch :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
+                    <n-switch size="small" :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
                       @click="scroll('auto')" :style="{ '--n-rail-color': 'grey' }">
                       <template #icon> 译 </template>
                     </n-switch>
@@ -862,20 +862,20 @@
   <modify-complain-view :showModifyComplainView="showModifyComplainView"
     @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
   <div v-show="false"><top-nav></top-nav></div>
-  <n-modal :z-index="2" v-model:show="showCollections">
+  <n-modal :z-index="2" v-model:show="showCollections" :block-scroll="false">
     <div :style="{
-      background: getRGBString(backgroundColorString, 0.6),
+      background: getRGBString(backgroundColorString, 0.9),
       position: 'relative',
       top: '-50px',
       'text-align': 'center',
-      'border-radius': '50px',
+      'border-radius': '20px',
     }">
       <div :style="{
-        margin: '20px',
+        'margin': '0 20px 20px 20px',
         'font-size': '25px',
         'font-weight': '700',
-        'background-color': getRGBString(backgroundColorString, 0.8),
-        color: getRGBString(fontColorString, 0.8),
+        'background-color': getRGBString(fontColorString, 0.7),
+        'color': getRGBString(backgroundColorString, 1),
         'margin-top': '20px',
         'border-radius': '50px',
         animation: isCollectChanged ? 'bounceIn' : '',
@@ -883,8 +883,8 @@
       }">
         {{ headChange === true ? "添加成功" : "请选择收藏夹" }}
       </div>
-      <image-table :rows="collectionData" :tableSize="[1000]" :entrySize="[200, 200]" :position="'CollectionView'"
-        @flushCollections="updateCollections" :handleClickEntry="handleClickEntry"></image-table>
+      <image-table :rows="collectionData" :tableSize="[800,500]" :entrySize="[175, 175]" :position="'CollectionView'"
+        @flushCollections="updateCollections" :handleClickEntry="handleClickEntry" ></image-table>
     </div>
   </n-modal>
 </template>
