@@ -255,7 +255,7 @@ export default defineComponent({
                                 <n-popover trigger="hover">
                                     <template #trigger>
                                         <div class="upload-list-cover" :style="{
-                                            'border': `solid rgb(${this.accentColor}) 2px `,
+                                            'border': this.songPageUrl === '/src/assets/upload-logo.png' ? `2px solid rgba(${this.accentColor},0.3)` : '',
                                             'background': `rgb(${this.accentColor},0.1)`,
                                         }" @click="uploadFile">
                                             <input type="file" ref="fileInput" style="display: none" accept="image/*"
@@ -520,6 +520,7 @@ export default defineComponent({
 
 .outer-container {
     width: 800px;
+    min-width: 800px;
     border-radius: 20px;
     padding-top: 20px;
     padding-bottom: 20px;

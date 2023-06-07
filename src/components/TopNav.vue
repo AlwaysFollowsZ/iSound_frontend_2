@@ -3,9 +3,9 @@
     <n-grid x-gap="0">
       <n-gi :span="4">
         <router-link to="/">
-          <n-image width="45" src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-            style="padding-left: 4%" :preview-disabled="true" />
-          <div class="isound-style">iSound</div>
+          <img  src="/src/assets/iSound.png"
+            style="padding-left: 10px; height:40px" :preview-disabled="true" />
+          <!-- <div class="isound-style">iSound</div> -->
         </router-link>
       </n-gi>
       <n-gi :span="7">
@@ -350,6 +350,7 @@ export default {
 .topnav {
   padding-top: 7px;
   padding-bottom: 7px;
+  min-width: 1400px;
   /*border: dashed;*/
 }
 
@@ -397,6 +398,8 @@ export default {
 }
 
 .choose-color-default {
+  vertical-align:bottom;
+  display:inline-block;
   padding-right: 3px;
   color: cornflowerblue;
 }

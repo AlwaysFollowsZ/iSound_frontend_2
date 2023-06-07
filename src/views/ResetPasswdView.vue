@@ -1,7 +1,7 @@
 <template>
     <n-modal :show="showResetPasswd" :style="{'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)'}" :block-scroll="false">
-        <div class="outer-container">
-            <div class="title-container">
+        <div class="outer-container" style="min-width: 640px">
+            <div class="title-container" style="min-width: 520px">
                 <div style="margin-bottom: 30px">
                     <n-grid>
                         <n-gi :span="2"></n-gi>
@@ -17,7 +17,7 @@
                     </n-grid>
                 </div> 
             </div>
-            <div class="body-container">
+            <div class="body-container" style="min-width: 520px">
                 <div class="body-item">
                     <n-grid>
                         <n-gi :span="3"></n-gi>
@@ -89,10 +89,10 @@
                     </n-grid>
                 </div><div style="height: 75px" v-else></div>
             </div>
-            <div class="reset-passwd-prompt" >
+            <div class="reset-passwd-prompt" style="min-width: 520px">
                 通过邮箱验证后，重置的密码将发送到你的邮箱。
             </div>
-            <div class="reset-passwd-sub-prompt" >
+            <div class="reset-passwd-sub-prompt" style="min-width: 520px">
                 登录后，你可以在头像的下拉菜单中修改密码。
             </div>
         </div>
@@ -161,6 +161,7 @@ export default {
     cursor: pointer;
   }
   .title-container {
+    min-width: 520px;
     margin-top: 10px;
     margin-bottom: 10px;
     width: 600px;
