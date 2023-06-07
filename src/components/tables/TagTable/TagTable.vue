@@ -108,9 +108,8 @@ export default {
                 if (hoverIndex === index) {//是被hover的标签
                     return {
                         // 'height': '80px',
-                        'width': '250px',
-                        'transform': 'scale(1.3)',
-                        'margin': '0 10px'
+                        'width': '180px',
+                        'transform': 'scale(1.25)'
                     }
                 }
                 else {//其他标签
@@ -131,9 +130,9 @@ export default {
 <style>
 .tag-entry-container {
     transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
-    margin: 0 10px;
     height: 70px;
-    width: 140px;
+    width: 150px;
+    margin:0 10px;
     display: inline-block;
     text-align: center;
     justify-content: center;

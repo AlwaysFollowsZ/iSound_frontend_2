@@ -267,32 +267,32 @@
         </div>
     </n-modal>
     <n-modal :show="isUploading" :z-index="150">
-        <n-progress type="circle" status="success" :percentage="percentage" rail-color="lightgrey"
-        :style="{
-                '--n-fill-color':
-                    (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
-                        'grey' :
-                        'rgb(' + this.accentColor + ')',
-            }"
-        >
-        <template #default>
-          <div v-if="this.percentage < 85">
-            <n-icon size="50" :color="this.accentColor === '0,0,0' || this.accentColor === '255,255,255'
-              ? 'grey'
-              : 'rgba(' + this.accentColor + ', 0.7)'
-              " :class="{
-    'animate__animated animate__slideInLeft': this.percentage > 85,
-  }">
-              <musical-notes-outline />
-            </n-icon>
-          </div>
-          <div v-else>
-            <n-icon size="56" color="#63e2b8" class="animate__animated animate__zoomIn">
-              <checkmark-circle-outline />
-            </n-icon>
-          </div>
-        </template>
-    </n-progress>
+        <n-progress type="circle" status="success" :percentage="percentage" rail-color="lightgrey" :style="{
+            'width': '200px',
+            'aspect-ratio': 1,
+            '--n-fill-color':
+                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                    'grey' :
+                    'rgb(' + this.accentColor + ')',
+        }">
+            <template #default>
+                <div v-if="this.percentage < 85">
+                    <n-icon size="50" :color="this.accentColor === '0,0,0' || this.accentColor === '255,255,255'
+                        ? 'grey'
+                        : 'rgba(' + this.accentColor + ', 0.7)'
+                        " :class="{
+        'animate__animated animate__slideInLeft': this.percentage > 85,
+    }">
+                        <musical-notes-outline />
+                    </n-icon>
+                </div>
+                <div v-else>
+                    <n-icon size="56" color="#63e2b8" class="animate__animated animate__zoomIn">
+                        <checkmark-circle-outline />
+                    </n-icon>
+                </div>
+            </template>
+        </n-progress>
     </n-modal>
 </template>
   
