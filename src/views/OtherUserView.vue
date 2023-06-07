@@ -1,6 +1,6 @@
 <template>
   <div class="user-page-TopNav"><top-nav></top-nav></div>
-  <div>
+  <div style="min-width: 1400px">
     <n-grid :x-gap="0">
       <n-gi :span="3">
         <div>
@@ -10,7 +10,7 @@
         </div>
       </n-gi>
       <n-gi :span="18">
-        <div class="user-info-title">
+        <div class="user-info-title" style="min-height: 470px;">
           <n-grid :x-gap="0">
             <n-gi :span="10">
               <div class="user-avatar">
@@ -18,7 +18,7 @@
               </div>
             </n-gi>
             <n-gi :span="14">
-              <div class="user-info">
+              <div class="user-info" style="min-height: 470px;">
                 <n-grid :y-gap="12" :cols="1">
                   <n-gi>
                     <div class="user-name" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">{{ this.username }}</div>

@@ -651,6 +651,7 @@ export default {
 
 .outer-container {
     width: 700px;
+    min-width: 700px;
     border-radius: 20px;
     padding-top: 20px;
     padding-bottom: 20px;

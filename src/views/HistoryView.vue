@@ -1,7 +1,7 @@
 <template>
   <div class="history-page">
     <div class="user-page-TopNav"><top-nav></top-nav></div>
-    <div class="page-title-container">
+    <div class="page-title-container" style="min-width: 1400px">
       <n-grid>
         <n-gi :span="2"></n-gi>
         <n-gi :span="20">
@@ -41,7 +41,7 @@
         </template>
       </n-progress>
     </div>
-    <div class="page-body" v-else>
+    <div class="page-body" style="min-width: 1400px" v-else>
       <!-- <div class="page-body-icon" style="width: 30px">
                 <alarm />
             </div> -->
@@ -170,7 +170,7 @@
                   </div>
                 </n-gi>
                 <n-gi :span="16">
-                  <div :t="this.flushList">
+                  <div :t="this.flushList" style="min-width: 860px">
                     <n-timeline :key="this.flushList">
                       <n-timeline-item v-for="( item, index ) in  showHistoryData " :key="index" type=""
                         :content="item.content" :time="item.date.replace('T', ' ').split('.')[0]" line-type="dashed"

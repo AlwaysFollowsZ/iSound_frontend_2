@@ -7,7 +7,7 @@
     :block-scroll="false"
   >
     <div class="outer-container">
-      <div class="title-container">
+      <div class="title-container" style="min-width: 790px;">
         <div style="margin-bottom: 30px">
           <n-grid>
             <n-gi :span="2"></n-gi>
@@ -33,7 +33,7 @@
           </n-grid>
         </div>
       </div>
-      <div class="body-container">
+      <div class="body-container" style="min-width: 790px;">
         <n-grid>
           <n-gi :span="10">
             <div class="avatar">
@@ -187,7 +187,7 @@
           </n-gi>
         </n-grid>
       </div>
-      <div style="margin-top: 20px; margin-bottom: 25px">
+      <div style="margin-top: 20px; margin-bottom: 25px; min-width: 790px;">
         <n-grid class="login-button-top">
           <n-gi :span="4"></n-gi>
           <n-gi :span="4" style="display: flex; justify-content: right">
@@ -419,6 +419,7 @@ export default {
 
 .outer-container {
     width: 800px;
+    min-width: 790px;
     border-radius: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
