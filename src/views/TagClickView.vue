@@ -92,6 +92,7 @@ export default {
                 imagePath: songlist.cover,     // === NEED TO BE REPLACED ===
                 songCount: songlist.music_set.length,
                 Name: songlist.title,
+                Id: songlist.id,
             }))
         });
     },
