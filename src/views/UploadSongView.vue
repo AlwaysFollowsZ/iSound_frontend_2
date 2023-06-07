@@ -20,7 +20,7 @@
             </div>
             <div class="body-container">
                 <n-grid>
-                    <n-gi :span="9">
+                    <n-gi :span="10">
                         <n-popover trigger="hover" class="cover-prompt" :style="{ 'color': fontColorString }">
                             <template #trigger>
                                 <div class="upload-song-page">
@@ -29,7 +29,7 @@
                                         'justify-content': 'center',
                                         'align-items': 'center',
                                         'border-radius': '10px',
-                                        'background':fontColorSlight,
+                                        'background': fontColorSlight,
                                         'border': `5px solid ${fontColorString}`,
                                         'height': '238px',
                                         'aspect-ratio': '1',
@@ -50,13 +50,14 @@
                                         'color': (accentColor === '0,0,0' || accentColor === '255,255,255') ? fontColorString : 'rgba(' + this.accentColor + ', 0.25)'
                                     }">分类标签</div>
                                     <n-select v-model:value="value" multiple :options="options" placeholder="为歌曲添加1～3个分类标签"
-                                        max-tag-count="responsive" @update:value="handleUpdateValue" />
+                                        max-tag-count="responsive" @update:value="handleUpdateValue"
+                                        :color="fontColorString" />
                                 </n-gi>
                                 <!-- <n-gi :span="3"></n-gi> -->
                             </n-grid>
                         </div>
                     </n-gi>
-                    <n-gi :span="15">
+                    <n-gi :span="14"+>
                         <div class="body-item">
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
@@ -405,7 +406,7 @@
 <script>
 import { CloseOutline, ArrowUpOutline, WatchOutline, ImageOutline } from '@vicons/ionicons5'
 import { NInput, NModal, NPopover, NIcon } from 'naive-ui';
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref, watch, computed } from "vue";
 import { mapState } from 'vuex'
 import { message } from "ant-design-vue";
 import { getRGBString, getFontColorString, getBackgroundColorString, globalThemeColor } from '/src/colorMode.js'
@@ -423,30 +424,6 @@ export default {
     },
     computed: {
         ...mapState(['accentColor', 'colorMode']),
-        BoxColorString() {
-            return getRGBString(getBackgroundColorString(globalThemeColor), 0.9)
-        },
-        BackgroundColorString() {
-            return getRGBString(getBackgroundColorString(globalThemeColor), 0.8)
-        },
-        fontColorString() {
-            return getRGBString(getFontColorString(globalThemeColor), 0.8)
-        },
-        fontColorHover() {
-            return getRGBString(getFontColorString(globalThemeColor), 0.6)
-        },
-        BackgroundColorHover() {
-            return getRGBString(getBackgroundColorString(globalThemeColor), 0.6)
-        },
-        fontColorPress() {
-            return getRGBString(getFontColorString(globalThemeColor), 0.5)
-        },
-        BackgroundColorPress() {
-            return getRGBString(getBackgroundColorString(globalThemeColor), 0.5)
-        },
-        fontColorSlight() {
-            return getRGBString(getFontColorString(globalThemeColor), 0.4)
-        }
     },
     data() {
         return {
@@ -518,7 +495,39 @@ export default {
         }
     },
     setup() {
+        let BoxColorString = computed(() => {
+            return getRGBString(getBackgroundColorString(globalThemeColor), 0.9)
+        })
+        let BackgroundColorString = computed(() => {
+            return getRGBString(getBackgroundColorString(globalThemeColor), 0.8)
+        })
+        let fontColorString = computed(() => {
+            return getRGBString(getFontColorString(globalThemeColor), 0.8)
+        })
+        let fontColorHover = computed(() => {
+            return getRGBString(getFontColorString(globalThemeColor), 0.6)
+        })
+        let BackgroundColorHover = computed(() => {
+            return getRGBString(getBackgroundColorString(globalThemeColor), 0.6)
+        })
+        let fontColorPress = computed(() => {
+            return getRGBString(getFontColorString(globalThemeColor), 0.5)
+        })
+        let BackgroundColorPress = computed(() => {
+            return getRGBString(getBackgroundColorString(globalThemeColor), 0.5)
+        })
+        let fontColorSlight = computed(() => {
+            return getRGBString(getFontColorString(globalThemeColor), 0.4)
+        })
         return {
+            BackgroundColorHover,
+            BackgroundColorPress,
+            BackgroundColorString,
+            BoxColorString,
+            fontColorHover,
+            fontColorPress,
+            fontColorSlight,
+            fontColorString,
             error(msg) {
                 message.error({
                     content: msg,
@@ -541,6 +550,10 @@ export default {
     },
     created() {
         this.songPageUrl = '/src/assets/upload-logo.png';
+
+    },
+    mounted() {
+        this.renderTags()
     },
     methods: {
         closeUWindow() {
@@ -636,115 +649,78 @@ export default {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     options.push(option);
-                    option.style={
-                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ? 
-                        this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
-                        'rgba(' + this.accentColor + ', 0.2)',
-                        'color': 'rgb(' + this.accentColor + ')',
-                        '--n-option-check-color': 'rgb(' + this.accentColor + ')',
-                    }   
+                    option.style = {
+                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
+                            this.fontColorString : 'rgba(' + this.accentColor + ', 0.2)',
+                        'color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                            this.BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                        '--n-option-check-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                            this.BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                    }
                 }
             })
-            let op=this.options.filter(function(v){return options.indexOf(v)==-1})
-            let i=0,j=0;
-            for(i=0;i<op.length;i++){
-                for(j=0;j<this.options.length;j++){
-                    if(op[i].value==this.options[j].value){
-                        this.options[j].style={'background-color':this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                        'color':this.colorMode === 'white' ? 'black' : 'white',}
+            let op = this.options.filter(function (v) { return options.indexOf(v) == -1 })
+            let i = 0, j = 0;
+            for (i = 0; i < op.length; i++) {
+                for (j = 0; j < this.options.length; j++) {
+                    if (op[i].value == this.options[j].value) {
+                        this.options[j].style = {
+                            'background-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                                this.fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                            'color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                                this.BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                        }
+                        this.options[j].addEventListener('mouseenter', () => {
+                            this.options[j].style = {
+                                'background-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                                    this.fontColorHover : 'rgba(' + this.accentColor + ', 0.25)',
+                            }
+                        })
                     }
                 }
-            } 
+            }
         },
         renderTags() {
-            let menus = document.getElementsByClassName('n-base-select-menu n-base-select-menu--multiple n-select-menu')
-            if (menus.length > 0) {
-                let menu = menus[0]
-                menu.style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
-                menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
-            }
+            //菜单部分
+            // let menus = document.getElementsByClassName('n-base-select-menu n-base-select-menu--multiple n-select-menu')
+            // if (menus.length > 0) {
+            // let menu = menus[0]
+            // menu.style.setProperty('--n-option-color-pending', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+            //     this.fontColorPress : 'rgba(' + this.accentColor + ', 0.25)')
+            // menu.style.setProperty('--n-option-color-active-pending', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+            //     this.fontColorPress : 'rgba(' + this.accentColor + ', 0.25)')
+            // }
             //let options = []
-            
+
             for (let i = 0; i < this.options.length; i++) {
-                this.options[i].style = 
-                    { 
-                      'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                      'color': this.colorMode === 'white' ? 'black' : 'white',
-                    }
+                this.options[i].style =
+                {
+                    'background-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                        this.fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                    'color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                        this.BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                    '--n-color-hover': 'red'
+                }
             }
-            this.value.forEach((value) => {      
+            this.value.forEach((value) => {
                 const option = this.options.find((option) => option.value == value);
                 if (option) {
                     //options.push(option);
-                    option.style={
-                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ? 
-                        this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
-                        'rgba(' + this.accentColor + ', 0.2)',
-                        'color': 'rgb(' + this.accentColor + ')',
-                        '--n-option-check-color': 'rgb(' + this.accentColor + ')',
-                    }   
+                    option.style = {
+                        'background-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                            this.fontColorString : 'rgba(' + this.accentColor + ', 0.25)',
+                        'color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                            this.BackgroundColorString : 'rgba(' + this.accentColor + ', 1)',
+                    }
                 }
             })
+            //选项框部分
+
         }
-        // renderTagChoices() {
-        //     setTimeout(() => {
-        //         let selectMenu = document.getElementsByClassName('n-base-select-menu')
-        //         if (selectMenu.length > 0) {
-        //             selectMenu[0].style.setProperty('--n-color', this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)')
-        //             selectMenu[0].style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
-        //             selectMenu[0].style.setProperty('--n-option-text-color', fontColorString)
-        //             selectMenu[0].style.setProperty('--n-border-radius', '8px')
-        //             selectMenu[0].style.setProperty('--n-option-check-color', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.25)')
-        //             selectMenu[0].style.setProperty('--n-option-text-color-active', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)')
-        //             selectMenu[0].style.setProperty('--n-option-text-color-pressed', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)')
-        //                     console.log(selectMenu.length)
     }
-    // let tags = document.getElementsByClassName('n-base-select-option')
-    // for (let i = 0; i < tags.length; i++) {
-    //     tags[i].addEventListener('click', this.tagClick)
-    //     tags[i].addEventListener('hover', this.setScroll)
-    //     tags[i].style.color = 
-    //         (tags[i].classList.contains('n-base-select-option--selected')) ?
-    //         ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //             BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
-    // }
-    //     }, 0)
-    // },
-    // setScroll() {
-    //     let scroll = document.getElementsByClassName('n-scrollbar')
-    //         //console.log('s' + scroll.length)
-    //         for (let i = 0; i < scroll.length; i++) {
-    //             scroll[i].props = { 'on-scroll': this.renderTags }
-    //             //scroll[i].addEventListener('scroll', this.renderTags)
-    //         }
-    // },
-    // renderTags() {
-    //     let tags = document.getElementsByClassName('n-base-select-option')
-    //         for (let i = 0; i < tags.length; i++) {
-    //             tags[i].addEventListener('click', this.tagClick)
-    //             tags[i].addEventListener('hover', this.setScroll)
-    //             tags[i].style.color = 
-    //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
-    //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
-    //         }
-    //         console.log('hello')
-    // },
-    // tagClick() {
-    //     let tags = document.getElementsByClassName('n-base-select-option')
-    //     for (let i = 0; i < tags.length; i++) {
-    //             tags[i].style.color = 
-    //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
-    //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //                     BackgroundColorString : 'rgba(' + this.accentColor + ', 0.9)') : (fontColorString)
-    //         }
-    // }
-    // }
 };
 </script>
+
 <style scoped>
 .close-icon:hover {
     cursor: pointer;
@@ -796,8 +772,9 @@ export default {
     transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;
 }
 
-.upload-song-page div:hover,.upload-song-page img:hover {
-    opacity:0.8;
+.upload-song-page div:hover,
+.upload-song-page img:hover {
+    opacity: 0.8;
     transform: scale(1.02);
     transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.5s;
 }
@@ -825,6 +802,36 @@ export default {
 
 .upload-song-page:hover {
     cursor: pointer;
+}
+
+/* 悬浮标签 */
+:deep(.n-base-select-menu .n-base-select-option.n-base-select-option--pending::before) {
+    --n-option-color-pending: var(--my-color);
+    opacity: 0.8;
+}
+
+/* 选中标签 */
+:deep(.n-base-select-menu .n-base-select-option.n-base-select-option--selected.n-base-select-option--pending::before) {
+    --n-option-color-active-pending: var(--my-text-color);
+    opacity: 0.8;
+}
+
+/* 提示标签信息 */
+:deep(.n-base-selection-placeholder__inner){
+    color:var(--my-color) ;
+}
+/* 框里的标签  */
+:deep(.n-base-selection .n-tag){
+    --n-color:var(--my-color) !important;
+    --n-text-color:var(--my-text-color) !important
+}
+
+:deep(.n-base-selection-tags) {
+    --n-color: var(--my-text-color)
+}
+
+:deep(.v-vl-items) {
+    padding: 0 !important
 }
 
 /* :global(.ant-select-dropdown){
