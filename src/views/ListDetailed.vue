@@ -377,7 +377,7 @@ export default defineComponent({
     <div class="list-detail-page" style="min-width: 1400px;" v-if="this.playlist.up !== undefined">
         <n-grid>
             <n-gi :span="4">
-                <n-button tertiary circle class="back-button" @click="back">
+                <n-button quaternary circle class="back-button" @click="back">
                     <ChevronBack style="width: 36px; position: absolute; left: 0px;" />
                 </n-button></n-gi>
             <n-gi :span="4">
@@ -554,7 +554,7 @@ export default defineComponent({
                                 &nbsp; 取消分享
                             </n-button>
                             <n-button v-if="this.$cookies.isKey('userid') &&
-                                this.$cookies.get('userid') != this.up.id
+                                this.$cookies.get('userid') != this.up.id && this.$cookies.get('is_superuser') == 'false'
                                 " :focusable="false" @click="complainList" :style="{
         '--n-color': 'transparent',
         '--n-color-hover': 'transparent',

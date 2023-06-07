@@ -6,7 +6,7 @@
       <n-grid>
         <n-gi :span="4">
           <div>
-            <n-button tertiary circle class="back-button" @click="back">
+            <n-button quaternary circle class="back-button" @click="back">
               <ChevronBack style="width: 36px; position: absolute; left: 0px; color: white; opacity: 0.8;"/>
             </n-button>
           </div>
@@ -121,7 +121,7 @@
                     </div>
                   </n-scrollbar>
                   <div class="translationSwitch">
-                    <n-switch :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
+                    <n-switch size="small" :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
                       @click="scroll('auto')" :style="{ '--n-rail-color': 'grey' }">
                       <template #icon> 译 </template>
                     </n-switch>
