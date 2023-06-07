@@ -252,6 +252,7 @@ export default {
               this.setLogState(false);
               this.$http.post("/api/accounts/logout/");
               this.$cookies.remove("userid");
+              this.$cookies.remove("is_superuser");
               this.$router.push("/");
             },
           },
