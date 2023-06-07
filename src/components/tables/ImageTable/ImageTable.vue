@@ -113,9 +113,6 @@ export default {
             document.documentElement.style.setProperty('--my-modal-select-tag-color', colorMode.value === 'white' ? 'rgb(230,230,230)' : 'rgb(108,108,108)')
             document.documentElement.style.setProperty('--my-modal-select-text-color', colorMode.value === 'white' ? 'rgb(45,45,45)' : 'rgb(230,230,230)')
         }, { immediate: true })
-        watch(this.accentColor, () => {
-            document.documentElement.style.setProperty('--my-accent-color', this.accentColor)//只有这个是a,b,c
-        })
 
         return {
             showModal,
@@ -271,11 +268,10 @@ export default {
         @flushCollections="$emit('flushCollections')" @closeCreateWindow="showModal = false"></create-new-collection-view>
     <div class="image_table" :style="{
         'background-color': getRGBString(BackgroundColorString, 0.2),
-        'border-radius': '50px',
-        'width': tableSize[0] === undefined ? '90%' : `${tableSize[0]}px`,
+        'width': tableSize[0] === undefined ? '100%' : `${tableSize[0]}px`,
         'height': `${tableSize[1]}px`,
-        // 'animation':'zoomIn',
-        // 'animation-duration':'1.5s'
+        'animation': rows.length === 0 ? '' : 'slideInUp',
+        'animation-duration': '1.5s'
     }">
         <!-- 根据不同的情况判断，在个人主页的“收藏夹”页面会显示“新建”按钮，
             在个人主页的“上传歌曲”页面会显示“上传”按钮 -->
@@ -326,13 +322,22 @@ export default {
         </div>
         <!-- 这个组件不会用在首页，因此都采用有pagination的形式 -->
         <div class="image_table_list" v-if="rows.length > 0">
-            <template v-for="data in currentPageData" :key="data.Key">
-                <image-table-entry v-bind="data" style="vertical-align: middle" @clickEntry="handleClickEntry"
-                    @deleteCollection="handleClickDeleteCollection" @shareCollection="handleClickShareCollection"
-                    @cancelShare="handleClickCancelShare" @deleteUploadedSong="handleClickDeleteUploadedSongs"
-                    :EntrySize="entrySize"
-                    :Edit="['Collection', 'Songlist', 'UploadedSongs'].includes(position)"></image-table-entry>
-            </template>
+            <div :style="{
+                'margin-bottom': ['Collection', 'UploadedSongs', 'CollectionView'].includes(position) ? '50px' : '0',
+            }">
+                <template v-for="data in currentPageData" :key="data.Key">
+                    <span :style="{
+                        'animation': 'fadeIn',
+                        'animation-duration': '1s'
+                    }">
+                        <image-table-entry v-bind="data" style="vertical-align: middle" @clickEntry="handleClickEntry"
+                            @deleteCollection="handleClickDeleteCollection" @shareCollection="handleClickShareCollection"
+                            @cancelShare="handleClickCancelShare" @deleteUploadedSong="handleClickDeleteUploadedSongs"
+                            :EntrySize="entrySize"
+                            :Edit="['Collection', 'Songlist', 'UploadedSongs'].includes(position)"></image-table-entry>
+                </span>
+                </template>
+            </div>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
                     v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker :page-sizes="[
@@ -438,16 +443,16 @@ export default {
     --my-modal-select-color: none;
     --my-modal-select-text-color: none;
     --my-modal-select-tag-color: none;
-    --my-accent-color:none;
 }
 
 .image_table {
-    margin: 0;
+    border-radius: 20px;
+    margin: 20px 0 0 0;
     /*设置为0，由父级设置padding*/
     padding-top: 10px;
     display: inline-block;
     overflow: hidden;
-    transition: cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
 }
 
 .list_top_nav {

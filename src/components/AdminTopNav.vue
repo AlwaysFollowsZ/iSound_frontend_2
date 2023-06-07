@@ -67,9 +67,10 @@ export default {
                     label: "登出",
                     props: {
                         onClick: () => {
-                            this.$router.push('/')
-                            // this.setIsAdmin(false),
-                            console.log('管理员登出')
+                            this.$http.post("/api/accounts/logout/");
+                            this.$cookies.remove("userid");
+                            this.$cookies.remove("is_superuser");
+                            this.$router.push("/");
                         }
                     }
                 }
