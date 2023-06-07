@@ -3,7 +3,8 @@
         <n-grid :y-gap="16">
             <n-gi :span="24">
                 <div v-for="(content, idx) in contents" :key="idx" :style="{ 'display': 'inline-block' }">
-                    <div class="tag-entry-container" :style="getTagStyle(idx)">
+                    <div class="tag-entry-container" :style="getTagStyle(idx)" @mouseenter="idx===31?'':isHoverOnTag[idx] = true"
+                        @mouseleave="idx === 31 ? '' : isHoverOnTag[idx] = false">
                         <tag-entry :index="idx" :content="content" :color-display="this.colorMode === 'white' ?
                             (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.3)' : 'rgba(' + this.accentColor + ', 0.5)') :
                             (idx % 2 === 0 ? '#5f5c5c' : '#bcbbbb')" :color-hover="this.colorMode === 'white' ?
@@ -12,8 +13,8 @@
                             :color-text="this.colorMode === 'white' ?
                                 (idx % 2 === 0 ? 'rgb(' + this.accentColor + ')' : 'white') :
                                 (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 1)' : 'rgba(' + this.accentColor + ', 0.9)')"
-                            :should-animate="shouldAnimate" @click="handleClickTag(content)"
-                            @mouseenter="isHoverOnTag[idx] = true" @mouseleave="isHoverOnTag[idx] = false" />
+                            :should-animate="shouldAnimate" @click="handleClickTag(content)" @mouseenter="idx !== 31 ? '' : isHoverOnTag[idx] = true"
+                            @mouseleave="idx !== 31 ? '' : isHoverOnTag[idx] = false"/>
                     </div>
                 </div>
             </n-gi>
@@ -108,13 +109,16 @@ export default {
                     return {
                         // 'height': '80px',
                         'width': '250px',
-                        'transform': 'scale(1.3)'
+                        'transform': 'scale(1.3)',
+                        'margin': '0 10px'
                     }
                 }
                 else {//其他标签
+                    console.log(Math.abs(hoverIndex - index))
                     return {
                         // 'height': '80px',
-                        'width': '150px'
+                        // 'width': `${140-Math.abs(hoverIndex-index)*10}px'`,
+                        'margin': `${15 - Math.abs(hoverIndex - index)*2}px`
                     }
                 }
             }
@@ -127,8 +131,9 @@ export default {
 <style>
 .tag-entry-container {
     transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
-    height: 50px;
-    width: 160px;
+    margin: 0 10px;
+    height: 70px;
+    width: 140px;
     display: inline-block;
     text-align: center;
     justify-content: center;

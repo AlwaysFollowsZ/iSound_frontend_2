@@ -5,7 +5,7 @@
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
           <div style="
-          /* min-width:1400px;  */
+          /* min-width:1400px; */
           margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
             :style="{ 'color': 'rgb(' + this.accentColor + ')' }" @click="prompt('hello')">
             来点不一样的歌单
@@ -25,15 +25,15 @@
     </n-grid>
   </div>
   <div v-if="scrollPromptShouldDisplay && !isLoggedIn"
-    :class="[`${cardsShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
+    :class="[`${songEntryShouldAnimate && !isLoggedIn ? 'animate__animated animate__zoomOut' : 'animate__animated animate__zoomIn animate__slow'}`]">
     <n-grid>
       <n-gi :span="9"></n-gi>
       <n-gi :span="8">
-        <div class="scroll-prompt rainbow-text">往下滑，探索新世界</div>
+        <div class="scroll-prompt rainbow-text" style="min-width: 1400px">往下滑，探索新世界</div>
       </n-gi><n-gi :span="7"></n-gi>
     </n-grid>
   </div>
-  <div ref="songCardRef" class="placeholder" v-else-if="!isLoggedIn"></div>
+
 
   <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" :class="{ 'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn }" style=" 
@@ -75,7 +75,7 @@
       </n-grid>
     </div>
   </div>
-
+  <div ref="songEntryRef" class="placeholder" v-else></div>
 
   <div v-if="cardsShouldAnimate || isLoggedIn">
     <div class="animate__animated" :class="{ 'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn }"
@@ -103,13 +103,14 @@
       </n-grid>
     </div>
   </div>
+  <div ref="songCardRef" class="placeholder" v-else></div>
 
 
-  <div v-if="cardsShouldAnimate || isLoggedIn">
-    <div class="animate__animated" :class="{ 'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn }"
+  <div v-if="hotsShouldAnimate || isLoggedIn">
+    <div class="animate__animated" :class="{ 'animate__slideInLeft': hotsShouldAnimate && !isLoggedIn }"
       style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
       :style="{ 'color': 'rgb(' + this.accentColor + ')' }">最近热门</div>
-    <div class="card-container animate__animated " :class="{ 'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn }">
+    <div class="card-container animate__animated " :class="{ 'animate__fadeInRight': hotsShouldAnimate && !isLoggedIn }">
       <n-grid :col="6">
         <n-gi :span="4" v-for="(song, idx) in hotSongs.slice(0, 6)" :key="idx">
           <div class="single-card-container-wrap">
@@ -131,9 +132,9 @@
       </n-grid>
     </div>
   </div>
+  <div ref="songHotRef" class="placeholder" v-else></div>
 
 
-  <div ref="songEntryRef" class="placeholder" v-else></div>
   <div v-if="tagShouldAnimate || isLoggedIn">
     <div class="animate__animated" :class="{ 'animate__slideInLeft': tagShouldAnimate && !isLoggedIn }"
       style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s; min-width:1400px;"
@@ -173,6 +174,7 @@ export default {
       songEntryShouldAnimate: false,
       scrollPromptShouldDisplay: false,
       tagShouldAnimate: false,
+      hotsShouldAnimate: false,
       imgs: [
         {
           path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg",
@@ -229,11 +231,13 @@ export default {
     window.addEventListener('scroll', this.handleSongEntryScroll)
     window.addEventListener('scroll', this.handleCardsScroll)
     window.addEventListener('scroll', this.handleTagScroll)
+    window.addEventListener('scroll', this.handleHotScroll)
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleSongEntryScroll)
     window.removeEventListener('scroll', this.handleCardsScroll)
     window.removeEventListener('scroll', this.handleTagScroll)
+    window.removeEventListener('scroll', this.handleHotScroll)
   },
   methods: {
     ...mapMutations(['setAccentColor']),
@@ -352,6 +356,17 @@ export default {
           this.tagShouldAnimate = true
         }
       }
+    },
+    handleHotScroll() {
+      if (!this.hotsShouldAnimate && !this.isLoggedIn) {
+        const componentElement = this.$refs.songHotRef
+        const componentOffsetTop = componentElement.offsetTop
+        const windowHeight = window.innerHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (componentOffsetTop <= scrollTop + windowHeight * 0.6) {
+          this.hotsShouldAnimate = true
+        }
+      }
     }
   }
 }
@@ -388,10 +403,11 @@ export default {
 }
 
 .card-container {
+  display: inline-block;
   height: 270px;
   min-width: 1400px;
   padding-top: 1%;
-  padding-left: 5%;
+  padding-left: 3.5%;
   margin: auto;
   animation-delay: 300ms;
   animation-duration: 1500ms;

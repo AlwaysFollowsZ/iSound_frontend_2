@@ -11,7 +11,7 @@
             '--n-text-color-pressed': `${ colorText }`,
             '--n-text-color-focus': `${ colorText }`,
             '--n-border-radius': `8px`,
-            '--n-height': '30px',
+            '--n-height': '40px',
         }"  
     >
         {{ content }}

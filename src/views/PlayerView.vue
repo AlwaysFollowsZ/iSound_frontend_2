@@ -868,7 +868,7 @@
       position: 'relative',
       top: '-50px',
       'text-align': 'center',
-      'border-radius': '20px',
+      'border-radius': '30px',
     }">
       <div :style="{
         'margin': '0 20px 20px 20px',

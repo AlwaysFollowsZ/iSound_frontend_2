@@ -222,7 +222,7 @@ export default {
                         }, {
                             icon: () => h(Heart12Filled, {
                                 style: {
-                                    'color': 'rgb(204,12,32)'
+                                    'color': '#ff6666'
                                 }
                             })
                         }),
@@ -276,7 +276,7 @@ export default {
                                 {
                                     icon: () => h(Heart12Filled, {
                                         style: {
-                                            'color': row.isLiked ? 'rgb(204,12,32)' : 'rgb(235,245,235)'
+                                            'color': row.isLiked ? '#ff6666' : 'rgb(235,245,235)'
                                         }
                                     })
                                 }),//"我喜欢按钮"
@@ -369,7 +369,7 @@ export default {
                                     'background-color': getRGBString(BackgroundColorString.value, 0.8),
                                     'color': getRGBString(fontColorString.value, 0.8),
                                     'margin-top': '20px',
-                                    'border-radius': '50px',
+                                    'border-radius': '30px',
                                     'animation': this.isCollectChanged ? 'bounceIn' : '',
                                     'animation-duration': '1s'
                                 },
@@ -377,8 +377,8 @@ export default {
                             //除了多选外，“选择收藏夹”的imageTable不会在收藏夹页面出现
                             h(imageTable, {
                                 rows: this.collectionData,
-                                tableSize: [1000,],
-                                entrySize: [200, 200],
+                                tableSize: [800,500],
+                                entrySize: [175,175],
                                 position: 'CollectionView',
                                 onFlushCollections: this.updateCollections,
                                 //注意传出来的是ID
@@ -474,11 +474,11 @@ export default {
                         }
                             , h('div', {
                                 style: {
-                                    'background': getRGBString(BackgroundColorString, 0.6),
+                                    'background': getRGBString(BackgroundColorString, 0.9),
                                     'position': 'relative',
                                     'top': '-50px',
                                     'text-align': 'center',
-                                    'border-radius': '50px'
+                                    'border-radius': '30px'
                                 }
                             }, [
                                 //“请选择收藏夹”的标题不会在收藏夹页面出现
@@ -500,8 +500,8 @@ export default {
                                 (this.position !== 'CollectionView') ? h(imageTable, {
                                     rows: this.collectionData,
                                     onFlushCollections: this.updateCollections,
-                                    tableSize: [1000,],
-                                    entrySize: [200, 200],
+                                    tableSize: [800,500],
+                                    entrySize: [175,175],
                                     position: 'CollectionView',//需要显示的是收藏夹页面
                                     handleClickEntry: (listId) => {
                                         this.headChange = true
