@@ -397,6 +397,8 @@ export default {
 }
 
 .choose-color-default {
+  vertical-align:bottom;
+  display:inline-block;
   padding-right: 3px;
   color: cornflowerblue;
 }
