@@ -76,7 +76,7 @@
 <style scoped>
 .user-message-hodder {
     width: 800px;
-    height: 500px;
+    height: 550px;
 }
 .close-message-modify {
     margin-right: 0px;
