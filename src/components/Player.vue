@@ -142,7 +142,7 @@ onMounted(() => {
   );
 
   if (proxy.$router.currentRoute.value.name != "player") {
-    proxy.$http.get("/api/music/detail/1/").then((response) => {
+    proxy.$http.get("/api/music/detail/2/").then((response) => {
       ap.list.add(response.data.music_set);
     });
   }

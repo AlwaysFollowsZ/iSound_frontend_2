@@ -78,6 +78,7 @@ export default defineComponent({
         };
     },
     created() {
+        document.title = "iSound管理平台";
         this.$http.get(`/api/index/`).then((response) => {
             let i = 0;
             let j = 0;
