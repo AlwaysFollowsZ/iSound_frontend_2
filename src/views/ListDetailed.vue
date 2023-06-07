@@ -562,7 +562,8 @@ export default defineComponent({
                                 &nbsp; 取消分享
                             </n-button>
                             <n-button v-if="this.$cookies.isKey('userid') &&
-                                this.$cookies.get('userid') != this.up.id
+                                this.$cookies.get('userid') != this.up.id &&
+                                this.$cookies.get('is_superuser') == 'false'
                                 " :focusable="false" @click="complainList" :style="{
         '--n-color': 'transparent',
         '--n-color-hover': 'transparent',
