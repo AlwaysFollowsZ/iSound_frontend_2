@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="carousel-container">
-          <n-carousel :autoplay="false" :interval="3000" effect="card"
+          <n-carousel :autoplay="true" :interval="5000" effect="card"
             prev-slide-style="transform: translateX(-120%) translateZ(-500px);"
             next-slide-style="transform: translateX(20%) translateZ(-500px);" style="height: 85%" :show-dots="true">
             <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }"
@@ -33,33 +33,8 @@
       </n-gi><n-gi :span="7"></n-gi>
     </n-grid>
   </div>
-  <div v-if="cardsShouldAnimate || isLoggedIn">
-    <div class="animate__animated" :class="{ 'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn }"
-      style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
-      :style="{ 'color': 'rgb(' + this.accentColor + ')' }">猜你喜欢</div>
-    <div class="card-container animate__animated " :class="{ 'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn }">
-      <n-grid :col="6">
-        <n-gi :span="4" v-for="(song, idx) in songs.slice(0, 6)" :key="idx">
-          <div>
-            <div class="single-card-container" @click="jumpToSong(song.id)">
-              <div class="single-card-img-container">
-                <img class="single-card-img" draggable="false" :src="song.imgSrc">
-              </div>
-              <div class="single-card-info-container">
-                <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
-                  <n-ellipsis style="max-width: 160px">{{ song.title }}</n-ellipsis>
-                </div>
-                <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
-                  <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
-                </div>
-              </div>
-            </div>
-          </div>
-        </n-gi>
-      </n-grid>
-    </div>
-  </div>
-  <div ref="songCardRef" class="placeholder" v-else></div>
+  <div ref="songCardRef" class="placeholder" v-else-if="!isLoggedIn"></div>
+
   <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" :class="{ 'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn }" style=" 
       min-width:1400px;padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
@@ -69,13 +44,13 @@
       <n-grid :x-gap="0" :y-gap="0">
         <n-gi :span="6" v-for="(song, idx) in songs.slice(6, 18)" :key="idx">
           <div class="song-entry-card-container">
-            <div class="song-entry-container" @click="jumpToSong(song.id)">
-              <div style="padding-bottom: 3%; padding-top: 3%; height: 15px">
+            <div class="song-entry-container">
+              <div style="padding-bottom: 3%; padding-top: 3%; height: 15px;">
                 <!-- <hr style="box-shadow: none;  margin: 0; transition: color 1s;" 
                 :style="{'border-color': 'rgba(' + this.accentColor + ',0.7)', 'background-color': 'rgba(' + this.accentColor + ',0.7)'}"
                 /> -->
               </div>
-              <n-grid>
+              <n-grid @click="jumpToSong(song.id)" class="song-entry-content">
                 <n-gi :span="4">
                   <div class="song-entry-img-container">
                     <img class="song-entry-img" :src="song.imgSrc" draggable="false">
@@ -100,6 +75,64 @@
       </n-grid>
     </div>
   </div>
+
+
+  <div v-if="cardsShouldAnimate || isLoggedIn">
+    <div class="animate__animated" :class="{ 'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn }"
+      style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
+      :style="{ 'color': 'rgb(' + this.accentColor + ')' }">猜你喜欢</div>
+    <div class="card-container animate__animated " :class="{ 'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn }">
+      <n-grid :col="6">
+        <n-gi :span="4" v-for="(song, idx) in songs.slice(0, 6)" :key="idx">
+          <div class="single-card-container-wrap">
+            <div class="single-card-container">
+              <div class="single-card-img-container">
+                <img class="single-card-img" draggable="false" :src="song.imgSrc" @click="jumpToSong(song.id)">
+              </div>
+              <div class="single-card-info-container">
+                <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                  <n-ellipsis style="max-width: 160px" @click="jumpToSong(song.id)">{{ song.title }}</n-ellipsis>
+                </div>
+                <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
+                  <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
+                </div>
+              </div>
+            </div>
+          </div>
+        </n-gi>
+      </n-grid>
+    </div>
+  </div>
+
+
+  <div v-if="cardsShouldAnimate || isLoggedIn">
+    <div class="animate__animated" :class="{ 'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn }"
+      style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
+      :style="{ 'color': 'rgb(' + this.accentColor + ')' }">最近热门</div>
+    <div class="card-container animate__animated " :class="{ 'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn }">
+      <n-grid :col="6">
+        <n-gi :span="4" v-for="(song, idx) in hotSongs.slice(0, 6)" :key="idx">
+          <div class="single-card-container-wrap">
+            <div class="single-card-container">
+              <div class="single-card-img-container">
+                <img class="single-card-img" draggable="false" :src="song.imgSrc" @click="jumpToSong(song.id)">
+              </div>
+              <div class="single-card-info-container">
+                <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                  <n-ellipsis style="max-width: 160px" @click="jumpToSong(song.id)">{{ song.title }}</n-ellipsis>
+                </div>
+                <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
+                  <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
+                </div>
+              </div>
+            </div>
+          </div>
+        </n-gi>
+      </n-grid>
+    </div>
+  </div>
+
+
   <div ref="songEntryRef" class="placeholder" v-else></div>
   <div v-if="tagShouldAnimate || isLoggedIn">
     <div class="animate__animated" :class="{ 'animate__slideInLeft': tagShouldAnimate && !isLoggedIn }"
@@ -163,6 +196,7 @@ export default {
         },
       ],
       songs: [],
+      hotSongs: [],
       songlists: [],
       all_songs: [],
       all_songlists: [],
@@ -187,6 +221,7 @@ export default {
       }))
       this.randomSelectSongs()
       this.randomSelectLists()
+      this.selectHotSongs()
     })
   },
   mounted() {
@@ -245,6 +280,14 @@ export default {
             this.songlists.push(this.all_songlists[r])
           }
         }
+      }
+    },
+    selectHotSongs() {
+      this.hotSongs = this.all_songs.sort((a, b) => {
+        return a.like < b.like
+      }).slice(0, 6)
+      while (this.hotSongs.length < 6) {
+        this.hotSongs.push(this.all_songs[Math.floor(Math.random() * this.all_songs.length)])
       }
     },
     getCorrectAccentColor() {
@@ -353,16 +396,30 @@ export default {
   animation-duration: 1500ms;
 }
 
+.single-card-container-wrap {
+  border-radius: 15px;
+  margin: 0 5px;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
+
+.single-card-container-wrap:hover {
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.4s;
+  box-shadow: 3px 5px 3px 3px rgba(var(--theme-font-color), 0.4);
+  background: rgba(var(--theme-color), 0.6);
+  transform: scale(1.03) translateY(-5px);
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.4s;
+}
+
+
 .single-card-container {
-  max-width: 180px;
+  margin: 0 auto;
+  max-width: 160px;
   padding-top: 3%;
   padding-bottom: 3%;
   word-wrap: break-word;
+
 }
 
-.single-card-container:hover {
-  cursor: pointer;
-}
 
 .single-card-img-container {
   width: 160px;
@@ -375,11 +432,13 @@ export default {
 }
 
 .single-card-img {
+  cursor: pointer;
   width: 100%;
   height: 100%;
 }
 
 .single-card-info-name {
+  cursor: pointer;
   transition: color 1s;
   font-size: medium;
   font-weight: 700;
@@ -429,14 +488,25 @@ export default {
   padding-left: 19%;
 }
 
-.song-entry-card-container:hover {
-  cursor: pointer;
-}
 
 .song-entry-container {
   min-width: 320px;
   margin-top: 0%;
   margin-bottom: 0%;
+}
+
+.song-entry-content {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
+}
+
+.song-entry-content:hover {
+  box-shadow: 3px 5px 3px 3px rgba(var(--theme-font-color), 0.4);
+  background: rgba(var(--theme-color), 0.6);
+  transform: scale(1.03) translateY(-5px);
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.4s;
 }
 
 .song-entry-img-container {
@@ -494,16 +564,21 @@ export default {
 }
 
 .tagtable-container {
+  margin-top: 1%;
   min-width: 1400px;
   transition: color 1s;
-  margin-top: 1%;
   display: flex;
+  justify-content: space-evenly;
   padding-left: 1%;
   animation-delay: 300ms;
   animation-duration: 1500ms;
 }
 
-:deep(.n-carousel .n-carousel--card .n-carousel__slide .n-carousel__slide--current):hover {
+:deep(.n-carousel.n-carousel--card .n-carousel__slide.n-carousel__slide--current:hover) {
+  transform: translateX(-50%) translateZ(0) scale(1.2) !important
+}
+
+:deep(.n-carousel__slide .n-carousel__slide--current .carousel-item-container:hover) {
   transform: translateX(-50%) translateZ(0) scale(1.2) !important
 }
 </style>

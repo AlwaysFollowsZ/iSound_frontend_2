@@ -1,23 +1,20 @@
 <template>
-    <div :style="{ width: this.width + 'px'}">
+    <div :style="{ width: this.width + 'px' }">
         <n-grid :y-gap="16">
-            <n-gi :span="3" v-for="(content, idx) in contents" :key="idx">
-                <div class="tag-entry-container">
-                    <tag-entry 
-                        :index="idx"
-                        :content="content"
-                        :color-display="this.colorMode === 'white' ? 
-                                        (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.3)': 'rgba(' + this.accentColor + ', 0.5)') : 
-                                        (idx % 2 === 0 ? '#5f5c5c' : '#bcbbbb')"
-                        :color-hover="this.colorMode === 'white' ?
-                                      (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.6)' : 'rgba(' + this.accentColor + ', 0.65)') : 
-                                      (idx % 2 === 0 ? '#373333' : '#373333')"
-                        :color-text="this.colorMode === 'white' ?
-                                     (idx % 2 === 0 ? 'rgb(' + this.accentColor + ')' : 'white') : 
-                                     (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 1)' : 'rgba(' + this.accentColor + ', 0.9)')"
-                        :should-animate="shouldAnimate"
-                        @click="handleClickTag(content)"
-                    />
+            <n-gi :span="24">
+                <div v-for="(content, idx) in contents" :key="idx" :style="{ 'display': 'inline-block' }">
+                    <div class="tag-entry-container" :style="getTagStyle(idx)">
+                        <tag-entry :index="idx" :content="content" :color-display="this.colorMode === 'white' ?
+                            (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.3)' : 'rgba(' + this.accentColor + ', 0.5)') :
+                            (idx % 2 === 0 ? '#5f5c5c' : '#bcbbbb')" :color-hover="this.colorMode === 'white' ?
+        (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.6)' : 'rgba(' + this.accentColor + ', 0.65)') :
+        (idx % 2 === 0 ? '#373333' : '#373333')"
+                            :color-text="this.colorMode === 'white' ?
+                                (idx % 2 === 0 ? 'rgb(' + this.accentColor + ')' : 'white') :
+                                (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 1)' : 'rgba(' + this.accentColor + ', 0.9)')"
+                            :should-animate="shouldAnimate" @click="handleClickTag(content)"
+                            @mouseenter="isHoverOnTag[idx] = true" @mouseleave="isHoverOnTag[idx] = false" />
+                    </div>
                 </div>
             </n-gi>
         </n-grid>
@@ -44,9 +41,14 @@ export default {
         console.log(this.getRGBString(this.getFontColorString(this.globalThemeColor).value, 0.6))
     },
     data() {
+        let isHoverOnTag = new Array(32)
+        isHoverOnTag.forEach((i) => {
+            i = false
+        })
         return {
-            getFontColorString, 
-            getBackgroundColorString, 
+            isHoverOnTag,
+            getFontColorString,
+            getBackgroundColorString,
             getRGBString,
             globalThemeColor,
             contents: [
@@ -89,6 +91,34 @@ export default {
         handleClickTag(tagName) {
             this.$router.push("/tags/" + tagName);
             console.log(`push to search the tag: ${tagName}`);
+        },
+        getTagStyle(index) {
+            let start = Math.floor(index / 8) * 8//设置起始下标
+            let flag = 0
+            let hoverIndex = 0
+            for (let i = start; i < start + 8; i++) {
+                if (this.isHoverOnTag[i] === true) {
+                    flag = 1
+                    hoverIndex = i
+                    break
+                }
+            }
+            if (flag === 1) {//有标签被hover
+                if (hoverIndex === index) {//是被hover的标签
+                    return {
+                        // 'height': '80px',
+                        'width': '250px',
+                        'transform': 'scale(1.3)'
+                    }
+                }
+                else {//其他标签
+                    return {
+                        // 'height': '80px',
+                        'width': '150px'
+                    }
+                }
+            }
+
         }
     }
 }
@@ -96,8 +126,16 @@ export default {
 
 <style>
 .tag-entry-container {
-    display: flex;
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+    height: 50px;
+    width: 160px;
+    display: inline-block;
+    text-align: center;
     justify-content: center;
     align-items: center;
+}
+
+.tag-entry-container:hover {
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.7s;
 }
 </style>

@@ -196,8 +196,8 @@ export default defineComponent({
                 if (option) {
                     options.push(option);
                     option.style = {
-                        '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-                                (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
+                        '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                            (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
                         '--n-option-text-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-text-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
@@ -251,8 +251,8 @@ export default defineComponent({
                         'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
                             this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
                             'rgba(' + this.accentColor + ', 0.2)',
-                            '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-                                (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
+                        '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                            (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
                         '--n-option-text-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-text-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
@@ -598,7 +598,7 @@ export default defineComponent({
         :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }" :block-scroll="false"
         z-index="2">
 
-        <div class="outer-container" style="width: 700px">
+        <div class="outer-container" style="width:800px">
             <div class="title-container">
                 <div style="margin-bottom: 25px">
 
@@ -619,58 +619,70 @@ export default defineComponent({
                     </n-grid>
                 </div>
             </div>
-            <div class="body-container">
+            <div class="body-container" :style="{ 'width': 'max-content' }">
                 <n-grid>
-                    <n-gi :span="1"></n-gi>
+
                     <n-gi :span="8">
-                        <n-popover trigger="hover">
-                            <template #trigger>
-                                <div class="upload-list-cover" :style="{
-                                    'border': `2px solid rgba(${this.accentColor},0.5)`
-                                }" @click="uploadFile">
-                                    <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
-                                        max="1" :on-change="handleCoverChange" :style="{
-                                            '--n-border': 'none',
-                                            'width': '216px',
-                                            'display': this.cover !== null ? '' : 'none',
-                                            '--n-dragger-border': 'none',
-                                            '--n-dragger-border-hover': 'none',
-                                        }" ref="uploadImage">
-                                        <n-icon size="100" depth="5">
-                                            <ImageOutline />
-                                        </n-icon>
-                                    </n-upload>
-                                    <n-image v-if="this.cover === null" :preview-disabled="true" :src="previewImageUrl"
-                                        :style="{
-                                            'width': '216px',
-                                            'aspect-ratio': '1',
-                                            'cursor': 'pointer',
-                                            'border-radius': '10px'
-                                        }" object-fit="contain" @click="handleImageClick" :trigger-style="{
-    'width': '216px',
+                        <div :style="{ 'text-align': 'center', 'margin': '0 auto' }">
+                            <n-popover trigger="hover" raw >
+                                <template #trigger>
+                                    <div class="upload-list-cover" :style="{
+                                        'border': `2px solid rgba(${this.accentColor},0.5)`
+                                    }" @click="uploadFile">
+                                        <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
+                                            max="1" :on-change="handleCoverChange" :style="{
+                                                '--n-border': 'none',
+                                                'aspect-ratio': '1',
+                                                'display': this.cover !== null ? '' : 'none',
+                                                '--n-dragger-border': 'none',
+                                                '--n-dragger-border-hover': 'none',
+                                            }" ref="uploadImage">
+                                            <n-icon size="100" depth="5">
+                                                <ImageOutline />
+                                            </n-icon>
+                                        </n-upload>
+                                        <n-image v-if="this.cover === null" :preview-disabled="true" :src="previewImageUrl"
+                                            :style="{
+
+                                                'aspect-ratio': '1',
+                                                'cursor': 'pointer',
+                                                'border-radius': '10px'
+                                            }" object-fit="cover" @click="handleImageClick" :trigger-style="{
     'aspect-ratio': '1'
 }" />
+                                    </div>
+                                </template>
+                                <div class="avatar-prompt" :style="{
+                                    'font-weight': '600',
+                                    'margin': '5px 20px',
+                                    'display': 'flex',
+                                    'justify-content': 'center',
+                                    'align-items': 'center',
+                                    'height': '30px',
+                                    'color': `rgb(${this.accentColor},0.7)`,
+                                    'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                }">
+                                    <span>点击以修改封面</span>
                                 </div>
-                            </template>
-                            <span>点击以修改封面</span>
-                        </n-popover>
+                            </n-popover>
+                        </div>
                         <div class="body-item" :style="{
-                            'margin-top':'30px'
+                            'margin-top': '30px'
                         }">
-                                <n-grid>
-                                    <n-gi :span="3"></n-gi>
-                                    <n-gi :span="18">
-                                        <div class="body-item-title">
-                                            分类标签
-                                        </div>
-                                        <n-select v-model:value="tags" multiple :options="options" :placeholder="'选择1～3个分类标签'"
-                                            @click="renderTags" @update:value="handleUpdateValue" />
-                                    </n-gi>
-                                    <n-gi :span="3"></n-gi>
-                                </n-grid>
-                            </div>
+                            <n-grid>
+                                <!-- <n-gi :span="3"></n-gi> -->
+                                <n-gi :span="24">
+                                    <div class="body-item-title">
+                                        分类标签
+                                    </div>
+                                    <n-select v-model:value="tags" multiple :options="options" :placeholder="'选择1～3个分类标签'"
+                                        @click="renderTags" @update:value="handleUpdateValue" />
+                                </n-gi>
+                                <!-- <n-gi :span="3"></n-gi> -->
+                            </n-grid>
+                        </div>
                     </n-gi>
-                    <n-gi :span="15">
+                    <n-gi :span="12">
                         <div class="body-item">
                             <n-grid>
                                 <n-gi :span="3"></n-gi>
@@ -947,12 +959,12 @@ export default defineComponent({
 }
 
 .upload-list-cover {
-    display: flex;
+    width: 200px;
+    aspect-ratio: 1;
+    display: inline-block;
     align-items: center;
     justify-content: center;
     color: rgb(209, 209, 209);
-    /* height: 200px;
-    width: 200px; */
     border-radius: 5%;
     overflow: hidden;
     transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
@@ -973,15 +985,15 @@ export default defineComponent({
 }
 
 .upload-list-cover-image {
-    margin-left:-1px;
+    margin-left: -1px;
     height: 100%;
     width: 100%;
 }
 
 :deep(.n-upload-trigger.n-upload-trigger--image-card) {
     margin-top: -8px;
-    width: 216px;
-    height: 216px;
+    width: 200px;
+    height: 200px;
     z-index: 1;
 }
 
@@ -992,8 +1004,8 @@ export default defineComponent({
 
 :deep(.n-upload-file-list .n-upload-file.n-upload-file--image-card-type) {
     position: relative;
-    width: 216px;
-    height: 216px;
+    width: 200px;
+    height: 200px;
     border: var(--n-item-border-image-card);
     border-radius: var(--n-border-radius);
     display: flex;

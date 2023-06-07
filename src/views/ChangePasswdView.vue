@@ -349,7 +349,7 @@ export default {
 
 .avatar img:hover {
     cursor: pointer;
-    box-shadow: 0 0 0 10px var(--my-color);
+    box-shadow: 0 0 0 10px rgba(var(--theme-color),0.5);
     transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 
