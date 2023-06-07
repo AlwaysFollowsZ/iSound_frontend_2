@@ -110,7 +110,7 @@ export default defineComponent({
                     .then((response) => {
                         this.updateData(this.playlist.id);
                     });
-                this.success("修改歌单信息成功");
+                //this.success("修改歌单信息成功");
                 this.closeWindow();
             }
         },
@@ -120,7 +120,7 @@ export default defineComponent({
         confirmShare() {
             this.$http.post(`/api/playlist/share/${this.playlist.id}/`);
             this.playlist.shared = true;
-            this.success("分享歌单成功");
+            //this.success("分享歌单成功");
             this.closeWindow();
             setTimeout(() => {
                 this.$router.push('/home')
@@ -1073,8 +1073,8 @@ export default defineComponent({
     border-radius: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 80px;
+    padding-right: 80px;
 }
 
 .title-container {

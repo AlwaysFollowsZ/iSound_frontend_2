@@ -7,7 +7,7 @@
         <n-gi :span="4">
           <div>
             <n-button tertiary circle class="back-button" @click="back">
-              <ChevronBack style="width: 36px; position: absolute; left: 0px" />
+              <ChevronBack style="width: 36px; position: absolute; left: 0px; color: white; opacity: 0.8;"/>
             </n-button>
           </div>
         </n-gi>
@@ -86,10 +86,10 @@
                       <n-tag :bordered="false" :style="{
                         '--n-border-radius': `5px`,
                         '--n-font-weight-strong': `bold`,
-                        '--n-height': `20px`,
+                        '--n-height': `22px`,
                         '--n-close-margin': `0 18px 0 18px`,
                       }" class="tag-item">
-                        {{ tag }}
+                        #{{ tag }}
                       </n-tag>
                     </span>
                   </div>
@@ -1347,7 +1347,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   min-width: 1400px;
-  min-height: 790px;
+  min-height: 840px;
   object-fit: cover;
   filter: blur(40px) saturate(1);
   /* 背景图片模糊效果 */
@@ -1361,16 +1361,16 @@ export default defineComponent({
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  max-height: 100%;
   min-width: 1400px;
-  min-height: 790px;
+  min-height: 840px;
   background-color: rgba(0, 0, 0, 0.4);
   /* 黑色遮罩，透明度为0.5 */
   z-index: 1;
 }
 
 .player-page {
-  min-height: 790px;
+  min-height: 840px;
   min-width: 1400px;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
   font-family: Arial, Helvetica, sans-serif;
@@ -1570,7 +1570,9 @@ export default defineComponent({
 }
 
 .tag-item {
-  margin-left: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 13px;
 }
 
 .hoverable-icon:hover {
