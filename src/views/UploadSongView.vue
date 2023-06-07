@@ -31,7 +31,7 @@
                                         'justify-content': 'center',
                                         'align-items': 'center',
                                         'border-radius': '10px',
-                                        'background': `rgb(${this.accentColor},0.2)`,
+                                        'background': `rgb(${this.accentColor},0.1)`,
                                         'height': '220px',
                                         'margin-bottom': '18px',
                                         'aspect-ratio': '1',
@@ -76,13 +76,13 @@
                                                 '--n-color-focus':
                                                     'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-text-color':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-hover':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-pressed':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-focus':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-border': '1px solid transparent',
                                                 '--n-border-hover': '1px solid transparent',
                                                 '--n-border-pressed': '1px solid transparent',
@@ -116,13 +116,13 @@
                                                 '--n-color-focus':
                                                     'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-text-color':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-hover':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-pressed':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-focus':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-border': '1px solid transparent',
                                                 '--n-border-hover': '1px solid transparent',
                                                 '--n-border-pressed': '1px solid transparent',
@@ -204,11 +204,13 @@
                             '--n-color-pressed':
                                 'rgba(' + this.accentColor + ', 0.45)',
                             '--n-text-color':
-                                'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 0.8)',
                             '--n-text-color-hover':
-                                'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 0.8)',
                             '--n-text-color-pressed':
-                                'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 0.8)',
+                            '--n-text-color-focus':
+                                'rgba(' + this.accentColor + ', 0.8)',
                             '--n-border': '1px solid transparent',
                             '--n-border-hover': '1px solid transparent',
                             '--n-border-pressed': '1px solid transparent',
@@ -629,7 +631,14 @@ export default {
     padding-left: 40px;
 }
 
-.upload-song-page:hover {}
+.upload-song-page div {
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+}
+
+.upload-song-page div:hover {
+    transform: scale(1.03);
+    opacity: 0.8;
+}
 
 .upload-song-page img {
     width: 220px;
@@ -659,6 +668,20 @@ export default {
 
 .upload-song-page:hover {
     cursor: pointer;
+}
+
+
+:deep(.n-base-selection .n-base-selection-tags) {
+    --n-color: var(--my-modal-select-color);
+}
+
+:deep(.n-base-selection .n-tag) {
+    --n-color: var(--my-modal-select-tag-color) !important;
+    --n-text-color: var(--my-modal-select-text-color) !important
+}
+
+:deep(.n-base-close){
+    --n-close-icon-color:var(--my-modal-select-text-color) !important
 }
 
 /* :global(.ant-select-dropdown){
