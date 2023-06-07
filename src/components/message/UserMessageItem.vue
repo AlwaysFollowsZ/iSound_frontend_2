@@ -250,8 +250,8 @@ export default defineComponent({
 </template>
 <style scoped>
 .message-card-outer {
-  /*width: 760px;
-  height: 500px;*/
+  /*width: 760px;*/
+  height: 600px;
 }
 .message-card {
   border-radius: 20px;

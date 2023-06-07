@@ -211,7 +211,7 @@
       <n-gi :span="4"></n-gi>
     </n-grid>
   </div>
-  <div class="comments" style="margin-top: 10px" :key="this.refreshCommentVir">
+  <div class="comments" style="margin-top: 10px; min-width: 1400px" :key="this.refreshCommentVir">
     <n-grid>
       <n-gi :span="4"></n-gi>
       <n-gi :span="16">
@@ -1346,6 +1346,8 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
+  min-width: 1400px;
+  min-height: 790px;
   object-fit: cover;
   filter: blur(40px) saturate(1);
   /* 背景图片模糊效果 */
@@ -1360,13 +1362,16 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
+  min-width: 1400px;
+  min-height: 790px;
   background-color: rgba(0, 0, 0, 0.4);
   /* 黑色遮罩，透明度为0.5 */
   z-index: 1;
 }
 
 .player-page {
-  height: 100vh;
+  min-height: 790px;
+  min-width: 1400px;
   transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 1s;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -1453,6 +1458,7 @@ export default defineComponent({
 
 .edit-comment {
   margin-top: 24px;
+  min-width: 1400px;
 }
 
 .clean-button {

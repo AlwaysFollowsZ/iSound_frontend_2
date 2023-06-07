@@ -1,6 +1,6 @@
 <template>
     <div class="user-page-TopNav"><top-nav></top-nav></div>
-    <div class="user-page-body">
+    <div class="user-page-body" style="min-width: 1400px">
         <n-grid x-gap="0">
             <n-gi :span="2"> <!--左右边栏留一部分空袭空隙，使主页主体居中--></n-gi>
             <n-gi :span="7">

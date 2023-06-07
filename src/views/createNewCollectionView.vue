@@ -520,6 +520,7 @@ export default defineComponent({
 
 .outer-container {
     width: 800px;
+    min-width: 800px;
     border-radius: 20px;
     padding-top: 20px;
     padding-bottom: 20px;

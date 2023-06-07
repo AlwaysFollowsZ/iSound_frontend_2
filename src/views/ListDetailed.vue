@@ -357,7 +357,7 @@ export default defineComponent({
 });
 </script>
 <template>
-    <div class="list-detail-page" v-if="this.playlist.up !== undefined">
+    <div class="list-detail-page" style="min-width: 1400px;" v-if="this.playlist.up !== undefined">
         <n-grid>
             <n-gi :span="4">
                 <n-button tertiary circle class="back-button" @click="back">
@@ -559,7 +559,7 @@ export default defineComponent({
             <n-gi :span="4"></n-gi>
         </n-grid>
     </div>
-    <div class="music-list-item" v-if="this.playlist.up !== undefined">
+    <div class="music-list-item" style="min-width: 1400px" v-if="this.playlist.up !== undefined">
         <n-grid>
             <n-gi :span="4"></n-gi>
             <n-gi :span="16">

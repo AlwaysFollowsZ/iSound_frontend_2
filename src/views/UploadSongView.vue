@@ -2,7 +2,6 @@
     <n-modal :show="showUploadSong" :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }"
         :block-scroll="false" :z-index="1">
         <div class="outer-container">
-
             <div class="title-container">
                 <div style="margin-bottom: 30px">
                     <n-grid>
@@ -254,6 +253,9 @@
             </div>
         </div>
     </n-modal>
+    <n-modal :show="isUploading" :z-index="150">
+        <n-progress type="circle" status="success" :percentage="percentage"></n-progress>
+    </n-modal>
 </template>
   
 <script>
@@ -279,6 +281,8 @@ export default {
     },
     data() {
         return {
+            isUploading: false,
+            percentage: 0,
             isUploading: false,
             previewImageUrl: '',
             songName: '',
@@ -420,7 +424,7 @@ export default {
                 return
             }
             if (this.isUploading === false) {
-                this.isUploading = true
+                this.isUploading = true;
                 this.handleTagList();
                 console.log(this.tagString);
                 let data = new FormData();
@@ -430,7 +434,12 @@ export default {
                 data.append('source', this.songSrcFile);
                 data.append('lyrics', this.songLyricFile);
                 data.append('tags', this.tagString);
-                this.$http.post('/api/music/upload/', data).then(response => {
+                this.$http.post('/api/music/upload/', data, {
+                    onUploadProgress: (progress) => {
+                        this.percentage = ((progress.loaded / progress.total) * 100) | 0;
+                    },
+                }).then(response => {
+                    this.isUploading = false;
                     console.log(response);
                     if (response.data.code == '0') {
                         this.$emit('flushUploadSongs')//刷新歌曲
@@ -474,14 +483,16 @@ export default {
                     }
                 }
             })
-            let op=this.options.filter(function(v){return options.indexOf(v)==-1})
-            let i=0,j=0;
-            for(i=0;i<op.length;i++){
-                for(j=0;j<this.options.length;j++){
-                    if(op[i].value==this.options[j].value){
-                        this.options[j].style={'background-color':this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                        'color':this.colorMode === 'white' ? 'black' : 'white',
-                        '--n-option-check-color': 'rgb(' + this.accentColor + ')',}
+            let op = this.options.filter(function (v) { return options.indexOf(v) == -1 })
+            let i = 0, j = 0;
+            for (i = 0; i < op.length; i++) {
+                for (j = 0; j < this.options.length; j++) {
+                    if (op[i].value == this.options[j].value) {
+                        this.options[j].style = {
+                            'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                            'color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                        }
                     }
                 }
             }
@@ -582,6 +593,7 @@ export default {
 
 .outer-container {
     width: 700px;
+    min-width: 700px;
     border-radius: 20px;
     padding-top: 20px;
     padding-bottom: 20px;

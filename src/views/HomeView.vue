@@ -4,7 +4,7 @@
     <n-grid>
       <n-gi :span="24">
         <div style="padding-bottom: 0%; padding-left: 4.5%">
-          <div style="margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}" @click="prompt('hello')">
+          <div style="min-width:1400px; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}" @click="prompt('hello')">
             来点不一样的歌单
           </div>
         </div>
@@ -42,7 +42,7 @@
   <div v-if="cardsShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': cardsShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}"
+      style="min-width:1400px; padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}"
     >猜你喜欢</div>
     <div class="card-container animate__animated "
       :class="{'animate__fadeInRight': cardsShouldAnimate && !isLoggedIn}"
@@ -72,7 +72,7 @@
   <div v-if="songEntryShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': songEntryShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}"
+      style=" min-width:1400px;padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;" :style="{'color': 'rgb(' + this.accentColor + ')'}"
     >现在就听</div>
     <div class="song-entry-outter animate__animated"
       :class="{ 'animate__fadeInRight': songEntryShouldAnimate && !isLoggedIn }">
@@ -109,7 +109,7 @@
   <div v-if="tagShouldAnimate || isLoggedIn">
     <div class="animate__animated" 
       :class="{'animate__slideInLeft': tagShouldAnimate && !isLoggedIn}"
-      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s;"
+      style="padding-left: 4.5%; margin-bottom: 0; font-size: 30px; font-weight: bold; transition: color 1s; min-width:1400px;"
       :style="{'color': 'rgb(' + this.accentColor + ')'}"
     >
       分类标签：总有你的喜欢
@@ -320,12 +320,13 @@ export default {
 
 <style>
   .img-show {
-    height: 60vh;
+    height: 520px;
+    min-width: 1400px;
     color:rgb(224, 224, 230);
     /*border: dashed; */
   }
   .carousel-container {
-    height: 60vh;
+    height: 520px;
     align-items: center;
     padding-top: 1%;
     padding-left: 10%;
@@ -343,7 +344,8 @@ export default {
     cursor: pointer;
   }
   .card-container {
-    height: 30vh;
+    height: 270px;
+    min-width: 1400px;
     padding-top: 1%;
     padding-left: 5%;
     margin: auto;
@@ -407,7 +409,8 @@ export default {
   }
  
   .song-entry-outter {
-    height: 32vh;
+    height: 270px;
+    min-width: 1400px;
     animation-delay: 300ms;
     animation-duration: 1500ms;
   }
@@ -418,7 +421,7 @@ export default {
     cursor: pointer;
   }
   .song-entry-container {
-    width: 18vw;
+    min-width: 320px;
     margin-top: 0%;
     margin-bottom: 0%;
   }
@@ -469,6 +472,7 @@ export default {
     -webkit-text-fill-color: transparent;
   }
   .tagtable-container {
+    min-width: 1400px;
     transition: color 1s;
     margin-top: 1%;
     display: flex; 
