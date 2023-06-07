@@ -32,7 +32,7 @@ export default {
                 }).then((response) => {
                     let key = 0
                     if (response.data.playlist_set.length == 0) {
-                        this.collectionData = []
+                        this.songlistData = []
                         return
                     }
                     this.songlistData = response.data.playlist_set.map((songlist) => {
