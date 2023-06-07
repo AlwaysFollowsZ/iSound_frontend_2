@@ -239,6 +239,9 @@ export default {
     },
     methods: {
         closeCWindow() {
+            this.password = '';
+            this.new_password1 = '';
+            this.new_password2 = '';
             this.$emit('closeChangePasswdWindow')
         },
         handleChange() {

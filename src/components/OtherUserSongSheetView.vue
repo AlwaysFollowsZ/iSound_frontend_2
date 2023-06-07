@@ -33,6 +33,7 @@
 </template>
 <script>
 import 'animate.css';
+import { mapState } from 'vuex'
 export default {
     data() {
         return {
@@ -42,15 +43,18 @@ export default {
             isLoading: true,
         }
     },
+    computed: {
+        ...mapState(['isLoggedIn', 'accentColor', 'colorMode']),
+    },
     mounted() {
         let i = 0;
         let t1 = setInterval(() => {
             this.loadingPercentage += 1
         }, 300)
-        this.$watch(
-            () => this.$route.params,
-            (newParams) => {
-                const userId = newParams.userId;
+        // this.$watch(
+        //     () => this.$route.params,
+        //     (newParams) => {
+                const userId = this.$route.params.userId;
                 this.$http.get(`/api/playlist/of/${userId}/`, { params: { 'shared': 'True' } }).then((response) => {
                     this.songLists = response.data.playlist_set.map(songlist => ({
                         Key: i++,
@@ -80,9 +84,9 @@ export default {
                         }, 1500)
                     }
                 })
-            },
-            { immediate: true }
-        );
+        //     },
+        //     { immediate: true }
+        // );
 
     },
     methods: {
