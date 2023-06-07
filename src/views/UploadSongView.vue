@@ -2,7 +2,6 @@
     <n-modal :show="showUploadSong" :style="{ 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)' }"
         :block-scroll="false" :z-index="1">
         <div class="outer-container">
-
             <div class="title-container">
                 <div style="margin-bottom: 30px">
                     <n-grid>
@@ -27,7 +26,7 @@
                             <template #trigger>
                                 <div class="upload-song-page">
                                     <div :style="{
-                                        'border': this.songPageUrl === '/src/assets/upload-logo.png'? `2px solid rgba(${this.accentColor},0.5)`:'',
+                                        'border': this.songPageUrl === '/src/assets/upload-logo.png' ? `2px solid rgba(${this.accentColor},0.5)` : '',
                                         'display': 'flex',
                                         'justify-content': 'center',
                                         'align-items': 'center',
@@ -251,77 +250,9 @@
                 </n-grid>
             </div>
         </div>
-        <!-- <div style="background-color:aliceblue">
-            <n-card style="width: 800px; --n-border-radius: 20px;" :bordered="false" :role="dialog" aria-modal="true">
-                <template #header>
-                    <div>
-                        <n-grid :x-gap="12">
-                            <n-gi :span="2"></n-gi>
-                            <n-gi :span="20">
-                                <span class="modify-title">请上传您的歌曲</span>
-                            </n-gi>
-                            <n-gi :span="2">
-                                <div style="padding-top: 30%" @click="closeUWindow">
-                                    <close-outline />
-                                </div>
-                            </n-gi>
-                        </n-grid>
-                    </div>
-                </template>
-                <n-grid x-gap="12" :cols="2">
-                    <n-gi>
-                        <n-popover trigger="hover">
-                            <template #trigger>
-                                <div class="upload-song-page">
-                                    <img :src="songPageUrl" @click="uploadFile" />
-                                    <input type="file" ref="fileInput" style="display: none"
-                                    accept="image/*"    
-                                    @change="handleSongPageChange" />
-                                </div>
-                            </template>
-                            <span>点击此处上传歌曲封面</span>
-                        </n-popover>
-                    </n-gi>
-                    <n-gi>
-                        <div>
-                            <span>歌曲文件</span>
-                            <n-space>
-                                <input type="file" @change="handleSongSrcFileChange" />
-                            </n-space>
-                        </div>
-                        <div>
-                            <span>歌词文件</span>
-                            <n-space>
-                                <input type="file" @change="handleSongLyricFileChange" />
-                            </n-space>
-                        </div>
-                        <div>
-                            <span>歌名</span>
-                            <n-input type="text" size="small" placeholder="请输入歌名" :value="songName"
-                                @input="songName = $event" />
-                        </div>
-                        <div>
-                            <span>歌手</span>
-                            <n-input type="text" size="small" placeholder="请输入歌手" :value="songAuthor"
-                                @input="songAuthor = $event" />
-                        </div>
-                        <div>
-                            <span>标签选择</span>
-                            <n-space vertical>
-                                <n-select v-model:value="value" multiple :options="options" placeholder="请选择歌曲标签" max-tag-count="responsive"/>
-                            </n-space>
-                        </div>
-                        <n-button strong secondary round type="primary" class="upload-button-position"
-                            @click="submitUpload">
-                            确认上传
-                        </n-button>
-                    </n-gi>
-                </n-grid>
-                <div class="modify-notice-text">
-                    请上传符合社会主义核心价值观的歌曲
-                </div>
-            </n-card>
-        </div> -->
+    </n-modal>
+    <n-modal :show="isUploading" :z-index="150">
+        <n-progress type="circle" status="success" :percentage="percentage"></n-progress>
     </n-modal>
 </template>
   
@@ -348,6 +279,8 @@ export default {
     },
     data() {
         return {
+            isUploading: false,
+            percentage: 0,
             isUploading: false,
             previewImageUrl: '',
             songName: '',
@@ -489,7 +422,7 @@ export default {
                 return
             }
             if (this.isUploading === false) {
-                this.isUploading = true
+                this.isUploading = true;
                 this.handleTagList();
                 console.log(this.tagString);
                 let data = new FormData();
@@ -499,7 +432,12 @@ export default {
                 data.append('source', this.songSrcFile);
                 data.append('lyrics', this.songLyricFile);
                 data.append('tags', this.tagString);
-                this.$http.post('/api/music/upload/', data).then(response => {
+                this.$http.post('/api/music/upload/', data, {
+                    onUploadProgress: (progress) => {
+                        this.percentage = ((progress.loaded / progress.total) * 100) | 0;
+                    },
+                }).then(response => {
+                    this.isUploading = false;
                     console.log(response);
                     if (response.data.code == '0') {
                         this.$emit('flushUploadSongs')//刷新歌曲
@@ -543,14 +481,16 @@ export default {
                     }
                 }
             })
-            let op=this.options.filter(function(v){return options.indexOf(v)==-1})
-            let i=0,j=0;
-            for(i=0;i<op.length;i++){
-                for(j=0;j<this.options.length;j++){
-                    if(op[i].value==this.options[j].value){
-                        this.options[j].style={'background-color':this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                        'color':this.colorMode === 'white' ? 'black' : 'white',
-                        '--n-option-check-color': 'rgb(' + this.accentColor + ')',}
+            let op = this.options.filter(function (v) { return options.indexOf(v) == -1 })
+            let i = 0, j = 0;
+            for (i = 0; i < op.length; i++) {
+                for (j = 0; j < this.options.length; j++) {
+                    if (op[i].value == this.options[j].value) {
+                        this.options[j].style = {
+                            'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                            'color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                        }
                     }
                 }
             }
