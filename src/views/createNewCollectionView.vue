@@ -85,11 +85,14 @@ export default defineComponent({
                 if (option) {
                     options.push(option);
                     option.style = {
-                        'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
-                            this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
-                            'rgba(' + this.accentColor + ', 0.2)',
-                        'color': 'rgb(' + this.accentColor + ')',
+                        '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
+                        '--n-option-text-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
+                        '--n-option-text-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                        '--n-option-color-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                        '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                    
                     }
                 }
             })
@@ -100,8 +103,11 @@ export default defineComponent({
                     if (op[i].value == this.options[j].value) {
                         this.options[j].style = {
                             'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                            'color': this.colorMode === 'white' ? 'black' : 'white',
-                            '--n-option-check-color': 'rgb(' + this.accentColor + ')'
+                            '--n-option-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                            '--n-option-color-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                            '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                            '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
                         }
                     }
                 }
@@ -111,8 +117,9 @@ export default defineComponent({
             let menus = document.getElementsByClassName('n-base-select-menu n-base-select-menu--multiple n-select-menu')
             if (menus.length > 0) {
                 let menu = menus[0]
-                menu.style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
-                menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108')
+                menu.style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
+                menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
+                menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
             }
             //let options = []
 
@@ -120,7 +127,10 @@ export default defineComponent({
                 this.options[i].style =
                 {
                     'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                    'color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-option-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                    '--n-option-color-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                    '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                    '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
                 }
             }
             this.value.forEach((value) => {
@@ -131,8 +141,14 @@ export default defineComponent({
                         'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
                             this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
                             'rgba(' + this.accentColor + ', 0.2)',
-                        'color': 'rgb(' + this.accentColor + ')',
+                            '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
+                                (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
+                        '--n-option-text-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
+                        '--n-option-text-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
+                        '--n-option-color-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                        '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
+                        '--n-option-color-active-pending': this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)',
                     }
                 }
             })

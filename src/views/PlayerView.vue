@@ -40,7 +40,7 @@
               </n-gi>
               <n-gi :span="4" style="margin: auto">
                 <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon size="45" @click="complain" color="#e65c5c" class="hoverable-icon">
+                  <n-icon size="45" @click="complain" color="rgba(255,255,255,0.7)" class="hoverable-icon">
                     <WarningOutline />
                   </n-icon>
                 </span>
