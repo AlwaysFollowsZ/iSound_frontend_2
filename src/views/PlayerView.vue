@@ -262,7 +262,7 @@
                   <n-gi :span="2" class="icon-container">
                     <div class="comment-icon" style="margin-top: 8px">
                       <span key="reply-comment" style="margin-right: 3px;">
-                        <span style="cursor: auto">
+                        <span style="cursor: auto;">
                           <n-button text circle :focusable="false" @click="editReplyComment(comment)"
                             :disabled="!this.$cookies.isKey('userid')" :style="{
                               '--n-color': 'transparent',
@@ -868,7 +868,7 @@
       position: 'relative',
       top: '-50px',
       'text-align': 'center',
-      'border-radius': '20px',
+      'border-radius': '30px',
     }">
       <div :style="{
         'margin': '0 20px 20px 20px',

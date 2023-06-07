@@ -86,16 +86,20 @@ export default defineComponent({
             this.active2 = false
             this.active3 = false
             this.confirmButton = false
-            
+
             this.showShareListModify = false;
-            this.cover = null;
-            if (this.showEditListModify) {
-                this.showEditListModify = false;
-                this.cover = this.tmpCover
-                this.listIntro = this.tmpListIntro
-                this.listName = this.tmpListName
-                this.tags = this.tmpTags.slice()
-            }
+            setTimeout(() => {
+                this.cover = null
+                if (this.showEditListModify) {
+                    this.showEditListModify = false;
+                    //this.cover = this.tmpCover
+                    this.listIntro = this.tmpListIntro
+                    this.listName = this.tmpListName
+                    this.tags = this.tmpTags.slice()
+                }
+            }, 1000)
+
+
         },
         submitEdit() {
             //todo
@@ -129,7 +133,7 @@ export default defineComponent({
             setTimeout(() => {
                 this.$router.push('/home')
             }, 1000)
-        },    
+        },
         unshareList() {
             this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
             if (
@@ -158,6 +162,7 @@ export default defineComponent({
         updateData(playlistId) {
             this.$http.get(`/api/playlist/detail/${playlistId}/`).then((response) => {
                 this.playlist = response.data;
+                this.previewImageUrl = this.playlist.cover;
                 this.songNum = this.playlist.music_set.length;
                 this.tagsNum = this.playlist.tags.length;
                 this.listName = this.playlist.title;
@@ -268,6 +273,9 @@ export default defineComponent({
                     }
                 }
             })
+        },
+        handleImageClick() {
+            this.$refs.uploadImage.openOpenFileDialog()
         }
     },
     setup() {
@@ -633,7 +641,7 @@ export default defineComponent({
 
                     <n-gi :span="8">
                         <div :style="{ 'text-align': 'center', 'margin': '0 auto' }">
-                            <n-popover trigger="hover" raw >
+                            <n-popover trigger="hover" raw>
                                 <template #trigger>
                                     <div class="upload-list-cover" :style="{
                                         'border': `2px solid rgba(${this.accentColor},0.5)`
@@ -716,20 +724,6 @@ export default defineComponent({
                                             '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.8)',
                                             '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                                         }" />
-                                </n-gi>
-                                <n-gi :span="3"></n-gi>
-                            </n-grid>
-                        </div>
-                        <div class="body-item">
-                            <n-grid>
-                                <n-gi :span="3"></n-gi>
-                                <n-gi :span="18">
-                                    <div class="body-item-title">
-                                        分类标签
-                                    </div>
-                                    <n-select v-model:value="tags" multiple :options="options"
-                                        :placeholder="'你需要选择1～3个分类标签'" @click="renderTags"
-                                        @update:value="handleUpdateValue" />
                                 </n-gi>
                                 <n-gi :span="3"></n-gi>
                             </n-grid>
@@ -1059,6 +1053,14 @@ export default defineComponent({
     border-width:3px; */
     color: rgb(209, 209, 209);
     border-radius: 5%;
+    overflow: hidden;
+    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+}
+
+.upload-list-cover:hover {
+    transform: scale(1.03);
+    opacity: 0.8;
+    transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 
 /* .upload-list-cover:hover {
@@ -1181,5 +1183,20 @@ export default defineComponent({
 
 .close-icon:hover {
     cursor: pointer;
+}
+
+
+:deep(.n-base-selection .n-base-selection-tags) {
+    --n-color: var(--my-modal-select-color);
+}
+
+:deep(.n-base-selection .n-tag) {
+    --n-color: var(--my-modal-select-tag-color) !important;
+    --n-text-color: var(--my-modal-select-text-color) !important
+}
+
+:deep(.n-base-close) {
+    --n-close-icon-color: var(--my-modal-select-text-color) !important;
+    --n-close-icon-color-hover: red !important
 }
 </style>

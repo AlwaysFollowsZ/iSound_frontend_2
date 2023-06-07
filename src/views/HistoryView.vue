@@ -67,6 +67,8 @@
                           '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
                           '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
                           '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                          '--n-color-pressed': 'transparent',
+                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
                           '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
                           '--n-border-hover': 'transparent',
                           '--n-border-focus': 'transparent',
@@ -101,6 +103,8 @@
                           '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
                           '--n-border-radius': '8px',
                           '--n-height': '55px',
+                          '--n-color-pressed': 'transparent',
+                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
                           '--n-ripple-color': 'rgb(' + this.accentColor + ')',
                           '--n-font-size': '18px',
                           '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
@@ -129,6 +133,8 @@
                           '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
                           '--n-border-radius': '8px',
                           '--n-height': '55px',
+                          '--n-color-pressed': 'transparent',
+                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
                           '--n-ripple-color': 'rgb(' + this.accentColor + ')',
                           '--n-font-size': '18px',
                           '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
@@ -157,6 +163,8 @@
                           '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
                           '--n-border-radius': '8px',
                           '--n-height': '55px',
+                          '--n-color-pressed': 'transparent',
+                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
                           '--n-ripple-color': 'rgb(' + this.accentColor + ')',
                           '--n-font-size': '18px',
                           '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
@@ -218,13 +226,15 @@
                                 <span v-for="( tag, i ) in  item.music.tags " :key="i">
                                   <!-- <span v-for="tag in historyPrompt"> -->
                                   <n-tag :style="{
+                                    '--n-border': '1px solid rgba(' + this.accentColor + ', 0.3)',
+                                    '--n-text-color': 'rgb(' + this.accentColor + ')',
+                                    '--n-color': 'transparent',
                                     '--n-border-radius': `5px`,
-                                    '--n-font-weight-strong': `bold`,
-                                    '--n-height': `22px`,
-                                    '--n-close-margin': `0 18px 0 18px`,
+                                    'font-size': `15px`,
+                                    '--n-height': `28px`,
                                   }
                                     " class="tag-item">
-                                    #{{ tag }}
+                                    # {{ tag }}
                                   </n-tag>
                                   <!-- <a-divider type="vertical"
                                                             style="width: 1.5px; background-color: #dddddd" /> -->

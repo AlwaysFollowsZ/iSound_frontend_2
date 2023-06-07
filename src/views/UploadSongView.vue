@@ -21,8 +21,8 @@
             </div>
             <div class="body-container">
                 <n-grid>
-                    <n-gi :span="10" >
-                        
+                    <n-gi :span="10">
+
                         <n-popover row trigger="hover" class="cover-prompt" :style="{ 'color': fontColorString }">
                             <template #trigger>
                                 <div class="upload-song-page">
@@ -56,9 +56,9 @@
                                 'color': `rgb(${this.accentColor},0.7)`,
                                 'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                             }">
-                          <span>点击此处上传歌曲封面</span>
-                        </div>
-                            </n-popover>
+                                <span>点击此处上传歌曲封面</span>
+                            </div>
+                        </n-popover>
                         <div class="body-item">
                             <n-grid>
                                 <n-gi :span="1"></n-gi>
@@ -267,12 +267,38 @@
         </div>
     </n-modal>
     <n-modal :show="isUploading" :z-index="150">
-        <n-progress type="circle" status="success" :percentage="percentage"></n-progress>
+        <n-progress type="circle" status="success" :percentage="percentage" rail-color="lightgrey" :style="{
+            'width': '200px',
+            'aspect-ratio': 1,
+            '--n-fill-color':
+                (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                    'grey' :
+                    'rgb(' + this.accentColor + ')',
+        }">
+            <template #default>
+                <div v-if="this.percentage < 85">
+                    <n-icon size="50" :color="this.accentColor === '0,0,0' || this.accentColor === '255,255,255'
+                        ? 'grey'
+                        : 'rgba(' + this.accentColor + ', 0.7)'
+                        " :class="{
+        'animate__animated animate__slideInLeft': this.percentage > 85,
+    }">
+                        <musical-notes-outline />
+                    </n-icon>
+                </div>
+                <div v-else>
+                    <n-icon size="56" color="#63e2b8" class="animate__animated animate__zoomIn">
+                        <checkmark-circle-outline />
+                    </n-icon>
+                </div>
+            </template>
+        </n-progress>
     </n-modal>
 </template>
   
 <script>
-import { CloseOutline, ArrowUpOutline, WatchOutline, ImageOutline } from '@vicons/ionicons5'
+import { CloseOutline, ArrowUpOutline, WatchOutline, ImageOutline, CheckmarkCircleOutline, MusicalNoteOutline } from '@vicons/ionicons5'
+import 'animate.css'
 import { NInput, NModal, NPopover } from 'naive-ui';
 import { defineComponent, ref, watch } from "vue";
 import { mapState } from 'vuex'
@@ -287,7 +313,9 @@ export default {
         ArrowUpOutline,
         NInput,
         NModal,
-        ImageOutline
+        ImageOutline,
+        CheckmarkCircleOutline,
+        MusicalNoteOutline,
     },
     props: {
         showUploadSong: Boolean,
@@ -457,6 +485,7 @@ export default {
                     if (response.data.code == '0') {
                         this.$emit('flushUploadSongs')//刷新歌曲
                         this.closeUWindow();
+                        this.percentage = 0;
                         //this.success('上传歌曲成功!')
                     } else if (response.data.code == '-1') {
                         this.error('上传歌曲失败，请重新上传!');
@@ -489,8 +518,8 @@ export default {
                     options.push(option);
                     option.style = {
 
-                        '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-                                (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
+                        '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                            (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
                         '--n-option-text-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-text-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
@@ -523,7 +552,7 @@ export default {
                 menu.style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
                 menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
                 menu.style.setProperty('--n-option-color-active-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
-                
+
             }
             //let options = []
 
@@ -545,8 +574,8 @@ export default {
                         'background-color': this.accentColor === '0,0,0' || this.accentColor === '0,0,0' ?
                             this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)' :
                             'rgba(' + this.accentColor + ', 0.2)',
-                            '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-                                (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
+                        '--n-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
+                            (this.colorMode === 'white' ? 'rgb(243,243,243)' : 'rgba(72,72,72,0.1)') : 'rgba(' + this.accentColor + ', 0.4)',
                         '--n-option-text-color': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-text-color-active': (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 'black' : 'rgba(' + this.accentColor + ',1)',
                         '--n-option-check-color': 'rgb(' + this.accentColor + ')',
@@ -710,8 +739,7 @@ export default {
     --n-text-color: var(--my-modal-select-text-color) !important
 }
 
-:deep(.n-base-close){
-    --n-close-icon-color:var(--my-modal-select-text-color) !important
+:deep(.n-base-close) {
+    --n-close-icon-color: var(--my-modal-select-text-color) !important
 }
-
 </style>
