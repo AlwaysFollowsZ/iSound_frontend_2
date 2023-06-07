@@ -1,14 +1,14 @@
 <template>
     <div><admin-top-nav :isSearchPage="true"></admin-top-nav></div>
-    <div class="message-page-search">
-        <n-grid>
-            <n-gi :span="3"></n-gi>
-            <n-gi :span="14">
-                <div style="padding-top: 7%">
+    
+        <n-grid :x-gap="12">
+            <n-gi :span="7"></n-gi>
+            <n-gi :span="9">
+                <div style="padding-top: 30px; display: flex; justify-content: center">
                     <n-input :style="{
                         '--n-color': 'white',
                         '--n-color-focus': 'white',
-                        '--n-border-radius': `10px`,
+                        '--n-border-radius': `12px`,
                         '--n-height': '50px',
                         '--n-text-color': 'black',
                         '--n-caret-color': 'black',
@@ -16,21 +16,20 @@
                         '--n-border-hover': '1px solid ' + 'lightgrey',
                         '--n-border-focus': '1px solid ' + 'lightgrey',
                         '--n-box-shadow-focus': '0 0 0 2px ' + 'grey',
-                        '--n-font-size': '20px',
+                        '--n-font-size': '18px',
                     }" type="text" v-model:value="searchValue" placeholder="输入关键字以检索" @keyup.enter="search()" />
                 </div>
             </n-gi>
-            <n-gi :span="1"></n-gi>
             <n-gi :span="1">
-                <div class="search-icon" style="color: lightgray; padding-top: 40px">
-                    <n-icon size="50px">
-                        <SearchOutline @click="search()" />
+                <div class="search-icon" style="color: lightgray; padding-top: 35px"
+                :style="{ 'color': this.searchIconIsHovered ? 'rgba(0, 0, 0, 0.45)' : 'lightgrey' }"
+                @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
+                    <n-icon size="40px">
+                        <SearchOutline @click="search" />
                     </n-icon>
                 </div>
             </n-gi>
-            <n-gi :span="4"></n-gi>
         </n-grid>
-    </div>
     <div class="tab-container">
         <n-tabs size="large" type="line" animated :style="{
             '--n-bar-color': 'black',
@@ -45,8 +44,8 @@
                     @flushData="flushData"></list-table>
             </n-tab-pane>
             <n-tab-pane name="歌单" tab="歌单">
-                <image-table :key="refresh" :position="'SongList'" :table-size="[1350]" :entry-size="[330, 240]"
-                    v-model:rows="songlists" @flushSonglists="flushData">
+                <image-table :key="refresh" :position="'Songlist'" :table-size="[1350]" :entry-size="[330, 240]"
+                    v-model:rows="songlists" @flushSonglists="flushData" :handleClickEntry="jumpToPlaylist">
                 </image-table>
             </n-tab-pane>
             <template #suffix>
@@ -75,6 +74,7 @@ export default defineComponent({
             all_songlists: [],
             songs: [],
             songlists: [],
+            searchIconIsHovered: false,
         };
     },
     created() {
@@ -99,11 +99,14 @@ export default defineComponent({
             this.songs = this.all_songs;
             this.all_songlists = response.data.playlist_set.map((songlist) => ({
                 Key: j++,
+                Id: songlist.id,
                 Type: "songList",
                 imagePath: songlist.cover, // === NEED TO BE REPLACED ===
                 songCount: songlist.music_set.length,
                 Name: songlist.title,
+
             }));
+            this.songlists = this.all_songlists;
             this.refresh++;
         });
     },
@@ -179,6 +182,9 @@ export default defineComponent({
             this.searchValue = "";
             this.refresh--;
         },
+        jumpToPlaylist(id) {
+            this.$router.push(`/listdetail/${id}`);
+        }
     },
 });
 </script>
@@ -193,8 +199,8 @@ export default defineComponent({
 }
 
 .tab-container {
-    margin-left: 180px;
-    margin-right: 180px;
+    margin-left: 80px;
+    margin-right: 80px;
 }
 
 .show-all {

@@ -65,7 +65,7 @@
                                 '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
                                 '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
                             }">
-                                <n-tab-pane name="我的收藏夹" tab="我的收藏夹">
+                                <n-tab-pane name="收藏夹" tab="收藏夹">
                                     <my-song-sheet-view />
                                 </n-tab-pane>
                                 <n-tab-pane name="我喜欢" tab="我喜欢">
