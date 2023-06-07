@@ -1,6 +1,5 @@
 <template>
-    <n-button :class="{'animate__animated animate__fadeInLeft': shouldAnimate && !isLoggedIn}" strong secondary type="primary" size="large" :focusable="false"
-    
+    <n-button class="tag-button" :class="{'animate__animated animate__fadeInLeft': shouldAnimate && !isLoggedIn}" strong secondary type="primary" size="large" :focusable="false"
         :style="{
             'animation-delay': `${0.5 + index * 0.04}s`,
             '--n-color': `${ colorDisplay }`, 
@@ -13,7 +12,7 @@
             '--n-text-color-focus': `${ colorText }`,
             '--n-border-radius': `8px`,
             '--n-height': '30px',
-        }"
+        }"  
     >
         {{ content }}
     </n-button>
@@ -43,10 +42,9 @@ export default {
         jumpSearchTag() {
             console.log('I\'ll jump to ' + this.content)
         }
-    }
+    },
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>

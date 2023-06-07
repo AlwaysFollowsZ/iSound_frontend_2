@@ -268,7 +268,7 @@ export default defineComponent({
                     <n-gi :span="9">
                         <div style="height: 280px; position: relative" class="img-container">
                             <div style="position: absolute; top: 10%;">
-                                <n-popover trigger="hover">
+                                <n-popover trigger="hover" raw>
                                     <template #trigger>
                                         <div class="upload-list-cover" :style="{
                                             'border': this.songPageUrl === '/src/assets/upload-logo.png' ? `2px solid rgba(${this.accentColor},0.3)` : '',
@@ -283,7 +283,18 @@ export default defineComponent({
                                             <img v-else :src="songPageUrl" style="width: 100%;" />
                                         </div>
                                     </template>
-                                    <span>点击以上传封面</span>
+                                    <div class="avatar-prompt" :style="{
+                                        'font-weight': '600',
+                                        'margin': '5px 20px',
+                                        'display': 'flex',
+                                        'justify-content': 'center',
+                                        'align-items': 'center',
+                                        'height': '30px',
+                                        'color': `rgb(${this.accentColor},0.7)`,
+                                        'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                    }">
+                      <span>点击以上传封面</span>
+                    </div>
                                 </n-popover>
                             </div>
                         </div>
