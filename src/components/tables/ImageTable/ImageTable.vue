@@ -9,6 +9,7 @@ import CreateNewCollectionView from "/src/views/createNewCollectionView.vue";
 import { message } from 'ant-design-vue';
 import { mapState } from 'vuex'
 import {
+    colorMode,
     getBackgroundColorString,
     getFontColorString,
     changeColorMode,
@@ -54,6 +55,7 @@ export default {
         const fontColorString = getFontColorString(globalThemeColor);
         const defaultBGString = getBackgroundColorString(globalThemeColor);
         //在这里设置需要使用:deep更改的穿透样式，并在:root中定义相应变量
+        //似乎这些需要先设置一遍
         watch(
             globalThemeColor,
             () => {
@@ -106,6 +108,14 @@ export default {
             },
             { immediate: true }
         );
+        watch(colorMode, () => {
+            document.documentElement.style.setProperty('--my-modal-select-color', colorMode.value === 'white' ? 'white' : 'rgb(72,72,72)')
+            document.documentElement.style.setProperty('--my-modal-select-tag-color', colorMode.value === 'white' ? 'rgb(230,230,230)' : 'rgb(108,108,108)')
+            document.documentElement.style.setProperty('--my-modal-select-text-color', colorMode.value === 'white' ? 'rgb(45,45,45)' : 'rgb(230,230,230)')
+        }, { immediate: true })
+        watch(this.accentColor, () => {
+            document.documentElement.style.setProperty('--my-accent-color', this.accentColor)//只有这个是a,b,c
+        })
 
         return {
             showModal,
@@ -208,8 +218,8 @@ export default {
         handleClickDeleteUploadedSongs(Key) {
             this.$http.delete(`api/music/delete/${this.rows[Key].Id}/`).then(() => {
                 //this.success('删除歌曲成功')
-                setTimeout(()=>{this.$emit('flushUploadSongs')},200)
-                
+                setTimeout(() => { this.$emit('flushUploadSongs') }, 200)
+
             })
         },
         handleTopClick() {
@@ -262,7 +272,7 @@ export default {
     <div class="image_table" :style="{
         'background-color': getRGBString(BackgroundColorString, 0.2),
         'border-radius': '50px',
-        'width': tableSize[0]===undefined?'90%':`${tableSize[0]}px`,
+        'width': tableSize[0] === undefined ? '90%' : `${tableSize[0]}px`,
         'height': `${tableSize[1]}px`,
         // 'animation':'zoomIn',
         // 'animation-duration':'1.5s'
@@ -325,8 +335,7 @@ export default {
             </template>
             <div class="pagination_box">
                 <n-pagination :page-count="pageCount" v-model:page-size="pageArgs.pageSize"
-                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker
-                    :page-sizes="[
+                    v-model:page="pageArgs.currentPage" show-quick-jumper show-size-picker :page-sizes="[
                         {
                             label: '6条/页',
                             value: 6,
@@ -343,8 +352,7 @@ export default {
                             label: '50条/页',
                             value: 50,
                         },
-                    ]" 
-                    :suffix="() =>
+                    ]" :suffix="() =>
     h(
         'span',
         {
@@ -427,6 +435,10 @@ export default {
     --my-shadow-active: none;
     --my-shadow-focus: none;
     --my-option-text-color: none;
+    --my-modal-select-color: none;
+    --my-modal-select-text-color: none;
+    --my-modal-select-tag-color: none;
+    --my-accent-color:none;
 }
 
 .image_table {
@@ -445,7 +457,7 @@ export default {
 }
 
 .image_table_list {
-    text-align:center;
+    text-align: center;
     animation: fadeIn;
     animation-duration: 1.2s;
 }

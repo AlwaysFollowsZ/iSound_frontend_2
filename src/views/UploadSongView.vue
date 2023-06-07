@@ -27,12 +27,12 @@
                             <template #trigger>
                                 <div class="upload-song-page">
                                     <div :style="{
-                                        'border': this.songPageUrl === '/src/assets/upload-logo.png'? `2px solid rgba(${this.accentColor},0.5)`:'',
+                                        'border': this.songPageUrl === '/src/assets/upload-logo.png' ? `2px solid rgba(${this.accentColor},0.5)` : '',
                                         'display': 'flex',
                                         'justify-content': 'center',
                                         'align-items': 'center',
                                         'border-radius': '10px',
-                                        'background': `rgb(${this.accentColor},0.2)`,
+                                        'background': `rgb(${this.accentColor},0.1)`,
                                         'height': '220px',
                                         'margin-bottom': '18px',
                                         'aspect-ratio': '1',
@@ -77,13 +77,13 @@
                                                 '--n-color-focus':
                                                     'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-text-color':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-hover':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-pressed':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-focus':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-border': '1px solid transparent',
                                                 '--n-border-hover': '1px solid transparent',
                                                 '--n-border-pressed': '1px solid transparent',
@@ -117,13 +117,13 @@
                                                 '--n-color-focus':
                                                     'rgba(' + this.accentColor + ', 0.25)',
                                                 '--n-text-color':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-hover':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-pressed':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-text-color-focus':
-                                                    'rgba(' + this.accentColor + ', 1)',
+                                                    'rgba(' + this.accentColor + ', 0.8)',
                                                 '--n-border': '1px solid transparent',
                                                 '--n-border-hover': '1px solid transparent',
                                                 '--n-border-pressed': '1px solid transparent',
@@ -205,11 +205,13 @@
                             '--n-color-pressed':
                                 'rgba(' + this.accentColor + ', 0.45)',
                             '--n-text-color':
-                                'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 0.8)',
                             '--n-text-color-hover':
-                                'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 0.8)',
                             '--n-text-color-pressed':
-                                'rgba(' + this.accentColor + ', 1)',
+                                'rgba(' + this.accentColor + ', 0.8)',
+                            '--n-text-color-focus':
+                                'rgba(' + this.accentColor + ', 0.8)',
                             '--n-border': '1px solid transparent',
                             '--n-border-hover': '1px solid transparent',
                             '--n-border-pressed': '1px solid transparent',
@@ -251,77 +253,6 @@
                 </n-grid>
             </div>
         </div>
-        <!-- <div style="background-color:aliceblue">
-            <n-card style="width: 800px; --n-border-radius: 20px;" :bordered="false" :role="dialog" aria-modal="true">
-                <template #header>
-                    <div>
-                        <n-grid :x-gap="12">
-                            <n-gi :span="2"></n-gi>
-                            <n-gi :span="20">
-                                <span class="modify-title">请上传您的歌曲</span>
-                            </n-gi>
-                            <n-gi :span="2">
-                                <div style="padding-top: 30%" @click="closeUWindow">
-                                    <close-outline />
-                                </div>
-                            </n-gi>
-                        </n-grid>
-                    </div>
-                </template>
-                <n-grid x-gap="12" :cols="2">
-                    <n-gi>
-                        <n-popover trigger="hover">
-                            <template #trigger>
-                                <div class="upload-song-page">
-                                    <img :src="songPageUrl" @click="uploadFile" />
-                                    <input type="file" ref="fileInput" style="display: none"
-                                    accept="image/*"    
-                                    @change="handleSongPageChange" />
-                                </div>
-                            </template>
-                            <span>点击此处上传歌曲封面</span>
-                        </n-popover>
-                    </n-gi>
-                    <n-gi>
-                        <div>
-                            <span>歌曲文件</span>
-                            <n-space>
-                                <input type="file" @change="handleSongSrcFileChange" />
-                            </n-space>
-                        </div>
-                        <div>
-                            <span>歌词文件</span>
-                            <n-space>
-                                <input type="file" @change="handleSongLyricFileChange" />
-                            </n-space>
-                        </div>
-                        <div>
-                            <span>歌名</span>
-                            <n-input type="text" size="small" placeholder="请输入歌名" :value="songName"
-                                @input="songName = $event" />
-                        </div>
-                        <div>
-                            <span>歌手</span>
-                            <n-input type="text" size="small" placeholder="请输入歌手" :value="songAuthor"
-                                @input="songAuthor = $event" />
-                        </div>
-                        <div>
-                            <span>标签选择</span>
-                            <n-space vertical>
-                                <n-select v-model:value="value" multiple :options="options" placeholder="请选择歌曲标签" max-tag-count="responsive"/>
-                            </n-space>
-                        </div>
-                        <n-button strong secondary round type="primary" class="upload-button-position"
-                            @click="submitUpload">
-                            确认上传
-                        </n-button>
-                    </n-gi>
-                </n-grid>
-                <div class="modify-notice-text">
-                    请上传符合社会主义核心价值观的歌曲
-                </div>
-            </n-card>
-        </div> -->
     </n-modal>
 </template>
   
@@ -691,7 +622,14 @@ export default {
     padding-left: 40px;
 }
 
-.upload-song-page:hover {}
+.upload-song-page div {
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+}
+
+.upload-song-page div:hover {
+    transform: scale(1.03);
+    opacity: 0.8;
+}
 
 .upload-song-page img {
     width: 220px;
@@ -721,6 +659,20 @@ export default {
 
 .upload-song-page:hover {
     cursor: pointer;
+}
+
+
+:deep(.n-base-selection .n-base-selection-tags) {
+    --n-color: var(--my-modal-select-color);
+}
+
+:deep(.n-base-selection .n-tag) {
+    --n-color: var(--my-modal-select-tag-color) !important;
+    --n-text-color: var(--my-modal-select-text-color) !important
+}
+
+:deep(.n-base-close){
+    --n-close-icon-color:var(--my-modal-select-text-color) !important
 }
 
 /* :global(.ant-select-dropdown){

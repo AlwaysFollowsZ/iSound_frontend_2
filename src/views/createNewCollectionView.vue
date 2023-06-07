@@ -172,6 +172,7 @@ export default defineComponent({
     },
     data() {
         return {
+            value:[],
             songPageUrl: "/src/assets/upload-logo.png",
             listName: ref('默认收藏夹'),
             listIntro: ref(''),
@@ -249,20 +250,19 @@ export default defineComponent({
                 <n-grid>
                     <n-gi :span="2"></n-gi>
                     <n-gi :span="8">
-                        <div style="height: 300px; position: relative">
+                        <div style="height: 280px; position: relative">
                             <div style="position: absolute; top: 10%;">
                                 <n-popover trigger="hover">
                                     <template #trigger>
-                                        <div class="upload-list-cover" :style="{ 
+                                        <div class="upload-list-cover" :style="{
                                             'border': `solid rgb(${this.accentColor}) 2px `,
-                                            'background': `rgb(${this.accentColor},0.2)`,
-                                             }"
-                                            @click="uploadFile">
+                                            'background': `rgb(${this.accentColor},0.1)`,
+                                        }" @click="uploadFile">
                                             <input type="file" ref="fileInput" style="display: none" accept="image/*"
                                                 @change="handleSongPageChange" />
                                             <n-icon v-if="songPageUrl === '/src/assets/upload-logo.png'" size="100"
                                                 depth="3" :color="`rgb(${this.accentColor})`">
-                                                <ImageOutline  />
+                                                <ImageOutline />
                                             </n-icon>
                                             <img v-else :src="songPageUrl" style="width: 100%;" />
                                         </div>
@@ -652,7 +652,7 @@ export default defineComponent({
 
 .upload-list-cover:hover {
     transform: scale(1.03);
-    box-shadow: 0 0 2px 2px;
+    opacity: 0.8;
 }
 
 .edit-list-main {
@@ -725,5 +725,19 @@ export default defineComponent({
 
 .share-button {
     margin-right: 20px;
+}
+
+:deep(.n-base-selection .n-base-selection-tags) {
+    --n-color: var(--my-modal-select-color);
+}
+
+:deep(.n-base-selection .n-tag) {
+    --n-color: var(--my-modal-select-tag-color) !important;
+    --n-text-color: var(--my-modal-select-text-color) !important
+}
+
+:deep(.n-base-close){
+    --n-close-icon-color:var(--my-modal-select-text-color) !important;
+    --n-close-icon-color-hover:red !important
 }
 </style>
