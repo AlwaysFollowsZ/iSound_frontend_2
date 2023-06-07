@@ -86,7 +86,7 @@ export default {
                 isCollected: false,
                 showCollection: false,
             }))
-            this.songLists = response.data.playlist_set.map(songList => ({
+            this.songLists = response.data.playlist_set.map(songlist => ({
                 Key: j++,
                 Type: 'songList',
                 imagePath: '/src/assets/song1.jpg',     // === NEED TO BE REPLACED ===
