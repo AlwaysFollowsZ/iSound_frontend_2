@@ -195,6 +195,8 @@ onMounted(() => {
 
   document.querySelector(".aplayer-miniswitcher").click();
 
+  document.querySelector(".aplayer-icon-lrc").click();
+
   onBeforeUnmount(() => {
     ap.destroy();
     proxy.$EventBus.off("play");
