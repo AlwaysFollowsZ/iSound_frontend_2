@@ -1,5 +1,5 @@
 <template>
-    <n-modal :show="showChangePasswd" :style="{
+    <n-modal z-index="2" :show="showChangePasswd" :style="{
         'background-color': this.colorMode === 'white' ? 'white' : 'rgb(50,50,50)',
     }" :block-scroll="false">
         <div class="outer-container">
@@ -189,6 +189,7 @@
 <script>
 import { CloseOutline } from '@vicons/ionicons5';
 import { mapState } from "vuex";
+import { message } from "ant-design-vue";
 import { globalThemeColor, getFontColorString, getRGBString } from '/src/colorMode.js'
 export default {
     name: "ChangePasswdView",
@@ -199,6 +200,24 @@ export default {
             password: '',
             new_password1: '',
             new_password2: '',
+            error(msg) {
+                message.error({
+                    content: msg,
+                    duration: 1,
+                    style: {
+                        "z-index": 100,
+                    },
+                });
+            },  
+            warning(msg) {
+                message.warning({
+                    content: msg,
+                    duration: 1,
+                    style: {
+                        "z-index": 100,
+                    },
+                });
+            },
         };
     },
     components: {
@@ -223,16 +242,28 @@ export default {
             this.$emit('closeChangePasswdWindow')
         },
         handleChange() {
+            if(this.password == ''){
+                this.warning('请输入原密码');
+                return;
+            }
+            if(this.new_password1 == ''){
+                this.warning('请输入新密码');
+                return;
+            }
+            if(this.new_password2 == ''){
+                this.warning('请确认新密码');
+                return;
+            }
             let data = new FormData();
             data.append('old_password', this.password);
             data.append('new_password1', this.new_password1);
             data.append('new_password2', this.new_password2);
             this.$http.post('/api/accounts/password_change/', data).then(response => {
                 if (response.data.code == '0') {
-                    alert('修改密码成功');
                     this.closeCWindow();
                 } else if (response.data.code == '-1') {
-                    alert('修改失败，请重试！');
+                    const message = response.data.message;
+                    this.error(message.replaceAll('。',' '));
                     // this.closeCWindow();
                 }
             });
