@@ -40,7 +40,7 @@
               </n-gi>
               <n-gi :span="4" style="margin: auto">
                 <span style="margin-right: 3px; margin-top: 2px">
-                  <n-icon size="45" @click="complain" color="#e65c5c" class="hoverable-icon">
+                  <n-icon size="45" @click="complain" color="rgba(255,255,255,0.7)" class="hoverable-icon">
                     <WarningOutline />
                   </n-icon>
                 </span>
@@ -70,8 +70,8 @@
                 <div style="color: #fff">
                   <span>来源： </span>
                   <router-link :to="this.$cookies.get('userid') == this.up.id
-                      ? '/home'
-                      : `/home/user/${this.up.id}`
+                    ? '/home'
+                    : `/home/user/${this.up.id}`
                     ">
                     <span class="upload-user" style="color: #fff">{{
                       this.up.username
@@ -146,8 +146,9 @@
                 全部评论
               </span>
             </n-gi>
-            <n-gi :span="1" style="padding-top: 5px">
-              <n-icon id="comment-fold" size="36" :color="'rgb(' + this.accentColor + ')'" @click="handleShow1stComment">
+            <n-gi :span="1" style="padding-top: 5px;">
+              <n-icon id="comment-fold" size="36" :color="'rgb(' + this.accentColor + ')'" style="cursor: pointer;"
+                @click="handleShow1stComment">
                 <ChatbubbleEllipsesOutline />
               </n-icon>
             </n-gi>
@@ -172,39 +173,47 @@
                 '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
             }" :autosize="{ minRows: 6, maxRows: 6 }" />
           <div class="my-comment-button">
-            <n-button class="send-button" strong secondary type="tertiary" :focusable="false" @click="sendComment" :style="{
-              '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-              '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
-              '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
-              '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-              '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-              '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-              '--n-border': '1px solid transparent',
-              '--n-border-hover': '1px solid transparent',
-              '--n-border-pressed': '1px solid transparent',
-              '--n-border-radius': '5px',
-              '--n-height': '36px',
-              '--n-font-size': '16px',
-            }">
-              发送
-            </n-button>
-            <n-button class="clean-button" style="margin-left: 938px" strong secondary type="tertiary" :focusable="false"
-              :style="{
-                '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
-                '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
-                '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                '--n-border': '1px solid transparent',
-                '--n-border-hover': '1px solid transparent',
-                '--n-border-pressed': '1px solid transparent',
-                '--n-border-radius': '5px',
-                '--n-height': '36px',
-                '--n-font-size': '16px',
-              }" @click="cleanComment">
-              清空
-            </n-button>
+            <n-grid x-gap="12">
+              <n-gi :span="20"></n-gi>
+              <n-gi :span="2">
+                <n-button class="send-button" strong secondary type="tertiary" :focusable="false" @click="sendComment"
+                  :style="{
+                    '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
+                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                    '--n-border': '1px solid transparent',
+                    '--n-border-hover': '1px solid transparent',
+                    '--n-border-pressed': '1px solid transparent',
+                    '--n-border-radius': '5px',
+                    '--n-height': '36px',
+                    '--n-font-size': '16px',
+                  }">
+                  发送
+                </n-button>
+              </n-gi>
+              <n-gi :span="2">
+                <n-button class="clean-button" style="margin-left: 10px;" strong secondary type="tertiary"
+                  :focusable="false" :style="{
+                    '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
+                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.25)',
+                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                    '--n-border': '1px solid transparent',
+                    '--n-border-hover': '1px solid transparent',
+                    '--n-border-pressed': '1px solid transparent',
+                    '--n-border-radius': '5px',
+                    '--n-height': '36px',
+                    '--n-font-size': '16px',
+                  }" @click="cleanComment">
+                  清空
+                </n-button>
+              </n-gi>
+            </n-grid>
           </div>
         </div>
       </n-gi>
@@ -426,45 +435,52 @@
                       '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                   }" :autosize="{ minRows: 6, maxRows: 6 }" />
                 <div class="my-comment-button">
-                  <n-button class="send-button" strong secondary type="tertiary" :style="{
-                    '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
-                    '--n-color-pressed':
-                      'rgba(' + this.accentColor + ', 0.25)',
-                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                    '--n-text-color-hover':
-                      'rgba(' + this.accentColor + ', 1)',
-                    '--n-text-color-pressed':
-                      'rgba(' + this.accentColor + ', 1)',
-                    '--n-border': '1px solid transparent',
-                    '--n-border-hover': '1px solid transparent',
-                    '--n-border-pressed': '1px solid transparent',
-                    '--n-border-radius': '5px',
-                    '--n-height': '36px',
-                    '--n-font-size': '16px',
-                  }" @click="sendComment">
-                    发送
-                  </n-button>
-                  <n-button class="clean-button" style="margin-left: 893px" strong secondary type="tertiary"
-                    @click="cleanComment" :style="{
-                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                      '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
-                      '--n-color-pressed':
-                        'rgba(' + this.accentColor + ', 0.25)',
-                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                      '--n-text-color-hover':
-                        'rgba(' + this.accentColor + ', 1)',
-                      '--n-text-color-pressed':
-                        'rgba(' + this.accentColor + ', 1)',
-                      '--n-border': '1px solid transparent',
-                      '--n-border-hover': '1px solid transparent',
-                      '--n-border-pressed': '1px solid transparent',
-                      '--n-border-radius': '5px',
-                      '--n-height': '36px',
-                      '--n-font-size': '16px',
-                    }">
-                    清空
-                  </n-button>
+                  <n-grid>
+                    <n-gi :span="20"></n-gi>
+                    <n-gi :span="2">
+                      <n-button class="send-button" strong secondary type="tertiary" :style="{
+                        '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                        '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
+                        '--n-color-pressed':
+                          'rgba(' + this.accentColor + ', 0.25)',
+                        '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                        '--n-text-color-hover':
+                          'rgba(' + this.accentColor + ', 1)',
+                        '--n-text-color-pressed':
+                          'rgba(' + this.accentColor + ', 1)',
+                        '--n-border': '1px solid transparent',
+                        '--n-border-hover': '1px solid transparent',
+                        '--n-border-pressed': '1px solid transparent',
+                        '--n-border-radius': '5px',
+                        '--n-height': '36px',
+                        '--n-font-size': '16px',
+                      }" @click="sendComment">
+                        发送
+                      </n-button>
+                    </n-gi>
+                    <n-gi :span="2">
+                      <n-button class="clean-button" style="margin-left: 10px" strong secondary type="tertiary"
+                        @click="cleanComment" :style="{
+                          '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                          '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
+                          '--n-color-pressed':
+                            'rgba(' + this.accentColor + ', 0.25)',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-text-color-hover':
+                            'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-pressed':
+                            'rgba(' + this.accentColor + ', 1)',
+                          '--n-border': '1px solid transparent',
+                          '--n-border-hover': '1px solid transparent',
+                          '--n-border-pressed': '1px solid transparent',
+                          '--n-border-radius': '5px',
+                          '--n-height': '36px',
+                          '--n-font-size': '16px',
+                        }">
+                        清空
+                      </n-button>
+                    </n-gi>
+                  </n-grid>
                 </div>
               </div>
             </div>
@@ -492,44 +508,49 @@
                       '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
                   }" :autosize="{ minRows: 6, maxRows: 6 }" />
                 <div class="my-comment-button">
-                  <n-button class="send-button" strong secondary type="tertiary" :style="{
-                    '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
-                    '--n-color-pressed':
-                      'rgba(' + this.accentColor + ', 0.25)',
-                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                    '--n-text-color-hover':
-                      'rgba(' + this.accentColor + ', 1)',
-                    '--n-text-color-pressed':
-                      'rgba(' + this.accentColor + ', 1)',
-                    '--n-border': '1px solid transparent',
-                    '--n-border-hover': '1px solid transparent',
-                    '--n-border-pressed': '1px solid transparent',
-                    '--n-border-radius': '5px',
-                    '--n-height': '36px',
-                    '--n-font-size': '16px',
-                  }" @click="send2ndComment">
-                    发送
-                  </n-button>
-                  <n-button class="clean-button" style="margin-left: 893px" strong secondary type="tertiary" :style="{
-                    '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
-                    '--n-color-pressed':
-                      'rgba(' + this.accentColor + ', 0.25)',
-                    '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
-                    '--n-text-color-hover':
-                      'rgba(' + this.accentColor + ', 1)',
-                    '--n-text-color-pressed':
-                      'rgba(' + this.accentColor + ', 1)',
-                    '--n-border': '1px solid transparent',
-                    '--n-border-hover': '1px solid transparent',
-                    '--n-border-pressed': '1px solid transparent',
-                    '--n-border-radius': '5px',
-                    '--n-height': '36px',
-                    '--n-font-size': '16px',
-                  }" @click="cleanComment">
-                    清空
-                  </n-button>
+                  <n-grid>
+                    <n-gi :span="20"></n-gi>
+                    <n-gi :span="2"><n-button class="send-button" strong secondary type="tertiary" :style="{
+                      '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                      '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-color-pressed':
+                        'rgba(' + this.accentColor + ', 0.25)',
+                      '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                      '--n-text-color-hover':
+                        'rgba(' + this.accentColor + ', 1)',
+                      '--n-text-color-pressed':
+                        'rgba(' + this.accentColor + ', 1)',
+                      '--n-border': '1px solid transparent',
+                      '--n-border-hover': '1px solid transparent',
+                      '--n-border-pressed': '1px solid transparent',
+                      '--n-border-radius': '5px',
+                      '--n-height': '36px',
+                      '--n-font-size': '16px',
+                    }" @click="send2ndComment">
+                        发送
+                      </n-button></n-gi>
+                    <n-gi :span="2"><n-button class="clean-button" style="margin-left: 10px" strong secondary
+                        type="tertiary" :style="{
+                          '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                          '--n-color-hover': 'rgba(' + this.accentColor + ', 0.25)',
+                          '--n-color-pressed':
+                            'rgba(' + this.accentColor + ', 0.25)',
+                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.8)',
+                          '--n-text-color-hover':
+                            'rgba(' + this.accentColor + ', 1)',
+                          '--n-text-color-pressed':
+                            'rgba(' + this.accentColor + ', 1)',
+                          '--n-border': '1px solid transparent',
+                          '--n-border-hover': '1px solid transparent',
+                          '--n-border-pressed': '1px solid transparent',
+                          '--n-border-radius': '5px',
+                          '--n-height': '36px',
+                          '--n-font-size': '16px',
+                        }" @click="cleanComment">
+                        清空
+                      </n-button>
+                    </n-gi>
+                  </n-grid>
                 </div>
               </div>
             </div>
@@ -751,48 +772,55 @@
                             ', 0.6)',
                         }" :autosize="{ minRows: 6, maxRows: 6 }" />
                       <div class="my-comment-button">
-                        <n-button class="send-button" strong secondary type="tertiary" :style="{
-                          '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                          '--n-color-hover':
-                            'rgba(' + this.accentColor + ', 0.25)',
-                          '--n-color-pressed':
-                            'rgba(' + this.accentColor + ', 0.25)',
-                          '--n-text-color':
-                            'rgba(' + this.accentColor + ', 0.8)',
-                          '--n-text-color-hover':
-                            'rgba(' + this.accentColor + ', 1)',
-                          '--n-text-color-pressed':
-                            'rgba(' + this.accentColor + ', 1)',
-                          '--n-border': '1px solid transparent',
-                          '--n-border-hover': '1px solid transparent',
-                          '--n-border-pressed': '1px solid transparent',
-                          '--n-border-radius': '5px',
-                          '--n-height': '36px',
-                          '--n-font-size': '16px',
-                        }" @click="send2ndComment">
-                          发送
-                        </n-button>
-                        <n-button class="clean-button-2nd" strong secondary type="tertiary" :style="{
-                          '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
-                          '--n-color-hover':
-                            'rgba(' + this.accentColor + ', 0.25)',
-                          '--n-color-pressed':
-                            'rgba(' + this.accentColor + ', 0.25)',
-                          '--n-text-color':
-                            'rgba(' + this.accentColor + ', 0.8)',
-                          '--n-text-color-hover':
-                            'rgba(' + this.accentColor + ', 1)',
-                          '--n-text-color-pressed':
-                            'rgba(' + this.accentColor + ', 1)',
-                          '--n-border': '1px solid transparent',
-                          '--n-border-hover': '1px solid transparent',
-                          '--n-border-pressed': '1px solid transparent',
-                          '--n-border-radius': '5px',
-                          '--n-height': '36px',
-                          '--n-font-size': '16px',
-                        }" @click="cleanComment">
-                          清空
-                        </n-button>
+                        <n-grid>
+                          <n-gi :span="20"></n-gi>
+                          <n-gi :span="2"><n-button class="send-button" strong secondary type="tertiary" :style="{
+                            '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                            '--n-color-hover':
+                              'rgba(' + this.accentColor + ', 0.25)',
+                            '--n-color-pressed':
+                              'rgba(' + this.accentColor + ', 0.25)',
+                            '--n-text-color':
+                              'rgba(' + this.accentColor + ', 0.8)',
+                            '--n-text-color-hover':
+                              'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-pressed':
+                              'rgba(' + this.accentColor + ', 1)',
+                            '--n-border': '1px solid transparent',
+                            '--n-border-hover': '1px solid transparent',
+                            '--n-border-pressed': '1px solid transparent',
+                            '--n-border-radius': '5px',
+                            '--n-height': '36px',
+                            '--n-font-size': '16px',
+                          }" @click="send2ndComment">
+                              发送
+                            </n-button>
+                          </n-gi>
+                          <n-gi :span="2">
+                            <n-button class="clean-button-2nd" style="margin-left: 10px;" strong secondary type="tertiary"
+                              :style="{
+                                '--n-color': 'rgba(' + this.accentColor + ', 0.1)',
+                                '--n-color-hover':
+                                  'rgba(' + this.accentColor + ', 0.25)',
+                                '--n-color-pressed':
+                                  'rgba(' + this.accentColor + ', 0.25)',
+                                '--n-text-color':
+                                  'rgba(' + this.accentColor + ', 0.8)',
+                                '--n-text-color-hover':
+                                  'rgba(' + this.accentColor + ', 1)',
+                                '--n-text-color-pressed':
+                                  'rgba(' + this.accentColor + ', 1)',
+                                '--n-border': '1px solid transparent',
+                                '--n-border-hover': '1px solid transparent',
+                                '--n-border-pressed': '1px solid transparent',
+                                '--n-border-radius': '5px',
+                                '--n-height': '36px',
+                                '--n-font-size': '16px',
+                              }" @click="cleanComment">
+                              清空
+                            </n-button>
+                          </n-gi>
+                        </n-grid>
                       </div>
                     </div>
                   </div>
@@ -834,20 +862,20 @@
   <modify-complain-view :showModifyComplainView="showModifyComplainView"
     @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>
   <div v-show="false"><top-nav></top-nav></div>
-  <n-modal :z-index="2" v-model:show="showCollections">
+  <n-modal :z-index="2" v-model:show="showCollections" :block-scroll="false">
     <div :style="{
-      background: getRGBString(backgroundColorString, 0.6),
+      background: getRGBString(backgroundColorString, 0.9),
       position: 'relative',
       top: '-50px',
       'text-align': 'center',
-      'border-radius': '50px',
+      'border-radius': '20px',
     }">
       <div :style="{
-        margin: '20px',
+        'margin': '0 20px 20px 20px',
         'font-size': '25px',
         'font-weight': '700',
-        'background-color': getRGBString(backgroundColorString, 0.8),
-        color: getRGBString(fontColorString, 0.8),
+        'background-color': getRGBString(fontColorString, 0.7),
+        'color': getRGBString(backgroundColorString, 1),
         'margin-top': '20px',
         'border-radius': '50px',
         animation: isCollectChanged ? 'bounceIn' : '',
@@ -855,8 +883,8 @@
       }">
         {{ headChange === true ? "添加成功" : "请选择收藏夹" }}
       </div>
-      <image-table :rows="collectionData" :tableSize="[1000]" :entrySize="[200, 200]" :position="'CollectionView'"
-        @flushCollections="updateCollections" :handleClickEntry="handleClickEntry"></image-table>
+      <image-table :rows="collectionData" :tableSize="[800,500]" :entrySize="[175, 175]" :position="'CollectionView'"
+        @flushCollections="updateCollections" :handleClickEntry="handleClickEntry" ></image-table>
     </div>
   </n-modal>
 </template>
@@ -1158,15 +1186,20 @@ export default defineComponent({
       this.value = "";
     },
     handleShow1stComment() {
-      this.reply2ndComment = false;
-      this.edit1stComment = false;
-      this.edit2ndComment = false;
-      this.value = "";
-      if (!this.write1stConmment) {
-        this.write1stConmment = true;
+      if (!this.$cookies.isKey('userid')) {
+        this.$EventBus.emit('showLoginModal')
       } else {
-        this.write1stConmment = false;
+        this.reply2ndComment = false;
+        this.edit1stComment = false;
+        this.edit2ndComment = false;
+        this.value = "";
+        if (!this.write1stConmment) {
+          this.write1stConmment = true;
+        } else {
+          this.write1stConmment = false;
+        }
       }
+
     },
     // 编辑回复评论
     editReplyComment(comment) {

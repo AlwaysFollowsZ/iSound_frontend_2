@@ -67,9 +67,6 @@ export default {
             document.documentElement.style.setProperty('--my-modal-select-tag-color', colorMode.value === 'white' ? 'rgb(230,230,230)' : 'rgb(108,108,108)')
             document.documentElement.style.setProperty('--my-modal-select-text-color', colorMode.value === 'white' ? 'rgb(45,45,45)' : 'rgb(230,230,230)')
         }, { immediate: true })
-        watch(this.accentColor, () => {
-            document.documentElement.style.setProperty('--my-accent-color', this.accentColor)//只有这个是a,b,c
-        })
         const emit = this.$emit
         let isSelected = false//当前是否有歌曲被选择
         let selectedEntries = []//被选择的项（和rowKey同步更新）
@@ -897,7 +894,7 @@ export default {
     --my-modal-select-color: none;
     --my-modal-select-text-color: none;
     --my-modal-select-tag-color: none;
-    --my-accent-color: none;
+
 }
 
 .data-table {
