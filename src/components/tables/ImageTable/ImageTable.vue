@@ -205,7 +205,7 @@ export default {
         },
         //处理点击取消分享歌单事件的方法
         handleClickCancelShare(Key) {
-            this.$http.post(`/api/playlist/unshare/${this.row[Key].Id}/`).then(() => {
+            this.$http.post(`/api/playlist/unshare/${this.rows[Key].Id}/`).then(() => {
                 //this.success('取消分享成功')
                 this.$emit('flushSonglists')
             })
