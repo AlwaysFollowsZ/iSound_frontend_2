@@ -28,6 +28,9 @@ export default defineComponent({
             this.$router.push('send')
         },
     },
+    created() {
+        document.title = "消息中心";
+    },
     setup() {
 
     }

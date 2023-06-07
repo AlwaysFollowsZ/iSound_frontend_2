@@ -29,6 +29,8 @@
     </div>
 </template>
 <script>
+import 'animate.css'
+import { mapState } from 'vuex'
 export default {
     data() {
         return {
@@ -37,6 +39,9 @@ export default {
             loadingIconShouldOut: false,
             isLoading: true,
         }
+    },
+    computed: {
+        ...mapState(['colorMode', 'accentColor']),
     },
     created() {
 

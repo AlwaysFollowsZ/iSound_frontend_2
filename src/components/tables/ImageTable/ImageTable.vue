@@ -409,14 +409,22 @@ export default {
             </div>
         </div>
         <div v-else :style="{ 'color': getRGBString(fontColorString), 'text-align': 'center' }" class="no_content_notice">
-            {{
+            <span v-if="$cookies.get('is_superuser')=='false'">{{
                 ["Collection", "CollectionView"].includes(position)
                 ? "暂无已创建的收藏夹...新建一个？"
                 : position === "Songlist"
                     ? "暂无已分享的歌单...从收藏夹分享一个？"
                     : position === "ResultView" ? "暂无搜索结果......."
                         : "暂无已上传的歌曲...上传一首？"
-            }}
+            }}</span>
+            <span v-else>{{
+                ["Collection", "CollectionView"].includes(position)
+                ? "暂无已创建的收藏夹？"
+                : position === "Songlist"
+                    ? "暂无已分享的歌单"
+                    : position === "ResultView" ? "暂无搜索结果......."
+                        : "暂无已上传的歌曲"
+            }}</span>
         </div>
     </div>
 </template>

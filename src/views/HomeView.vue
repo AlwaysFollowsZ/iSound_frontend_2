@@ -204,6 +204,7 @@ export default {
     }
   },
   created() {
+    document.title = "iSound"
     setTimeout(() => {
       this.scrollPromptShouldDisplay = true
     }, 800)

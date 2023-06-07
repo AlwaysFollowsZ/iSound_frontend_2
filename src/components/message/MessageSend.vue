@@ -144,12 +144,13 @@ export default defineComponent({
       </tbody>
     </table>
     <div>
-      <n-grid x-gap="12">
-        <n-gi :span="19"></n-gi>
+      <n-grid x-gap="0">
+        <n-gi :span="20"></n-gi>
         <n-gi :span="2">
           <n-button
+            strong
             class="cancel-button"
-            type="info"
+            type="primary"
             @click="cleanContent"
             :style="{
               '--n-color': `rgba(40, 180, 40, 0.657)`,
@@ -159,11 +160,11 @@ export default defineComponent({
               '--n-text-color-hover': `white`,
               '--n-text-color-disabled': `rgb(90, 90, 90)`,
             }"
-            >清空</n-button
-          ></n-gi
-        >
+            >清空</n-button>
+        </n-gi>
         <n-gi :span="2">
           <n-button
+            strong
             class="send-button"
             type="info"
             :style="{
@@ -173,9 +174,8 @@ export default defineComponent({
               '--n-text-color-hover': `white`,
             }"
             @click="sendMessage"
-            >发送</n-button
-          ></n-gi
-        >
+            >发送</n-button>
+          </n-gi>
         <n-gi :span="1"></n-gi>
       </n-grid>
     </div>

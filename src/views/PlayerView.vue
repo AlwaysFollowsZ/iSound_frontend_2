@@ -15,7 +15,7 @@
           <div class="music-cover">
             <n-image class="music-cover-img" :src="music.cover" width="400" height="400" />
           </div>
-          <div class="three-buttons" v-if="this.$cookies.get('is_superuser') == 'false'">
+          <div class="three-buttons" v-if="!this.$cookies.isKey('userid') || this.$cookies.get('is_superuser') == 'false'">
             <n-grid>
               <n-gi :span="4"></n-gi>
               <n-gi :span="4" style="margin: auto">
@@ -121,7 +121,7 @@
                     </div>
                   </n-scrollbar>
                   <div class="translationSwitch">
-                    <n-switch :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
+                    <n-switch size="small" :rail-style="railStyle" v-if="hasTranslation" v-model:value="showTranslation"
                       @click="scroll('auto')" :style="{ '--n-rail-color': 'grey' }">
                       <template #icon> 译 </template>
                     </n-switch>
@@ -1274,7 +1274,7 @@ export default defineComponent({
         obj.time = this.parseTime(obj.timeStr);
         if (
           this.lyricsObjArr.length > 0 &&
-          obj.time <= this.lyricsObjArr[this.lyricsObjArr.length - 1].time
+          obj.time < this.lyricsObjArr[this.lyricsObjArr.length - 1].time
         ) {
           this.hasTranslation = true;
           for (let i = 0; i < this.lyricsObjArr.length; i++) {

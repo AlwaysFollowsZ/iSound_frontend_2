@@ -1,9 +1,9 @@
 <template>
   <div ref="containerRef"></div>
-  <a v-if="!launched" @click="launch">
+  <a v-if="proxy.$router.currentRoute.value.name != 'player'" @click="launch">
     <ChevronUp class="aplayer-launch" />
   </a>
-  <a v-if="launched" @click="unlaunch">
+  <a v-if="proxy.$router.currentRoute.value.name == 'player'" @click="unlaunch">
     <ChevronDown class="aplayer-unlaunch" />
   </a>
   <div class="footer"></div>
@@ -88,6 +88,17 @@ function setTheme(index) {
 }
 
 function play(musicId) {
+  if (currentMusicId == musicId) {
+    return;
+  }
+  for (let i = 0; i < ap.list.audios.length; i++) {
+    let audio = ap.list.audios[i];
+    if (audio.id == musicId) {
+      ap.list.switch(i);
+      ap.play();
+      return;
+    }
+  }
   proxy.$http.get(`/api/music/detail/${musicId}`).then((response) => {
     ap.list.clear();
     ap.list.add(response.data.music_set);
@@ -121,9 +132,20 @@ onMounted(() => {
     storageName: "aplayer-setting",
   });
 
-  proxy.$http.get("/api/music/detail/1/").then((response) => {
-    ap.list.add(response.data.music_set);
-  });
+  proxy.$watch(
+    () => proxy.$route.params,
+    () => {
+      if (proxy.$router.currentRoute.value.name == "player") {
+        play(proxy.$route.params.musicId);
+      }
+    }
+  );
+
+  if (proxy.$router.currentRoute.value.name != "player") {
+    proxy.$http.get("/api/music/detail/2/").then((response) => {
+      ap.list.add(response.data.music_set);
+    });
+  }
 
   ap.on("timeupdate", () => {
     proxy.$EventBus.emit("timeupdate", ap.audio.currentTime);

@@ -86,9 +86,16 @@ export default defineComponent({
             this.active2 = false
             this.active3 = false
             this.confirmButton = false
-            this.showEditListModify = false;
+            
             this.showShareListModify = false;
             this.cover = null;
+            if (this.showEditListModify) {
+                this.showEditListModify = false;
+                this.cover = this.tmpCover
+                this.listIntro = this.tmpListIntro
+                this.listName = this.tmpListName
+                this.tags = this.tmpTags.slice()
+            }
         },
         submitEdit() {
             //todo
@@ -122,7 +129,7 @@ export default defineComponent({
             setTimeout(() => {
                 this.$router.push('/home')
             }, 1000)
-        },
+        },    
         unshareList() {
             this.$http.post(`/api/playlist/unshare/${this.playlist.id}/`);
             if (
@@ -132,12 +139,12 @@ export default defineComponent({
                 let formData = new FormData();
                 formData.append(
                     "content",
-                    `您的歌单${this.playlist.title}涉嫌违规，已被取消分享。`
+                    `你的歌单${this.playlist.title}涉嫌违规，已被取消分享。`
                 );
                 this.$http.post(`/api/message/to/${this.up.id}/`, formData);
             }
             this.playlist.shared = false;
-            this.success("取消分享成功");
+            //this.success("取消分享成功");
             setTimeout(() => {
                 this.$router.push('/home')
             }, 1000)
@@ -151,13 +158,16 @@ export default defineComponent({
         updateData(playlistId) {
             this.$http.get(`/api/playlist/detail/${playlistId}/`).then((response) => {
                 this.playlist = response.data;
-                this.previewImageUrl = this.playlist.cover
                 this.songNum = this.playlist.music_set.length;
                 this.tagsNum = this.playlist.tags.length;
                 this.listName = this.playlist.title;
                 this.listIntro = this.playlist.profile;
                 this.tags = this.playlist.tags;
                 this.up = this.playlist.up;
+                this.tmpListName = this.listName
+                this.tmpListIntro = this.listIntro
+                this.tmpCover = this.playlist.cover
+                this.tmpTags = this.tags.slice()
                 document.title = `${this.up.username}的歌单 - ${this.playlist.title}`;
                 let key = 0;
                 this.songData = this.playlist.music_set.map((music) => ({
@@ -176,11 +186,7 @@ export default defineComponent({
                 }));
             });
         },
-        handleImageClick() {
-            this.$refs.uploadImage.openOpenFileDialog()
-        },
         handleCoverChange(e) {
-            alert
             this.cover = e.file.file;
         },
         handleSwitchActive() {
@@ -306,16 +312,20 @@ export default defineComponent({
             playlist: {},
             up: {},
             listName: "",
+            tmpListName: "",
             listIntro: "",
+            tmpListIntro: "",
             songNum: 0,
             tagsNum: 0,
             songData: [],
             cover: null,
+            tmpCover: null,
             showEditListModify: false,
             showShareListModify: false,
             showModifyComplainView: false,
             MusicalNotesOutline,
             tags: [], // 存储所选内容的数组
+            tmpTags: [],
             options: [
                 { label: "华语", value: "华语" },
                 { label: "流行", value: "流行" },
@@ -417,8 +427,6 @@ export default defineComponent({
                                         '--n-text-color': 'rgba(' + this.accentColor + ', 0.7)',
                                         '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
                                         '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                                        '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
-                                        '--n-ripple-color': 'rgba(' + this.accentColor + ', 1)',
                                         '--n-border': '1px solid transparent',
                                         '--n-border-hover': '1px solid rgba(' + this.accentColor + ', 0.6)',
                                         '--n-border-pressed': '1px solid rgba(' + this.accentColor + ', 0.6)',
@@ -607,7 +615,7 @@ export default defineComponent({
                         <n-gi :span="20">
                             <div class="register-card-title"
                                 :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
-                                编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}信息
+                                编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}
                             </div>
                         </n-gi>
                         <n-gi :span="2">
@@ -716,6 +724,20 @@ export default defineComponent({
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div class="body-item-title">
+                                        分类标签
+                                    </div>
+                                    <n-select v-model:value="tags" multiple :options="options"
+                                        :placeholder="'你需要选择1～3个分类标签'" @click="renderTags"
+                                        @update:value="handleUpdateValue" />
+                                </n-gi>
+                                <n-gi :span="3"></n-gi>
+                            </n-grid>
+                        </div>
+                        <div class="body-item">
+                            <n-grid>
+                                <n-gi :span="3"></n-gi>
+                                <n-gi :span="18">
+                                    <div class="body-item-title">
                                         简介
                                     </div>
                                     <n-input v-model:value="listIntro" type="textarea" placeholder="" :autosize="{
@@ -769,6 +791,74 @@ export default defineComponent({
                 </n-grid>
 
             </div>
+
+            <!-- <n-card class="edit-list-hodder" style="--n-border-radius: 20px">
+                <n-grid>
+                    <n-gi :span="1"></n-gi>
+                    <n-gi :span="22">
+                        <span class="modify-title">
+                            <div class="edit-list-title">
+                                编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}信息
+                            </div>
+                        </span>
+                    </n-gi>
+                    <n-gi :span="1">
+                        <div class="close-edit-modify">
+                            <n-icon size="32px" @click="closeWindow">
+                                <close-outline />
+                            </n-icon>
+                        </div>
+                    </n-gi>
+                </n-grid>
+                <div class="edit-list-main">
+                    <n-grid>
+                        <n-gi :span="8">
+                            <n-popover trigger="hover">
+                                <template #trigger>
+                                    <div class="upload-list-cover" @click="uploadFile">
+                                        <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
+                                            max="1" @preview="handlePreview" :on-change="handleCoverChange"
+                                            style="max-width: 200px">
+                                            <n-icon size="100" depth="5">
+                                                <ImageOutline />
+                                            </n-icon>
+                                        </n-upload>
+                                        <n-image :src="previewImageUrl" style="width: 200px" />
+                                    </div>
+                                </template>
+                                <span>点击此处上传歌单封面</span>
+                            </n-popover>
+                        </n-gi>
+                        <n-gi :span="1"></n-gi>
+                        <n-gi :span="15">
+                            <div>
+                                <div style="padding-bottom: 3px; font-size: 16px">歌单名</div>
+                                <n-input type="text" placeholder="请输入歌单名称" :maxlength="20" show-count
+                                    v-model:value="listName" />
+                            </div>
+                            <div>
+                                <div style="padding: 10px 0px 3px 0px; font-size: 16px">标签</div>
+                                <n-space vertical>
+                                    <n-select v-model:value="tags" multiple :options="options" placeholder="请选择歌单标签" />
+                                </n-space>
+                            </div>
+                            <div>
+                                <div style="padding: 10px 0px 3px 0px; font-size: 16px">简介</div>
+                                <n-input v-model:value="listIntro" type="textarea" placeholder="每张歌单都有自己的故事~" :autosize="{
+                                    minRows: 6,
+                                    maxRows: 6,
+                                }" :maxlength="150" show-count>
+                                </n-input>
+                            </div>
+                            <div class="submit-button">
+                                <n-button strong secondary type="primary" @click="submitEdit">
+                                    保存修改
+                                </n-button>
+                            </div>
+                        </n-gi>
+                    </n-grid>
+                </div>
+            </n-card> -->
         </div>
     </n-modal>
     <n-modal :show="showShareListModify"
@@ -964,16 +1054,10 @@ export default defineComponent({
     display: inline-block;
     align-items: center;
     justify-content: center;
+    /* border-style: dashed;
+    border-width:3px; */
     color: rgb(209, 209, 209);
     border-radius: 5%;
-    overflow: hidden;
-    transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
-}
-
-.upload-list-cover:hover {
-    transform: scale(1.03);
-    opacity: 0.8;
-    transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 
 /* .upload-list-cover:hover {
@@ -1004,6 +1088,8 @@ export default defineComponent({
 
 :deep(.n-upload-file-list .n-upload-file.n-upload-file--image-card-type) {
     position: relative;
+    width: 200px;
+    height: 200px;
     width: 200px;
     height: 200px;
     border: var(--n-item-border-image-card);
@@ -1094,20 +1180,5 @@ export default defineComponent({
 
 .close-icon:hover {
     cursor: pointer;
-}
-
-
-:deep(.n-base-selection .n-base-selection-tags) {
-    --n-color: var(--my-modal-select-color);
-}
-
-:deep(.n-base-selection .n-tag) {
-    --n-color: var(--my-modal-select-tag-color) !important;
-    --n-text-color: var(--my-modal-select-text-color) !important
-}
-
-:deep(.n-base-close) {
-    --n-close-icon-color: var(--my-modal-select-text-color) !important;
-    --n-close-icon-color-hover: red !important
 }
 </style>
