@@ -703,8 +703,8 @@ export default {
             if (row.isDeleted !== undefined && isAdmin.value) {//只有管理员有删除动画
                 return {
                     style: {
-                        'animation': row.isDeleted ? 'slideOutRight' : 'none',
-                        'animation-duration': '1.5s'
+                        'animation': row.isDeleted ? 'fadeOut' : 'none',
+                        'animation-duration': '2.2s'
                     }
                 }
             }
