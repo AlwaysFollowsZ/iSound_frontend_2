@@ -697,9 +697,10 @@ export default {
                         })
                 }
             } : {},
+            isLoggedIn.value?
             {
                 type: 'selection',
-            },
+            }:{},
         ])//表头和表项
         let rowProps = (row) => {
             if (row.isDeleted !== undefined && isAdmin.value) {//只有管理员有删除动画
