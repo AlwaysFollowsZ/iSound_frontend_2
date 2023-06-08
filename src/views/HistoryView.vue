@@ -1,270 +1,296 @@
 <template>
-  <div class="history-page">
-    <div class="user-page-TopNav"><top-nav></top-nav></div>
-    <div class="page-title-container" style="min-width: 1400px">
-      <n-grid>
-        <n-gi :span="2"></n-gi>
-        <n-gi :span="20">
-          <div class="page-title" :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
-            历史记录：{{
-              this.historyPrompt[Math.floor(Math.random() * this.historyPrompt.length)]
-            }}
-          </div>
-        </n-gi>
-        <n-gi :span="2"></n-gi>
-      </n-grid>
-    </div>
-    <div class="loading-animate" v-if="isLoading">
-      <n-progress style="height: 200px; width: 200px" class="animate__animated" type="circle"
-        :percentage="loadingPercentage" rail-color="lightgrey" :style="{
-          '--n-fill-color':
-            this.accentColor === '0,0,0' || this.accentColor === '255,255,255'
-              ? 'grey'
-              : 'rgb(' + this.accentColor + ')',
-        }" :class="[`${this.loadingIconShouldOut ? 'animate__zoomOut' : 'animate__zoomIn'}`]">
-        <template #default>
-          <div v-if="this.loadingPercentage < 95">
-            <n-icon size="60" :color="this.accentColor === '0,0,0' || this.accentColor === '255,255,255'
-              ? 'grey'
-              : 'rgba(' + this.accentColor + ', 0.7)'
-              " :class="{
+  <div :style="{
+    'animation': isEnteringPage ? 'fadeInLeft' : 'fadeOutRight',
+    'animation-duration': '1s',
+  }">
+    <div class="history-page">
+      <div class="user-page-TopNav"><top-nav @exit="this.isEnteringPage = false"></top-nav></div>
+      <div class="page-title-container" style="min-width: 1400px">
+        <n-grid>
+          <n-gi :span="2"></n-gi>
+          <n-gi :span="20">
+            <div class="page-title" :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
+              历史记录：{{
+                this.historyPrompt[Math.floor(Math.random() * this.historyPrompt.length)]
+              }}
+            </div>
+          </n-gi>
+          <n-gi :span="2"></n-gi>
+        </n-grid>
+      </div>
+      <div class="loading-animate" v-if="isLoading">
+        <n-progress style="height: 200px; width: 200px" class="animate__animated" type="circle"
+          :percentage="loadingPercentage" rail-color="lightgrey" :style="{
+            '--n-fill-color':
+              this.accentColor === '0,0,0' || this.accentColor === '255,255,255'
+                ? 'grey'
+                : 'rgb(' + this.accentColor + ')',
+          }" :class="[`${this.loadingIconShouldOut ? 'animate__zoomOut' : 'animate__zoomIn'}`]">
+          <template #default>
+            <div v-if="this.loadingPercentage < 95">
+              <n-icon size="60" :color="this.accentColor === '0,0,0' || this.accentColor === '255,255,255'
+                ? 'grey'
+                : 'rgba(' + this.accentColor + ', 0.7)'
+                " :class="{
     'animate__animated animate__slideInLeft': this.loadingPercentage > 96,
   }">
-              <musical-notes-outline />
-            </n-icon>
-          </div>
-          <div v-else>
-            <n-icon size="70" color="#63e2b8" class="animate__animated animate__zoomIn">
-              <checkmark-circle-outline />
-            </n-icon>
-          </div>
-        </template>
-      </n-progress>
-    </div>
-    <div class="page-body" style="min-width: 1400px" v-else>
-      <!-- <div class="page-body-icon" style="width: 30px">
+                <musical-notes-outline />
+              </n-icon>
+            </div>
+            <div v-else>
+              <n-icon size="70" color="#63e2b8" class="animate__animated animate__zoomIn">
+                <checkmark-circle-outline />
+              </n-icon>
+            </div>
+          </template>
+        </n-progress>
+      </div>
+      <div class="page-body" style="min-width: 1400px" v-else>
+        <!-- <div class="page-body-icon" style="width: 30px">
                 <alarm />
             </div> -->
-      <div class="page-body-list" v-if="historyNowCount !== 0">
-        <n-grid x-gap="12">
-          <n-gi :span="3"></n-gi>
-          <n-gi :span="21">
-            <div>
-              <n-grid :x-gap="12">
-                <n-gi :span="4">
-                  <div class="time-limit-container">
-                    <n-timeline>
-                      <n-timeline-item :style="{
-                        'animation-delay': `${0.3 + index * 0.05}s`,
-                        '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
-                        '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
-                        '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
-                      }
-                        ">
-                        <div><n-button @click="getYesterdayHistory(); this.flushList++" :style="{
-                          '--n-color': this.colorMode === 'transparent',
-                          '--n-color-focus': 'transparent',
-                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
-                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-color-pressed': 'transparent',
-                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                          '--n-border-hover': 'transparent',
-                          '--n-border-focus': 'transparent',
-                          '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                          '--n-border-radius': '8px',
-                          '--n-height': '55px',
-                          '--n-ripple-color': 'rgb(' + this.accentColor + ')',
-                          '--n-font-size': '18px',
-                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
-                          '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
-                          '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
-                          '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                          '--n-icon-size': '25px'
-                        }" style="margin-top: 10px;">今日播放</n-button></div>
-                      </n-timeline-item>
-                      <n-timeline-item :style="{
-                        'animation-delay': `${0.3 + index * 0.05}s`,
-                        '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
-                        '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
-                        '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
-                      }
-                        ">
-                        <div><n-button @click="getTheWeekHistory(); this.flushList++" :style="{
-                          '--n-color': this.colorMode === 'transparent',
-                          '--n-color-focus': 'transparent',
-                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
-                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                          '--n-border-hover': 'transparent',
-                          '--n-border-focus': 'transparent',
-                          '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                          '--n-border-radius': '8px',
-                          '--n-height': '55px',
-                          '--n-color-pressed': 'transparent',
-                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-ripple-color': 'rgb(' + this.accentColor + ')',
-                          '--n-font-size': '18px',
-                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
-                          '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
-                          '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
-                          '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                          '--n-icon-size': '25px'
-                        }" style="margin-top: 10px;">本周播放</n-button></div>
-                      </n-timeline-item>
-                      <n-timeline-item :style="{
-                        'animation-delay': `${0.3 + index * 0.05}s`,
-                        '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
-                        '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
-                        '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
-                      }
-                        ">
-                        <div><n-button @click=" getTheMonthHistory(); this.flushList++" :style="{
-                          '--n-color': this.colorMode === 'transparent',
-                          '--n-color-focus': 'transparent',
-                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
-                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                          '--n-border-hover': 'transparent',
-                          '--n-border-focus': 'transparent',
-                          '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                          '--n-border-radius': '8px',
-                          '--n-height': '55px',
-                          '--n-color-pressed': 'transparent',
-                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-ripple-color': 'rgb(' + this.accentColor + ')',
-                          '--n-font-size': '18px',
-                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
-                          '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
-                          '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
-                          '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                          '--n-icon-size': '25px'
-                        }">本月播放</n-button></div>
-                      </n-timeline-item>
-                      <n-timeline-item :style="{
-                        'animation-delay': `${0.3 + index * 0.05}s`,
-                        '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
-                        '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
-                        '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
-                      }
-                        ">
-                        <div><n-button @click=" getAllHistory(); this.flushList++" :style="{
-                          '--n-color': this.colorMode === 'transparent',
-                          '--n-color-focus': 'transparent',
-                          '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
-                          '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                          '--n-border-hover': 'transparent',
-                          '--n-border-focus': 'transparent',
-                          '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
-                          '--n-border-radius': '8px',
-                          '--n-height': '55px',
-                          '--n-color-pressed': 'transparent',
-                          '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
-                          '--n-ripple-color': 'rgb(' + this.accentColor + ')',
-                          '--n-font-size': '18px',
-                          '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
-                          '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
-                          '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
-                          '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                          '--n-icon-size': '25px'
-                        }">全部播放</n-button></div>
-                      </n-timeline-item>
-                    </n-timeline>
-                  </div>
-                </n-gi>
-                <n-gi :span="16">
-                  <div :t="this.flushList" style="min-width: 860px">
-                    <n-timeline :key="this.flushList">
-                      <n-timeline-item v-for="( item, index ) in  showHistoryData " :key="index" type=""
-                        :content="item.content" :time="item.date.replace('T', ' ').split('.')[0]" line-type="dashed"
-                        class="animate__animated animate__fadeInDown" :style="{
+        <div class="page-body-list" v-if="historyNowCount !== 0">
+          <n-grid x-gap="12">
+            <n-gi :span="3"></n-gi>
+            <n-gi :span="21">
+              <div>
+                <n-grid :x-gap="12">
+                  <n-gi :span="4">
+                    <div class="time-limit-container">
+                      <n-timeline>
+                        <n-timeline-item :style="{
                           'animation-delay': `${0.3 + index * 0.05}s`,
                           '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
                           '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
                           '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
                         }
                           ">
-                        <n-grid :x-gap="12">
-                          <n-gi :span="3">
-                            <img class="song-image" :src="item.music.cover" @click="playMusic(item.music.id)" />
-                          </n-gi>
-                          <n-gi :span="12">
-                            <div class="song-detail-card" @click="playMusic(item.music.id)">
-                              <div class="song-name" :style="{
-                                color: this.colorMode === 'white' ? 'black' : 'white',
-                              }
-                                ">
-                                {{ item.music.name }}
+                          <div><n-button @click="getYesterdayHistory(); this.flushList++" :style="{
+                            '--n-color': this.colorMode === 'transparent',
+                            '--n-color-focus': 'transparent',
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
+                            '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-color-pressed': 'transparent',
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-border-hover': 'transparent',
+                            '--n-border-focus': 'transparent',
+                            '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                            '--n-border-radius': '8px',
+                            '--n-height': '55px',
+                            '--n-ripple-color': 'rgb(' + this.accentColor + ')',
+                            '--n-font-size': '18px',
+                            '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
+                            '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                            '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                            '--n-icon-size': '25px'
+                          }" style="margin-top: 10px;">今日播放</n-button></div>
+                        </n-timeline-item>
+                        <n-timeline-item :style="{
+                          'animation-delay': `${0.3 + index * 0.05}s`,
+                          '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
+                          '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
+                          '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
+                        }
+                          ">
+                          <div><n-button @click="getTheWeekHistory(); this.flushList++" :style="{
+                            '--n-color': this.colorMode === 'transparent',
+                            '--n-color-focus': 'transparent',
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
+                            '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-border-hover': 'transparent',
+                            '--n-border-focus': 'transparent',
+                            '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                            '--n-border-radius': '8px',
+                            '--n-height': '55px',
+                            '--n-color-pressed': 'transparent',
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-ripple-color': 'rgb(' + this.accentColor + ')',
+                            '--n-font-size': '18px',
+                            '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
+                            '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                            '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                            '--n-icon-size': '25px'
+                          }" style="margin-top: 10px;">本周播放</n-button></div>
+                        </n-timeline-item>
+                        <n-timeline-item :style="{
+                          'animation-delay': `${0.3 + index * 0.05}s`,
+                          '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
+                          '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
+                          '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
+                        }
+                          ">
+                          <div><n-button @click=" getTheMonthHistory(); this.flushList++" :style="{
+                            '--n-color': this.colorMode === 'transparent',
+                            '--n-color-focus': 'transparent',
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
+                            '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-border-hover': 'transparent',
+                            '--n-border-focus': 'transparent',
+                            '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                            '--n-border-radius': '8px',
+                            '--n-height': '55px',
+                            '--n-color-pressed': 'transparent',
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-ripple-color': 'rgb(' + this.accentColor + ')',
+                            '--n-font-size': '18px',
+                            '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
+                            '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                            '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                            '--n-icon-size': '25px'
+                          }">本月播放</n-button></div>
+                        </n-timeline-item>
+                        <n-timeline-item :style="{
+                          'animation-delay': `${0.3 + index * 0.05}s`,
+                          '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
+                          '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
+                          '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
+                        }
+                          ">
+                          <div><n-button @click=" getAllHistory(); this.flushList++" :style="{
+                            '--n-color': this.colorMode === 'transparent',
+                            '--n-color-focus': 'transparent',
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
+                            '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                            '--n-border-hover': 'transparent',
+                            '--n-border-focus': 'transparent',
+                            '--n-placeholder-color': this.colorMode === 'white' ? 'grey' : 'rgb(200,200,200)',
+                            '--n-border-radius': '8px',
+                            '--n-height': '55px',
+                            '--n-color-pressed': 'transparent',
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-ripple-color': 'rgb(' + this.accentColor + ')',
+                            '--n-font-size': '18px',
+                            '--n-border': '1px solid ' + 'rgba(' + this.accentColor + ', 0.75)',
+                            '--n-border-hover': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                            '--n-border-focus': '1px solid ' + 'rgba(' + this.accentColor + ', 1)',
+                            '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                            '--n-icon-size': '25px'
+                          }">全部播放</n-button></div>
+                        </n-timeline-item>
+                      </n-timeline>
+                    </div>
+                  </n-gi>
+                  <n-gi :span="16">
+                    <div :t="this.flushList" style="min-width: 860px" class="history-table">
+                      <n-timeline :key="this.flushList">
+                        <n-timeline-item v-for="( item, index ) in  showHistoryData " :key="index" type=""
+                          :content="item.content" :time="item.date.replace('T', ' ').split('.')[0]" line-type="dashed"
+                          class="animate__animated animate__fadeInDown" :style="{
+                            'animation-delay': `${0.3 + index * 0.05}s`,
+                            '--n-line-color': 'rgba(' + this.accentColor + ', 0.55)',
+                            '--n-circle-border': '2px solid rgba(' + this.accentColor + ', 0.85)',
+                            '--n-meta-text-color': 'rgba(' + this.accentColor + ', 0.95)',
+                          }
+                            ">
+                          <n-grid :x-gap="12" class="song-information" @click="playMusic(item.music.id)">
+                            <n-gi :span="3">
+                              <img class="song-image" :src="item.music.cover" />
+                            </n-gi>
+                            <n-gi :span="12">
+                              <div class="song-detail-card">
+                                <div class="song-name" :style="{
+                                  color: this.colorMode === 'white' ? 'black' : 'white',
+                                }
+                                  ">
+                                  {{ item.music.name }}
+                                </div>
                               </div>
-                            </div>
-                            <div>
-                              <div class="song-singer" :style="{
-                                color: this.colorMode === 'white' ? 'grey' : 'lightgrey',
-                              }
-                                ">
-                                {{ item.music.artist }}
-                              </div>
-                              <router-link :to="`/home/user/${item.music.up.id}`">
-                                <span class="song-upload-username" :style="{
+                              <div>
+                                <div class="song-singer" :style="{
                                   color: this.colorMode === 'white' ? 'grey' : 'lightgrey',
                                 }
                                   ">
-                                  上传者: {{ item.music.up.username }}
-                                  播放次数: {{ item.times }}
-                                </span>
-                              </router-link>
-                            </div>
-                          </n-gi>
-                          <n-gi :span="9">
-                            <div class="song-tags">
-                              <div class="tag-container">
-                                <span v-for="( tag, i ) in  item.music.tags " :key="i">
-                                  <!-- <span v-for="tag in historyPrompt"> -->
-                                  <n-tag :style="{
-                                    '--n-border': '1px solid rgba(' + this.accentColor + ', 0.3)',
-                                    '--n-text-color': 'rgb(' + this.accentColor + ')',
-                                    '--n-color': 'transparent',
-                                    '--n-border-radius': `5px`,
-                                    'font-size': `15px`,
-                                    '--n-height': `28px`,
+                                  {{ item.music.artist }}
+                                </div>
+                                <div>
+                                  <span class="song-upload-username" :style="{
+                                    color: this.colorMode === 'white' ? 'grey' : 'lightgrey',
                                   }
-                                    " class="tag-item">
-                                    # {{ tag }}
-                                  </n-tag>
-                                  <!-- <a-divider type="vertical"
-                                                            style="width: 1.5px; background-color: #dddddd" /> -->
-                                </span>
+                                    ">
+                                    <div :style="{
+                                      'display': 'inline-block',
+                                      'min-width': '50px',
+                                      'color': `rgba(${accentColor},0.8)`,
+                                      'font-weight': '700',
+                                      'margin-right': '10px'
+                                    }">上传者</div>
+                                    <div :style="{
+                                      'display': 'inline-block',
+                                      'min-width': '100px',
+                                      'margin-right': '15px'
+                                    }" @click.stop="jumpToUp(item.music.up.id)" class="song-uploader"> {{
+  item.music.up.username }}</div>
+                                    <div :style="{
+                                      'display': 'inline-block',
+                                      'min-width': '50px',
+                                      'color': `rgba(${accentColor},0.8)`,
+                                      'font-weight': '700',
+                                      'margin-right': '10px'
+                                    }">播放次数</div>
+                                    <div :style="{
+                                      'display': 'inline-block',
+                                      'min-width': '100px'
+                                    }"> {{ item.times }}</div>
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                            <!-- <span class="song-tags"
+                            </n-gi>
+                            <n-gi :span="9">
+                              <div class="song-tags">
+                                <div class="tag-container">
+                                  <span v-for="( tag, i ) in  item.music.tags " :key="i">
+                                    <!-- <span v-for="tag in historyPrompt"> -->
+                                    <n-tag :style="{
+                                      '--n-border': '1px solid rgba(' + this.accentColor + ', 0.3)',
+                                      '--n-text-color': 'rgb(' + this.accentColor + ')',
+                                      '--n-color': 'transparent',
+                                      '--n-border-radius': `5px`,
+                                      'font-size': `15px`,
+                                      '--n-height': `28px`,
+                                    }
+                                      " class="tag-item">
+                                      # {{ tag }}
+                                    </n-tag>
+                                    <!-- <a-divider type="vertical"
+                                                            style="width: 1.5px; background-color: #dddddd" /> -->
+                                  </span>
+                                </div>
+                              </div>
+                              <!-- <span class="song-tags"
                                                     :style="{ 'color': this.colorMode === 'white' ? 'grey' : 'lightgrey' }">
                                                     {{ item.music.tags }}
                                                 </span> -->
-                          </n-gi>
-                        </n-grid>
-                        <a-divider style="height: 1px; position: absolute; button: 0"
-                          :style="{ 'background-color': 'rgba(' + this.accentColor + ', 0.7)' }" />
-                      </n-timeline-item>
-                    </n-timeline>
-                  </div>
-                </n-gi>
-                <n-gi :span="4"></n-gi>
-              </n-grid>
-            </div>
-          </n-gi>
-        </n-grid>
-      </div>
-      <div v-else>
-        <div class="no-history-container animate__animated animate__zoomIn"
-          :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
-          你还没有听歌记录
+                            </n-gi>
+                          </n-grid>
+                          <a-divider style="height: 1px; position: absolute;  button: 0"
+                            :style="{ 'background-color': 'rgba(' + this.accentColor + ', 0.7)' }" />
+                        </n-timeline-item>
+                      </n-timeline>
+                    </div>
+                  </n-gi>
+                  <n-gi :span="4"></n-gi>
+                </n-grid>
+              </div>
+            </n-gi>
+          </n-grid>
         </div>
-        <!-- <div style="
+        <div v-else>
+          <div class="no-history-container animate__animated animate__zoomIn"
+            :style="{ color: this.colorMode === 'white' ? 'black' : 'white' }">
+            你还没有听歌记录
+          </div>
+          <!-- <div style="
             padding-left: 8%;
             font-size: 30px;
             font-weight: bold;
@@ -276,6 +302,7 @@
           为你推荐
         </div>
         <div><recommend-for-you /></div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -307,6 +334,7 @@ export default {
       loadingPercentage: 0,
       loadingIconShouldOut: false,
       isLoading: true,
+      isEnteringPage: true,
       historyPrompt: [
         "寻觅音符的足迹",
         "记录美好的音符瞬间",
@@ -423,6 +451,13 @@ export default {
     },
     getAllHistory() {
       this.showHistoryData = this.historyData;
+    },
+    jumpToUp(id) {
+      this.isEnteringPage = false
+      setTimeout(() => {
+        this.$router.push(`/home/user/${id}`)
+      }, 900)
+
     }
   },
 };
@@ -444,7 +479,7 @@ export default {
   font-weight: bold;
 }
 
-.song-detail-card :hover {
+.song-information {
   cursor: pointer;
 }
 
@@ -469,8 +504,19 @@ export default {
 .song-upload-username {
   font-size: 16px;
   font-weight: 350;
+
   /* position: absolute;
     bottom: 0; */
+}
+
+.song-uploader {
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;
+}
+
+.song-uploader:hover {
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+  transform: scale(1.03);
+  opacity: 0.6;
 }
 
 .song-tags {
@@ -508,5 +554,22 @@ export default {
   margin-right: 10px;
   font-size: 13px;
   padding-bottom: 2px;
+}
+
+:deep(.history-table .n-timeline-item-content .song-information) {
+  padding-top: 5px;
+  border-radius: 20px;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+}
+
+.song-tags {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+:deep(.history-table .n-timeline-item-content:hover .song-information) {
+  background-color: rgba(var(--theme-color), 0.2);
+  transform: scale(1.03) translateX(25px) translateY(5px);
+  box-shadow: -10px -5px 5px 5px var(--my-color);
 }
 </style>

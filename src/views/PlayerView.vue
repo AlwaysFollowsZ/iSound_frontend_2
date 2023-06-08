@@ -1369,23 +1369,25 @@ export default defineComponent({
       }, 800);
     },
     updateCollections() {
-      this.$http.get("/api/playlist/of/0/").then((response) => {
-        let key = 0;
-        if (response.data.playlist_set.length == 0) {
-          this.collectionData = [];
-          return;
-        }
-        this.collectionData = response.data.playlist_set.map((collection) => {
-          return {
-            Key: key++,
-            Id: collection.id,
-            imagePath: collection.cover,
-            Name: collection.title,
-            songCount: collection.music_set.length,
-            Type: "Collection",
-          };
-        });
-      }); //更新当前用户的收藏夹数据
+      if (this.$cookies.isKey('userid')) {
+        this.$http.get("/api/playlist/of/0/").then((response) => {
+          let key = 0;
+          if (response.data.playlist_set.length == 0) {
+            this.collectionData = [];
+            return;
+          }
+          this.collectionData = response.data.playlist_set.map((collection) => {
+            return {
+              Key: key++,
+              Id: collection.id,
+              imagePath: collection.cover,
+              Name: collection.title,
+              songCount: collection.music_set.length,
+              Type: "Collection",
+            };
+          });
+        }); //更新当前用户的收藏夹数据
+      }
     },
     closeM() {
       this.showModifyComplainView = false

@@ -1,73 +1,80 @@
 <template>
-    <top-nav></top-nav>
-    <div>
-        <n-grid :x-gap="12">
-            <n-gi :span="7"></n-gi>
-            <n-gi :span="9">
-                <div style="padding-top: 30px; display: flex; justify-content: center">
-                    <n-input type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search" :style="{
-                        '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                        '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
-                        '--n-font-size': '18px',
-                        '--n-border-radius': '12px',
-                        '--n-height': '50px',
-                        '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                        '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
-                        '--n-border': '1px solid rgb(224, 224, 230)',
-                        '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                        '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
-                        '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
-                    }" />
-                </div>
-            </n-gi>
-            <n-gi :span="1">
-                <div style="">
-                    <div style="padding-top: 35px" class="search-icon"
-                        :style="{ 'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey' }"
-                        @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
-                        <n-icon size="40px" @click="search">
-                            <SearchOutline />
-                        </n-icon>
+    <div :style="{
+        'animation': isEnteringPage ? 'fadeIn' : 'fadeOut',
+        'animation-duration': '1s'
+    }">
+        <top-nav @exit="this.isEnteringPage = false"></top-nav>
+        <div>
+            <n-grid :x-gap="12">
+                <n-gi :span="7"></n-gi>
+                <n-gi :span="9">
+                    <div style="padding-top: 30px; display: flex; justify-content: center">
+                        <n-input type="text" v-model:value="searchValue" placeholder="歌曲、歌单以及更多内容" @keyup.enter="search"
+                            :style="{
+                                '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                '--n-color-focus': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
+                                '--n-font-size': '18px',
+                                '--n-border-radius': '12px',
+                                '--n-height': '50px',
+                                '--n-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                '--n-caret-color': this.colorMode === 'white' ? 'black' : 'white',
+                                '--n-border': '1px solid rgb(224, 224, 230)',
+                                '--n-border-hover': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                                '--n-border-focus': '1px solid ' + 'rgb(' + this.accentColor + ')',
+                                '--n-box-shadow-focus': '0 0 0 2px ' + 'rgba(' + this.accentColor + ', 0.6)',
+                            }" />
                     </div>
-                </div>
-            </n-gi>
-        </n-grid>
-    </div>
-    <div class="tab-container">
-        <n-tabs size="large" type="line" animated :style="{
-            '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
-            '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
-            '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
-            '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
-            '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
-            '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
-        }">
-            <n-tab-pane name="歌曲" tab="歌曲">
-                <div v-if="this.songs.length == 0" class="no-result-info">
-                    暂无搜索结果...
-                </div>
-                <div v-else>
-                    <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
-                        v-model:songData="songs"></list-table>
-                </div>
-            </n-tab-pane>
-            <n-tab-pane name="歌单" tab="歌单">
-                <div v-if="this.songlists.length == 0" class="no-result-info">
-                    暂无搜索结果...
-                </div>
-                <div v-else><image-table :key="this.$route.params.keyword" :table-size="[1350,]" :entry-size="[330, 240]"
-                        v-model:rows="songlists" :position="'ResultView'" :handleClickEntry="jumpToSonglist"> </image-table>
-                </div>
-            </n-tab-pane>
-            <n-tab-pane name="用户" tab="用户">
-                <div v-if="this.userlist.length == 0" class="no-result-info">
-                    暂无搜索结果...
-                </div>
-                <div v-else>
-                    <user-list :list="userlist"></user-list>
-                </div>
-            </n-tab-pane>
-        </n-tabs>
+                </n-gi>
+                <n-gi :span="1">
+                    <div style="">
+                        <div style="padding-top: 35px" class="search-icon"
+                            :style="{ 'color': this.searchIconIsHovered ? 'rgba(' + this.accentColor + ', 0.9)' : 'lightgrey' }"
+                            @mouseover="this.searchIconIsHovered = true" @mouseout="this.searchIconIsHovered = false">
+                            <n-icon size="40px" @click="search">
+                                <SearchOutline />
+                            </n-icon>
+                        </div>
+                    </div>
+                </n-gi>
+            </n-grid>
+        </div>
+        <div class="tab-container">
+            <n-tabs size="large" type="line" animated :style="{
+                '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
+                '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
+                '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
+                '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
+                '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
+            }">
+                <n-tab-pane name="歌曲" tab="歌曲">
+                    <div v-if="this.songs.length == 0" class="no-result-info">
+                        暂无搜索结果...
+                    </div>
+                    <div v-else>
+                        <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
+                            v-model:songData="songs"></list-table>
+                    </div>
+                </n-tab-pane>
+                <n-tab-pane name="歌单" tab="歌单">
+                    <div v-if="this.songlists.length == 0" class="no-result-info">
+                        暂无搜索结果...
+                    </div>
+                    <div v-else><image-table :key="this.$route.params.keyword" :table-size="[1350,]"
+                            :entry-size="[330, 240]" v-model:rows="songlists" :position="'ResultView'"
+                            :handleClickEntry="jumpToSonglist"> </image-table>
+                    </div>
+                </n-tab-pane>
+                <n-tab-pane name="用户" tab="用户">
+                    <div v-if="this.userlist.length == 0" class="no-result-info">
+                        暂无搜索结果...
+                    </div>
+                    <div v-else>
+                        <user-list :list="userlist"></user-list>
+                    </div>
+                </n-tab-pane>
+            </n-tabs>
+        </div>
     </div>
 </template>
 
@@ -92,6 +99,7 @@ export default {
     },
     data() {
         return {
+            isEnteringPage: true,
             refresh: 0,
             searchIconIsHovered: false,
             songs: [],
@@ -114,7 +122,11 @@ export default {
     },
     methods: {
         jumpToSonglist(id) {
-            this.$router.push(`/listdetail/${id}/`)
+            this.isEnteringPage = false
+            setTimeout(() => {
+                this.$router.push(`/listdetail/${id}/`)
+            }, 900)
+
         },
         setAndSearchKeyword(keyword) {
             let i = 0, j = 0

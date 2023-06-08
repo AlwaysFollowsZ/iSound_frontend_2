@@ -36,10 +36,16 @@ export default {
     methods: {
         playSong(Id) {
             this.$EventBus.emit('play', Id)
-            this.$router.push(`/player/${Id}`)
+            this.$emit('exit')
+            setTimeout(() => {
+                this.$router.push(`/player/${Id}`)
+            }, 900)
         },
         clickSong(Id) {
-            this.$router.push(`/listdetail/${Id}`)
+            this.$emit('exit')
+            setTimeout(() => {
+                this.$router.push(`/listdetail/${Id}`)
+            }, 900)
         },//点击收藏夹。这时候应该跳转到收藏夹详情页面
         updateSongs() {
             this.$http.get('/api/music/of/0/').then((response) => {

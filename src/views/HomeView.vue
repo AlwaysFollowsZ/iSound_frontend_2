@@ -1,7 +1,7 @@
 <template>
   <div :style="{
     'animation': isEnteringPage ? 'fadeIn' : 'fadeOutUp',
-    'animation-duration': '1.5s'
+    'animation-duration': '1.2s'
   }">
     <top-nav @exit="this.isEnteringPage = false"></top-nav>
 
@@ -22,7 +22,12 @@
               next-slide-style="transform: translateX(20%) translateZ(-500px);" style="height: 85%" :show-dots="true">
               <n-carousel-item class="carousel-item-container" :style="{ width: '60%' }"
                 v-for="(songlist, idx) in songlists" :key="idx">
-                <img class="carousel-img" :src="songlist.path" draggable="false" @click="jumpToSongList(songlist.id)">
+                <div class="carousel-img" :style="{
+                  'background': `url(${songlist.path})`,
+                  'background-repeat': 'no-repeat',
+                  'background-size': 'cover',
+                  'background-position': 'center center'
+                }" @click="jumpToSongList(songlist.id)"></div>
               </n-carousel-item>
             </n-carousel>
           </div>
@@ -517,7 +522,7 @@ export default {
 
 
 .song-entry-container {
-  min-width: 300px;
+  max-width: 275px;
   margin-top: 0%;
   margin-bottom: 0%;
 }

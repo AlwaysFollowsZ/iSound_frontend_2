@@ -89,17 +89,16 @@ export default defineComponent({
             this.active2 = false
             this.active3 = false
             this.confirmButton = false
-
             this.showShareListModify = false;
+            if (this.showEditListModify) {
+                this.showEditListModify = false;
+            }
             setTimeout(() => {
                 this.cover = null
-                if (this.showEditListModify) {
-                    this.showEditListModify = false;
-                    //this.cover = this.tmpCover
-                    this.listIntro = this.tmpListIntro
-                    this.listName = this.tmpListName
-                    this.tags = this.tmpTags.slice()
-                }
+                //this.cover = this.tmpCover
+                this.listIntro = this.tmpListIntro
+                this.listName = this.tmpListName
+                this.tags = this.tmpTags.slice()
             }, 1000)
 
 
@@ -418,7 +417,7 @@ export default defineComponent({
                     </n-button></n-gi>
                 <n-gi :span="4">
                     <div class="list-cover">
-                        <img draggable="false" class="list-cover-img" :src="this.playlist.cover" />
+                        <n-image class="list-cover-img" :src="this.playlist.cover" object-fit="contain" />
                     </div>
                     <div style="margin: 30px 0px 20px 0px">
                         <n-breadcrumb>
@@ -483,7 +482,7 @@ export default defineComponent({
                                 </div>
                             </n-gi>
                             <n-gi>
-                                <span style="font-size: 16px; font-weight: 450"
+                                <span style="font-size: 16px; font-weight: 700"
                                     :style="{ 'color': 'rgb(' + this.accentColor + ')' }">来源 </span>
                                 <span class="up-link" @click="handleUpLink"
                                     :style="{ 'color': this.colorMode === 'white' ? 'rgb(50,50,50)' : 'rgb(222,222,222)' }"
@@ -493,7 +492,7 @@ export default defineComponent({
                             </n-gi>
                             <n-gi>
                                 <div>
-                                    <span style="font-size: 16px; font-weight: 450"
+                                    <span style="font-size: 16px; font-weight: 700"
                                         :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
                                         歌曲数量
                                     </span>
@@ -505,7 +504,7 @@ export default defineComponent({
                             </n-gi>
                             <n-gi>
                                 <div>
-                                    <span style="font-size: 16px; font-weight: 450"
+                                    <span style="font-size: 16px; font-weight: 600"
                                         :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
                                         歌单简介
                                     </span>
@@ -616,8 +615,9 @@ export default defineComponent({
                 <n-gi :span="4"></n-gi>
                 <n-gi :span="16">
                     <a-divider style="height: 1.8px; background-color: #dddddd" />
+                    <!-- 这里判断逻辑改了,所有是自己用户的都属于CollectionView 并且只能两重等于 -->
                     <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'"
-                        :position="playlist.shared === true ? 'PublicView' : 'CollectionView'"
+                        :position="this.$cookies.get('userid') == playlist.up.id ? 'CollectionView' : 'PublicView'"
                         v-model:songData="this.songData" :currentListId="playlist.id"></list-table>
                 </n-gi>
                 <n-gi :span="4"></n-gi>
@@ -672,7 +672,6 @@ export default defineComponent({
                                             </n-upload>
                                             <n-image v-if="this.cover === null" :preview-disabled="true"
                                                 :src="previewImageUrl" :style="{
-
                                                     'aspect-ratio': '1',
                                                     'cursor': 'pointer',
                                                     'border-radius': '10px'
@@ -993,14 +992,15 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    border-radius: 10%;
 }
 
 .list-cover-img {
     /* position: absolute; */
     margin: auto;
-    width: 245px;
+    /* width: 245px; */
     height: 245px;
-    border-radius: 10%;
+
     transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
 }
 
@@ -1177,6 +1177,7 @@ export default defineComponent({
 }
 
 .body-item {
+    max-width: 400px;
     margin-bottom: 25px;
     display: flex;
     justify-content: center;

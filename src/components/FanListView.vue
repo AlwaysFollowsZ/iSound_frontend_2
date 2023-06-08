@@ -3,8 +3,8 @@
         全部粉丝
     </div>
     <div class="loading-animate" v-if="isLoading">
-        <n-progress style="height: 50px; width: 400px" class="animate__animated" type="line"
-            :percentage="loadingPercentage" rail-color="lightgrey" :style="{
+        <n-progress style="height: 50px; width: 400px" class="animate__animated" type="line" :percentage="loadingPercentage"
+            rail-color="lightgrey" :style="{
                 '--n-fill-color':
                     (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ?
                         'grey' :
@@ -24,14 +24,14 @@
             :key="idx">
             <div class="fan-card">
                 <n-grid x-gap="12">
-                    <n-gi :span="3"><router-link :to="`/home/user/${fan.id}`"><img class="fan-card-image"
-                                :src="fan.avatarImg" /></router-link></n-gi>
+                    <n-gi :span="3"><span @click="jumpToFan(fan.id)" style="cursor:pointer">
+                            <img class="fan-card-image" :src="fan.avatarImg" /></span></n-gi>
                     <n-gi :span="18">
-                        <router-link :to="`/home/user/${fan.id}`">
-                            <div class="fan-card-name" :style="{'color': 'rgb(' + this.accentColor + ')'}">
+                        <span style="cursor:pointer" @click="jumpToFan(fan.id)">
+                            <div class="fan-card-name" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
                                 {{ fan.name }}
                             </div>
-                        </router-link>
+                        </span>
                         <div class="fan-card-bio">
                             <n-ellipsis expand-trigger="click" line-clamp="1" :tooltip="false">
                                 <div style="word-wrap: break-word;">
@@ -43,75 +43,66 @@
                         </div>
                     </n-gi>
                     <n-gi span="3">
-                        <n-popconfirm 
-                            v-if="fan.isFollowed" @positive-click="follow(fan)" positive-text="确认" negative-text="取消"
-                            :style="{
+                        <n-popconfirm v-if="fan.isFollowed" @positive-click="follow(fan)" positive-text="确认"
+                            negative-text="取消" :style="{
                                 '--n-text-color': this.colorMode === 'white' ? 'rgb(57,57,57)' : 'white',
                                 '--n-color': this.colorMode === 'white' ? '#fff' : 'rgb(72,72,72)',
                                 '--n-border-radius': '12px',
-                            }"  
-                            :negative-button-props="{
-                                style:{
-                                    '--n-color': 'transparent',
-                                    '--n-color-hover': 'transparent',
-                                    '--n-color-pressed': 'transparent',
-                                    '--n-color-focus': 'transparent',
-                                    '--n-text-color': '',
-                                    '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
-                                    '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
-                                    '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
-                                    '--n-border': '1px solid rgb(224, 224, 230)',
-                                    '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
-                                    '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
-                                    '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
-                                    '--n-border-radius': '8px',
-                                }
-                            }"
-                            :positive-button-props="{
-                                style:{
-                                    '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
-                                    '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
-                                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.8)',
-                                    '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
-                                    '--n-text-color': 'white',
-                                    '--n-text-color-hover': 'white',
-                                    '--n-text-color-pressed': 'white',
-                                    '--n-text-color-focus': 'white',
-                                    '--n-border': '1px solid rgb(224, 224, 230)',
-                                    '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
-                                    '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
-                                    '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
-                                    '--n-border-radius': '8px',
-                                }
-                            }"
-                        
-                        >
+                            }" :negative-button-props="{
+    style: {
+        '--n-color': 'transparent',
+        '--n-color-hover': 'transparent',
+        '--n-color-pressed': 'transparent',
+        '--n-color-focus': 'transparent',
+        '--n-text-color': '',
+        '--n-text-color-hover': 'rgb(' + this.accentColor + ')',
+        '--n-text-color-pressed': 'rgb(' + this.accentColor + ')',
+        '--n-text-color-focus': 'rgb(' + this.accentColor + ')',
+        '--n-border': '1px solid rgb(224, 224, 230)',
+        '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+        '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+        '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+        '--n-border-radius': '8px',
+    }
+}" :positive-button-props="{
+    style: {
+        '--n-color': 'rgba(' + this.accentColor + ', 0.7)',
+        '--n-color-hover': 'rgba(' + this.accentColor + ', 0.8)',
+        '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.8)',
+        '--n-color-focus': 'rgba(' + this.accentColor + ', 0.8)',
+        '--n-text-color': 'white',
+        '--n-text-color-hover': 'white',
+        '--n-text-color-pressed': 'white',
+        '--n-text-color-focus': 'white',
+        '--n-border': '1px solid rgb(224, 224, 230)',
+        '--n-border-hover': '1px solid rgb(' + this.accentColor + ')',
+        '--n-border-pressed': '1px solid rgb(' + this.accentColor + ')',
+        '--n-border-focus': '1px solid rgb(' + this.accentColor + ')',
+        '--n-border-radius': '8px',
+    }
+}">
                             <template #trigger>
-                                <n-button strong secondary round type="info" style="margin-top: 15px;"
-                                :style="{
+                                <n-button strong secondary round type="info" style="margin-top: 15px;" :style="{
                                     '--n-color': 'rgba(' + this.accentColor + ', 0.3)',
                                     '--n-color-hover': 'rgba(' + this.accentColor + ', 0.5)',
-                                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)', 
+                                    '--n-color-pressed': 'rgba(' + this.accentColor + ', 0.5)',
                                     '--n-color-focus': 'rgba(' + this.accentColor + ', 0.5)',
-                                    '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
-                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
-                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
-                                    '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
-                                  }"
-                                >
+                                    '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
+                                    '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                                    '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                                    '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                                }">
                                     已互粉
                                 </n-button>
                             </template>
                             确定要取消关注该用户吗？
                         </n-popconfirm>
-                        <n-button v-else strong secondary round style="margin-top: 15px;" @click="follow(fan)"
-                            :style="{
-                                '--n-text-color': 'rgba(' + this.accentColor + ', 1)', 
-                                '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)', 
-                                '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)', 
-                                '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)', 
-                            }"
-                        >
+                        <n-button v-else strong secondary round style="margin-top: 15px;" @click="follow(fan)" :style="{
+                            '--n-text-color': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-hover': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-pressed': 'rgba(' + this.accentColor + ', 1)',
+                            '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
+                        }">
                             回关
                         </n-button>
                     </n-gi>
@@ -122,14 +113,13 @@
             <n-gi :span="8"></n-gi>
             <n-gi :span="8">
                 <div style="display: flex; justify-content: center; margin-top: 0px;" v-if="fansList.length > 0">
-                    <n-pagination v-model:page="page" :page-count="Math.ceil(fansList.length / 4)" 
-                    :style="{
+                    <n-pagination v-model:page="page" :page-count="Math.ceil(fansList.length / 4)" :style="{
                         '--n-item-text-color-hover': 'rgb(' + this.accentColor + ')',
                         '--n-item-text-color-active': 'rgb(' + this.accentColor + ')',
                         '--n-item-text-color-pressed': 'rgb(' + this.accentColor + ')',
                         '--n-item-border-active': '1px solid rgb(' + this.accentColor + ')',
                         '--n-item-color-disabled': 'transparent',
-                    }"  />
+                    }" />
                 </div>
                 <div class="no-result-info" v-else>
                     暂无粉丝
@@ -213,6 +203,12 @@ export default {
             this.$http.post(`/api/follow/${user.id}/`).then((response) => {
                 console.log(response);
             })
+        },
+        jumpToFan(id) {
+            this.$emit('exit')
+            setTimeout(() => {
+                this.$router.push(`/home/user/${id}`)
+            }, 900)
         }
     },
 }
@@ -263,6 +259,7 @@ export default {
     font-weight: 500;
     color: grey;
 }
+
 .no-result-info {
     font-family: "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;

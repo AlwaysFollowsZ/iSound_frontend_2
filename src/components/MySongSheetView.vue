@@ -3,29 +3,9 @@
         <div class="my-song-sheet-title">
             全部收藏夹
         </div>
-        <!-- <div style="display: flex; justify-content: center;"> -->
-        <!-- <div class="song-sheet-container">
-                <n-grid :x-gap="12" :y-gap="6" :col="2">
-                    <n-gi :span="12" v-for="(song, idx) in songSheets" :key="idx">
-                        <div class="single-card-container">
-                            <div class="single-card-img-container">
-                                <img class="single-card-img" :src="song.imgSrc">
-                            </div>
-                            <div class="single-card-info-container">
-                                <div class="single-card-info-name">
-                                    {{ song.title }}
-                                </div>
-                            </div>
-                        </div>
-                    </n-gi>
-                </n-grid>
-            </div> -->
-        <!-- <n-pagination v-model:page="page" :page-count="3" />
-        </div> -->
         <div style="text-align:center;position:relative"><image-table :position="'Collection'" :entrySize="[200, 200]"
                 :rows="collectionData" @flushCollections="updateCollections"
                 :handleClickEntry="clickCollection"></image-table></div>
-
     </div>
 </template>
 <script>
@@ -70,28 +50,33 @@ export default {
     },
     methods: {
         clickCollection(Id) {
-            this.$router.push(`/listdetail/${Id}`)
+            this.$emit('exit')
+            setTimeout(() => {
+                this.$router.push(`/listdetail/${Id}`)
+            }, 900);
         },//点击收藏夹。这时候应该跳转到收藏夹详情页面
         updateCollections() {
-            this.$http.get('/api/playlist/of/0/').then((response) => {
-                let key = 0
-                console.log('update:content=' + response.data.playlist_set)
-                if (response.data.playlist_set.length == 0) {
-                    this.collectionData = []
-                    return
-                }
-                this.collectionData = response.data.playlist_set.map((collection) => {
-                    return {
-                        Key: key++,
-                        Id: collection.id,
-                        imagePath: collection.cover,
-                        Name: collection.title,
-                        songCount: collection.music_set.length,
-                        Type: 'Collection'
+            if (this.$cookies.isKey('userid')) {
+                this.$http.get('/api/playlist/of/0/').then((response) => {
+                    let key = 0
+                    console.log('update:content=' + response.data.playlist_set)
+                    if (response.data.playlist_set.length == 0) {
+                        this.collectionData = []
+                        return
                     }
-                })
-                console.log('cod' + JSON.stringify(response.data))
-            })//更新当前用户的收藏夹数据
+                    this.collectionData = response.data.playlist_set.map((collection) => {
+                        return {
+                            Key: key++,
+                            Id: collection.id,
+                            imagePath: collection.cover,
+                            Name: collection.title,
+                            songCount: collection.music_set.length,
+                            Type: 'Collection'
+                        }
+                    })
+                    console.log('cod' + JSON.stringify(response.data))
+                })//更新当前用户的收藏夹数据
+            }
         },
     }
 }
