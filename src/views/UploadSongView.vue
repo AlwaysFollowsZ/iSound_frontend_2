@@ -23,7 +23,7 @@
                 <n-grid>
                     <n-gi :span="10">
 
-                        <n-popover row trigger="hover" class="cover-prompt" :style="{ 'color': fontColorString }">
+                        <n-popover raw trigger="hover" class="cover-prompt" :style="{ 'color': fontColorString }">
                             <template #trigger>
                                 <div class="upload-song-page">
                                     <div :style="{
@@ -57,7 +57,6 @@
                                 'align-items': 'center',
                                 'height': '30px',
                                 'color': `rgb(${this.accentColor},0.7)`,
-                                'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                             }">
                                 <span>点击此处上传歌曲封面</span>
                             </div>

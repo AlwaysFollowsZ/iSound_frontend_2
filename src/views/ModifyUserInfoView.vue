@@ -43,7 +43,6 @@
                   'align-items': 'center',
                   'height': '30px',
                   'color': `rgb(${this.accentColor},0.7)`,
-                  'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                 }">
                   <span>点击以更换头像</span>
                 </div>
