@@ -1,12 +1,12 @@
 <template>
     <div :style="{
         'animation': isEnteringPage ? 'fadeIn' : 'fadeOut',
-        'animation-duration': '1s'
+        'animation-duration': '1.25s'
     }">
         <div class="user-page-TopNav"><top-nav @exit="this.isEnteringPage = false"></top-nav></div>
         <div class="user-page-body" style="min-width: 1400px">
             <n-grid x-gap="0">
-                <n-gi :span="2"> <!--左右边栏留一部分空袭空隙，使主页主体居中--></n-gi>
+                <n-gi :span="2"> <!--左右边栏留一部分空隙，使主页主体居中--></n-gi>
                 <n-gi :span="7">
                     <div class="user-info-container">
                         <div class="avatar">
@@ -190,7 +190,7 @@ export default {
                 .get("/api/accounts/detail/0/")
                 .then((response) => {
                     this.username = response.data.username;
-                    document.title = `${this.username}的个人主页`;
+                    document.title = `iSound - ${this.username}的个人主页`;
                     this.email = response.data.email;
                     this.recordNum = response.data.record_num;
                     this.bio = response.data.profile;

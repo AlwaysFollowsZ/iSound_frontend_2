@@ -348,7 +348,7 @@ export default {
     };
   },
   async created() {
-    document.title = "历史记录";
+    document.title = `iSound - 历史记录`;
     let t1 = setInterval(() => {
       this.loadingPercentage += 1;
     }, 300);

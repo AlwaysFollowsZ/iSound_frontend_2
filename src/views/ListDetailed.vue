@@ -185,7 +185,7 @@ export default defineComponent({
                 this.tmpListIntro = this.listIntro
                 this.tmpCover = this.playlist.cover
                 this.tmpTags = this.tags.slice()
-                document.title = `${this.up.username}的歌单 - ${this.playlist.title}`;
+                document.title = `iSound - ${this.up.username}的歌单 - ${this.playlist.title}`;
                 let key = 0;
                 this.songData = this.playlist.music_set.map((music) => ({
                     key: key++,

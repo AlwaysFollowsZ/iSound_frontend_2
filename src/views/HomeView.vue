@@ -330,7 +330,7 @@ export default {
       this.isEnteringPage = false
       setTimeout(() => {
         this.$router.push('/listdetail/' + id)
-      }, 1400)
+      }, 1200)
     },
     jumpToSong(id) {
       // this.$router.push(jumpLink)

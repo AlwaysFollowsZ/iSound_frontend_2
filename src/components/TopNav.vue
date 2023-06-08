@@ -463,18 +463,28 @@ export default {
   cursor: pointer;
 }
 
-.user-avatar:hover {
+.user-avatar {
+  border-radius: 10px;
   cursor: pointer;
+  transition: all linear 0.5s;
+}
+
+.user-avatar:hover {
+  opacity: 0.7;
+  transform: scale(1.03);
+  transition: all linear 0.3s;
 }
 
 .mail-icon:hover {
   cursor: pointer;
 }
-.n-dropdown-option{
+
+.n-dropdown-option {
   transition: all linear 0.5s;
 }
-.n-dropdown-option:hover{
-  background: var(--my-color);
+
+.n-dropdown-option:hover {
+  background: rgba(var(--theme-color), 0.8);
   transition: all linear 0.3s;
 }
 </style>
