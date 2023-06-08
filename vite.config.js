@@ -26,10 +26,10 @@ export default defineConfig({
       resolvers: [NaiveUiResolver()]
     })
   ],
-  server: {
-    proxy: {
-      '/api': 'http://43.138.14.231:8000/'
-      // '/api': 'http://43.138.14.231/'
-    }
-  },
+  // server: {
+  //   proxy: {
+  //     '/api': 'http://43.138.14.231:8000/'
+  //     // '/api': 'http://43.138.14.231/'
+  //   }
+  // },
 })

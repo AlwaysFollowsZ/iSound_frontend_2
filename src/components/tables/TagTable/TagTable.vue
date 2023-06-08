@@ -113,7 +113,6 @@ export default {
                     }
                 }
                 else {//其他标签
-                    console.log(Math.abs(hoverIndex - index))
                     return {
                         // 'height': '80px',
                         // 'width': `${140-Math.abs(hoverIndex-index)*10}px'`,

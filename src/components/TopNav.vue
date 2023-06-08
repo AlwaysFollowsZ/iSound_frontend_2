@@ -2,10 +2,10 @@
   <div class="topnav">
     <n-grid x-gap="0">
       <n-gi :span="4">
-        <router-link to="/">
-          <img src="/src/assets/iSound.png" style="padding-left: 10px; height:40px" :preview-disabled="true" />
-          <!-- <div class="isound-style">iSound</div> -->
-        </router-link>
+        <img src="/src/assets/iSound.png" 
+        style="padding-left: 10px; height:40px;cursor:pointer" :preview-disabled="true"
+          @click="jumpToHome" />
+        <!-- <div class="isound-style">iSound</div> -->
       </n-gi>
       <n-gi :span="7">
         <!-- test -->
@@ -113,15 +113,14 @@
         </n-grid>
       </n-gi>
       <n-gi :span="1">
-        <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options" :style="{'animation':'bounce'}">
-          <n-avatar v-if="isLoggedIn" class="user-avatar" @click="this.$router.push('/home')" @mouseover="renderDropDown"
+        <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options" :style="{ 'animation': 'bounce' }">
+          <n-avatar v-if="isLoggedIn" class="user-avatar" @click="jumpToUserView" @mouseover="renderDropDown"
             :src="this.avatarFile" size="large"></n-avatar>
           <n-avatar v-else src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" size="large"></n-avatar>
         </n-dropdown>
         <n-tooltip v-else placement="bottom-start" trigger="hover">
           <template #trigger>
-            <n-avatar class="user-avatar" src="/src/assets/ava.png"
-              size="large"></n-avatar>
+            <n-avatar class="user-avatar" src="/src/assets/ava.jpg" size="large"></n-avatar>
           </template>
           已有账号？请<a style="color: cornflowerblue" @click="showLogin = true">登录</a>；未注册账号？请<a style="color: cornflowerblue"
             @click="showRegister = true">注册</a>。
@@ -345,6 +344,22 @@ export default {
         // console.log(menu.length)
       }, 120);
     },
+    jumpToUserView() {
+      if (this.$route.name !== 'UserView') {
+        this.$emit('exit')
+        setTimeout(() => {
+          this.$router.push('/home')
+        }, 1400)
+      }
+    },
+    jumpToHome() {
+      if (this.$route.name !== 'home') {
+        this.$emit('exit')
+        setTimeout(() => {
+          this.$router.push('/')
+        }, 1400)
+      }
+    }
   },
 };
 </script>
@@ -377,13 +392,13 @@ export default {
 }
 
 .color-icon-container {
-  opacity:0.5;
+  opacity: 0.5;
   padding-top: 20%;
   transition: all linear 0.3s
 }
 
 .color-icon-container:hover {
-  opacity:1;
+  opacity: 1;
   cursor: pointer;
 }
 
