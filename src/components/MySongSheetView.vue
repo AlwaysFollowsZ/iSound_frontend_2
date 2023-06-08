@@ -56,25 +56,27 @@ export default {
             }, 900);
         },//点击收藏夹。这时候应该跳转到收藏夹详情页面
         updateCollections() {
-            this.$http.get('/api/playlist/of/0/').then((response) => {
-                let key = 0
-                console.log('update:content=' + response.data.playlist_set)
-                if (response.data.playlist_set.length == 0) {
-                    this.collectionData = []
-                    return
-                }
-                this.collectionData = response.data.playlist_set.map((collection) => {
-                    return {
-                        Key: key++,
-                        Id: collection.id,
-                        imagePath: collection.cover,
-                        Name: collection.title,
-                        songCount: collection.music_set.length,
-                        Type: 'Collection'
+            if (this.$cookies.isKey('userid')) {
+                this.$http.get('/api/playlist/of/0/').then((response) => {
+                    let key = 0
+                    console.log('update:content=' + response.data.playlist_set)
+                    if (response.data.playlist_set.length == 0) {
+                        this.collectionData = []
+                        return
                     }
-                })
-                console.log('cod' + JSON.stringify(response.data))
-            })//更新当前用户的收藏夹数据
+                    this.collectionData = response.data.playlist_set.map((collection) => {
+                        return {
+                            Key: key++,
+                            Id: collection.id,
+                            imagePath: collection.cover,
+                            Name: collection.title,
+                            songCount: collection.music_set.length,
+                            Type: 'Collection'
+                        }
+                    })
+                    console.log('cod' + JSON.stringify(response.data))
+                })//更新当前用户的收藏夹数据
+            }
         },
     }
 }

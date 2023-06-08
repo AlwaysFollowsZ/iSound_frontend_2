@@ -27,28 +27,30 @@ export default {
             }, 900)
         },//点击收藏夹。这时候应该跳转到收藏夹详情页面
         updateSonglists() {
-            this.$http.get('/api/playlist/of/0/',
-                {
-                    params: {
-                        'shared': 'True'
-                    }
-                }).then((response) => {
-                    let key = 0
-                    if (response.data.playlist_set.length == 0) {
-                        this.songlistData = []
-                        return
-                    }
-                    this.songlistData = response.data.playlist_set.map((songlist) => {
-                        return {
-                            Key: key++,
-                            Id: songlist.id,
-                            imagePath: songlist.cover,
-                            Name: songlist.title,
-                            songCount: songlist.music_set.length,
-                            Type: 'songList'
+            if (this.$cookies.isKey('userid')) {
+                this.$http.get('/api/playlist/of/0/',
+                    {
+                        params: {
+                            'shared': 'True'
                         }
+                    }).then((response) => {
+                        let key = 0
+                        if (response.data.playlist_set.length == 0) {
+                            this.songlistData = []
+                            return
+                        }
+                        this.songlistData = response.data.playlist_set.map((songlist) => {
+                            return {
+                                Key: key++,
+                                Id: songlist.id,
+                                imagePath: songlist.cover,
+                                Name: songlist.title,
+                                songCount: songlist.music_set.length,
+                                Type: 'songList'
+                            }
+                        })
                     })
-                })
+            }
         }
     },
     data() {

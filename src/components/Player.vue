@@ -347,7 +347,7 @@ onMounted(() => {
 .aplayer-dtime {
   color: v-bind("mainFontColor") !important;
   position: absolute !important;
-  right: -3px !important;
+  right: -7px !important;
   visibility: visible !important;
 }
 
