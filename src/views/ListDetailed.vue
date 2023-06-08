@@ -482,7 +482,7 @@ export default defineComponent({
                                 </div>
                             </n-gi>
                             <n-gi>
-                                <span style="font-size: 16px; font-weight: 450"
+                                <span style="font-size: 16px; font-weight: 700"
                                     :style="{ 'color': 'rgb(' + this.accentColor + ')' }">来源 </span>
                                 <span class="up-link" @click="handleUpLink"
                                     :style="{ 'color': this.colorMode === 'white' ? 'rgb(50,50,50)' : 'rgb(222,222,222)' }"
@@ -492,7 +492,7 @@ export default defineComponent({
                             </n-gi>
                             <n-gi>
                                 <div>
-                                    <span style="font-size: 16px; font-weight: 450"
+                                    <span style="font-size: 16px; font-weight: 700"
                                         :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
                                         歌曲数量
                                     </span>
@@ -504,7 +504,7 @@ export default defineComponent({
                             </n-gi>
                             <n-gi>
                                 <div>
-                                    <span style="font-size: 16px; font-weight: 450"
+                                    <span style="font-size: 16px; font-weight: 600"
                                         :style="{ 'color': 'rgb(' + this.accentColor + ')' }">
                                         歌单简介
                                     </span>
@@ -615,8 +615,9 @@ export default defineComponent({
                 <n-gi :span="4"></n-gi>
                 <n-gi :span="16">
                     <a-divider style="height: 1.8px; background-color: #dddddd" />
+                    <!-- 这里判断逻辑改了,所有是自己用户的都属于CollectionView 并且只能两重等于 -->
                     <list-table v-if="playlist.music_set.length > 0" :view-mode="'user'"
-                        :position="playlist.shared === true ? 'PublicView' : 'CollectionView'"
+                        :position="this.$cookies.get('userid') == playlist.up.id ? 'CollectionView' : 'PublicView'"
                         v-model:songData="this.songData" :currentListId="playlist.id"></list-table>
                 </n-gi>
                 <n-gi :span="4"></n-gi>

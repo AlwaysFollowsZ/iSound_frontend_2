@@ -1,7 +1,7 @@
 <template>
     <div :style="{
-        'animation': isEnteringPage ? 'fadeIn' : 'fadeOutDown',
-        'animation-duration': '1.5s'
+        'animation': isEnteringPage ? 'fadeIn' : 'fadeOut',
+        'animation-duration': '1s'
     }">
         <div class="user-page-TopNav"><top-nav @exit="this.isEnteringPage = false"></top-nav></div>
         <div class="user-page-body" style="min-width: 1400px">
@@ -70,22 +70,22 @@
                                     '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
                                 }">
                                     <n-tab-pane name="收藏夹" tab="收藏夹">
-                                        <my-song-sheet-view />
+                                        <my-song-sheet-view @exit="this.isEnteringPage=false" />
                                     </n-tab-pane>
                                     <n-tab-pane name="我喜欢" tab="我喜欢">
-                                        <my-favorites />
+                                        <my-favorites/>
                                     </n-tab-pane>
                                     <n-tab-pane name="分享歌单" tab="分享歌单">
-                                        <shared-song-sheet-view />
+                                        <shared-song-sheet-view @exit="this.isEnteringPage = false"/>
                                     </n-tab-pane>
                                     <n-tab-pane name="我的歌曲" tab="我的歌曲">
-                                        <my-upload-song-view />
+                                        <my-upload-song-view @exit="this.isEnteringPage = false"/>
                                     </n-tab-pane>
                                     <n-tab-pane name="我的关注" tab="我的关注">
-                                        <follow-list-view />
+                                        <follow-list-view @exit="this.isEnteringPage = false"/>
                                     </n-tab-pane>
                                     <n-tab-pane name="我的粉丝" tab="我的粉丝">
-                                        <fan-list-view />
+                                        <fan-list-view @exit="this.isEnteringPage = false"/>
                                     </n-tab-pane>
                                     <template #suffix>
                                         <div :style="{

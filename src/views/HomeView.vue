@@ -1,7 +1,7 @@
 <template>
   <div :style="{
     'animation': isEnteringPage ? 'fadeIn' : 'fadeOutUp',
-    'animation-duration': '1.5s'
+    'animation-duration': '1.2s'
   }">
     <top-nav @exit="this.isEnteringPage = false"></top-nav>
 

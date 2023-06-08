@@ -2,8 +2,7 @@
   <div class="topnav">
     <n-grid x-gap="0">
       <n-gi :span="4">
-        <img src="/src/assets/iSound.png" 
-        style="padding-left: 10px; height:40px;cursor:pointer" :preview-disabled="true"
+        <img src="/src/assets/iSound.png" style="padding-left: 10px; height:40px;cursor:pointer" :preview-disabled="true"
           @click="jumpToHome" />
         <!-- <div class="isound-style">iSound</div> -->
       </n-gi>
@@ -223,8 +222,13 @@ export default {
           label: "个人主页",
           props: {
             onClick: () => {
-              this.$router.push("/home");
-              console.log("user page");
+              if (this.$route.name !== 'UserView') {
+                this.$emit('exit')
+                setTimeout(() => {
+                  this.$router.push("/home");
+                  console.log("user page");
+                }, 900)
+              }
             },
           },
         },
@@ -232,8 +236,14 @@ export default {
           label: "历史记录",
           props: {
             onClick: () => {
-              this.$router.push("/history");
-              console.log("history");
+              if (this.$route.name !== 'HistoryView') {
+                this.$emit('exit')
+                setTimeout(() => {
+                  this.$router.push("/history");
+                  console.log("history");
+                }, 900)
+              }
+
             },
           },
         },
@@ -254,7 +264,11 @@ export default {
               this.$http.post("/api/accounts/logout/");
               this.$cookies.remove("userid");
               this.$cookies.remove("is_superuser");
-              this.$router.push("/");
+              this.$emit('exit')
+              setTimeout(() => {
+                this.$router.push("/");
+              })
+
             },
           },
         },
@@ -286,13 +300,23 @@ export default {
       if (this.searchValue.trim().length !== 0) {
         // console.log(`searchValue: ${this.searchValue}`)
         // jump to search page
-        this.$router.push("/searchresult/" + this.searchValue);
+        if (this.$route.name !== 'searchresult') {
+          this.$emit('exit')
+          setTimeout(() => {
+            this.$router.push("/searchresult/" + this.searchValue);
+            this.searchValue = "";
+          }, 900)
+        }
+        else {
+          this.$router.push("/searchresult/" + this.searchValue);
+          this.searchValue = "";
+        }
         // console.log('hhh')
         // this.$router.replace('/')
         // this.$router.replace('/searchresult/' + this.searchValue, () => {
 
         // });
-        this.searchValue = "";
+
         // window.location.reload()
       }
     },
@@ -349,7 +373,7 @@ export default {
         this.$emit('exit')
         setTimeout(() => {
           this.$router.push('/home')
-        }, 1400)
+        }, 1100)
       }
     },
     jumpToHome() {
@@ -357,7 +381,7 @@ export default {
         this.$emit('exit')
         setTimeout(() => {
           this.$router.push('/')
-        }, 1400)
+        }, 900)
       }
     }
   },
@@ -445,5 +469,12 @@ export default {
 
 .mail-icon:hover {
   cursor: pointer;
+}
+.n-dropdown-option{
+  transition: all linear 0.5s;
+}
+.n-dropdown-option:hover{
+  background: var(--my-color);
+  transition: all linear 0.3s;
 }
 </style>

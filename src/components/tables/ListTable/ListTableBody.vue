@@ -534,7 +534,7 @@ export default {
                                 }, [this.headChange === true ? `取消收藏成功` : `是否取消收藏?`]),
                                 //取消按钮
                                 [h(NButton, {
-                                    color: getRGBString(this.BackgroundColorString, 0.8),
+                                    color: getRGBString(fontColorString.value, 0.7),
                                     circle: true,
                                     ghost: true,
                                     focus: false,
@@ -550,7 +550,7 @@ export default {
                                     h(NIcon, h(ArrowBack))),
                                 //确定按钮
                                 h(NButton, {
-                                    color: getRGBString(this.BackgroundColorString, 0.8),
+                                    color: getRGBString(fontColorString.value, 0.7),
                                     circle: true,
                                     ghost: true,
                                     focus: false,

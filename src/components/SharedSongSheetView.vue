@@ -21,7 +21,10 @@ export default {
     },
     methods: {
         clickSonglists(Id) {
-            this.$router.push(`/listdetail/${Id}`)
+            this.$emit('exit')
+            setTimeout(() => {
+                this.$router.push(`/listdetail/${Id}`)
+            }, 900)
         },//点击收藏夹。这时候应该跳转到收藏夹详情页面
         updateSonglists() {
             this.$http.get('/api/playlist/of/0/',
