@@ -21,18 +21,20 @@ export default {
         let collectionData = []//当前用户的收藏夹的数据
         let formData = new FormData()
         formData.append('shared', false)
-        this.$http.get('/api/playlist/of/0/', formData).then((response) => {
-            let key = 0
-            this.collectionData = response.data.playlist_set.map((collection) => {
-                return {
-                    Key: key++,
-                    Id: collection.id,
-                    imagePath: collection.cover,
-                    Name: collection.title,
-                    songCount: collection.music_set.length
-                }
-            })
-        })//获取当前用户的收藏夹数据(会在nmodal中使用)
+        if (this.$cookies.isKey('userid')) {
+            this.$http.get('/api/playlist/of/0/', formData).then((response) => {
+                let key = 0
+                this.collectionData = response.data.playlist_set.map((collection) => {
+                    return {
+                        Key: key++,
+                        Id: collection.id,
+                        imagePath: collection.cover,
+                        Name: collection.title,
+                        songCount: collection.music_set.length
+                    }
+                })
+            })//获取当前用户的收藏夹数据(会在nmodal中使用)
+        }
         let viewMode = this.viewMode//转换一下
         let headChange = false//模态框标题是否转换
         let showCollection = false//表头的收藏夹是否显示模态框(表项的在每一行定义)
@@ -377,8 +379,8 @@ export default {
                             //除了多选外，“选择收藏夹”的imageTable不会在收藏夹页面出现
                             h(imageTable, {
                                 rows: this.collectionData,
-                                tableSize: [800,500],
-                                entrySize: [175,175],
+                                tableSize: [800, 500],
+                                entrySize: [175, 175],
                                 position: 'CollectionView',
                                 onFlushCollections: this.updateCollections,
                                 //注意传出来的是ID
@@ -500,8 +502,8 @@ export default {
                                 (this.position !== 'CollectionView') ? h(imageTable, {
                                     rows: this.collectionData,
                                     onFlushCollections: this.updateCollections,
-                                    tableSize: [800,500],
-                                    entrySize: [175,175],
+                                    tableSize: [800, 500],
+                                    entrySize: [175, 175],
                                     position: 'CollectionView',//需要显示的是收藏夹页面
                                     handleClickEntry: (listId) => {
                                         this.headChange = true
@@ -759,25 +761,27 @@ export default {
             }
         },
         updateCollections() {
-            this.$http.get('/api/playlist/of/0/').then((response) => {
-                let key = 0
-                console.log('update:content=' + response.data.playlist_set)
-                if (response.data.playlist_set.length == 0) {
-                    this.collectionData = []
-                    return
-                }
-
-                this.collectionData = response.data.playlist_set.map((collection) => {
-                    return {
-                        Key: key++,
-                        Id: collection.id,
-                        imagePath: collection.cover,
-                        Name: collection.title,
-                        songCount: collection.music_set.length
+            if (this.$cookies.isKey('userid')) {
+                this.$http.get('/api/playlist/of/0/').then((response) => {
+                    let key = 0
+                    console.log('update:content=' + response.data.playlist_set)
+                    if (response.data.playlist_set.length == 0) {
+                        this.collectionData = []
+                        return
                     }
-                })
-                console.log('cod' + JSON.stringify(response.data))
-            })//更新当前用户的收藏夹数据(会在nmodal中使用)
+
+                    this.collectionData = response.data.playlist_set.map((collection) => {
+                        return {
+                            Key: key++,
+                            Id: collection.id,
+                            imagePath: collection.cover,
+                            Name: collection.title,
+                            songCount: collection.music_set.length
+                        }
+                    })
+                    console.log('cod' + JSON.stringify(response.data))
+                })//更新当前用户的收藏夹数据(会在nmodal中使用)
+            }
         },
     },
     emits: ['like', 'collect', 'likeAll', 'collectAll', 'discollectOnPublic', 'discollectOnCollection', 'removeSong', 'deleteAll', 'delete']
