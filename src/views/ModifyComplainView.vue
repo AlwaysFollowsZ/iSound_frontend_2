@@ -31,7 +31,7 @@ export default defineComponent({
         } else if (this.$router.currentRoute.value.name == "listdetail") {
           data.append("playlist", this.$route.params.playlistId);
         }
-        this.$http.post("/api/message/to/1/", data).then(() => {
+        this.$http.post("/api/message/to/6/", data).then(() => {
           this.closeWindow();
           this.value = null;
         });
