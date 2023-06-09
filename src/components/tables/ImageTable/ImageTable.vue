@@ -188,6 +188,15 @@ export default {
         //以下方法都需要从Key转换为Id
         //处理点击删除收藏夹事件的方法
         handleClickDeleteCollection(Key) {
+            this.rows[Key].Deleted = true//触发动画
+            if ((Math.ceil(this.rows.length / this.pageArgs.pageSize)
+                > Math.ceil((this.rows.length - 1) / this.pageArgs.pageSize))
+                && this.pageArgs.currentPage > 1
+                && this.pageArgs.currentPage === this.pageCount)
+            //删除歌曲之后有可能需要跳转到前一页(仅在最后一页)
+            {
+                this.pageArgs.currentPage--;
+            }
             this.$http.delete(`api/playlist/delete/${this.rows[Key].Id}/`).then(() => {
                 //this.success('删除收藏夹成功')
                 this.$emit('flushCollections')

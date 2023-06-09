@@ -3,7 +3,8 @@
         <n-grid :y-gap="16">
             <n-gi :span="24">
                 <div v-for="(content, idx) in contents" :key="idx" :style="{ 'display': 'inline-block' }">
-                    <div class="tag-entry-container" :style="getTagStyle(idx)" @mouseenter="idx===31?'':isHoverOnTag[idx] = true"
+                    <div class="tag-entry-container" :style="getTagStyle(idx)"
+                        @mouseenter="idx === 31 ? '' : isHoverOnTag[idx] = true"
                         @mouseleave="idx === 31 ? '' : isHoverOnTag[idx] = false">
                         <tag-entry :index="idx" :content="content" :color-display="this.colorMode === 'white' ?
                             (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 0.3)' : 'rgba(' + this.accentColor + ', 0.5)') :
@@ -13,8 +14,9 @@
                             :color-text="this.colorMode === 'white' ?
                                 (idx % 2 === 0 ? 'rgb(' + this.accentColor + ')' : 'white') :
                                 (idx % 2 === 0 ? 'rgba(' + this.accentColor + ', 1)' : 'rgba(' + this.accentColor + ', 0.9)')"
-                            :should-animate="shouldAnimate" @click="handleClickTag(content)" @mouseenter="idx !== 31 ? '' : isHoverOnTag[idx] = true"
-                            @mouseleave="idx !== 31 ? '' : isHoverOnTag[idx] = false"/>
+                            :should-animate="shouldAnimate" @click="handleClickTag(content)"
+                            @mouseenter="idx !== 31 ? '' : isHoverOnTag[idx] = true"
+                            @mouseleave="idx !== 31 ? '' : isHoverOnTag[idx] = false" />
                     </div>
                 </div>
             </n-gi>
@@ -90,8 +92,11 @@ export default {
     },
     methods: {
         handleClickTag(tagName) {
-            this.$router.push("/tags/" + tagName);
-            console.log(`push to search the tag: ${tagName}`);
+            this.$emit('exit')
+            setTimeout(() => {
+                this.$router.push("/tags/" + tagName);
+                console.log(`push to search the tag: ${tagName}`);
+            }, 1100)
         },
         getTagStyle(index) {
             let start = Math.floor(index / 8) * 8//设置起始下标
@@ -116,7 +121,7 @@ export default {
                     return {
                         // 'height': '80px',
                         // 'width': `${140-Math.abs(hoverIndex-index)*10}px'`,
-                        'margin': `0 ${15 - Math.abs(hoverIndex - index)*2}px`
+                        'margin': `0 ${15 - Math.abs(hoverIndex - index) * 2}px`
                     }
                 }
             }
@@ -131,7 +136,7 @@ export default {
     transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
     height: 70px;
     width: 150px;
-    margin:0 10px;
+    margin: 0 10px;
     display: inline-block;
     text-align: center;
     justify-content: center;

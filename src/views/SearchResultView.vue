@@ -172,6 +172,7 @@ export default {
             this.$http.get(`/api/search/`, {
                 params: { 'tags': keyword }
             }).then((response) => {
+                console.log(response.data.music_set)
                 tmpSong = response.data.music_set.map(song => ({
                     key: i++,
                     name: song.name,
@@ -180,7 +181,7 @@ export default {
                     length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
                     imgSrc: song.cover,
                     isLiked: song.is_like,
-                    isCollected: false,
+                    isCollected: song.is_favorite,
                     showCollection: false,
                 }))
                 tmpList = response.data.playlist_set.map(songlist => ({

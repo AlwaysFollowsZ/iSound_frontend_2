@@ -20,10 +20,7 @@ export default {
         },
         //收藏全部歌曲
         handleCollectAll(keys, listId) {
-            //将选中的歌曲添加到listId中
-            //现在似乎不能直接调用handlecollect了
             for (let i = 0; i < keys.length; i++) {
-                //todo:提交到服务器端
                 this.handleCollect(keys[i], listId);
             }
         },

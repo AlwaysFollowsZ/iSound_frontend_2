@@ -1,49 +1,56 @@
 <template>
-    <div class="top-nav-container"><top-nav /></div>
-    <div class="tag-view-container">
-        <n-grid x-gap="12">
-            <n-gi :span="3"></n-gi>
-            <n-gi :span="18">
-                <div class="tag-table-container">
-                    <!-- <div class="cover-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">点击此处上传歌曲封面</div> -->
-                    <div class="tag-prompt" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">分类标签“{{ this.tag }}”的搜索结果
+    <div :style="{
+        'animation': isEnteringPage ? 'fadeIn' : 'fadeOut',
+        'animation-duration': '1s'
+    }">
+        <div class="top-nav-container"><top-nav @exit="this.isEnteringPage = false" /></div>
+        <div class="tag-view-container">
+            <n-grid x-gap="12">
+                <n-gi :span="3"></n-gi>
+                <n-gi :span="18">
+                    <div class="tag-table-container">
+                        <!-- <div class="cover-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">点击此处上传歌曲封面</div> -->
+                        <div class="tag-prompt" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">分类标签“{{ this.tag
+                        }}”的搜索结果
+                        </div>
+                        <!-- <tag-table :width="1400" :should-animate="false" /> -->
                     </div>
-                    <!-- <tag-table :width="1400" :should-animate="false" /> -->
-                </div>
 
-                <div class="tag-search-results">
-                    <n-tabs size="large" type="line" animated :style="{
-                        '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
-                        '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
-                        '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
-                        '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
-                        '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
-                        '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
-                    }">
-                        <n-tab-pane name="歌曲" tab="歌曲">
-                            <div v-if="this.songs.length == 0" class="no-result-info">
-                                暂无搜索结果...
-                            </div>
-                            <div v-else>
-                                <list-table :key="this.$route.params.keyword" :position="'PublicView'" :viewMode="'user'"
-                                    v-model:songData="songs"></list-table>
-                            </div>
-                        </n-tab-pane>
-                        <n-tab-pane name="歌单" tab="歌单">
-                            <div v-if="this.songLists.length == 0" class="no-result-info">
-                                暂无搜索结果...
-                            </div>
-                            <div v-else>
-                                <image-table :key="this.$route.params.keyword" :table-size="[1100,]"
-                                    :entry-size="[330, 240]" v-model:rows="songLists" :handleClickEntry="jumpToSonglist"> </image-table>
-                            </div>
-                        </n-tab-pane>
-                    </n-tabs>
-                    <!-- <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table> -->
-                </div>
-            </n-gi>
-            <n-gi :span="3"></n-gi>
-        </n-grid>
+                    <div class="tag-search-results">
+                        <n-tabs size="large" type="line" animated :style="{
+                                '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-tab-text-color': this.colorMode === 'white' ? 'black' : 'white',
+                                '--n-tab-text-color-active': 'rgba(' + this.accentColor + ', 1)',
+                                '--n-tab-text-color-hover': 'rgba(' + this.accentColor + ', 0.85)',
+                                '--n-pane-text-color': 'rgba(' + this.accentColor + ', 0.9)',
+                                '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
+                            }">
+                            <n-tab-pane name="歌曲" tab="歌曲">
+                                <div v-if="this.songs.length == 0" class="no-result-info">
+                                    暂无搜索结果...
+                                </div>
+                                <div v-else>
+                                    <list-table :key="this.$route.params.keyword" :position="'PublicView'"
+                                        :viewMode="'user'" v-model:songData="songs"></list-table>
+                                </div>
+                            </n-tab-pane>
+                            <n-tab-pane name="歌单" tab="歌单">
+                                <div v-if="this.songLists.length == 0" class="no-result-info">
+                                    暂无搜索结果...
+                                </div>
+                                <div v-else>
+                                    <image-table :key="this.$route.params.keyword" :table-size="[1100,]"
+                                        :entry-size="[330, 240]" v-model:rows="songLists"
+                                        :handleClickEntry="jumpToSonglist"> </image-table>
+                                </div>
+                            </n-tab-pane>
+                        </n-tabs>
+                        <!-- <list-table :position="'PublicView'" :viewMode="'user'" v-model:songData="songs"></list-table> -->
+                    </div>
+                </n-gi>
+                <n-gi :span="3"></n-gi>
+            </n-grid>
+        </div>
     </div>
 </template>
 <script>
@@ -65,6 +72,7 @@ export default {
     },
     data() {
         return {
+            isEnteringPage:true,
             tag: '',
             songs: [],
             songLists: [],
@@ -83,7 +91,7 @@ export default {
                 length: `${Math.floor(song.duration / 60)}`.padStart(2, '0') + ':' + `${Math.round(song.duration % 60)}`.padStart(2, '0'),
                 imgSrc: song.cover,
                 isLiked: song.is_like,
-                isCollected: false,
+                isCollected: song.is_favorite,
                 showCollection: false,
             }))
             this.songLists = response.data.playlist_set.map(songlist => ({

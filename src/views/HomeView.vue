@@ -152,7 +152,7 @@
         分类标签：总有你的喜欢
       </div>
       <div class="tagtable-container animate__animated">
-        <tag-table :width="1400" :should-animate="true" />
+        <tag-table :width="1400" :should-animate="true" @exit="this.isEnteringPage = false" />
       </div>
     </div>
     <div ref="tagRef" class="placeholder" v-else></div>
