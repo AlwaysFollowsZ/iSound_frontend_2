@@ -102,11 +102,11 @@
         <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options" :style="{ 'animation': 'bounce' }">
           <n-avatar v-if="isLoggedIn" class="user-avatar" @click="jumpToUserView" @mouseover="renderDropDown"
             :src="this.avatarFile" size="large"></n-avatar>
-          <n-avatar v-else src="/src/assets/avatar.png" size="large"></n-avatar>
+          <n-avatar v-else src="/api/media/default/visitor-avatar.png" size="large"></n-avatar>
         </n-dropdown>
         <n-tooltip v-else placement="bottom-start" trigger="hover">
           <template #trigger>
-            <n-avatar class="user-avatar" src="/src/assets/avatar.png" size="large"></n-avatar>
+            <n-avatar class="user-avatar" src="/api/media/default/visitor-avatar.png" size="large"></n-avatar>
           </template>
           已有账号？请<a style="color: cornflowerblue" @click="showLogin = true">登录</a>；未注册账号？请<a style="color: cornflowerblue"
             @click="showRegister = true">注册</a>。
