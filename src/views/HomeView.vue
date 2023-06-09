@@ -187,28 +187,6 @@ export default {
       scrollPromptShouldDisplay: false,
       tagShouldAnimate: false,
       hotsShouldAnimate: false,
-      imgs: [
-        {
-          path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg",
-          jumpLink: "a"
-        },
-        {
-          path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg",
-          jumpLink: "b"
-        },
-        {
-          path: "/src/assets/picture5.png",
-          jumpLink: 'e'
-        },
-        {
-          path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg",
-          jumpLink: "c"
-        },
-        {
-          path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg",
-          jumpLink: "d"
-        },
-      ],
       songs: [],
       hotSongs: [],
       songlists: [],

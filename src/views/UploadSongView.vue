@@ -595,63 +595,7 @@ export default {
                 }
             })
         }
-        // renderTagChoices() {
-        //     setTimeout(() => {
-        //         let selectMenu = document.getElementsByClassName('n-base-select-menu')
-        //         if (selectMenu.length > 0) {
-        //             selectMenu[0].style.setProperty('--n-color', this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)')
-        //             selectMenu[0].style.setProperty('--n-option-color-pending', this.colorMode === 'white' ? 'rgb(243, 243, 245)' : 'rgb(108,108,108)')
-        //             selectMenu[0].style.setProperty('--n-option-text-color', this.colorMode === 'white' ? 'black' : 'white')
-        //             selectMenu[0].style.setProperty('--n-border-radius', '8px')
-        //             selectMenu[0].style.setProperty('--n-option-check-color', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.25)')
-        //             selectMenu[0].style.setProperty('--n-option-text-color-active', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)')
-        //             selectMenu[0].style.setProperty('--n-option-text-color-pressed', (this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-        //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)')
-        //                     console.log(selectMenu.length)
     }
-    // let tags = document.getElementsByClassName('n-base-select-option')
-    // for (let i = 0; i < tags.length; i++) {
-    //     tags[i].addEventListener('click', this.tagClick)
-    //     tags[i].addEventListener('hover', this.setScroll)
-    //     tags[i].style.color = 
-    //         (tags[i].classList.contains('n-base-select-option--selected')) ?
-    //         ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //             '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
-    // }
-    //     }, 0)
-    // },
-    // setScroll() {
-    //     let scroll = document.getElementsByClassName('n-scrollbar')
-    //         //console.log('s' + scroll.length)
-    //         for (let i = 0; i < scroll.length; i++) {
-    //             scroll[i].props = { 'on-scroll': this.renderTags }
-    //             //scroll[i].addEventListener('scroll', this.renderTags)
-    //         }
-    // },
-    // renderTags() {
-    //     let tags = document.getElementsByClassName('n-base-select-option')
-    //         for (let i = 0; i < tags.length; i++) {
-    //             tags[i].addEventListener('click', this.tagClick)
-    //             tags[i].addEventListener('hover', this.setScroll)
-    //             tags[i].style.color = 
-    //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
-    //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
-    //         }
-    //         console.log('hello')
-    // },
-    // tagClick() {
-    //     let tags = document.getElementsByClassName('n-base-select-option')
-    //     for (let i = 0; i < tags.length; i++) {
-    //             tags[i].style.color = 
-    //                 (tags[i].classList.contains('n-base-select-option--selected')) ?
-    //                 ((this.accentColor === '0,0,0' || this.accentColor === '255,255,255') ? 
-    //                     '#8cbef8' : 'rgba(' + this.accentColor + ', 0.9)') : (this.colorMode === 'white' ? 'black' : 'white')
-    //         }
-    // }
-    // }
 };
 </script>
 <style scoped>

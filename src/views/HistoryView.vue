@@ -262,15 +262,9 @@
                                       " class="tag-item">
                                       # {{ tag }}
                                     </n-tag>
-                                    <!-- <a-divider type="vertical"
-                                                            style="width: 1.5px; background-color: #dddddd" /> -->
                                   </span>
                                 </div>
                               </div>
-                              <!-- <span class="song-tags"
-                                                    :style="{ 'color': this.colorMode === 'white' ? 'grey' : 'lightgrey' }">
-                                                    {{ item.music.tags }}
-                                                </span> -->
                             </n-gi>
                           </n-grid>
                           <a-divider style="height: 1px; position: absolute;  button: 0"

@@ -114,7 +114,6 @@
     updateInfo();
     "></modify-user-info-view>
 
-    <!-- <ModifyUserInfo @update-user-info="updateUserInfo" /> -->
 </template>
 
 <script>
@@ -203,13 +202,6 @@ export default {
                     console.error(error);
                 });
         },
-
-        // updateUserInfo(userInfo) {
-        //     this.avatarUrl = userInfo.avatarUrl;
-        //     this.username = userInfo.username;
-        //     this.email = userInfo.email;
-        //     this.bio = userInfo.bio;
-        // },
     },
 };
 </script>

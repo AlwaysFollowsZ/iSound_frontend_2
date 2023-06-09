@@ -5,12 +5,9 @@
             <n-gi :span="3"></n-gi>
             <n-gi :span="18">
                 <div class="tag-table-container">
-                    <!-- <div class="cover-prompt" :style="{'color': this.colorMode === 'white' ? 'black' : 'white'}">点击此处上传歌曲封面</div> -->
                     <div class="tag-prompt" :style="{ 'color': 'rgb(' + this.accentColor + ')' }">分类标签“{{ this.tag }}”的搜索结果
                     </div>
-                    <!-- <tag-table :width="1400" :should-animate="false" /> -->
                 </div>
-
                 <div class="tag-search-results">
                     <n-tabs size="large" type="line" animated :style="{
                         '--n-bar-color': 'rgba(' + this.accentColor + ', 1)',
