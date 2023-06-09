@@ -274,7 +274,7 @@ export default {
   },
   methods: {
     fetchData() {
-      if (this.$rookies.isKey('userid')) {
+      if (this.$cookies.isKey('userid')) {
         this.$http
           .get("/api/accounts/detail/0/")
           .then((response) => {

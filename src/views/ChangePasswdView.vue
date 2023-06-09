@@ -230,7 +230,7 @@ export default {
         showChangePasswd: Boolean,
     },
     created() {
-        if (this.$rookies.isKey('userid')) {
+        if (this.$cookies.isKey('userid')) {
             this.$http.get('/api/accounts/detail/0/').then(response => {
                 this.username = response.data.username;
                 this.avatarFile = response.data.avatar;
