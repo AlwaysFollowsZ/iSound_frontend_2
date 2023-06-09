@@ -152,7 +152,7 @@
         分类标签：总有你的喜欢
       </div>
       <div class="tagtable-container animate__animated">
-        <tag-table :width="1400" :should-animate="true" />
+        <tag-table :width="1400" :should-animate="true" @exit="this.isEnteringPage = false" />
       </div>
     </div>
     <div ref="tagRef" class="placeholder" v-else></div>
@@ -187,28 +187,6 @@ export default {
       scrollPromptShouldDisplay: false,
       tagShouldAnimate: false,
       hotsShouldAnimate: false,
-      imgs: [
-        {
-          path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg",
-          jumpLink: "a"
-        },
-        {
-          path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg",
-          jumpLink: "b"
-        },
-        {
-          path: "/src/assets/picture5.png",
-          jumpLink: 'e'
-        },
-        {
-          path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg",
-          jumpLink: "c"
-        },
-        {
-          path: "https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg",
-          jumpLink: "d"
-        },
-      ],
       songs: [],
       hotSongs: [],
       songlists: [],
@@ -330,7 +308,7 @@ export default {
       this.isEnteringPage = false
       setTimeout(() => {
         this.$router.push('/listdetail/' + id)
-      }, 1400)
+      }, 1200)
     },
     jumpToSong(id) {
       // this.$router.push(jumpLink)

@@ -217,10 +217,6 @@ export default {
         unFollowUser(user) {
             this.$http.post(`/api/follow/${user.id}/`).then((response) => {
                 console.log(response);
-                // const index = this.followerList.findIndex(follower => follower.id === user.id);
-                // if (index != -1) {
-                //     this.followerList.splice(index, 1);
-                // }
             })
         }
     }

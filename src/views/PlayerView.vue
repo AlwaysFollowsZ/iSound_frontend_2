@@ -968,7 +968,7 @@ export default defineComponent({
         this.$http.get(`/api/music/detail/${musicId}/`).then((response) => {
           this.music = response.data.music_set[0];
           this.up = this.music.up;
-          document.title = `${this.music.name} - ${this.music.artist}`;
+          document.title = `iSound - ${this.music.name} - ${this.music.artist}`;
           this.islike = this.music.is_like;
           this.iscollect = this.music.is_favorite;
           this.songtags = this.music.tags;

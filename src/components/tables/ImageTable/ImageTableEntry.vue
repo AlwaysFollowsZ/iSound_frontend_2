@@ -97,6 +97,10 @@ export default {
             type: Array,
             default: [300, 300]
         },
+        Deleted: {
+            type: Boolean,
+            default: false
+        }
     }
 }
 
@@ -109,6 +113,8 @@ export default {
     }">
         <!-- 大盒子的动态属性有背景色和宽高 -->
         <div class="mask_box" :style="{
+            'animation': Deleted===true ? 'fadeOut' : 'none',
+            'animation-duration': '1.5s',
             'width': `${imageSize[0] + 4}px`,//适应边框大小
             'height': `fit-content`,
             'border-radius': `${imageSizeAvg / 10}px`,

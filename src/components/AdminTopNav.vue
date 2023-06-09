@@ -2,22 +2,6 @@
         <div class="message-page-header">
             <div>
                 <n-grid>
-                    <!-- <n-gi :span="1">
-                        <div>
-                            <n-button class="go-message-button" strong secondary circle type="info" @click="gotoMessage()">
-                                <template #icon>
-                                  <n-icon><BellOutlined style="color:lightsteelblue"/></n-icon>
-                                </template>
-                              </n-button>
-                        </div>
-                        <div v-else>
-                            <n-button class="go-message-button" strong secondary circle type="info" @click="back()">
-                                <template #icon>
-                                  <n-icon><menu-outlined style="color:lightsteelblue"/></n-icon>
-                                </template>
-                              </n-button>
-                        </div> 
-                    </n-gi> -->
                     <n-gi :span="5">
                         <div class="isound-admin-style">
                             <img src="/src/assets/iSound.png" style="padding-left: 10px; height:40px" :preview-disabled="true" @click="back"/>

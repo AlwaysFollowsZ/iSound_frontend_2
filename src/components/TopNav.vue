@@ -4,23 +4,10 @@
       <n-gi :span="4">
         <img src="/src/assets/iSound.png" style="padding-left: 10px; height:40px;cursor:pointer" :preview-disabled="true"
           @click="jumpToHome" />
-        <!-- <div class="isound-style">iSound</div> -->
       </n-gi>
       <n-gi :span="7">
-        <!-- test -->
       </n-gi>
       <n-gi :span="2">
-        <!-- <div 
-                    class="back-to-home"
-                    :class="{'animate__animated animate__pulse': backToHomeIsHovered}"
-                    style="animation-duration: 2s"
-                    :style="{
-                        'text-shadow': backToHomeIsHovered ? '1px 1px 1px rgba(' + this.accentColor + ', 0.8)' : '',
-                        'color': this.colorMode === 'white' ? 'grey' : 'lightgrey',
-                    }" @mouseover="backToHomeIsHovered = true" @mouseout="backToHomeIsHovered = false"
-                    @click="this.$router.push('/')">
-                    音乐馆
-                </div> -->
       </n-gi>
       <n-gi :span="4"></n-gi>
       <n-gi :span="6">
@@ -466,18 +453,28 @@ export default {
   cursor: pointer;
 }
 
-.user-avatar:hover {
+.user-avatar {
+  border-radius: 10px;
   cursor: pointer;
+  transition: all linear 0.5s;
+}
+
+.user-avatar:hover {
+  opacity: 0.7;
+  transform: scale(1.03);
+  transition: all linear 0.3s;
 }
 
 .mail-icon:hover {
   cursor: pointer;
 }
-.n-dropdown-option{
+
+.n-dropdown-option {
   transition: all linear 0.5s;
 }
-.n-dropdown-option:hover{
-  background: var(--my-color);
+
+.n-dropdown-option:hover {
+  background: rgba(var(--theme-color), 0.8);
   transition: all linear 0.3s;
 }
 </style>

@@ -185,7 +185,7 @@ export default defineComponent({
                 this.tmpListIntro = this.listIntro
                 this.tmpCover = this.playlist.cover
                 this.tmpTags = this.tags.slice()
-                document.title = `${this.up.username}的歌单 - ${this.playlist.title}`;
+                document.title = `iSound - ${this.up.username}的歌单 - ${this.playlist.title}`;
                 let key = 0;
                 this.songData = this.playlist.music_set.map((music) => ({
                     key: key++,
@@ -688,7 +688,6 @@ export default defineComponent({
                                         'align-items': 'center',
                                         'height': '30px',
                                         'color': `rgb(${this.accentColor},0.7)`,
-                                        'background-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                                     }">
                                         <span>点击以修改封面</span>
                                     </div>
@@ -798,74 +797,6 @@ export default defineComponent({
                     </n-grid>
 
                 </div>
-
-                <!-- <n-card class="edit-list-hodder" style="--n-border-radius: 20px">
-                <n-grid>
-                    <n-gi :span="1"></n-gi>
-                    <n-gi :span="22">
-                        <span class="modify-title">
-                            <div class="edit-list-title">
-                                编辑{{ this.playlist.shared ? "歌单" : "收藏夹" }}信息
-                            </div>
-                        </span>
-                    </n-gi>
-                    <n-gi :span="1">
-                        <div class="close-edit-modify">
-                            <n-icon size="32px" @click="closeWindow">
-                                <close-outline />
-                            </n-icon>
-                        </div>
-                    </n-gi>
-                </n-grid>
-                <div class="edit-list-main">
-                    <n-grid>
-                        <n-gi :span="8">
-                            <n-popover trigger="hover">
-                                <template #trigger>
-                                    <div class="upload-list-cover" @click="uploadFile">
-                                        <n-upload class="upload-list-cover-image" list-type="image-card" accept="image/*"
-                                            max="1" @preview="handlePreview" :on-change="handleCoverChange"
-                                            style="max-width: 200px">
-                                            <n-icon size="100" depth="5">
-                                                <ImageOutline />
-                                            </n-icon>
-                                        </n-upload>
-                                        <n-image :src="previewImageUrl" style="width: 200px" />
-                                    </div>
-                                </template>
-                                <span>点击此处上传歌单封面</span>
-                            </n-popover>
-                        </n-gi>
-                        <n-gi :span="1"></n-gi>
-                        <n-gi :span="15">
-                            <div>
-                                <div style="padding-bottom: 3px; font-size: 16px">歌单名</div>
-                                <n-input type="text" placeholder="请输入歌单名称" :maxlength="20" show-count
-                                    v-model:value="listName" />
-                            </div>
-                            <div>
-                                <div style="padding: 10px 0px 3px 0px; font-size: 16px">标签</div>
-                                <n-space vertical>
-                                    <n-select v-model:value="tags" multiple :options="options" placeholder="请选择歌单标签" />
-                                </n-space>
-                            </div>
-                            <div>
-                                <div style="padding: 10px 0px 3px 0px; font-size: 16px">简介</div>
-                                <n-input v-model:value="listIntro" type="textarea" placeholder="每张歌单都有自己的故事~" :autosize="{
-                                    minRows: 6,
-                                    maxRows: 6,
-                                }" :maxlength="150" show-count>
-                                </n-input>
-                            </div>
-                            <div class="submit-button">
-                                <n-button strong secondary type="primary" @click="submitEdit">
-                                    保存修改
-                                </n-button>
-                            </div>
-                        </n-gi>
-                    </n-grid>
-                </div>
-            </n-card> -->
             </div>
         </n-modal>
         <n-modal :show="showShareListModify"
@@ -955,21 +886,6 @@ export default defineComponent({
                     </div>
                 </div>
             </div>
-            <!-- <n-card class="share-list-hodder" style="--n-border-radius: 20px">
-                <span class="modify-title">
-                    <div class="share-list-title">来自 iSound 的提醒</div>
-                </span>
-                <div class="confirm-message">
-                    您确认歌单名了吗？<br /><br />
-                    您为歌单添加标签了吗？<br /><br />
-                    您为歌单添加简介了吗？
-                </div>
-                <div class="buttons">
-                    <n-button :focusable="false" @click="closeWindow" style="margin: 0 10px">取消</n-button>
-                    <n-button :focusable="false" @click="confirmShare" style="margin: 0 10px">确认</n-button>
-                </div>
-            </n-card> -->
-
         </n-modal>
         <modify-complain-view :showModifyComplainView="showModifyComplainView"
             @closeModifyWindow="showModifyComplainView = false"></modify-complain-view>

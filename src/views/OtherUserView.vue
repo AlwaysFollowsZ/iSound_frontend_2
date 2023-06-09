@@ -200,7 +200,7 @@ export default {
         this.$http.get(`/api/accounts/detail/${userId}/`).then((response) => {
           this.userid = response.data.id;
           this.username = response.data.username;
-          document.title = `${this.username}的个人主页`;
+          document.title = `iSound - ${this.username}的个人主页`;
           this.userBio = response.data.profile;
           this.userEmail = response.data.email;
           this.userAvatar = response.data.avatar;

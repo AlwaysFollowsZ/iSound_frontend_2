@@ -188,6 +188,15 @@ export default {
         //以下方法都需要从Key转换为Id
         //处理点击删除收藏夹事件的方法
         handleClickDeleteCollection(Key) {
+            this.rows[Key].Deleted = true//触发动画
+            if ((Math.ceil(this.rows.length / this.pageArgs.pageSize)
+                > Math.ceil((this.rows.length - 1) / this.pageArgs.pageSize))
+                && this.pageArgs.currentPage > 1
+                && this.pageArgs.currentPage === this.pageCount)
+            //删除歌曲之后有可能需要跳转到前一页(仅在最后一页)
+            {
+                this.pageArgs.currentPage--;
+            }
             this.$http.delete(`api/playlist/delete/${this.rows[Key].Id}/`).then(() => {
                 //this.success('删除收藏夹成功')
                 this.$emit('flushCollections')
@@ -213,9 +222,20 @@ export default {
         },
         //处理点击删除已上传歌曲事件的方法
         handleClickDeleteUploadedSongs(Key) {
+            this.rows[Key].Deleted=true//触发动画
+            if ((Math.ceil(this.rows.length / this.pageArgs.pageSize)
+                > Math.ceil((this.rows.length - 1) / this.pageArgs.pageSize))
+                && this.pageArgs.currentPage > 1
+                && this.pageArgs.currentPage === this.pageCount)
+            //删除歌曲之后有可能需要跳转到前一页(仅在最后一页)
+            {
+                this.pageArgs.currentPage--;
+            }
             this.$http.delete(`api/music/delete/${this.rows[Key].Id}/`).then(() => {
                 //this.success('删除歌曲成功')
-                setTimeout(() => { this.$emit('flushUploadSongs') }, 200)
+                setTimeout(() => {
+                    this.$emit('flushUploadSongs')
+                }, 200)
 
             })
         },
@@ -335,7 +355,7 @@ export default {
                             @cancelShare="handleClickCancelShare" @deleteUploadedSong="handleClickDeleteUploadedSongs"
                             :EntrySize="entrySize"
                             :Edit="['Collection', 'Songlist', 'UploadedSongs'].includes(position)"></image-table-entry>
-                </span>
+                    </span>
                 </template>
             </div>
             <div class="pagination_box">
@@ -409,7 +429,7 @@ export default {
             </div>
         </div>
         <div v-else :style="{ 'color': getRGBString(fontColorString), 'text-align': 'center' }" class="no_content_notice">
-            <span v-if="$cookies.get('is_superuser')=='false'">{{
+            <span v-if="$cookies.get('is_superuser') == 'false'">{{
                 ["Collection", "CollectionView"].includes(position)
                 ? "暂无已创建的收藏夹...新建一个？"
                 : position === "Songlist"

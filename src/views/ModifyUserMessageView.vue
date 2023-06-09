@@ -63,24 +63,6 @@ export default defineComponent({
       </div>
       <UserMessageItem />
     </div>
-    <!-- <div>
-            <n-card class="user-message-hodder" style="--n-border-radius: 20px;">
-                <n-grid>
-                    <n-gi :span="1"></n-gi>
-                    <n-gi :span="22">
-                        <span class="modify-title"><h3 class="message-card-title">我的消息</h3></span>
-                    </n-gi>
-                    <n-gi :span="1">
-                        <div class="close-message-modify">                        
-                        <n-icon size="40px" @click="closeWindow">
-                            <close-outline />
-                        </n-icon>
-                        </div>
-                    </n-gi>
-                </n-grid>
-                <UserMessageItem/>
-            </n-card>
-        </div> -->
   </n-modal>
 </template>
 

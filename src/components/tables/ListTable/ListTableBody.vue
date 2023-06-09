@@ -389,8 +389,8 @@ export default {
                                     this.headChange = true
                                     //先设置所有项的isCollectChanged
                                     for (let i = 0; i < this.selectedEntries.length; i++) {
-                                        this.songData[i].isCollectChanged = true
-                                        this.songData[i].isCollected = true
+                                        this.songData[this.selectedEntries[i]].isCollectChanged = true
+                                        this.songData[this.selectedEntries[i]].isCollected = true
                                     }
                                     setTimeout(() => {
                                         this.showCollection = false

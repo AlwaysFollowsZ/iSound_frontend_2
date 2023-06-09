@@ -120,11 +120,6 @@ const router = createRouter({
       name: 'listdetailshare',
       component: () => import('../views/ListDetailed.vue'),
     },
-    // {
-    //   path: '/usermessage',
-    //   name: 'usermessage',
-    //   component: () => import('../components/message/UserMessageItem.vue')
-    // },
     {
       path: '/history',
       name: 'HistoryView',
