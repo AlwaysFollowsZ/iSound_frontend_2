@@ -3,13 +3,8 @@
         <div class="shared-song-sheet-title">
             全部分享歌单
         </div>
-        <!-- <div class="no-result-info" v-if="this.songlistData.length == 0">
-            暂无已分享的歌单...从收藏夹分享一个？
-        </div>
-        <div v-else> -->
         <div style="text-align:center"><image-table :position="'Songlist'" :rows="songlistData" :entrySize="[200, 200]"
                 @flushSonglists="updateSonglists" :handleClickEntry="clickSonglists"></image-table></div>
-        <!-- </div> -->
     </div>
 </template>
 <script>
@@ -58,32 +53,6 @@ export default {
         this.updateSonglists()//获取收藏夹数据
         return {
             songlistData,
-            songSheets: [
-                {
-                    imgSrc: "/src/assets/song2.jpg",
-                    title: "给自己的情书",
-                    jumpLink: "1",
-                    singer: "王菲"
-                },
-                {
-                    imgSrc: "/src/assets/song3.jpg",
-                    title: "Yesterday Once More",
-                    jumpLink: "2",
-                    singer: "Carpenters"
-                },
-                {
-                    imgSrc: "/src/assets/song4.jpg",
-                    title: "守时",
-                    jumpLink: "3",
-                    singer: "王菲"
-                },
-                {
-                    imgSrc: "/src/assets/song1.jpg",
-                    title: "陪你度过漫长岁月",
-                    jumpLink: "4",
-                    singer: "陈奕迅"
-                },
-            ]
         }
     },
 }
