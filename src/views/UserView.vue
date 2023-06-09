@@ -70,22 +70,22 @@
                                     '--n-tab-border-color': 'rgba(' + this.accentColor + ', 0.6)',
                                 }">
                                     <n-tab-pane name="收藏夹" tab="收藏夹">
-                                        <my-song-sheet-view @exit="this.isEnteringPage=false" />
+                                        <my-song-sheet-view @exit="this.isEnteringPage = false" />
                                     </n-tab-pane>
                                     <n-tab-pane name="我喜欢" tab="我喜欢">
-                                        <my-favorites/>
+                                        <my-favorites />
                                     </n-tab-pane>
                                     <n-tab-pane name="分享歌单" tab="分享歌单">
-                                        <shared-song-sheet-view @exit="this.isEnteringPage = false"/>
+                                        <shared-song-sheet-view @exit="this.isEnteringPage = false" />
                                     </n-tab-pane>
                                     <n-tab-pane name="我的歌曲" tab="我的歌曲">
-                                        <my-upload-song-view @exit="this.isEnteringPage = false"/>
+                                        <my-upload-song-view @exit="this.isEnteringPage = false" />
                                     </n-tab-pane>
                                     <n-tab-pane name="我的关注" tab="我的关注">
-                                        <follow-list-view @exit="this.isEnteringPage = false"/>
+                                        <follow-list-view @exit="this.isEnteringPage = false" />
                                     </n-tab-pane>
                                     <n-tab-pane name="我的粉丝" tab="我的粉丝">
-                                        <fan-list-view @exit="this.isEnteringPage = false"/>
+                                        <fan-list-view @exit="this.isEnteringPage = false" />
                                     </n-tab-pane>
                                     <template #suffix>
                                         <div :style="{
@@ -113,7 +113,6 @@
         showModifyUserInfo = false;
     updateInfo();
     "></modify-user-info-view>
-
 </template>
 
 <script>
@@ -174,7 +173,7 @@ export default {
             avatarFile: "",
             fansNum: "",
             followingNum: "",
-            isEnteringPage:true
+            isEnteringPage: true
         };
     },
     created() {
@@ -185,22 +184,24 @@ export default {
     },
     methods: {
         updateInfo() {
-            this.$http
-                .get("/api/accounts/detail/0/")
-                .then((response) => {
-                    this.username = response.data.username;
-                    document.title = `iSound - ${this.username}的个人主页`;
-                    this.email = response.data.email;
-                    this.recordNum = response.data.record_num;
-                    this.bio = response.data.profile;
-                    this.avatarFile = response.data.avatar;
-                    this.avatarUrl = this.avatarFile;
-                    this.fansNum = response.data.fans;
-                    this.followingNum = response.data.following;
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            if (this.$rookies.isKey('userid')) {
+                this.$http
+                    .get("/api/accounts/detail/0/")
+                    .then((response) => {
+                        this.username = response.data.username;
+                        document.title = `iSound - ${this.username}的个人主页`;
+                        this.email = response.data.email;
+                        this.recordNum = response.data.record_num;
+                        this.bio = response.data.profile;
+                        this.avatarFile = response.data.avatar;
+                        this.avatarUrl = this.avatarFile;
+                        this.fansNum = response.data.fans;
+                        this.followingNum = response.data.following;
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            }
         },
     },
 };

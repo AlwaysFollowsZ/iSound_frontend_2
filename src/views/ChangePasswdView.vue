@@ -65,8 +65,8 @@
                                 <n-gi :span="3"></n-gi>
                                 <n-gi :span="18">
                                     <div class="body-item-title">新密码</div>
-                                    <n-input type="password" show-password-on="mousedown" placeholder="输入新密码"
-                                        :minlength="8" :value="new_password1" @input="new_password1 = $event" :style="{
+                                    <n-input type="password" show-password-on="mousedown" placeholder="输入新密码" :minlength="8"
+                                        :value="new_password1" @input="new_password1 = $event" :style="{
                                             '--n-color': this.colorMode === 'white' ? 'white' : 'rgb(72,72,72)',
                                             '--n-color-focus':
                                                 this.colorMode === 'white' ? 'white' : 'rgb(100,100,100)',
@@ -208,7 +208,7 @@ export default {
                         "z-index": 100,
                     },
                 });
-            },  
+            },
             warning(msg) {
                 message.warning({
                     content: msg,
@@ -230,12 +230,14 @@ export default {
         showChangePasswd: Boolean,
     },
     created() {
-        this.$http.get('/api/accounts/detail/0/').then(response => {
-            this.username = response.data.username;
-            this.avatarFile = response.data.avatar;
-        }).catch(error => {
-            console.error(error);
-        });
+        if (this.$rookies.isKey('userid')) {
+            this.$http.get('/api/accounts/detail/0/').then(response => {
+                this.username = response.data.username;
+                this.avatarFile = response.data.avatar;
+            }).catch(error => {
+                console.error(error);
+            });
+        }
     },
     methods: {
         closeCWindow() {
@@ -245,15 +247,15 @@ export default {
             this.$emit('closeChangePasswdWindow')
         },
         handleChange() {
-            if(this.password == ''){
+            if (this.password == '') {
                 this.warning('请输入原密码');
                 return;
             }
-            if(this.new_password1 == ''){
+            if (this.new_password1 == '') {
                 this.warning('请输入新密码');
                 return;
             }
-            if(this.new_password2 == ''){
+            if (this.new_password2 == '') {
                 this.warning('请确认新密码');
                 return;
             }
@@ -266,7 +268,7 @@ export default {
                     this.closeCWindow();
                 } else if (response.data.code == '-1') {
                     const message = response.data.message;
-                    this.error(message.replaceAll('。',' '));
+                    this.error(message.replaceAll('。', ' '));
                     // this.closeCWindow();
                 }
             });
@@ -352,7 +354,7 @@ export default {
 
 .avatar img:hover {
     cursor: pointer;
-    box-shadow: 0 0 0 10px rgba(var(--theme-color),0.5);
+    box-shadow: 0 0 0 10px rgba(var(--theme-color), 0.5);
     transition: all cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 

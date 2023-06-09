@@ -274,24 +274,26 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$http
-        .get("/api/accounts/detail/0/")
-        .then((response) => {
-          this.username = response.data.username;
-          this.email = response.data.email;
-          this.recordNum = response.data.record_num;
-          this.bio = response.data.profile;
-          this.avatarFile = response.data.avatar;
-          this.avatarUrl = response.data.avatar;
-          this.tmpUsername = this.username + ''
-          this.tmpEmail = this.email + ''
-          this.tmpRecordNum = this.recordNum + ''
-          this.tmpBio = this.bio + ''
-          this.tmpAvatarUrl = this.avatarUrl + ''
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      if (this.$rookies.isKey('userid')) {
+        this.$http
+          .get("/api/accounts/detail/0/")
+          .then((response) => {
+            this.username = response.data.username;
+            this.email = response.data.email;
+            this.recordNum = response.data.record_num;
+            this.bio = response.data.profile;
+            this.avatarFile = response.data.avatar;
+            this.avatarUrl = response.data.avatar;
+            this.tmpUsername = this.username + ''
+            this.tmpEmail = this.email + ''
+            this.tmpRecordNum = this.recordNum + ''
+            this.tmpBio = this.bio + ''
+            this.tmpAvatarUrl = this.avatarUrl + ''
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     },
     closeMWindow() {
       this.username = this.tmpUsername

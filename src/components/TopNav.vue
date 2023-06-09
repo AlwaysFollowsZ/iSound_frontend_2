@@ -308,21 +308,23 @@ export default {
       }
     },
     fetchData() {
-      this.$http.get("/api/message/of/0/").then((response) => {
-        if (response.data.unread == 0) {
-          this.showMessage = false;
-        } else {
-          this.showMessage = true;
-        }
-      });
-      this.$http
-        .get("/api/accounts/detail/0/")
-        .then((response) => {
-          this.avatarFile = response.data.avatar;
-        })
-        .catch((error) => {
-          console.error(error);
+      if (this.$rookies.isKey('userid')) {
+        this.$http.get("/api/message/of/0/").then((response) => {
+          if (response.data.unread == 0) {
+            this.showMessage = false;
+          } else {
+            this.showMessage = true;
+          }
         });
+        this.$http
+          .get("/api/accounts/detail/0/")
+          .then((response) => {
+            this.avatarFile = response.data.avatar;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     },
     toLogIn() {
       this.setLogState(true);
