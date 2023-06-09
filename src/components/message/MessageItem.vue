@@ -19,7 +19,7 @@ export default defineComponent({
     CloseOutline,
   },
   created() {
-    this.$http.get("/api/message/of/1/").then((response) => {
+    this.$http.get("/api/message/of/0/").then((response) => {
       this.messages = response.data.message_set;
     });
   },
