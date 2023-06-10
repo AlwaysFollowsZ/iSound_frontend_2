@@ -174,7 +174,7 @@ export default {
         //数据来源
         rows: {
             type: JSON.type,
-            default: Rows
+            default: []
         },
         //处理点击entry事件的方法,只有这个会返回ID，其他都是key
         handleClickEntry: {
@@ -222,7 +222,7 @@ export default {
         },
         //处理点击删除已上传歌曲事件的方法
         handleClickDeleteUploadedSongs(Key) {
-            this.rows[Key].Deleted=true//触发动画
+            this.rows[Key].Deleted = true//触发动画
             if ((Math.ceil(this.rows.length / this.pageArgs.pageSize)
                 > Math.ceil((this.rows.length - 1) / this.pageArgs.pageSize))
                 && this.pageArgs.currentPage > 1
