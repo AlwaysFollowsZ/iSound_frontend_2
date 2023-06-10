@@ -240,7 +240,7 @@ export default {
 
 .easter:hover {
     animation: deny cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
-    animation-duration: 0.4s;
+    animation-duration: 0.35s;
     transform-origin: bottom center;
 }
 
@@ -258,11 +258,11 @@ export default {
     }
 
     25% {
-        transform: translate(-5%, 0) rotateY(30deg) rotateZ(-3deg);
+        transform: translate(-2%, 0) rotateY(15deg) rotateZ(-2deg);
     }
 
     75% {
-        transform: translate(5%, 0) rotateY(-30deg) rotateZ(3deg);
+        transform: translate(2%, 0) rotateY(-15deg) rotateZ(2deg);
         animation-timing-function: linear;
     }
 
