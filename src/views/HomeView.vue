@@ -67,11 +67,11 @@
                   <n-gi :span="2"></n-gi>
                   <n-gi :span="15">
                     <div class="song-entry-info-container">
-                      <div class="song-entry-info-name"
-                        :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                      <div class="song-entry-info-name" :style="{ 'color': 'rgba(' + this.accentColor + ',0.9)' }">
                         <n-ellipsis style="max-width: 200px">{{ song.title }}</n-ellipsis>
                       </div>
-                      <div class="song-entry-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
+                      <div class="song-entry-info-singer"
+                        :style="{ 'color': this.colorMode === 'white' ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)' }">
                         <n-ellipsis style="max-width: 200px">{{ song.singer }}</n-ellipsis>
                       </div>
                     </div>
@@ -99,10 +99,10 @@
                   <img class="single-card-img" draggable="false" :src="song.imgSrc" @click="jumpToSong(song.id)">
                 </div>
                 <div class="single-card-info-container">
-                  <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                  <div class="single-card-info-name" :style="{ 'color': 'rgba(' + this.accentColor + ',0.9)' }">
                     <n-ellipsis style="max-width: 160px" @click="jumpToSong(song.id)">{{ song.title }}</n-ellipsis>
                   </div>
-                  <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
+                  <div class="single-card-info-singer" :style="{ 'color': this.colorMode === 'white' ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)' }">
                     <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
                   </div>
                 </div>
@@ -129,10 +129,10 @@
                   <img class="single-card-img" draggable="false" :src="song.imgSrc" @click="jumpToSong(song.id)">
                 </div>
                 <div class="single-card-info-container">
-                  <div class="single-card-info-name" :style="{ 'color': this.colorMode === 'white' ? 'black' : 'white' }">
+                  <div class="single-card-info-name" :style="{ 'color': 'rgba(' + this.accentColor + ',0.9)' }">
                     <n-ellipsis style="max-width: 160px" @click="jumpToSong(song.id)">{{ song.title }}</n-ellipsis>
                   </div>
-                  <div class="single-card-info-singer" :style="{ 'color': 'rgba(' + this.accentColor + ',0.7)' }">
+                  <div class="single-card-info-singer" :style="{ 'color': this.colorMode === 'white' ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)' }">
                     <n-ellipsis style="max-width: 160px">{{ song.singer }}</n-ellipsis>
                   </div>
                 </div>
@@ -545,7 +545,7 @@ export default {
   padding-top: 3%;
   word-wrap: break-word;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .song-entry-info-singer {
@@ -553,7 +553,7 @@ export default {
   max-width: 12vw;
   word-wrap: break-word;
   font-weight: bold;
-  font-size: 8px;
+  font-size: 10px;
   color: grey;
 }
 
