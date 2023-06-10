@@ -195,7 +195,7 @@ export default {
             }
             else if (this.easterTwice === false) {
                 this.error('度し難い！')
-                changeThemeColor([255, 0, 0])//变红了，别惹我
+                changeThemeColor([255, 0, 0])//变红了，别惹reg
                 changeColorMode()
                 this.easterTwice = true
             }
@@ -204,7 +204,10 @@ export default {
             if (this.isEastered === false) {
                 this.success('下次再来和Reg一起玩噢!')
                 changeColorMode()
-                this.isEastered = true
+                setTimeout(() => {
+                    this.isEastered = true
+                }, 5000)
+
             }
         }
 
