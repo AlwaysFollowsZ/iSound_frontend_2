@@ -99,7 +99,7 @@
         </n-grid>
       </n-gi>
       <n-gi :span="1">
-        <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options" :style="{ 'animation': 'bounce' }">
+        <n-dropdown v-if="isLoggedIn" trigger="hover" :options="options">
           <n-avatar v-if="isLoggedIn" class="user-avatar" @click="jumpToUserView" @mouseover="renderDropDown"
             :src="this.avatarFile" size="large"></n-avatar>
           <n-avatar v-else src="/api/media/default/visitor-avatar.png" size="large"></n-avatar>

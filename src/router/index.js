@@ -144,6 +144,9 @@ router.beforeEach((to, from, next) => {
   else if (to.meta.isSuperuser && cookies.get('is_superuser') == 'false') {
     next({path: '/'});
   }
+  else if (to.name === 'home' && cookies.get('is_superuser') == 'true') {//管理员应该前往管理员界面
+    next({ path: '/admin' });
+  }
   else {
     next();
   }

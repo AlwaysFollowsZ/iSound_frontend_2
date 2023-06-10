@@ -60,7 +60,7 @@
                     <div v-if="this.songlists.length == 0" class="no-result-info">
                         暂无搜索结果...
                     </div>
-                    <div v-else><image-table :key="this.$route.params.keyword" :table-size="[1350,]"
+                    <div v-else style="text-align:center"><image-table :key="this.$route.params.keyword" :table-size="[1350,]"
                             :entry-size="[330, 240]" v-model:rows="songlists" :position="'ResultView'"
                             :handleClickEntry="jumpToSonglist"> </image-table>
                     </div>

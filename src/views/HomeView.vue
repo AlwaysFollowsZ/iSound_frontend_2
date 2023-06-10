@@ -396,7 +396,6 @@ export default {
 }
 
 .card-container {
-  display: inline-block;
   height: 270px;
   min-width: 1400px;
   padding-top: 1%;

@@ -5,7 +5,12 @@
     'animation-duration': '1.5s',
   }">
     <div class="player-page" id="top" ref="damn">
-      <img class="background-img" :src="music.cover" />
+      <div class="background-img" :src="music.cover"  :style="{
+        'background-image':`url(${music.cover})`,
+        'background-size':'cover',
+        'background-position':'center center',
+        'background-repeat':'no-repeat'
+      }" ></div>
       <div class="background-imgfloat"></div>
       <div class="content">
         <n-grid>
@@ -18,7 +23,7 @@
           </n-gi>
           <n-gi :span="7">
             <div class="music-cover">
-              <n-image class="music-cover-img" :src="music.cover" width="400" height="400" />
+              <n-image class="music-cover-img" :src="music.cover" width="400" height="400" object-fit="cover"/>
             </div>
             <div class="three-buttons"
               v-if="!this.$cookies.isKey('userid') || this.$cookies.get('is_superuser') == 'false'">
@@ -1419,7 +1424,7 @@ export default defineComponent({
   object-fit: cover;
   filter: blur(40px) saturate(1);
   /* 背景图片模糊效果 */
-  opacity: 0.5;
+  opacity: 0.6;
   z-index: -1;
 }
 

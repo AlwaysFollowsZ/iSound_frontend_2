@@ -53,7 +53,7 @@ export const getFontColorString = (themeColorInput, colorBase = 125) => {
     })
 }
 //获取主题背景色的方法,返回'a,b,c'形式的字符串
-export const getBackgroundColorString = (themeColorInput) => {
+export const getBackgroundColorString = (themeColorInput=globalThemeColor) => {
     //当歌曲主题色未解析完时可能投入空数组，忽略即可
     return computed(() => {
         //const a = [globalThemeColor.value,colorMode.value]
@@ -61,6 +61,9 @@ export const getBackgroundColorString = (themeColorInput) => {
         if ((typeof themeColorInput == Array) == false) {
             themeColor = themeColorInput.value
         }
+        if (themeColor === undefined) {
+            themeColor=JSON.parse(JSON.stringify(themeColorInput))
+        }//不是数组不一定就是响应式变量
         if (themeColor === undefined) {
             return []
         }
