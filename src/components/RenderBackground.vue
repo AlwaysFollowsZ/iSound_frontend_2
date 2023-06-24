@@ -42,28 +42,38 @@ export default {
             camera.position.z = 5
             scene.add(camera);
             //创建聚光源1
-            const spotLight1 = new THREE.SpotLight(elementColor, 1.0);// 1.0：光照强度intensity
+            const spotLight1 = new THREE.SpotLight(elementColor, 0.75);// 1.0：光照强度intensity
             spotLight1.angle = Math.PI / 2;//发散角度,光锥角度的二分之一
             spotLight1.position.set(-2, 3, 0);// 设置聚光光源位置
-            spotLight1.penumbra = 2; // 设置聚光灯的边缘柔化
+            spotLight1.penumbra = 5; // 设置聚光灯的边缘柔化
             spotLight1.decay = 2; // 设置聚光灯的衰减
             spotLight1.target.position.set(0, 0, 0);// spotLight.target是一个模型对象Object3D，默认在坐标原点
             scene.add(spotLight1.target);//spotLight.target添加到场景中.target.position才会起作用
             scene.add(spotLight1);//光源添加到场景中
             //创建聚光源2
-            const spotLight2 = new THREE.SpotLight(elementColor, 1);// 1.0：光照强度intensity
+            const spotLight2 = new THREE.SpotLight(elementColor, 0.75);// 1.0：光照强度intensity
             spotLight2.angle = Math.PI / 2;//发散角度,光锥角度的二分之一
             spotLight2.position.set(2, 3, 0);// 设置聚光光源位置
-            spotLight2.penumbra = 10; // 设置聚光灯的边缘柔化
-            spotLight2.decay = 2000; // 设置聚光灯的衰减
+            spotLight2.penumbra = 5; // 设置聚光灯的边缘柔化
+            spotLight2.decay = 2; // 设置聚光灯的衰减
             spotLight2.target.position.set(0, 0, 0);// spotLight.target是一个模型对象Object3D，默认在坐标原点
             scene.add(spotLight2.target);//spotLight.target添加到场景中.target.position才会起作用
             scene.add(spotLight2);//光源添加到场景中
 
+            //创建聚光源3
+            const spotLight3 = new THREE.SpotLight(elementColor, 0.2);// 1.0：光照强度intensity
+            spotLight3.angle = Math.PI / 2.5;//发散角度,光锥角度的二分之一
+            spotLight3.position.set(0, -5, 0);// 设置聚光光源位置
+            spotLight3.penumbra = 5; // 设置聚光灯的边缘柔化
+            spotLight3.decay = 2; // 设置聚光灯的衰减
+            spotLight3.target.position.set(0, 0, 0);// spotLight.target是一个模型对象Object3D，默认在坐标原点
+            scene.add(spotLight3.target);//spotLight.target添加到场景中.target.position才会起作用
+            scene.add(spotLight3);//光源添加到场景中
             // 聚光源辅助对象，可视化聚光源
             // const spotLightHelper1 = new THREE.SpotLightHelper(spotLight1, 0x123456)
             // const spotLightHelper2 = new THREE.SpotLightHelper(spotLight2, 0x345612)
-            // scene.add(spotLightHelper1, spotLightHelper2);
+            // const spotLightHelper3 = new THREE.SpotLightHelper(spotLight3, 0x561234)
+            // scene.add(spotLightHelper1, spotLightHelper2, spotLightHelper3);
 
             // 创建渲染器
             const renderer = new THREE.WebGLRenderer({ alpha: true });
@@ -443,10 +453,9 @@ export default {
                 });
                 //整个六芒星
                 element = new THREE.Group()
-                //单个四棱锥
 
                 constructor() {
-                    //首先生成六个六芒星并平移到正确的位置
+                    //首先生成六个芒并平移到正确的位置
                     for (let i = 0; i < 6; i++) {
                         const pyramid = new THREE.Mesh(this.geometry, this.material);
                         const container = new THREE.Group()
@@ -747,79 +756,78 @@ export default {
             }
             //渲染rashinban.只有旋转运动
             class animateRashinban {
-                Position = [0,0,0]//固定在屏幕中心位置
-                DirectionAngle = Math.random() * Math.PI / 3 - Math.PI / 6;
-                Speed = (1 / (200 * (this.Scale)))//根据物体大小决定物体速度
-
-                //创建椭球体的方法。半径为x,y,z
-                EllipsoidGeometry = (x, y, z) => {
-                    const ellipsoidGeometry = new THREE.SphereGeometry(1, 7, 7);
-                    const positionAttribute = ellipsoidGeometry.getAttribute('position');
-
-                    for (let i = 0; i < positionAttribute.count; i++) {
-                        const vertex = new THREE.Vector3();
-                        vertex.fromBufferAttribute(positionAttribute, i);
-                        vertex.x *= x;
-                        vertex.y *= y;
-                        vertex.z *= z;
-                        positionAttribute.setXYZ(i, vertex.x, vertex.y, vertex.z);
-                    }
-                    return ellipsoidGeometry;
-                }
-                //设置音符的三种模型的形状.具体的scale不在这里设置
-                geometries = [
-                    this.EllipsoidGeometry(0.4, 0.2, 0.2),//底部椭球
-                    new THREE.CylinderGeometry(0.08, 0.08, 1.5, 3, 1, true),//长杆
-                    new THREE.CylinderGeometry(0.05, 0.12, 0.8, 8, 1, true)]//短杆
-                //设置材质
+                //整个lashinbang
+                element = new THREE.Group()
+                //中间部分
+                middle = new THREE.Group()
+                //材质
                 material = new THREE.MeshLambertMaterial({
                     color: elementColor,
                     transparent: true,
-                    opacity: 0.2,
+                    opacity: 0.2
                 });
-                //整个音符
-                element = new THREE.Group()
+                middleMaterial = new THREE.MeshLambertMaterial({
+                    color: elementColor,
+                    emissive:'#888',
+                    transparent: true,
+                    opacity: 0.5
+                });
 
-                // type为1是八分音符，否则为四分音符
+                //上层四面体
+                Up = new THREE.Mesh(new THREE.ConeGeometry(0.5,0.4,6), this.middleMaterial)
+                //下层四面体
+                Down = new THREE.Mesh(new THREE.ConeGeometry(0.5,0.4,6), this.middleMaterial)
+                //圆环
+                Torus = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.07, 3, 100), this.material)
                 constructor(type) {
-                    //生成椭球、长杆和短杆
-                    const Ellipsoid = new THREE.Mesh(this.geometries[0], this.material)
-                    const longCylinder = new THREE.Mesh(this.geometries[1], this.material)
-
-                    //调节位置
-                    Ellipsoid.translateY(-0.5)
-                    longCylinder.translateX(0.3)
-                    longCylinder.translateY(0.3)
-                    if (type === 1) {
-                        const shortCylinder = new THREE.Mesh(this.geometries[2], this.material)
-                        shortCylinder.translateX(0.5)
-                        shortCylinder.translateY(0.8)
-                        shortCylinder.rotateZ(Math.PI / 5)
-                        this.element.add(shortCylinder)
-                    }
+                    //位置调整
+                    this.Up.position.y = 0.6
+                    this.Down.position.y = -0.6
+                    this.Down.rotation.x = Math.PI
                     //加入"group"
-                    this.element.add(Ellipsoid, longCylinder)
-
-                    //设置随机的缩放
-                    this.element.scale.set(this.Scale, this.Scale, this.Scale)
-                    //设置初始位置并加入场景
-                    this.element.position.x = this.Position[0]
-                    this.element.position.y = this.Position[1]
-                    this.element.position.z = this.Position[2]
+                    this.middle.add(this.Up)
+                    this.middle.add(this.Down)
+                    // this.element.add(this.Sphere)
+                    this.element.add(this.Torus)
+                    this.element.add(this.middle)
+                    //加入场景
+                    this.element.position.x = 0
+                    this.element.position.y = 0.5
+                    this.element.position.z = 0
+                    this.element.scale.set(2.5, 2.5, 2.5)
                     scene.add(this.element);
                 }
 
                 update = () => {
                     //以下是针对单个物体的操作
-
                     //白天和黑夜模式旋转相反
                     if (colorMode.value === 'white') {
-                        this.element.rotation.x += 0.02;
-                        this.element.rotation.y += 0.02;
+                        //整体旋转
+                        // this.element.rotation.y += 0.01;
+                        //圆环旋转
+                        this.Torus.rotation.x += 0.0005;
+                        this.Torus.rotation.y += 0.001;
+                        //内部旋转
+                        this.middle.rotation.x -= 0.002;
+                        // this.middle.rotation.z -= 0.01;
+                        //上部旋转
+                        this.Up.rotation.y += 0.002;
+                        //下部旋转.因为下部先绕x旋转了pi，所以方向是一样的
+                        this.Down.rotation.y += 0.002;
                     }
                     else {
-                        this.element.rotation.x -= 0.02;
-                        this.element.rotation.y -= 0.02;
+                        //整体旋转
+                        // this.element.rotation.y -= 0.01;
+                        //圆环旋转
+                        this.Torus.rotation.x -= 0.0005;
+                        this.Torus.rotation.y -= 0.001;
+                        //内部旋转
+                        this.middle.rotation.x += 0.002;
+                        // this.middle.rotation.z += 0.01;
+                        //上部旋转
+                        this.Up.rotation.y -= 0.002;
+                        //下部旋转.因为下部先绕x旋转了pi，所以方向是一样的
+                        this.Down.rotation.y -= 0.002;
                     }
                 }
             }
@@ -830,6 +838,8 @@ export default {
             let Stars = []//管理星星
             let Hexagrams = []//管理六芒星
             let Notes = []
+            let Rashinban = new animateRashinban()
+
 
             //添加组件
             for (let i = 0; i < 2; i++) {
@@ -869,6 +879,7 @@ export default {
                 Notes.forEach((note) => {
                     note.update()
                 })
+                Rashinban.update()
                 //渲染摄像机
                 renderer.render(scene, camera);
                 //请求渲染动画帧

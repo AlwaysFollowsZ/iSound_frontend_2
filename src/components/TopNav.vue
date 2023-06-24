@@ -382,6 +382,11 @@ export default {
   padding-top: 7px;
   padding-bottom: 7px;
   min-width: 1400px;
+  position: sticky;
+  top: 0;
+  background: rgba(var(--background-color),0.9);
+  z-index: 1;
+  transition:all linear 1s;
   /*border: dashed;*/
 }
 

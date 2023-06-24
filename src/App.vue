@@ -10,12 +10,14 @@ import TopNav from "./components/TopNav.vue";
 import ListTable from "./components/tables/ListTable/ListTable.vue";
 import Player from "./components/Player.vue";
 import MixedTable from "./components/tables/ImageTable/MixedImageTable.vue";
-import { globalThemeColor, getBackgroundColorString, getFontColorString } from '/src/colorMode.js'
+import { backgroundColor,globalThemeColor, getBackgroundColorString, getFontColorString } from '/src/colorMode.js'
 //全局主题色~
 watch(globalThemeColor, () => {
   document.documentElement.style.setProperty('--theme-color', getBackgroundColorString(globalThemeColor).value)
   document.documentElement.style.setProperty('--theme-font-color', getFontColorString(globalThemeColor).value)
+  document.documentElement.style.setProperty('--background-color', getBackgroundColorString(backgroundColor).value)
 }, { immediate: true })
+
 </script>
 <template>
   <background></background>
@@ -35,6 +37,7 @@ watch(globalThemeColor, () => {
 :root {
   --theme-font-color: none;
   --theme-color: none;
+  --background-color:none;
 }
 
 header {

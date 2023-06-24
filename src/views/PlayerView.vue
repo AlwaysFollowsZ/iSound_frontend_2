@@ -1499,6 +1499,7 @@ export default defineComponent({
 :deep(.ant-comment-content-author-time) {
   padding-top: 2px;
   font-size: 14px;
+  color:rgb(var(--theme-font-color),0.8)
 }
 
 :deep(.n-collapse .n-collapse-item .n-collapse-item__header .n-collapse-item__header-main) {
