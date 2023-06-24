@@ -147,7 +147,7 @@ const fixColor = (colorInput) => {
         }
     }
     else {//黑色模式下应保证主题色较暗,但不能太暗
-        if (blackBrightness > 150) {//明度较高，应调低明度
+        if (blackBrightness > 120) {//明度较高，应调低明度
             let colorBase = 50
             let rate = (255 - colorBase) / 255
             for (let i = 0; i < 3; i++) {
