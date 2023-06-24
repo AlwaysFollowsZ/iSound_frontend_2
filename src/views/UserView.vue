@@ -303,4 +303,10 @@ export default {
     align-items: center;
     justify-content: center;
 }
+
+.user-page-TopNav{
+    position:sticky;
+    top:0;
+    z-index: 1;
+}
 </style>
