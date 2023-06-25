@@ -66,7 +66,7 @@
                         }
                           ">
                           <div><n-button @click="getYesterdayHistory(); this.flushList++" :style="{
-                            '--n-color': this.colorMode === 'transparent',
+                            '--n-color': 'transparent',
                             '--n-color-focus': 'transparent',
                             '--n-text-color': 'rgba(' + this.accentColor + ', 0.75)',
                             '--n-text-color-focus': 'rgba(' + this.accentColor + ', 1)',
