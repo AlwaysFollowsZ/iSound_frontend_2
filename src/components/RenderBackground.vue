@@ -801,10 +801,10 @@ export default {
                     //白天和黑夜模式旋转相反
                     if (colorMode.value === 'white') {
                         //整体旋转
-                        // this.element.rotation.y += 0.01;
+                        this.element.rotation.y += 0.003;
                         //圆环1旋转
-                        this.Torus1.rotation.x += 0.005;
-                        this.Torus1.rotation.y += 0.01;
+                        this.Torus1.rotation.x += 0.002;
+                        this.Torus1.rotation.y += 0.004;
                         //圆环2旋转
                         this.Torus2.rotation.y -= 0.02;
                         this.Torus2.rotation.x -= 0.02;
@@ -817,10 +817,10 @@ export default {
                     }
                     else {
                         //整体旋转
-                        // this.element.rotation.y -= 0.01;
+                        this.element.rotation.y -= 0.003;
                         //圆环1旋转
-                        this.Torus1.rotation.x -= 0.005;
-                        this.Torus1.rotation.y -= 0.01;
+                        this.Torus1.rotation.x -= 0.002;
+                        this.Torus1.rotation.y -= 0.004;
                         //圆环2旋转
                         this.Torus2.rotation.y += 0.02;
                         this.Torus2.rotation.x += 0.02;
