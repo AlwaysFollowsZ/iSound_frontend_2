@@ -42,7 +42,7 @@ export default {
             camera.position.z = 5
             scene.add(camera);
             //创建聚光源1
-            const spotLight1 = new THREE.SpotLight(elementColor, 0.75);// 1.0：光照强度intensity
+            const spotLight1 = new THREE.SpotLight(elementColor, 0.5);// 1.0：光照强度intensity
             spotLight1.angle = Math.PI / 2;//发散角度,光锥角度的二分之一
             spotLight1.position.set(-2, 3, 0);// 设置聚光光源位置
             spotLight1.penumbra = 5; // 设置聚光灯的边缘柔化
@@ -51,7 +51,7 @@ export default {
             scene.add(spotLight1.target);//spotLight.target添加到场景中.target.position才会起作用
             scene.add(spotLight1);//光源添加到场景中
             //创建聚光源2
-            const spotLight2 = new THREE.SpotLight(elementColor, 0.75);// 1.0：光照强度intensity
+            const spotLight2 = new THREE.SpotLight(elementColor, 0.5);// 1.0：光照强度intensity
             spotLight2.angle = Math.PI / 2;//发散角度,光锥角度的二分之一
             spotLight2.position.set(2, 3, 0);// 设置聚光光源位置
             spotLight2.penumbra = 5; // 设置聚光灯的边缘柔化
@@ -61,9 +61,9 @@ export default {
             scene.add(spotLight2);//光源添加到场景中
 
             //创建聚光源3
-            const spotLight3 = new THREE.SpotLight(elementColor, 0.2);// 1.0：光照强度intensity
+            const spotLight3 = new THREE.SpotLight(elementColor, 0.4);// 1.0：光照强度intensity
             spotLight3.angle = Math.PI / 2.5;//发散角度,光锥角度的二分之一
-            spotLight3.position.set(0, -5, 0);// 设置聚光光源位置
+            spotLight3.position.set(0, -2, 0);// 设置聚光光源位置
             spotLight3.penumbra = 5; // 设置聚光灯的边缘柔化
             spotLight3.decay = 2; // 设置聚光灯的衰减
             spotLight3.target.position.set(0, 0, 0);// spotLight.target是一个模型对象Object3D，默认在坐标原点
@@ -758,8 +758,6 @@ export default {
             class animateRashinban {
                 //整个lashinbang
                 element = new THREE.Group()
-                //中间部分
-                middle = new THREE.Group()
                 //材质
                 material = new THREE.MeshLambertMaterial({
                     color: elementColor,
@@ -773,23 +771,23 @@ export default {
                     opacity: 0.5
                 });
 
-                //上层四面体
-                Up = new THREE.Mesh(new THREE.ConeGeometry(0.5,0.4,6), this.middleMaterial)
-                //下层四面体
-                Down = new THREE.Mesh(new THREE.ConeGeometry(0.5,0.4,6), this.middleMaterial)
-                //圆环
-                Torus = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.07, 3, 100), this.material)
+                //中心
+                Center = new THREE.Mesh(new THREE.BoxGeometry(0.4,0.4,0.4), this.material)
+                //圆环1
+                Torus1 = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.05, 3, 36), this.material)
+                //圆环2
+                Torus2 = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.015, 3, 60), this.material)
+                //圆环3
+                Torus3 = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.015, 3, 60), this.material)
                 constructor(type) {
                     //位置调整
-                    this.Up.position.y = 0.6
-                    this.Down.position.y = -0.6
-                    this.Down.rotation.x = Math.PI
-                    //加入"group"
-                    this.middle.add(this.Up)
-                    this.middle.add(this.Down)
+                    this.Torus2.rotation.y = Math.PI / 2
+                    this.Torus3.rotation.x = Math.PI / 2
                     // this.element.add(this.Sphere)
-                    this.element.add(this.Torus)
-                    this.element.add(this.middle)
+                    this.element.add(this.Torus1)
+                    this.element.add(this.Torus2)
+                    this.element.add(this.Torus3)
+                    this.element.add(this.Center)
                     //加入场景
                     this.element.position.x = 0
                     this.element.position.y = 0.5
@@ -804,30 +802,34 @@ export default {
                     if (colorMode.value === 'white') {
                         //整体旋转
                         // this.element.rotation.y += 0.01;
-                        //圆环旋转
-                        this.Torus.rotation.x += 0.0005;
-                        this.Torus.rotation.y += 0.001;
-                        //内部旋转
-                        this.middle.rotation.x -= 0.002;
-                        // this.middle.rotation.z -= 0.01;
-                        //上部旋转
-                        this.Up.rotation.y += 0.002;
-                        //下部旋转.因为下部先绕x旋转了pi，所以方向是一样的
-                        this.Down.rotation.y += 0.002;
+                        //圆环1旋转
+                        this.Torus1.rotation.x += 0.005;
+                        this.Torus1.rotation.y += 0.01;
+                        //圆环2旋转
+                        this.Torus2.rotation.y -= 0.02;
+                        this.Torus2.rotation.x -= 0.02;
+                        //圆环3旋转
+                        this.Torus3.rotation.y += 0.02;
+                        this.Torus3.rotation.x += 0.02;
+                        //中心旋转
+                        this.Center.rotation.y += 0.01;
+                        this.Center.rotation.x -= 0.01;
                     }
                     else {
                         //整体旋转
                         // this.element.rotation.y -= 0.01;
-                        //圆环旋转
-                        this.Torus.rotation.x -= 0.0005;
-                        this.Torus.rotation.y -= 0.001;
-                        //内部旋转
-                        this.middle.rotation.x += 0.002;
-                        // this.middle.rotation.z += 0.01;
-                        //上部旋转
-                        this.Up.rotation.y -= 0.002;
-                        //下部旋转.因为下部先绕x旋转了pi，所以方向是一样的
-                        this.Down.rotation.y -= 0.002;
+                        //圆环1旋转
+                        this.Torus1.rotation.x -= 0.005;
+                        this.Torus1.rotation.y -= 0.01;
+                        //圆环2旋转
+                        this.Torus2.rotation.y += 0.02;
+                        this.Torus2.rotation.x += 0.02;
+                        //圆环3旋转
+                        this.Torus3.rotation.y -= 0.02;
+                        this.Torus3.rotation.x -= 0.02;
+                        //中心旋转
+                        this.Center.rotation.y -= 0.01;
+                        this.Center.rotation.x += 0.01;
                     }
                 }
             }
